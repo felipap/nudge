@@ -1,5 +1,4 @@
-import { forwardRef, useEffect } from 'react'
-import { ComponentProps } from 'react'
+import { ComponentProps, forwardRef, useEffect } from 'react'
 
 type Props = Omit<ComponentProps<'textarea'>, 'onChange'> & {
   onChange: (value: string) => void
@@ -21,12 +20,13 @@ export const AutoExpandingTextarea = forwardRef<HTMLTextAreaElement, Props>(
       textarea.current.style.height = 'auto'
       // Calculate minimum height for 2 lines
       const lineHeight = parseInt(getComputedStyle(textarea.current).lineHeight)
-      const minHeight = lineHeight * 2
+      const minHeight = lineHeight * 4
       // Set the height to match the content, but not less than 2 lines
       textarea.current.style.height = `${Math.max(
         textarea.current.scrollHeight,
         minHeight
       )}px`
+      textarea.current.style.minHeight = `${minHeight}px`
     }, [value, ref])
 
     return (

@@ -4,7 +4,7 @@ import { zodResponseFormat } from 'openai/helpers/zod'
 
 const GoalFeedbackSchema = z.object({
   isGood: z.boolean(),
-  message: z.string(),
+  feedback: z.string(),
 })
 
 export type GoalFeedback = z.infer<typeof GoalFeedbackSchema>
@@ -28,7 +28,10 @@ Examples:
 
 Communication activities (texting, messaging, emails) are valid screen activities when paired with a time block.
 If they mention a screen activity AND a time block, return isGood=true with no explanation.
-If either is missing, return isGood=false with a message asking for clarification.`
+If either is missing, return isGood=false with a feedback asking for clarification.
+
+Instructions:
+* Don't use "Please". You're giving the user a suggestion, not a request. `
 
   try {
     const response = await client.beta.chat.completions.parse({
@@ -47,7 +50,9 @@ If either is missing, return isGood=false with a message asking for clarificatio
       response_format: zodResponseFormat(GoalFeedbackSchema, 'GoalFeedback'),
     })
 
-    return response.choices[0].message.parsed
+    const parsed = response.choices[0].message.parsed
+    console.log('[ai/goal-feedback] parsed', parsed)
+    return parsed
   } catch (error) {
     console.error('Error getting goal feedback:', error)
     throw error

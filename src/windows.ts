@@ -15,13 +15,13 @@ export function createMainWindow() {
 
   const win = new BrowserWindow({
     width: 450,
-    height: 450,
+    height: 400,
     resizable: false,
     frame: false,
     transparent: true,
     vibrancy: 'fullscreen-ui',
     // show: false,
-    alwaysOnTop: true,
+    // alwaysOnTop: true,
     x: primaryDisplay.workArea.x + primaryDisplay.workArea.width - 100 - 5,
     y: primaryDisplay.workArea.y + primaryDisplay.workArea.width - 50,
 

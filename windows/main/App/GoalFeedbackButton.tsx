@@ -1,8 +1,9 @@
 import { SparkleIcon } from '../../shared/ui/icons'
 import { Button } from '../../shared/ui/Button'
 import { useState } from 'react'
+import { withBoundary } from '../../shared/ui/withBoundary'
 
-export function GoalFeedbackButton({ goal }: { goal: string }) {
+export const GoalFeedbackButton = withBoundary(({ goal }: { goal: string }) => {
   const [feedback, setFeedback] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -13,8 +14,9 @@ export function GoalFeedbackButton({ goal }: { goal: string }) {
 
     setIsLoading(true)
     try {
-      const result = await window.electronAPI.getGoalFeedback(goal)
-      setFeedback(result)
+      const feedback = await window.electronAPI.getGoalFeedback(goal)
+      console.log('feedback', feedback)
+      setFeedback(feedback)
     } catch (error) {
       console.error('Error getting goal feedback:', error)
     } finally {
@@ -27,16 +29,17 @@ export function GoalFeedbackButton({ goal }: { goal: string }) {
       <Button
         variant="secondary"
         onClick={handleClick}
+        className="font-medium bg-emerald-200 text-black self-start text-[14px] hover:bg-emerald-300"
         disabled={!goal || isLoading}
         icon={<SparkleIcon className="w-4 h-4" />}
       >
         Get AI Feedback
       </Button>
       {feedback && (
-        <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded">
-          {feedback}
+        <div className="text-sm p-3 rounded bg-amber-50 text-amber-700">
+          <strong>Tip:</strong> {feedback.replace(/^Tip:? /, '')}
         </div>
       )}
     </div>
   )
-}
+})

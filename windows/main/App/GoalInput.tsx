@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { AutoExpandingTextarea } from '../../shared/ui/AutoExpandingTextarea'
 import { GoalFeedbackButton } from './GoalFeedbackButton'
+import { withBoundary } from '../../shared/ui/withBoundary'
 
 function useGoalState() {
   const [value, setValue] = useState<string | null>(null)
@@ -29,7 +30,7 @@ function useGoalState() {
   return { value, loading, saving, update }
 }
 
-export function GoalInput() {
+export const GoalInput = withBoundary(() => {
   const {
     value: savedGoal,
     loading: isLoadingGoal,
@@ -90,4 +91,4 @@ export function GoalInput() {
       <GoalFeedbackButton goal={value} />
     </div>
   )
-}
+})

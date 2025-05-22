@@ -1,6 +1,6 @@
 import { app, ipcMain, BrowserWindow, shell } from 'electron'
 import { screenCaptureService } from './lib/ScreenCaptureService'
-import { setOpenAiKey, store } from './lib/store'
+import { getOpenAiKey, setOpenAiKey, store } from './lib/store'
 import { State } from './types'
 import { setPartialState } from '../windows/shared/ipc'
 import { getGoalFeedback } from './lib/ai'
@@ -29,6 +29,24 @@ export function setupIPC() {
       return { success: false, error: error.message }
     }
   })
+
+  ipcMain.handle(
+    'getGoalFeedback',
+    async (_: Electron.IpcMainInvokeEvent, goal: string) => {
+      try {
+        const openAiKey = getOpenAiKey()
+        if (!openAiKey) {
+          throw new Error('No OpenAI key')
+        }
+        const feedback = await getGoalFeedback(goal, openAiKey)
+        console.log('feedback', feedback, feedback.feedback)
+        return feedback.isGood ? null : feedback.feedback!
+      } catch (error) {
+        console.error('Error in get-goal-feedback handler:', error)
+        throw error
+      }
+    }
+  )
 
   ipcMain.on('setPartialState', (_event, state: Partial<State>) => {
     store.setState({
@@ -74,19 +92,5 @@ export function setupIPC() {
 
   ipcMain.on('openExternal', (_event, url: string) => {
     shell.openExternal(url)
-  })
-
-  ipcMain.handle('getGoalFeedback', async (_event, goal: string) => {
-    try {
-      const openAiKey = store.getState().openAiKey
-      if (!openAiKey) {
-        throw new Error('No OpenAI key found')
-      }
-      const feedback = await getGoalFeedback(goal, openAiKey)
-      return feedback
-    } catch (error) {
-      console.error('Error in getGoalFeedback handler:', error)
-      throw error
-    }
   })
 }

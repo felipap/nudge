@@ -4,7 +4,7 @@ import { GoalInput } from './GoalInput'
 
 export default function App() {
   return (
-    <div className="flex flex-col bg-white h-screen">
+    <div className="flex flex-col bg-white h-screen select-none">
       <Navbar />
       <main className="p-4 h-full flex flex-col gap-4">
         <header className="flex flex-col gap-1">
