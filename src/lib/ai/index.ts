@@ -15,3 +15,4 @@ export function getOpenAiClient(openAiKey: string) {
 }
 
 export * from './is-procrastinating'
+export * from './goal-feedback'

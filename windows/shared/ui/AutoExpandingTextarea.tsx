@@ -1,14 +1,12 @@
 import { forwardRef, useEffect } from 'react'
+import { ComponentProps } from 'react'
 
-interface Props {
-  value: string
+type Props = Omit<ComponentProps<'textarea'>, 'onChange'> & {
   onChange: (value: string) => void
-  placeholder?: string
-  className?: string
 }
 
 export const AutoExpandingTextarea = forwardRef<HTMLTextAreaElement, Props>(
-  ({ value, onChange, placeholder, className = '' }, ref) => {
+  ({ value, onChange, className = '', ...props }, ref) => {
     if (!ref) {
       throw new Error('ref prop is required')
     }
@@ -36,9 +34,9 @@ export const AutoExpandingTextarea = forwardRef<HTMLTextAreaElement, Props>(
         ref={ref}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
         className={className}
         rows={2}
+        {...props}
       />
     )
   }

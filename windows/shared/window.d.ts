@@ -17,6 +17,7 @@ declare global {
       minimize: () => void
       zoom: () => void
       openExternal: (url: string) => void
+      getGoalFeedback: (goal: string) => Promise<string>
     }
   }
 }

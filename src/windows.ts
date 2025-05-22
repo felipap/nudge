@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, screen } from 'electron'
 import path from 'node:path'
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
@@ -11,15 +11,19 @@ export let mainWindow: BrowserWindow | null = null
 export let prefWindow: BrowserWindow | null = null
 
 export function createMainWindow() {
+  const primaryDisplay = screen.getPrimaryDisplay()
+
   const win = new BrowserWindow({
     width: 450,
-    height: 550,
+    height: 450,
     resizable: false,
     frame: false,
     transparent: true,
     vibrancy: 'fullscreen-ui',
     // show: false,
     alwaysOnTop: true,
+    x: primaryDisplay.workArea.x + primaryDisplay.workArea.width - 100 - 5,
+    y: primaryDisplay.workArea.y + primaryDisplay.workArea.width - 50,
 
     webPreferences: {
       preload: path.join(__dirname, '../renderer/preload.js'),

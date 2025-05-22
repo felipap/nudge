@@ -7,6 +7,13 @@ export default function App() {
     <div className="flex flex-col bg-white h-screen">
       <Navbar />
       <main className="p-4 h-full flex flex-col gap-4">
+        <header className="flex flex-col gap-1">
+          {/* <h2 className="text-lg font-semibold">Goal</h2> */}
+          <p className="text-gray-600 text-[20px] leading-[25px]">
+            <span className="font-semibold text-black">Choose a goal.</span>{' '}
+            What's your focus for the next hour?
+          </p>
+        </header>
         <GoalInput />
       </main>
     </div>
@@ -31,12 +38,16 @@ function Navbar() {
       <div className="flex-1 [app-region:drag] h-full flex items-center px-4">
         <div className="text-sm text-black font-medium">Nudge</div>
       </div>
-      <div>
-        <button className="flex items-center gap-1.5 px-2 h-[24px] hover:border hover:opacity-100 transition-all text-black opacity-40 text-sm font-medium hover:bg-neutral-100 rounded-md p-1 cursor-pointer">
-          <Settings className="w-3.5 h-3.5" />
-          <span>Settings</span>
-        </button>
-      </div>
+      <div>{/* <NavbarSettingsButton /> */}</div>
     </nav>
+  )
+}
+
+function NavbarSettingsButton() {
+  return (
+    <button className="flex items-center gap-1.5 px-2 h-[24px] hover:opacity-100 transition-all text-black opacity-40 text-sm font-medium hover:bg-neutral-100 rounded-md p-1 cursor-pointer">
+      <Settings className="w-3.5 h-3.5" />
+      <span>Settings</span>
+    </button>
   )
 }

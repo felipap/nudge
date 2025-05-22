@@ -3,6 +3,7 @@ import { screenCaptureService } from './lib/ScreenCaptureService'
 import { setOpenAiKey, store } from './lib/store'
 import { State } from './types'
 import { setPartialState } from '../windows/shared/ipc'
+import { getGoalFeedback } from './lib/ai'
 
 export function setupIPC() {
   ipcMain.on('setOpenAiKey', (_event, key: string) => {
@@ -73,5 +74,19 @@ export function setupIPC() {
 
   ipcMain.on('openExternal', (_event, url: string) => {
     shell.openExternal(url)
+  })
+
+  ipcMain.handle('getGoalFeedback', async (_event, goal: string) => {
+    try {
+      const openAiKey = store.getState().openAiKey
+      if (!openAiKey) {
+        throw new Error('No OpenAI key found')
+      }
+      const feedback = await getGoalFeedback(goal, openAiKey)
+      return feedback
+    } catch (error) {
+      console.error('Error in getGoalFeedback handler:', error)
+      throw error
+    }
   })
 }
