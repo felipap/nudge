@@ -5,9 +5,12 @@ import started from 'electron-squirrel-startup'
 import { setupIPC } from './ipc'
 import { screenCaptureService } from './lib/ScreenCaptureService'
 import { createTray } from './tray'
-import { createPreferencesWindow } from './windows'
+import {
+  createMainWindow,
+  createPreferencesWindow,
+  prefWindow,
+} from './windows'
 
-export let prefsWindow: BrowserWindow
 export let tray: Tray
 
 // Declare isQuitting property for TypeScript
@@ -34,9 +37,9 @@ if (!gotTheLock) {
 } else {
   app.on('second-instance', (event, commandLine) => {
     // Someone tried to run a second instance, focus our window instead
-    if (prefsWindow) {
-      if (prefsWindow.isMinimized()) prefsWindow.restore()
-      prefsWindow.focus()
+    if (prefWindow) {
+      if (prefWindow.isMinimized()) prefWindow.restore()
+      prefWindow.focus()
     }
 
     // // Protocol handler for win32
@@ -50,43 +53,14 @@ if (!gotTheLock) {
   })
 }
 
-/**
- * Set up app to launch at login
- */
-function setupAutoLaunch(enable = true): void {
-  app.setLoginItemSettings({
-    openAtLogin: enable,
-    openAsHidden: true, // Start the app minimized to tray
-  })
-}
-
-// function createWindow() {
-//   window = new BrowserWindow({
-//     width: 800,
-//     height: 600,
-//     webPreferences: {
-//       nodeIntegration: true,
-//       contextIsolation: false,
-//     },
-//   })
-
-//   if (app.isPackaged) {
-//     window.loadFile(path.join(__dirname, '../renderer/index.html'))
-//   } else {
-//     window.loadURL('http://localhost:5173')
-//   }
-
-//   // Initialize ClerkAuth with the window
-//   initializeClerkAuth(window)
-// }
-
 app.whenReady().then(() => {
   // Register protocol handler
   if (!app.isDefaultProtocolClient('buddy')) {
     app.setAsDefaultProtocolClient('buddy')
   }
 
-  prefsWindow = createPreferencesWindow()
+  createMainWindow()
+  createPreferencesWindow()
   screenCaptureService.start()
   tray = createTray()
 

@@ -10,7 +10,6 @@ import {
   nativeImage,
 } from 'electron'
 import path from 'path'
-import { prefsWindow } from './main'
 import {
   getGoals,
   getMood,
@@ -19,6 +18,7 @@ import {
   onMoodChange,
   onOpenAiKeyChange,
 } from './lib/store'
+import { mainWindow, prefWindow } from './windows'
 
 dayjs.extend(relativeTime)
 
@@ -53,14 +53,14 @@ export function createTray() {
       template.push({
         label: 'Enter your OpenAI key',
         click: () => {
-          prefsWindow.show()
+          prefWindow.show()
         },
       })
     } else {
       template = template.concat([
         getGoals()
           ? {
-              label: `Buddy is ${
+              label: `Nudge is ${
                 mood === 'happy'
                   ? 'pleased, for now'
                   : mood === 'angry'
@@ -74,7 +74,7 @@ export function createTray() {
           : {
               label: `Set goals`,
               click: () => {
-                prefsWindow.show()
+                prefWindow.show()
               },
             },
         { type: 'separator' },
@@ -103,7 +103,7 @@ export function createTray() {
             ? 'Enter your OpenAI key...'
             : 'Preferences...',
           click: () => {
-            prefsWindow.show()
+            prefWindow.show()
           },
         },
       ])
@@ -127,23 +127,22 @@ export function createTray() {
 
     const mood = getMood()
     // tray.setContextMenu(contextMenu)
-    tray.setTitle('🍃')
-    // tray.setTitle(
-    //   mood === 'happy'
-    //     ? 'In flow 🍃'
-    //     : mood === 'angry'
-    //     ? '>:('
-    //     : mood === 'thinking'
-    //     ? '?:/'
-    //     : ':|'
-    // )
+    tray.setTitle(
+      mood === 'happy'
+        ? ':D'
+        : mood === 'angry'
+        ? '>:('
+        : mood === 'thinking'
+        ? '?:/'
+        : ':|'
+    )
   }
 
   tray.on('click', () => {
-    if (prefsWindow.isVisible()) {
-      prefsWindow.hide()
+    if (mainWindow.isVisible()) {
+      mainWindow.hide()
     } else {
-      prefsWindow.show()
+      mainWindow.show()
     }
   })
 

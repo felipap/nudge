@@ -13,6 +13,10 @@ declare global {
       getState: () => Promise<State>
       setPartialState: (state: Partial<State>) => Promise<void>
       setAutoLaunch: (enable: boolean) => void
+      close: () => void
+      minimize: () => void
+      zoom: () => void
+      openExternal: (url: string) => void
     }
   }
 }

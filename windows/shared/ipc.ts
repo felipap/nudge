@@ -11,3 +11,15 @@ export async function setPartialState(state: Partial<State>) {
 export async function setAutoLaunch(enable: boolean) {
   return await window.electronAPI.setAutoLaunch(enable)
 }
+
+export function close() {
+  window.electronAPI.close()
+}
+
+export function minimize() {
+  window.electronAPI.minimize()
+}
+
+export function zoom() {
+  window.electronAPI.zoom()
+}

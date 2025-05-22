@@ -4,7 +4,7 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 // preload.ts
 
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, shell } from 'electron'
 import type { State } from '../../src/types'
 
 // Expose protected methods that allow the renderer process to use
@@ -41,5 +41,21 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   getSystemTheme: async () => {
     return await ipcRenderer.invoke('getSystemTheme')
+  },
+
+  close: () => {
+    ipcRenderer.send('close')
+  },
+
+  minimize: () => {
+    ipcRenderer.send('minimize')
+  },
+
+  zoom: () => {
+    ipcRenderer.send('zoom')
+  },
+
+  openExternal: (url: string) => {
+    ipcRenderer.send('openExternal', url)
   },
 })

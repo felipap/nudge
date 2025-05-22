@@ -3,6 +3,12 @@
 Productivity util for macOS that watches your screen and tells you when you're
 procrastinating.
 
+## To do
+
+- [ ] Reset goals every day.
+- [ ] Allow users to modify frequency
+- [ ] Come up with an icon
+
 ## Stack
 
 - Electron
@@ -10,7 +16,7 @@ procrastinating.
 - Tailwind v4
 - OpenAI
 
-~Screenshots are stored in `~/nudge-data/screenshots` and are captured every 5
+~~Screenshots are stored in `~/nudge-data/screenshots` and are captured every 5
 minutes by default.~~
 
 ## Development

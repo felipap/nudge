@@ -1,4 +1,4 @@
-import { app, ipcMain } from 'electron'
+import { app, ipcMain, BrowserWindow, shell } from 'electron'
 import { screenCaptureService } from './lib/ScreenCaptureService'
 import { setOpenAiKey, store } from './lib/store'
 import { State } from './types'
@@ -44,5 +44,34 @@ export function setupIPC() {
     if (_event) {
       _event.reply('background-action-completed', 'captureNow')
     }
+  })
+
+  ipcMain.on('close', (_event) => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) {
+      win.close()
+    }
+  })
+
+  ipcMain.on('minimize', (_event) => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) {
+      win.minimize()
+    }
+  })
+
+  ipcMain.on('zoom', (_event) => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) {
+      if (win.isMaximized()) {
+        win.unmaximize()
+      } else {
+        win.maximize()
+      }
+    }
+  })
+
+  ipcMain.on('openExternal', (_event, url: string) => {
+    shell.openExternal(url)
   })
 }
