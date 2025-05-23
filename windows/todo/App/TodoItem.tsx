@@ -1,16 +1,15 @@
+import { SyntheticListenerMap } from '@dnd-kit/core'
 import { Check, Trash2 } from 'lucide-react'
-import { type Todo } from '../../../src/types'
+import { useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { useRef, useState } from 'react'
-import { AutoExpandingTextarea } from '../../shared/ui/AutoExpandingTextarea'
-import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
+import { type Todo } from '../../../src/types'
 
 interface TodoItemProps {
   todo: Todo
   onToggle: (id: string) => void
   onDelete: (id: string) => void
   onEdit: (id: string, newText: string) => void
-  dragHandleProps?: DraggableProvidedDragHandleProps | null
+  dragHandleProps?: SyntheticListenerMap
 }
 
 export const TodoItem = ({
@@ -22,7 +21,6 @@ export const TodoItem = ({
 }: TodoItemProps) => {
   const [isEditing, setIsEditing] = useState(false)
   const [editText, setEditText] = useState(todo.text)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleSave = () => {
     if (editText.trim() !== '' && editText !== todo.text) {
@@ -32,8 +30,8 @@ export const TodoItem = ({
     setEditText(todo.text)
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey && editText.trim()) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && editText.trim()) {
       e.preventDefault()
       handleSave()
     } else if (e.key === 'Escape') {
@@ -43,9 +41,14 @@ export const TodoItem = ({
   }
 
   return (
-    <div className="flex items-center gap-2 group">
+    <div
+      className={twMerge(
+        'flex items-center gap-2 group',
+        todo.completed && 'opacity-50'
+      )}
+    >
       {dragHandleProps && (
-        <div {...dragHandleProps} className="cursor-grab">
+        <div className="cursor-grab" {...dragHandleProps}>
           <span className="text-gray-400 select-none">⋮⋮</span>
         </div>
       )}
@@ -58,10 +61,10 @@ export const TodoItem = ({
       >
         {todo.completed && <Check className="w-3 h-3 text-white" />}
       </button>
-      <AutoExpandingTextarea
-        ref={textareaRef}
+      <input
+        type="text"
         value={isEditing ? editText : todo.text}
-        onChange={setEditText}
+        onChange={(e) => setEditText(e.target.value)}
         onBlur={handleSave}
         onKeyDown={handleKeyDown}
         onClick={() => {
@@ -69,9 +72,8 @@ export const TodoItem = ({
           setEditText(todo.text)
         }}
         readOnly={!isEditing}
-        minLines={1}
         className={twMerge(
-          'flex-1 text-sm bg-transparent border-none cursor-text px-1 py-0.5 focus:border-none focus:!outline-none transition-all',
+          'flex-1 text-sm bg-transparent border-none cursor-text px-1 py-0.5 focus:border-none focus:!outline-none transition-all overflow-hidden text-ellipsis whitespace-nowrap',
           todo.completed && 'line-through text-gray-500 cursor-default'
         )}
       />

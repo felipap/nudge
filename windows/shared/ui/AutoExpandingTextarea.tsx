@@ -37,7 +37,6 @@ export const AutoExpandingTextarea = forwardRef<HTMLTextAreaElement, Props>(
         onChange={(e) => onChange(e.target.value)}
         className={className}
         rows={minLines}
-        style={{ resize: 'none' }}
         {...props}
       />
     )

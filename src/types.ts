@@ -30,4 +30,6 @@ export interface State {
   autoLaunch: boolean
   captureFrequency: number
   todos: Todo[]
+  isGoalWindowPinned: boolean
+  isTodoWindowPinned: boolean
 }

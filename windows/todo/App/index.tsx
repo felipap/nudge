@@ -1,14 +1,23 @@
-import { TodoInput } from './TodoInput'
-import { TodoItem } from './TodoItem'
-import { useTodoState } from './useTodoState'
-import { PlusIcon } from './PlusIcon'
 import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DropResult,
-} from 'react-beautiful-dnd'
-import { useState } from 'react'
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import { PinIcon } from 'lucide-react'
+import { twMerge } from 'tailwind-merge'
+import { useBackendState } from '../../shared/ipc'
+import { PlusIcon } from './PlusIcon'
+import { SortableTodoItem } from './SortableTodoItem'
+import { useTodoState } from './useTodoState'
 
 export default function App() {
   const {
@@ -22,58 +31,58 @@ export default function App() {
     reorderTodos,
   } = useTodoState()
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
 
-  const handleAddTodo = () => {
-    if (newTodo.trim()) {
-      addTodo(newTodo)
-      setNewTodo('')
-      setIsModalOpen(false)
-    }
-  }
-
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination) {
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    if (!over || active.id === over.id) {
       return
     }
 
-    reorderTodos(result.source.index, result.destination.index)
+    const oldIndex = todos.findIndex((todo) => todo.id === active.id)
+    const newIndex = todos.findIndex((todo) => todo.id === over.id)
+
+    reorderTodos(oldIndex, newIndex)
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white relative p-3">
-      <header className="flex items-center justify-between p-2">
-        <h2 className="text-[17px] font-semibold">Todos</h2>
+    <div className="flex flex-col h-screen bg-white relative overflow-hidden">
+      <header className="flex items-center justify-between p-3 py-3 ">
+        <h2 className="text-[17px] font-semibold w-full [app-region:drag]">
+          Todos
+        </h2>
+        <div>
+          <PinButton />
+        </div>
       </header>
       <main className="h-full overflow-hidden">
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="todos">
-            {(provided) => (
-              <div
-                className="flex flex-col gap-2 overflow-scroll h-full"
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                {todos.map((todo, index) => (
-                  <Draggable key={todo.id} draggableId={todo.id} index={index}>
-                    {(provided) => (
-                      <div ref={provided.innerRef} {...provided.draggableProps}>
-                        <TodoItem
-                          todo={todo}
-                          onToggle={toggleTodo}
-                          onDelete={deleteTodo}
-                          onEdit={editTodo}
-                          dragHandleProps={provided.dragHandleProps}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="flex flex-col gap-1 overflow-scroll h-full pb-4 px-2">
+            <SortableContext
+              items={todos.map((t) => t.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {todos.map((todo) => (
+                <SortableTodoItem
+                  key={todo.id}
+                  todo={todo}
+                  onToggle={toggleTodo}
+                  onDelete={deleteTodo}
+                  onEdit={editTodo}
+                />
+              ))}
+            </SortableContext>
+          </div>
+        </DndContext>
       </main>
 
       {/* Floating Action Button */}
@@ -81,6 +90,33 @@ export default function App() {
         <AddTodoButton onClick={() => addTodo('')} />
       </div>
     </div>
+  )
+}
+
+function PinButton() {
+  const { state } = useBackendState()
+
+  async function togglePin() {
+    if (state) {
+      await window.electronAPI.setPartialState({
+        isTodoWindowPinned: !state.isTodoWindowPinned,
+      })
+    }
+  }
+
+  const isPinned = state?.isTodoWindowPinned ?? false
+
+  return (
+    <button
+      className={twMerge(
+        'w-6 h-6 pt-[2px] flex items-center justify-center rounded-full !cursor-pointer',
+        isPinned &&
+          'bg-blue-200/30 text-blue-600 hover:bg-blue-200/50 transition-all border-blue-600/20 border'
+      )}
+      onClick={togglePin}
+    >
+      <PinIcon className="w-4 h-4" />
+    </button>
   )
 }
 

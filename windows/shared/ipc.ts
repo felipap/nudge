@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { State } from '../../src/types'
 
 export async function getState() {
@@ -22,4 +23,30 @@ export function minimize() {
 
 export function zoom() {
   window.electronAPI.zoom()
+}
+
+export function useBackendState() {
+  const [state, setState] = useState<State | null>(null)
+
+  useEffect(() => {
+    async function load() {
+      const state = await window.electronAPI.getState()
+      setState(state)
+    }
+    load()
+
+    // Subscribe to state changes
+    const unsubscribe = window.electronAPI.onStateChange((newState) => {
+      setState(newState)
+    })
+
+    // Cleanup subscription on unmount
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
+  return {
+    state,
+  }
 }

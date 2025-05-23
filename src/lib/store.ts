@@ -14,6 +14,8 @@ const DEFAULT_STATE: State = {
   autoLaunch: false,
   captureFrequency: 1,
   todos: [],
+  isGoalWindowPinned: false,
+  isTodoWindowPinned: false,
 }
 
 const electronStore = new Store<State>({

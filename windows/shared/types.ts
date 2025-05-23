@@ -9,6 +9,7 @@ declare global {
       ) => () => void
       setPartialState: (state: Partial<State>) => Promise<void>
       getState: () => Promise<State>
+      onStateChange: (callback: (state: State) => void) => () => void
       listenToggleDarkMode: (callback: (isDarkMode: boolean) => void) => void
       setAutoLaunch: (enable: boolean) => Promise<void>
       getSystemTheme: () => Promise<string>

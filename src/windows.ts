@@ -1,5 +1,6 @@
 import { app, BrowserWindow, screen } from 'electron'
 import path from 'node:path'
+import { getState, store } from './lib/store'
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
 declare const MAIN_WINDOW_VITE_NAME: string
@@ -28,11 +29,19 @@ export function createMainWindow() {
     // alwaysOnTop: true,
     x: primaryDisplay.workArea.x + primaryDisplay.workArea.width - 100 - 5,
     y: primaryDisplay.workArea.y + primaryDisplay.workArea.width - 50,
-
+    alwaysOnTop: getState().isGoalWindowPinned,
     webPreferences: {
       preload: path.join(__dirname, '../renderer/preload.js'),
       webSecurity: false,
     },
+  })
+
+  let lastPinnedState = getState().isGoalWindowPinned
+  store.subscribe((state) => {
+    if (state.isGoalWindowPinned !== lastPinnedState) {
+      win.setAlwaysOnTop(state.isGoalWindowPinned, 'floating')
+      lastPinnedState = state.isGoalWindowPinned
+    }
   })
 
   // and load the index.html of the app.
@@ -126,11 +135,25 @@ export function createTodoWindow() {
     x: primaryDisplay.workArea.x + primaryDisplay.workArea.width - 250 - 5,
     y: primaryDisplay.workArea.y + primaryDisplay.workArea.height - 200 - 5,
     vibrancy: 'fullscreen-ui',
-    alwaysOnTop: true,
+    alwaysOnTop: getState().isTodoWindowPinned,
     webPreferences: {
       preload: path.join(__dirname, '../renderer/preload.js'),
       webSecurity: false,
     },
+  })
+
+  let lastPinnedState = getState().isTodoWindowPinned
+  store.subscribe((state) => {
+    console.log('change to:', state.isTodoWindowPinned)
+    if (state.isTodoWindowPinned !== lastPinnedState) {
+      console.log(
+        'its different. will change isTodoWindowPinned',
+        state.isTodoWindowPinned,
+        lastPinnedState
+      )
+      win.setAlwaysOnTop(state.isTodoWindowPinned)
+      lastPinnedState = state.isTodoWindowPinned
+    }
   })
 
   // and load the index.html of the app.

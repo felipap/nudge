@@ -26,6 +26,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
     }
   },
 
+  onStateChange: (callback: (state: State) => void) => {
+    const listener = (_event: any, state: State) => callback(state)
+    ipcRenderer.on('state-changed', listener)
+    return () => {
+      ipcRenderer.removeListener('state-changed', listener)
+    }
+  },
+
   setPartialState: (state: Partial<State>) => {
     ipcRenderer.send('setPartialState', state)
   },

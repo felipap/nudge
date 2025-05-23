@@ -6,6 +6,16 @@ import { getOpenAiKey, setOpenAiKey, store } from './lib/store'
 import { State } from './types'
 
 export function setupIPC() {
+  // Set up state change listener
+  store.subscribe((state) => {
+    // Emit state change to all windows
+    BrowserWindow.getAllWindows().forEach((window) => {
+      if (!window.isDestroyed()) {
+        window.webContents.send('state-changed', state)
+      }
+    })
+  })
+
   ipcMain.on('setOpenAiKey', (_event, key: string) => {
     setOpenAiKey(key)
   })
