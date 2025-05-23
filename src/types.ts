@@ -13,6 +13,13 @@ export interface Capture {
   isPositive: boolean
 }
 
+export interface Todo {
+  id: string
+  text: string
+  completed: boolean
+  createdAt: string
+}
+
 export interface State {
   openAiKey: string | null
   lastCapture: Capture | null
@@ -21,4 +28,6 @@ export interface State {
   goals: string | null
   goalLastUpdatedAt: string | null
   autoLaunch: boolean
+  captureFrequency: number
+  todos: Todo[]
 }

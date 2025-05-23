@@ -14,18 +14,21 @@ export function LaunchOnStartup() {
   }
 
   return (
-    <label htmlFor="auto-launch" className="flex flex-row gap-1 items-start">
+    <label
+      htmlFor="auto-launch"
+      className="flex flex-row gap-1 justify-between items-center pr-3"
+    >
+      <div className="flex flex-col">
+        <span className="text-black">Launch on startup</span>
+        <p>Automatically start Nudge when you log in.</p>
+      </div>
       <input
-        className="mt-1 w-3.5 h-3.5"
+        className="mt-1 w-4 h-4"
         type="checkbox"
         id="auto-launch"
         checked={autoLaunch}
         onChange={handleAutoLaunchChange}
       />
-      <div className="flex flex-col">
-        <span className="ml-2 text-black">Launch on startup</span>
-        <p className="ml-2">Automatically start Nudge when you log in.</p>
-      </div>
     </label>
   )
 }

@@ -10,6 +10,7 @@ import {
   getNextCaptureAt,
   getOpenAiKey,
   setNextCaptureAt,
+  store,
   updateLastCapture,
 } from './store'
 
@@ -25,8 +26,17 @@ class ScreenCaptureService {
   isCapturing = false
 
   private iid: NodeJS.Timeout | null = null
+  private frequencyMs: number
 
-  constructor(public frequency: number = 2 * 60 * 1000) {
+  constructor() {
+    // Convert minutes to milliseconds
+    this.frequencyMs = (store.getState().captureFrequency || 60) * 1000
+
+    // Subscribe to frequency changes
+    store.subscribe((state) => {
+      this.frequencyMs = (state.captureFrequency || 60) * 1000
+    })
+
     console.log(
       '[ScreenCaptureService] getNextCaptureAt is',
       getNextCaptureAt()
@@ -100,7 +110,7 @@ class ScreenCaptureService {
       log('[ScreenCaptureService] Error capturing screen:', e)
     }
 
-    setNextCaptureAt(new Date(Date.now() + this.frequency).toISOString())
+    setNextCaptureAt(new Date(Date.now() + this.frequencyMs).toISOString())
 
     this.isCapturing = false
   }
@@ -173,10 +183,13 @@ function showNotification(body: string) {
     sound: 'Blow.aiff',
     timeoutType: 'default',
   })
+
   notif.show()
+
   // notif.on('click', () => {
   //   mainWindow.show()
   // })
+
   setTimeout(() => {
     notif.close()
   }, 20_000)

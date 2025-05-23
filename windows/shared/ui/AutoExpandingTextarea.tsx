@@ -2,10 +2,11 @@ import { ComponentProps, forwardRef, useEffect } from 'react'
 
 type Props = Omit<ComponentProps<'textarea'>, 'onChange'> & {
   onChange: (value: string) => void
+  minLines?: number
 }
 
 export const AutoExpandingTextarea = forwardRef<HTMLTextAreaElement, Props>(
-  ({ value, onChange, className = '', ...props }, ref) => {
+  ({ value, onChange, className = '', minLines = 2, ...props }, ref) => {
     if (!ref) {
       throw new Error('ref prop is required')
     }
@@ -20,7 +21,7 @@ export const AutoExpandingTextarea = forwardRef<HTMLTextAreaElement, Props>(
       textarea.current.style.height = 'auto'
       // Calculate minimum height for 2 lines
       const lineHeight = parseInt(getComputedStyle(textarea.current).lineHeight)
-      const minHeight = lineHeight * 4
+      const minHeight = lineHeight * minLines
       // Set the height to match the content, but not less than 2 lines
       textarea.current.style.height = `${Math.max(
         textarea.current.scrollHeight,
@@ -35,7 +36,8 @@ export const AutoExpandingTextarea = forwardRef<HTMLTextAreaElement, Props>(
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={className}
-        rows={2}
+        rows={minLines}
+        style={{ resize: 'none' }}
         {...props}
       />
     )

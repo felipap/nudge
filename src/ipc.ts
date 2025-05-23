@@ -1,9 +1,9 @@
-import { app, ipcMain, BrowserWindow, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { setPartialState } from '../windows/shared/ipc'
+import { getGoalFeedback } from './lib/ai'
 import { screenCaptureService } from './lib/ScreenCaptureService'
 import { getOpenAiKey, setOpenAiKey, store } from './lib/store'
 import { State } from './types'
-import { setPartialState } from '../windows/shared/ipc'
-import { getGoalFeedback } from './lib/ai'
 
 export function setupIPC() {
   ipcMain.on('setOpenAiKey', (_event, key: string) => {
@@ -12,6 +12,13 @@ export function setupIPC() {
 
   ipcMain.handle('getState', () => {
     return store.getState()
+  })
+
+  ipcMain.on('setCaptureFrequency', (_event, frequency: number) => {
+    store.setState({
+      ...store.getState(),
+      captureFrequency: frequency,
+    })
   })
 
   ipcMain.handle('setAutoLaunch', (_event, enable: boolean) => {

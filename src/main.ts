@@ -8,7 +8,9 @@ import { createTray } from './tray'
 import {
   createMainWindow,
   createPreferencesWindow,
+  createTodoWindow,
   prefWindow,
+  todoWindow,
 } from './windows'
 
 export let tray: Tray
@@ -61,6 +63,7 @@ app.whenReady().then(() => {
 
   createMainWindow()
   createPreferencesWindow()
+  createTodoWindow()
   screenCaptureService.start()
   tray = createTray()
 

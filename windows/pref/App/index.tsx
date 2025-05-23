@@ -1,10 +1,10 @@
-import { ExternalLink } from 'lucide-react'
 import { ApiKeyInput } from './ApiKeyInput'
+import { FrequencyInput } from './FrequencyInput'
 import { LaunchOnStartup } from './LaunchOnStartup'
 
 export default function App() {
   return (
-    <div className="flex flex-col bg-[#f0efee] h-screen text-[13px] font-[SF+Pro] text-[#888]">
+    <div className="flex flex-col pb-4 bg-[#f0efee] min-h-screen text-[13px] font-[SF+Pro] text-[#888]">
       <main className="p-4 h-full flex flex-col gap-4">
         <section className="flex flex-col gap-1 items-start">
           <header className="mb-2 flex flex-col gap-0.5">
@@ -42,13 +42,14 @@ export default function App() {
           </div>
         </section>
         <hr />
-
+        <section>
+          <FrequencyInput />
+        </section>
+        <hr />
         <section>
           <LaunchOnStartup />
         </section>
-
         <hr />
-
         <section>
           <ApiKeyInput />
         </section>

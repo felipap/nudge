@@ -40,6 +40,10 @@ const config: ForgeConfig = {
           config: 'vite.mainWindow.config.ts',
         },
         {
+          name: 'todo_window',
+          config: 'vite.todoWindow.config.ts',
+        },
+        {
           name: 'pref_window',
           config: 'vite.prefWindow.config.ts',
         },

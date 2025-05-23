@@ -1,22 +1,42 @@
-import { Settings } from 'lucide-react'
+import { Settings, X } from 'lucide-react'
 import { WindowControls } from '../../shared/ui/WindowControls'
 import { GoalInput } from './GoalInput'
+import { TryNowButton } from './TryNowButton'
+import { twMerge } from 'tailwind-merge'
 
 export default function App() {
   return (
     <div className="flex flex-col bg-white h-screen select-none">
-      <Navbar />
-      <main className="p-4 h-full flex flex-col gap-4">
+      {/* <Navbar /> */}
+      <div className="absolute top-3 right-3">
+        <CloseButton />
+      </div>
+      <main className="p-4 h-full flex flex-col gap-4 [app-region:drag]">
         <header className="flex flex-col gap-1">
           {/* <h2 className="text-lg font-semibold">Goal</h2> */}
           <p className="text-gray-600 text-[20px] leading-[25px]">
-            <span className="font-semibold text-black">Choose a goal.</span>{' '}
-            What's your focus for the next hour?
+            <span className="font-semibold text-black">Choose a goal</span>{' '}
+            {/* What's your focus for the next hour? */}
           </p>
         </header>
         <GoalInput />
+        <TryNowButton />
       </main>
     </div>
+  )
+}
+
+function CloseButton() {
+  return (
+    <button
+      className={twMerge(
+        'w-5 h-5 flex items-center justify-center rounded-full',
+        'hover:bg-black/20 transition-all duration-200',
+        'cursor-pointer'
+      )}
+    >
+      <X className="w-4 h-4" />
+    </button>
   )
 }
 

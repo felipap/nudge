@@ -12,6 +12,8 @@ const DEFAULT_STATE: State = {
   goals: `I need help staying focused on work instead of Youtube or other distractions.`,
   goalLastUpdatedAt: null,
   autoLaunch: false,
+  captureFrequency: 1,
+  todos: [],
 }
 
 const electronStore = new Store<State>({

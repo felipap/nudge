@@ -34,6 +34,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return await ipcRenderer.invoke('getState')
   },
 
+  setCaptureFrequency: (frequency: number) => {
+    ipcRenderer.send('setCaptureFrequency', frequency)
+  },
+
   listenToggleDarkMode: (callback: (isDarkMode: boolean) => void) => {
     const listener = (_event: any, isDarkMode: boolean) => callback(isDarkMode)
     ipcRenderer.on('listenToggleDarkMode', listener)
@@ -61,5 +65,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   getGoalFeedback: async (goal: string) => {
     return await ipcRenderer.invoke('getGoalFeedback', goal)
+  },
+
+  captureNow: async () => {
+    return await ipcRenderer.invoke('captureNow')
   },
 })
