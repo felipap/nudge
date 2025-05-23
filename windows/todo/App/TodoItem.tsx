@@ -3,12 +3,14 @@ import { type Todo } from '../../../src/types'
 import { twMerge } from 'tailwind-merge'
 import { useRef, useState } from 'react'
 import { AutoExpandingTextarea } from '../../shared/ui/AutoExpandingTextarea'
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 
 interface TodoItemProps {
   todo: Todo
   onToggle: (id: string) => void
   onDelete: (id: string) => void
   onEdit: (id: string, newText: string) => void
+  dragHandleProps?: DraggableProvidedDragHandleProps | null
 }
 
 export const TodoItem = ({
@@ -16,6 +18,7 @@ export const TodoItem = ({
   onToggle,
   onDelete,
   onEdit,
+  dragHandleProps,
 }: TodoItemProps) => {
   const [isEditing, setIsEditing] = useState(false)
   const [editText, setEditText] = useState(todo.text)
@@ -41,6 +44,11 @@ export const TodoItem = ({
 
   return (
     <div className="flex items-center gap-2 group">
+      {dragHandleProps && (
+        <div {...dragHandleProps} className="cursor-grab">
+          <span className="text-gray-400 select-none">⋮⋮</span>
+        </div>
+      )}
       <button
         onClick={() => onToggle(todo.id)}
         className={twMerge(

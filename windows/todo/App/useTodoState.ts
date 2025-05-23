@@ -68,6 +68,18 @@ export function useTodoState() {
     setTodos(updatedTodos)
   }
 
+  const reorderTodos = (startIndex: number, endIndex: number) => {
+    const updatedTodos = Array.from(todos)
+    const [removed] = updatedTodos.splice(startIndex, 1)
+    updatedTodos.splice(endIndex, 0, removed)
+
+    window.electronAPI.setPartialState({
+      todos: updatedTodos,
+    })
+
+    setTodos(updatedTodos)
+  }
+
   return {
     todos,
     newTodo,
@@ -76,5 +88,6 @@ export function useTodoState() {
     toggleTodo,
     deleteTodo,
     editTodo,
+    reorderTodos,
   }
 }
