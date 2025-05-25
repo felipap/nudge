@@ -1,0 +1,177 @@
+/* https://tailwindcss.com/blog/tailwindcss-v4#css-first-configuration */
+
+@layer theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@plugin '@tailwindcss/forms';
+
+/* https://tailwindcss.com/docs/dark-mode */
+@custom-variant dark (&:where(.dark, .dark *));
+/* @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *)); */
+
+@theme {
+  --font-sans: 'SF Pro', ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Noto Color Emoji';
+  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+
+  /* Layout */
+  --nav-height: 60px;
+  --column-width: 100%;
+
+  /* Colors */
+  --text-color-primary: #000;
+  --text-color-secondary: #888;
+  --text-color-tertiary: #888;
+  --text-color-inverted: #fff;
+  --background-one: #fff;
+  --background-two: #f0f0f0;
+  --background-three: #fff;
+  --highlight-color: #3b82f6;
+  --twitter-blue: #1da1f2;
+
+  /* Font sizes */
+  --text-xs: 10px;
+  --text-sm: 13px;
+  --text-md: 14px;
+  --text-lg: 18px;
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    @apply dark:border-[#1e1c1e] border-[#ddd];
+  }
+
+  @variant dark {
+    --text-color-primary: #fff;
+    --text-color-secondary: #888;
+    --text-color-tertiary: #666;
+    --text-color-inverted: #000;
+    --background-one: #111;
+    --background-two: #2a2a2a;
+    --background-three: #101010;
+  }
+}
+
+/* Layout */
+
+.column-width {
+  /* max-width: var(--column-width); */
+  padding-left: 20px;
+  padding-right: 30px;
+}
+
+body {
+  /* background-color: var(--background-one); */
+  color: var(--text-color-primary);
+}
+
+.text-inverted {
+  color: var(--text-color-inverted);
+}
+
+button {
+  cursor: pointer;
+}
+
+textarea {
+  @apply border-inherit;
+}
+
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+  /* https://github.com/tailwindlabs/tailwindcss/discussions/14508 */
+}
+
+/* LAYOUT CLASSES */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 10rem;
+}
+
+/* Text sizes */
+
+.text-body {
+  font-size: var(--text-body);
+}
+
+.text-heading {
+  font-size: 1.5rem;
+}
+
+/* Text colors */
+
+.text-one,
+.hover\:text-one:hover {
+  color: var(--text-color-primary);
+}
+
+.text-two,
+.hover\:text-two:hover {
+  color: var(--text-color-secondary);
+}
+
+.text-three,
+.hover\:text-three:hover {
+  color: var(--text-color-tertiary);
+}
+
+.message-content {
+  font-size: 14px;
+  line-height: 1.3;
+
+  li,
+  ol,
+  p {
+    margin: 0;
+    /* padding: 0; */
+  }
+}
+
+@layer utilities {
+  .bg-one,
+  /* There must be a better way */
+  .hover\:bg-one:hover {
+    background-color: var(--background-one);
+  }
+
+  .bg-two,
+  .hover\:bg-two:hover {
+    background-color: var(--background-two);
+  }
+
+  .bg-three,
+  .hover\:bg-three:hover {
+    background-color: var(--background-three);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.textarea-reset {
+  @apply resize-none outline-none border-none;
+}
