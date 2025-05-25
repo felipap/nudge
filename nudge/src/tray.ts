@@ -28,9 +28,9 @@ export function createTray() {
 
   let iconPath
   if (app.isPackaged) {
-    iconPath = path.join(process.resourcesPath, 'images', 'nudge-icon.png')
+    iconPath = path.join(process.resourcesPath, 'images', 'nudge-tray.png')
   } else {
-    iconPath = path.join(__dirname, '../../images', 'nudge-icon.png')
+    iconPath = path.join(__dirname, '../../images', 'nudge-tray.png')
   }
   // iconPath = path.join(__dirname, '../../images', 'whtaever')
 
@@ -127,15 +127,15 @@ export function createTray() {
 
     const mood = getMood()
     // tray.setContextMenu(contextMenu)
-    tray.setTitle(
-      mood === 'happy'
-        ? ':D'
-        : mood === 'angry'
-        ? '>:('
-        : mood === 'thinking'
-        ? '?:/'
-        : ':|'
-    )
+    // tray.setTitle(
+    //   mood === 'happy'
+    //     ? ':D'
+    //     : mood === 'angry'
+    //     ? '>:('
+    //     : mood === 'thinking'
+    //     ? '?:/'
+    //     : ':|'
+    // )
   }
 
   tray.on('click', () => {

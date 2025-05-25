@@ -1,19 +1,13 @@
-import { useEffect, useState } from 'react'
-import { type Todo } from '../../../src/types'
+import { useState } from 'react'
+import { useBackendState } from '../../shared/ipc'
 
 export function useTodoState() {
-  const [todos, setTodos] = useState<Todo[]>([])
+  const { state } = useBackendState()
   const [newTodo, setNewTodo] = useState('')
 
-  useEffect(() => {
-    async function load() {
-      const state = await window.electronAPI.getState()
-      setTodos(state.todos)
-    }
-    load()
-  }, [])
+  const todos = state?.todos ?? []
 
-  const addTodo = (text: string) => {
+  async function addTodo(text: string) {
     const todo = {
       id: crypto.randomUUID(),
       text: text.trim(),
@@ -21,14 +15,12 @@ export function useTodoState() {
       createdAt: new Date().toISOString(),
     }
 
-    window.electronAPI.setPartialState({
+    await window.electronAPI.setPartialState({
       todos: [todo, ...todos],
     })
-
-    setTodos([todo, ...todos])
   }
 
-  const toggleTodo = (id: string) => {
+  async function toggleTodo(id: string) {
     const updatedTodos = todos.map((todo) => {
       if (todo.id === id) {
         return { ...todo, completed: !todo.completed }
@@ -36,24 +28,20 @@ export function useTodoState() {
       return todo
     })
 
-    window.electronAPI.setPartialState({
+    await window.electronAPI.setPartialState({
       todos: updatedTodos,
     })
-
-    setTodos(updatedTodos)
   }
 
-  const deleteTodo = (id: string) => {
+  async function deleteTodo(id: string) {
     const updatedTodos = todos.filter((todo) => todo.id !== id)
 
-    window.electronAPI.setPartialState({
+    await window.electronAPI.setPartialState({
       todos: updatedTodos,
     })
-
-    setTodos(updatedTodos)
   }
 
-  const editTodo = (id: string, newText: string) => {
+  async function editTodo(id: string, newText: string) {
     const updatedTodos = todos.map((todo) => {
       if (todo.id === id) {
         return { ...todo, text: newText.trim() }
@@ -61,23 +49,19 @@ export function useTodoState() {
       return todo
     })
 
-    window.electronAPI.setPartialState({
+    await window.electronAPI.setPartialState({
       todos: updatedTodos,
     })
-
-    setTodos(updatedTodos)
   }
 
-  const reorderTodos = (startIndex: number, endIndex: number) => {
+  async function reorderTodos(startIndex: number, endIndex: number) {
     const updatedTodos = Array.from(todos)
     const [removed] = updatedTodos.splice(startIndex, 1)
     updatedTodos.splice(endIndex, 0, removed)
 
-    window.electronAPI.setPartialState({
+    await window.electronAPI.setPartialState({
       todos: updatedTodos,
     })
-
-    setTodos(updatedTodos)
   }
 
   return {

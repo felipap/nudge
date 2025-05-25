@@ -2,6 +2,9 @@ import { app, BrowserWindow, screen } from 'electron'
 import path from 'node:path'
 import { getState, store } from './lib/store'
 
+declare const WIDGET_WINDOW_VITE_DEV_SERVER_URL: string
+declare const WIDGET_WINDOW_VITE_NAME: string
+
 declare const PREF_WINDOW_VITE_DEV_SERVER_URL: string
 declare const PREF_WINDOW_VITE_NAME: string
 
@@ -14,7 +17,6 @@ export function createPreferencesWindow() {
     height: 400,
     resizable: false,
     show: false,
-    // alwaysOnTop: true,
     webPreferences: {
       preload: path.join(__dirname, '../renderer/preload.js'),
       webSecurity: false,
@@ -88,11 +90,11 @@ export function createTodoWindow() {
   })
 
   // and load the index.html of the app.
-  if (TODO_WINDOW_VITE_DEV_SERVER_URL) {
-    win.loadURL(TODO_WINDOW_VITE_DEV_SERVER_URL)
+  if (WIDGET_WINDOW_VITE_DEV_SERVER_URL) {
+    win.loadURL(WIDGET_WINDOW_VITE_DEV_SERVER_URL)
   } else {
     win.loadFile(
-      path.join(__dirname, `../renderer/${TODO_WINDOW_VITE_NAME}/index.html`)
+      path.join(__dirname, `../renderer/${WIDGET_WINDOW_VITE_NAME}/index.html`)
     )
   }
 

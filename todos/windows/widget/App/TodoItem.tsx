@@ -66,7 +66,7 @@ export const TodoItem = ({
     <div
       ref={ref}
       className={twMerge(
-        'flex items-center gap-2 group transition duration-75 px-1 py-0.5 rounded-sm',
+        'flex items-center gap-1.5 group transition duration-75 px-1 py-0.5 rounded-sm',
         todo.completed && 'opacity-50',
         'focus:outline-none focus:ring-0 focus:border-none',
         isOpen && 'bg-gray-400/20',

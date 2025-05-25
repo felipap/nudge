@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
 import { getState, store } from './lib/store'
 
@@ -12,8 +12,6 @@ export let mainWindow: BrowserWindow | null = null
 export let prefWindow: BrowserWindow | null = null
 
 export function createMainWindow() {
-  const primaryDisplay = screen.getPrimaryDisplay()
-
   const win = new BrowserWindow({
     width: 450,
     height: 400,
@@ -23,8 +21,8 @@ export function createMainWindow() {
     vibrancy: 'fullscreen-ui',
     show: false,
     // alwaysOnTop: true,
-    x: primaryDisplay.workArea.x + primaryDisplay.workArea.width - 100 - 5,
-    y: primaryDisplay.workArea.y + primaryDisplay.workArea.width - 50,
+    // x: primaryDisplay.workArea.x + primaryDisplay.workArea.width - 100 - 5,
+    // y: primaryDisplay.workArea.y + primaryDisplay.workArea.width - 50,
     alwaysOnTop: getState().isGoalWindowPinned,
     webPreferences: {
       preload: path.join(__dirname, '../renderer/preload.js'),

@@ -1,8 +1,9 @@
 import { PinIcon } from 'lucide-react'
+import { useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useBackendState } from '../../shared/ipc'
-import { PlusIcon } from './PlusIcon'
 import { FocusableTodoList } from './FocusableTodoList'
+import { PlusIcon } from './PlusIcon'
 import { SortableList } from './SortableList'
 import { TodoItem } from './TodoItem'
 import { useTodoState } from './useTodoState'
@@ -13,11 +14,21 @@ export default function App() {
     newTodo,
     setNewTodo,
     addTodo,
-    toggleTodo,
+    toggleTodo: toggleTodoBackend,
     deleteTodo,
     editTodo,
     reorderTodos,
   } = useTodoState()
+
+  const [recentToggledTodos, setRecentToggledTodos] = useState<string[]>([])
+  const filteredTodos = todos.filter(
+    (todo) => !todo.completed || recentToggledTodos.includes(todo.id)
+  )
+
+  function toggleTodo(id: string) {
+    toggleTodoBackend(id)
+    setRecentToggledTodos([id, ...recentToggledTodos])
+  }
 
   return (
     <div className="flex flex-col h-screen bg-white relative overflow-hidden">
@@ -30,7 +41,7 @@ export default function App() {
         </div>
       </header>
       <main className="h-full overflow-hidden px-2">
-        <FocusableTodoList todoIds={todos.map((todo) => todo.id)}>
+        <FocusableTodoList todoIds={filteredTodos.map((todo) => todo.id)}>
           {({
             onOpenTodo,
             onFocus,
@@ -39,7 +50,7 @@ export default function App() {
             openTodoId,
           }) => (
             <SortableList
-              items={todos}
+              items={filteredTodos}
               getItemId={(todo) => todo.id}
               onReorder={reorderTodos}
               renderItem={({ item: todo, dragHandleProps }) => (
