@@ -29,7 +29,6 @@ export interface State {
   goalLastUpdatedAt: string | null
   autoLaunch: boolean
   captureFrequency: number
-  todos: Todo[]
   isGoalWindowPinned: boolean
   isTodoWindowPinned: boolean
 }

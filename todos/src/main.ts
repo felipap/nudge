@@ -7,7 +7,7 @@ import { createMcpApp } from './mcp'
 import { createTray } from './tray'
 import {
   createPreferencesWindow,
-  createTodoWindow,
+  createWidgetWindow,
   prefWindow,
 } from './windows'
 
@@ -66,7 +66,7 @@ app.whenReady().then(() => {
   }
 
   createPreferencesWindow()
-  createTodoWindow()
+  createWidgetWindow()
   tray = createTray()
 
   setupIPC()

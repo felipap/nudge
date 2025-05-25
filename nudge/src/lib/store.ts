@@ -13,7 +13,6 @@ const DEFAULT_STATE: State = {
   goalLastUpdatedAt: null,
   autoLaunch: false,
   captureFrequency: 1,
-  todos: [],
   isGoalWindowPinned: false,
   isTodoWindowPinned: false,
 }

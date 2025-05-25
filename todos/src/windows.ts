@@ -1,6 +1,6 @@
 import { app, BrowserWindow, screen } from 'electron'
 import path from 'node:path'
-import { getState, store } from './lib/store'
+import { getState, store } from './store'
 
 declare const WIDGET_WINDOW_VITE_DEV_SERVER_URL: string
 declare const WIDGET_WINDOW_VITE_NAME: string
@@ -56,7 +56,7 @@ export function createPreferencesWindow() {
   return win
 }
 
-export function createTodoWindow() {
+export function createWidgetWindow() {
   const primaryDisplay = screen.getPrimaryDisplay()
 
   const win = new BrowserWindow({
@@ -74,6 +74,9 @@ export function createTodoWindow() {
       webSecurity: false,
     },
   })
+
+  // Hide from macOS docker
+  app.dock.hide()
 
   let lastPinnedState = getState().isTodoWindowPinned
   store.subscribe((state) => {

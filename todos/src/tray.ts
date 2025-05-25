@@ -2,23 +2,14 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import {
   Menu,
-  MenuItem,
   MenuItemConstructorOptions,
   Tray,
   app,
-  ipcMain,
   nativeImage,
 } from 'electron'
 import path from 'path'
-import {
-  getGoals,
-  getNextCaptureAt,
-  getOpenAiKey,
-  onOpenAiKeyChange,
-  getState,
-  store,
-} from './lib/store'
-import { prefWindow, todoWindow } from './windows'
+import { getState, store } from './store'
+import { todoWindow } from './windows'
 
 dayjs.extend(relativeTime)
 
@@ -43,11 +34,9 @@ export function createTray() {
   const tray = new Tray(trayIcon)
 
   function getTrayMenu() {
-    const hasOpenAiKey = !!getOpenAiKey()
-    const needsConfiguration = !hasOpenAiKey
     const state = getState()
 
-    let template = [
+    const template: MenuItemConstructorOptions[] = [
       {
         label: todoWindow.isVisible() ? 'Hide Window' : 'Show Window',
         click: () => {
@@ -75,6 +64,7 @@ export function createTray() {
         },
       },
     ]
+
     return template.filter(isTruthy)
   }
 
@@ -98,12 +88,7 @@ export function createTray() {
     // contextMenu.popup()
   })
 
-  onOpenAiKeyChange(() => {
-    updateTrayMenu()
-  })
-
   // Set initial menu
-  // tray.setToolTip('Buddy')
   updateTrayMenu()
 
   setInterval(() => {

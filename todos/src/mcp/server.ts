@@ -2,13 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import { z } from 'zod'
-import {
-  addTodo,
-  deleteTodo,
-  editTodo,
-  getTodos,
-  toggleTodo,
-} from '../lib/store'
+import { addTodo, deleteTodo, editTodo, getTodos, toggleTodo } from '../store'
 
 // Add timezone plugin
 dayjs.extend(timezone)
