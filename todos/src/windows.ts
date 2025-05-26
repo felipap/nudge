@@ -31,7 +31,15 @@ export function createMainWindow() {
   })
 
   // Hide from macOS docker
-  app.dock.hide()
+  // app.dock.hide()
+
+  win.on('show', () => {
+    app.dock.show()
+  })
+
+  win.on('close', () => {
+    app.dock.show()
+  })
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -84,9 +92,6 @@ export function createWidgetWindow() {
       webSecurity: false,
     },
   })
-
-  // Hide from macOS docker
-  app.dock.hide()
 
   let lastPinnedState = getState().iswidgetWindowPinned
   store.subscribe((state) => {

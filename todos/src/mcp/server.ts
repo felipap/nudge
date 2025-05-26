@@ -52,7 +52,7 @@ export function getServer() {
           {
             type: 'text',
             text: `Toggled todo "${todo?.text}" to ${
-              todo?.completed ? 'completed' : 'incomplete'
+              todo?.completedAt ? 'completed' : 'incomplete'
             }`,
           },
         ],
@@ -114,7 +114,7 @@ export function getServer() {
       let todos = getTodos()
 
       if (!showIncomplete) {
-        todos = todos.filter((todo) => !todo.completed)
+        todos = todos.filter((todo) => !todo.completedAt)
       }
 
       if (todos.length === 0) {
@@ -138,7 +138,13 @@ export function getServer() {
                 (todo) => `
 <todo>
 <id>${todo.id}</id>
-<status>${todo.completed ? 'done' : 'pending'}</status>
+<status>${
+                  todo.deletedAt
+                    ? 'deleted'
+                    : todo.completedAt
+                    ? 'done'
+                    : 'pending'
+                }</status>
 <description>${todo.text}</description>
 <createdAt>${todo.createdAt}</createdAt>
 </todo>`

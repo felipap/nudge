@@ -26,14 +26,16 @@ export function useTodoState() {
     }
   }
 
-  async function addTodo(text: string) {
+  async function addTodo(text: string, projectId?: string) {
     const task: Task = {
       id: nanoid(),
       text: text.trim(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      deletedAt: null,
       completedAt: null,
       context: null,
+      projectId: projectId ?? null,
     }
 
     await saveState({
@@ -58,7 +60,12 @@ export function useTodoState() {
   }
 
   async function deleteTodo(id: string) {
-    const updatedTodos = tasks.filter((task) => task.id !== id)
+    const updatedTodos = tasks.map((task) => {
+      if (task.id === id) {
+        return { ...task, deletedAt: new Date().toISOString() }
+      }
+      return task
+    })
 
     await saveState({
       tasks: updatedTodos,

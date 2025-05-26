@@ -78,6 +78,7 @@
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^19.0.0",
     "react-error-boundary": "^6.0.0",
+    "react-icons": "^5.5.0",
     "source-map-support": "^0.5.21",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.0.12",

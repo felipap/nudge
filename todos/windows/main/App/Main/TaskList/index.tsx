@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Task } from '../../../../src/store/types'
-import { useTodoState } from '../../lib/useTodoState'
-import { DraggableList } from '../DraggableList'
+import { Task } from '../../../../../src/store/types'
+import { useTodoState } from '../../../../shared/lib/useTodoState'
+import { DraggableList } from '../../../../shared/ui/DraggableList'
 import { FocusableTodoList } from './FocusableTodoList'
 import { TaskItem } from './TaskItem'
 

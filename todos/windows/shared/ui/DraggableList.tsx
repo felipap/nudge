@@ -27,7 +27,7 @@ interface Props<T> {
   }) => ReactNode
 }
 
-export function SortableList<T>({
+export function DraggableList<T>({
   items,
   getItemId,
   onReorder,
