@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { type Task } from '../../../../../src/store'
+import { type Task } from '../../../../../../src/store'
 
 interface Args {
   onToggle: () => void
@@ -21,21 +21,27 @@ export function useFocusedShortcuts(
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === 'k' && e.metaKey) {
         e.preventDefault()
+        console.log('[useFocusedShortcuts] cmd+k')
         onToggle()
       } else if (e.key === 't' && e.metaKey) {
         e.preventDefault()
+        console.log('[useFocusedShortcuts] cmd+t')
         changeWhen('today')
       } else if (e.key === 'e' && e.metaKey) {
         e.preventDefault()
+        console.log('[useFocusedShortcuts] cmd+e')
         changeWhen('tonight')
       } else if (e.key === 'Backspace') {
         e.preventDefault()
+        console.log('[useFocusedShortcuts] backspace')
         onDelete()
       } else if (e.key === 'r' && e.metaKey) {
         e.preventDefault()
+        console.log('[useFocusedShortcuts] cmd+r')
         changeWhen(null)
       } else if (e.key === 'Escape') {
         e.preventDefault()
+        console.log('[useFocusedShortcuts] escape')
         onEscape()
       }
     }

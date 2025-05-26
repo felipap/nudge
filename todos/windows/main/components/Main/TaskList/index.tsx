@@ -2,7 +2,7 @@ import { Task } from '../../../../../src/store/types'
 import { useTodoState } from '../../../../shared/lib/useTodoState'
 import { DraggableList } from '../../../../shared/ui/DraggableList'
 import { withBoundary } from '../../../../shared/ui/withBoundary'
-import { FocusableTodoList } from './FocusableTodoList'
+import { FocusedGroupedList } from './FocusedGroupedList'
 import { TaskItem } from './TaskItem'
 
 interface Props {
@@ -23,7 +23,7 @@ export const TaskList = withBoundary(
     restoreOnDelete = false,
     visibleItemDate = false,
   }: Props) => {
-    const { toggleTodoCompletion, deleteTodo, reorderTodos, undo } =
+    const { toggleTodoCompletion, deleteTodo, reorderTodos, undo, editTodo } =
       useTodoState()
 
     // Sort tasks by anytimeRank
@@ -38,12 +38,27 @@ export const TaskList = withBoundary(
       (task) => task // !task.completedAt || recentToggledTodos.includes(task.id)
     )
 
-    async function toggleTodo(id: string) {
-      const task = tasks.find((t) => t.id === id)
-      if (!task) {
-        return
+    const toggleTasks = async (ids: string[], completed?: boolean) => {
+      const anyItemIsCompleted = ids.some(
+        (id) => tasks.find((t) => t.id === id)?.completedAt
+      )
+      const targetCompleted = completed ?? !anyItemIsCompleted
+
+      for (const id of ids) {
+        await toggleTodoCompletion(id, targetCompleted)
       }
-      await toggleTodoCompletion(id, !task.completedAt)
+    }
+
+    const changeTasksWhen = (ids: string[], when: Task['when']) => {
+      for (const id of ids) {
+        editTodo(id, { when })
+      }
+    }
+
+    const deleteTasks = async (ids: string[]) => {
+      for (const id of ids) {
+        await deleteTodo(id, restoreOnDelete)
+      }
     }
 
     const handleReorder = (startIndex: number, endIndex: number) => {
@@ -68,14 +83,15 @@ export const TaskList = withBoundary(
     }
 
     return (
-      <FocusableTodoList
+      <FocusedGroupedList
         onAddTodo={onAddTodo}
-        todoIds={filteredTasks.map((task) => task.id)}
-        onDelete={deleteTodo}
+        itemIds={filteredTasks.map((task) => task.id)}
         onUndo={undo}
-        restoreOnDelete={restoreOnDelete}
+        toggleTasks={toggleTasks}
+        changeTasksWhen={changeTasksWhen}
+        deleteTasks={deleteTasks}
       >
-        {({ onOpenTodo, onFocus, onCloseTodo, focusedTodoIds, openTodoId }) => (
+        {({ onOpenTodo, onFocus, onCloseTodo, selection, openTodoId }) => (
           <DraggableList
             items={filteredTasks}
             getItemId={(task) => task.id}
@@ -83,10 +99,10 @@ export const TaskList = withBoundary(
             renderItem={({ item: task, dragHandleProps }) => (
               <TaskItem
                 task={task}
-                onToggle={toggleTodo}
+                onToggle={(id) => toggleTasks([id])}
                 onFocus={() => onFocus(task.id)}
                 dragHandleProps={dragHandleProps}
-                isFocused={focusedTodoIds.includes(task.id)}
+                isFocused={selection.includes(task.id)}
                 isOpen={task.id === openTodoId}
                 onOpen={() => onOpenTodo(task.id)}
                 onClose={onCloseTodo}
@@ -96,7 +112,7 @@ export const TaskList = withBoundary(
             )}
           />
         )}
-      </FocusableTodoList>
+      </FocusedGroupedList>
     )
   }
 )

@@ -104,7 +104,7 @@ export const TaskItem = ({
       </div>
       <div
         className={twMerge(
-          'w-full h-[26px] flex items-center overflow-hidden',
+          'w-full h-[28px] flex items-center overflow-hidden',
           !isOpen && 'cursor-move'
         )}
         // {...(!isOpen && dragHandleProps)}
@@ -129,7 +129,7 @@ export const TaskItem = ({
         ) : (
           <div
             className={twMerge(
-              'min-w-0 flex flex-row gap-2 items-center flex-1 cursor-pointer select-none text-sm px-1 py-0 transition-all text-ellipsis whitespace-nowrap overflow-hidden '
+              'min-w-0 flex flex-row gap-2 items-center flex-1 cursor-pointer select-none text-[14px] px-1 py-0 transition-all text-ellipsis whitespace-nowrap overflow-hidden '
             )}
           >
             {showStarIfToday && task.when === 'today' && (
