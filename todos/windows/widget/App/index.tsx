@@ -1,33 +1,12 @@
 import { PinIcon } from 'lucide-react'
-import { useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useBackendState } from '../../shared/ipc'
-import { FocusableTodoList } from './FocusableTodoList'
+import { useTodoState } from '../../shared/lib/useTodoState'
+import { TaskList } from '../../shared/ui/TaskList'
 import { PlusIcon } from './PlusIcon'
-import { SortableList } from './SortableList'
-import { TaskItem } from './TaskItem'
-import { useTodoState } from './useTodoState'
 
 export default function App() {
-  const {
-    tasks,
-    addTodo,
-    toggleTodo: toggleTodoBackend,
-    deleteTodo,
-    editTodo,
-    reorderTodos,
-    undo,
-  } = useTodoState()
-
-  const [recentToggledTodos, setRecentToggledTodos] = useState<string[]>([])
-  const filteredTasks = tasks.filter(
-    (task) => !task.completedAt || recentToggledTodos.includes(task.id)
-  )
-
-  async function toggleTodo(id: string) {
-    await toggleTodoBackend(id)
-    setRecentToggledTodos([id, ...recentToggledTodos])
-  }
+  const { tasks, addTodo } = useTodoState()
 
   return (
     <div className="flex flex-col h-screen bg-white relative overflow-hidden">
@@ -40,43 +19,7 @@ export default function App() {
         </div>
       </header>
       <main className="h-full overflow-hidden px-2">
-        <FocusableTodoList
-          onAddTodo={() => addTodo('')}
-          todoIds={filteredTasks.map((task) => task.id)}
-          onDelete={deleteTodo}
-          onUndo={undo}
-        >
-          {({
-            onOpenTodo,
-            onFocus,
-            onCloseTodo,
-            focusedTodoId,
-            openTodoId,
-          }) => (
-            <SortableList
-              items={filteredTasks}
-              getItemId={(task) => task.id}
-              onReorder={reorderTodos}
-              renderItem={({ item: task, dragHandleProps }) => (
-                <TaskItem
-                  task={task}
-                  onToggle={toggleTodo}
-                  onFocus={() => onFocus(task.id)}
-                  onDelete={deleteTodo}
-                  onEdit={(id, newText) => {
-                    editTodo(id, newText)
-                    onCloseTodo()
-                  }}
-                  dragHandleProps={dragHandleProps}
-                  isFocused={task.id === focusedTodoId}
-                  isOpen={task.id === openTodoId}
-                  onOpen={() => onOpenTodo(task.id)}
-                  onClose={onCloseTodo}
-                />
-              )}
-            />
-          )}
-        </FocusableTodoList>
+        <TaskList tasks={tasks} />
       </main>
 
       {/* Floating Action Button */}
@@ -93,12 +36,12 @@ function PinButton() {
   async function togglePin() {
     if (state) {
       await window.electronAPI.setPartialState({
-        isTodoWindowPinned: !state.isTodoWindowPinned,
+        iswidgetWindowPinned: !state.iswidgetWindowPinned,
       })
     }
   }
 
-  const isPinned = state?.isTodoWindowPinned ?? false
+  const isPinned = state?.iswidgetWindowPinned ?? false
 
   return (
     <button

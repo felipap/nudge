@@ -1,7 +1,7 @@
 export const DEFAULT_STATE: State = {
   autoLaunch: false,
   tasks: [],
-  isTodoWindowPinned: false,
+  iswidgetWindowPinned: false,
 }
 
 export interface Task {
@@ -16,5 +16,5 @@ export interface Task {
 export interface State {
   autoLaunch: boolean
   tasks: Task[]
-  isTodoWindowPinned: boolean
+  iswidgetWindowPinned: boolean
 }

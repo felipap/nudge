@@ -7,6 +7,7 @@ import { createMcpApp } from './mcp'
 import { createTray } from './tray'
 import {
   createPreferencesWindow,
+  createMainWindow,
   createWidgetWindow,
   prefWindow,
 } from './windows'
@@ -44,7 +45,9 @@ if (!gotTheLock) {
   app.on('second-instance', (event, commandLine) => {
     // Someone tried to run a second instance, focus our window instead
     if (prefWindow) {
-      if (prefWindow.isMinimized()) prefWindow.restore()
+      if (prefWindow.isMinimized()) {
+        prefWindow.restore()
+      }
       prefWindow.focus()
     }
 
@@ -65,6 +68,7 @@ app.whenReady().then(() => {
     app.setAsDefaultProtocolClient('buddy')
   }
 
+  createMainWindow()
   createPreferencesWindow()
   createWidgetWindow()
   tray = createTray()
@@ -119,9 +123,6 @@ async function quitApp() {
   // }
 
   app.isQuitting = true
-  if (screenCaptureService) {
-    screenCaptureService.stop()
-  }
   app.quit()
   process.exit(0)
 }

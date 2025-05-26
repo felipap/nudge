@@ -78,8 +78,8 @@ function WindowControlCircle({
   return (
     <span
       aria-label={label}
-      className="w-[13px] h-[13px] rounded-full inline-block border border-black/10 dark:border-white/10 relative"
-      style={{ backgroundColor: color }}
+      className="w-[13px] h-[13px] rounded-full inline-block border border-black/10 dark:border-white/10 relative transition-colors group-hover:duration-100 group-hover:[background-color:var(--hover-color)]"
+      style={{ ['--hover-color' as any]: color }}
       onClick={onClick}
     >
       <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">

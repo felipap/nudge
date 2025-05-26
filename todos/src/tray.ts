@@ -9,7 +9,7 @@ import {
 } from 'electron'
 import path from 'path'
 import { getState, store } from './store'
-import { todoWindow } from './windows'
+import { mainWindow, widgetWindow } from './windows'
 
 dayjs.extend(relativeTime)
 
@@ -40,15 +40,15 @@ export function createTray() {
       {
         label: 'Show Window',
         click: () => {
-          todoWindow.show()
+          widgetWindow.show()
         },
       },
       {
         label: 'Keep on top',
         type: 'checkbox',
-        checked: state.isTodoWindowPinned,
+        checked: state.iswidgetWindowPinned,
         click: () => {
-          store.setState({ isTodoWindowPinned: !state.isTodoWindowPinned })
+          store.setState({ iswidgetWindowPinned: !state.iswidgetWindowPinned })
         },
       },
       { type: 'separator' },
@@ -66,13 +66,13 @@ export function createTray() {
 
   function updateTrayMenu() {}
 
-  // tray.on('click', () => {
-  //   if (todoWindow.isVisible()) {
-  //     todoWindow.hide()
-  //   } else {
-  //     todoWindow.show()
-  //   }
-  // })
+  tray.on('click', () => {
+    // if (mainWindow.isVisible()) {
+    //   mainWindow.hide()
+    // } else {
+    // }
+    mainWindow.show()
+  })
 
   let lastTrayIconBounds: Electron.Rectangle | null = null
 
