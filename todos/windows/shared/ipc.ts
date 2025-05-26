@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { State } from '../../src/store'
+import { Project, State } from '../../src/store'
 
 export async function getState() {
   return await window.electronAPI.getState()
@@ -27,7 +27,15 @@ export function zoom() {
 
 export function useProjects() {
   const { state } = useBackendState()
-  return { projects: state?.projects ?? [] }
+  async function editProject(id: string, data: Partial<Project>) {
+    await setPartialState({
+      projects: state?.projects?.map((p) =>
+        p.id === id ? { ...p, ...data } : p
+      ),
+    })
+  }
+
+  return { projects: state?.projects ?? [], editProject }
 }
 
 export function useTasks() {

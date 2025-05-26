@@ -2,51 +2,70 @@ import { twMerge } from 'tailwind-merge'
 
 interface Props {
   progress: number // 0 to 1
-  size?: number // in pixels
-  strokeWidth?: number // in pixels
+  small?: boolean
+
   className?: string
 }
 
 export function CircularProgress({
   progress,
-  size = 16,
-  strokeWidth = 2,
+  small = false,
   className,
 }: Props) {
+  const size = small ? 16 : 25
   const normalizedProgress = Math.min(1, Math.max(0, progress))
-  const radius = (size - strokeWidth) / 2
-  const circumference = 2 * Math.PI * radius
-  const strokeDashoffset = circumference * (1 - normalizedProgress)
+  const center = size / 2
+  const strokeWidth = small ? 1.25 : 2
+  const gap = small ? 3 : 4
+  const innerRadius = size / 2 - gap
+  const outerRadius = size / 2 - strokeWidth / 2
+
+  let pathData: string
+
+  if (normalizedProgress === 1) {
+    // Path for a full inner circle
+    pathData = `M ${center} ${center - innerRadius}
+                A ${innerRadius} ${innerRadius} 0 0 1 ${center} ${
+      center + innerRadius
+    }
+                A ${innerRadius} ${innerRadius} 0 0 1 ${center} ${
+      center - innerRadius
+    } Z`
+  } else {
+    // Path for a partial pie segment
+    const startAngle = -Math.PI / 2 // Start at 12 o'clock
+    const endAngle = startAngle + normalizedProgress * Math.PI * 2
+
+    const startX = center + innerRadius * Math.cos(startAngle)
+    const startY = center + innerRadius * Math.sin(startAngle)
+    const endX = center + innerRadius * Math.cos(endAngle)
+    const endY = center + innerRadius * Math.sin(endAngle)
+
+    const largeArcFlag = normalizedProgress > 0.5 ? '1' : '0'
+    pathData = `M ${center} ${center}
+                L ${startX} ${startY}
+                A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 1 ${endX} ${endY}
+                Z`
+  }
 
   return (
     <svg
       width={size}
       height={size}
       viewBox={`0 0 ${size} ${size}`}
-      className={twMerge('rotate-[-90deg]', className)}
+      className={twMerge(className)}
     >
-      {/* Background circle */}
+      {/* Border circle */}
       <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={radius}
+        cx={center}
+        cy={center}
+        r={outerRadius}
         fill="none"
         stroke="currentColor"
         strokeWidth={strokeWidth}
-        className="opacity-20"
       />
-      {/* Progress circle */}
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={radius}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={strokeWidth}
-        strokeDasharray={circumference}
-        strokeDashoffset={strokeDashoffset}
-        strokeLinecap="round"
-      />
+      {/* Progress pie */}
+      <path d={pathData} fill="currentColor" />
     </svg>
   )
 }

@@ -77,7 +77,7 @@ export function OldMainComponent_REPLACE({
 
 interface LayoutProps {
   children: React.ReactNode
-  title: string
+  title: string | React.ReactNode
   icon?: React.ReactNode
   page: Page
   projectId?: string
@@ -88,7 +88,11 @@ export function Layout({ title, icon, handleAddTodo, children }: LayoutProps) {
   return (
     <div className="px-10 pt-[50px] w-full h-full">
       <header className="flex pb-8 items-center justify-between">
-        <PageTitle title={title} icon={icon} />
+        {typeof title === 'string' ? (
+          <PageTitle title={title} icon={icon} />
+        ) : (
+          title
+        )}
       </header>
       <main className="h-full overflow-hidden flex flex-col gap-2">
         {children}
@@ -111,7 +115,7 @@ export function PageTitle({
   icon?: React.ReactNode
 }) {
   return (
-    <h1 className="text-2xl font-semibold flex items-center gap-4">
+    <h1 className="text-2xl font-semibold flex items-center gap-3">
       {icon}
       {title}
     </h1>

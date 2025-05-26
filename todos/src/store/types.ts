@@ -28,6 +28,7 @@ export interface Task {
   loggedAt: string | null
   anytimeRank: number
   todayRank: number | null
+  aiMetadata?: string
 }
 
 export interface State {

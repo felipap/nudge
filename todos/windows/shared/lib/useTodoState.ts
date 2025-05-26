@@ -125,6 +125,14 @@ export function useTodoState() {
     })
   }
 
+  async function clearTrash() {
+    const updatedTodos = tasksRef.current.filter((task) => !task.deletedAt)
+
+    await saveState({
+      tasks: updatedTodos,
+    })
+  }
+
   async function logAllCompleted() {
     const updatedTodos = tasksRef.current.map((task) => {
       if ((task.completedAt || task.cancelledAt) && !task.loggedAt) {
@@ -132,8 +140,6 @@ export function useTodoState() {
       }
       return task
     })
-
-    console.log('new todos', updatedTodos)
 
     await saveState({
       tasks: updatedTodos,
@@ -195,5 +201,6 @@ export function useTodoState() {
     logAllCompleted,
     reorderTodos,
     undo,
+    clearTrash,
   }
 }

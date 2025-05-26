@@ -134,21 +134,21 @@ export function getServer() {
             type: 'text',
             text: `
 <list>${todos
-              .map(
-                (todo) => `
+              .map((todo) => {
+                const status = todo.deletedAt
+                  ? 'deleted'
+                  : todo.completedAt
+                  ? 'done'
+                  : 'pending'
+
+                return `
 <todo>
 <id>${todo.id}</id>
-<status>${
-                  todo.deletedAt
-                    ? 'deleted'
-                    : todo.completedAt
-                    ? 'done'
-                    : 'pending'
-                }</status>
-<description>${todo.text}</description>
+<content>${todo.text}</content>
+<status>${status}</status>
 <createdAt>${todo.createdAt}</createdAt>
 </todo>`
-              )
+              })
               .join('\n')}
 </list>`.trim(),
           },

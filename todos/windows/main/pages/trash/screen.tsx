@@ -1,11 +1,12 @@
 import { useMemo } from 'react'
 import { BsFillTrash2Fill } from 'react-icons/bs'
 import { useTodoState } from '../../../shared/lib/useTodoState'
+import { Button } from '../../../shared/ui/Button'
 import { Layout } from '../../components/Main'
 import { TaskList } from '../../components/Main/TaskList'
 
 export default function Screen() {
-  const { tasks } = useTodoState()
+  const { tasks, clearTrash } = useTodoState()
 
   const pageTasks = useMemo(() => {
     return tasks.filter((t) => !!t.deletedAt)
@@ -17,6 +18,9 @@ export default function Screen() {
       title="Trash"
       page="trash"
     >
+      <Button className="self-start mb-4" onClick={clearTrash}>
+        Clear Trash
+      </Button>
       <TaskList tasks={pageTasks} showStarIfToday restoreOnDelete />
     </Layout>
   )
