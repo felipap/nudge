@@ -1,23 +1,17 @@
+import { Link, useRouter, useMatches } from '@tanstack/react-router'
 import { ListIcon } from 'lucide-react'
+import { useEffect } from 'react'
 import { BsFillTrash2Fill } from 'react-icons/bs'
 import { FaBook, FaStar } from 'react-icons/fa6'
 import { RiArchive2Fill } from 'react-icons/ri'
 import { twMerge } from 'tailwind-merge'
-import { Page } from '../Main'
+import { useProjects, useTasks } from '../../../shared/ipc'
 import { CircularProgress } from './CircularProgress'
-import { useBackendState } from '../../../shared/ipc'
-import { useEffect } from 'react'
 
-interface Props {
-  navigate: (page: Page, projectId?: string) => void
-  page: Page
-  selectedProjectId?: string
-}
-
-export function Sidebar({ navigate, page, selectedProjectId }: Props) {
-  const { state } = useBackendState()
-  const projects = state?.projects ?? []
-  const tasks = state?.tasks ?? []
+export function Sidebar() {
+  const routerInstance = useRouter()
+  const { projects } = useProjects()
+  const { tasks } = useTasks()
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -30,20 +24,23 @@ export function Sidebar({ navigate, page, selectedProjectId }: Props) {
 
         // Main sections: 1-5
         if (num === 1) {
-          navigate('today')
+          routerInstance.navigate({ to: '/today' })
         } else if (num === 2) {
-          navigate('anytime')
+          routerInstance.navigate({ to: '/anytime' })
         } else if (num === 3) {
-          navigate('someday')
+          routerInstance.navigate({ to: '/someday' })
         } else if (num === 4) {
-          navigate('completed')
+          routerInstance.navigate({ to: '/completed' })
         } else if (num === 5) {
-          navigate('trash')
+          routerInstance.navigate({ to: '/trash' })
         }
         // Projects: 6 and above
         else if (num >= 6 && num - 6 < projects.length) {
           const project = projects[num - 6]
-          navigate('project', project.id)
+          routerInstance.navigate({
+            to: '/project/$projectId',
+            params: { projectId: project.id },
+          })
         }
       }
     }
@@ -52,7 +49,7 @@ export function Sidebar({ navigate, page, selectedProjectId }: Props) {
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [navigate, projects])
+  }, [routerInstance, projects])
 
   const getProjectProgress = (projectId: string) => {
     const projectTasks = tasks.filter(
@@ -70,22 +67,16 @@ export function Sidebar({ navigate, page, selectedProjectId }: Props) {
       <div className="flex flex-col gap-5 [app-region:no-drag]">
         <section className="flex flex-col gap-1">
           <SidebarButton
-            onClick={() => navigate('today')}
-            active={page === 'today'}
+            href="/today"
             icon={<FaStar className="w-4.5 text-amber-300" />}
           >
             Today
           </SidebarButton>
-          <SidebarButton
-            onClick={() => navigate('anytime')}
-            active={page === 'anytime'}
-            icon={<ListIcon className="w-4.5" />}
-          >
+          <SidebarButton href="/anytime" icon={<ListIcon className="w-4.5" />}>
             Anytime
           </SidebarButton>
           <SidebarButton
-            onClick={() => navigate('someday')}
-            active={page === 'someday'}
+            href="/someday"
             icon={<RiArchive2Fill className="w-4.5 text-yellow-900/60" />}
           >
             Someday
@@ -93,30 +84,29 @@ export function Sidebar({ navigate, page, selectedProjectId }: Props) {
         </section>
         <section className="flex flex-col gap-1">
           <SidebarButton
-            onClick={() => navigate('completed')}
-            active={page === 'completed'}
+            href="/completed"
             icon={<FaBook className="w-4.5 text-green-500" />}
           >
             Logbook
           </SidebarButton>
           <SidebarButton
-            onClick={() => navigate('trash')}
-            active={page === 'trash'}
+            href="/trash"
             icon={<BsFillTrash2Fill className="w-4.5 text-gray-400" />}
           >
             Trash
           </SidebarButton>
         </section>
+        {/* Projects */}
         {projects.length > 0 && (
           <section className="flex flex-col gap-1">
             <div className="px-2 text-sm font-medium text-gray-500">
               Projects
             </div>
-            {projects.map((project, index) => (
+            {projects.map((project) => (
               <SidebarButton
                 key={project.id}
-                onClick={() => navigate('project', project.id)}
-                active={page === 'project' && selectedProjectId === project.id}
+                href="/project/$projectId"
+                params={{ projectId: project.id }}
                 icon={
                   <CircularProgress
                     progress={getProjectProgress(project.id)}
@@ -134,27 +124,32 @@ export function Sidebar({ navigate, page, selectedProjectId }: Props) {
   )
 }
 
-function SidebarButton({
-  children,
-  onClick,
-  active,
-  icon,
-}: {
+interface SidebarButtonProps {
   children: React.ReactNode
-  onClick: () => void
-  active: boolean
-  icon?: React.ReactNode
-}) {
+  icon: React.ReactNode
+  href: string
+  params?: Record<string, string>
+  onClick?: () => void
+}
+
+function SidebarButton({ children, icon, href, ...props }: SidebarButtonProps) {
+  const matches = useMatches()
+  const isActive =
+    matches.some((match) => match.pathname === href) ||
+    (href === '/project/$projectId' &&
+      window.location.pathname.startsWith('/project/'))
+
   return (
-    <button
+    <Link
+      to={href}
       className={twMerge(
-        'w-full h-7 rounded-md cursor-pointer self-start flex items-center px-2 text-[15px] font-medium gap-2',
-        active && 'bg-gray-200 text-black'
+        'flex items-center gap-2 px-2 py-1 rounded-md text-sm font-medium transition-all text-[15px]',
+        isActive ? 'bg-blue-100 text-blue-700' : 'text-black hover:bg-gray-100'
       )}
-      onClick={onClick}
+      {...props}
     >
-      {icon && <div className="w-4.5">{icon}</div>}
+      {icon}
       {children}
-    </button>
+    </Link>
   )
 }

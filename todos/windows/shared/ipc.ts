@@ -25,6 +25,16 @@ export function zoom() {
   window.electronAPI.zoom()
 }
 
+export function useProjects() {
+  const { state } = useBackendState()
+  return { projects: state?.projects ?? [] }
+}
+
+export function useTasks() {
+  const { state } = useBackendState()
+  return { tasks: state?.tasks ?? [] }
+}
+
 export function useBackendState() {
   const [state, setState] = useState<State | null>(null)
 

@@ -60,6 +60,7 @@
     "@modelcontextprotocol/sdk": "^1.12.0",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.0.12",
+    "@tanstack/react-router": "^1.120.10",
     "@types/react-beautiful-dnd": "^13.1.8",
     "assert": "^2.1.0",
     "chalk": "^5.4.1",

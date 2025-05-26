@@ -100,7 +100,7 @@ export const TaskItem = ({
       onClick={() => {
         onFocus()
       }}
-      // {...(!isOpen && dragHandleProps)}
+      {...(!isOpen && dragHandleProps)}
     >
       <Checkbox
         onClick={() => onToggle(task.id)}
@@ -113,18 +113,13 @@ export const TaskItem = ({
         }}
       >
         {isOpen ? (
-          <input
+          <OpenTaskItem
             ref={inputRef}
-            type="text"
+            task={task}
             value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onBlur={handleSave}
-            onKeyDown={handleKeyDown}
-            className={twMerge(
-              'w-full flex-1 text-sm bg-transparent cursor-text px-1 py-0 transition-all text-ellipsis whitespace-nowrap',
-              'border-none focus:border-none focus:!outline-none !drop-shadow-none !shadow-none ring-0',
-              task.completedAt && 'line-through text-gray-500 cursor-default'
-            )}
+            setValue={setValue}
+            handleSave={handleSave}
+            handleKeyDown={handleKeyDown}
           />
         ) : (
           <div
@@ -137,6 +132,40 @@ export const TaskItem = ({
         )}
       </div>
     </div>
+  )
+}
+
+interface OpenTaskItemProps {
+  task: Task
+  value: string
+  ref: React.RefObject<HTMLInputElement | null>
+  setValue: (value: string) => void
+  handleSave: () => void
+  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void
+}
+
+function OpenTaskItem({
+  task,
+  value,
+  ref,
+  setValue,
+  handleSave,
+  handleKeyDown,
+}: OpenTaskItemProps) {
+  return (
+    <input
+      ref={ref}
+      type="text"
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onBlur={handleSave}
+      onKeyDown={handleKeyDown}
+      className={twMerge(
+        'w-full flex-1 text-sm bg-transparent cursor-text px-1 py-0 transition-all text-ellipsis whitespace-nowrap',
+        'border-none focus:border-none focus:!outline-none !drop-shadow-none !shadow-none ring-0',
+        task.completedAt && 'line-through text-gray-500 cursor-default'
+      )}
+    />
   )
 }
 
