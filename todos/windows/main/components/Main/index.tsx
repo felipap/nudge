@@ -44,11 +44,11 @@ export function OldMainComponent_REPLACE({
     } else if (page === 'today') {
       addTodo({ when: 'today' })
     } else if (page === 'anytime') {
-      addTodo({ when: 'anytime' })
+      addTodo({ when: null })
     } else if (page === 'trash') {
       addTodo({ deletedAt: new Date().toISOString() })
     } else if (page === 'someday') {
-      addTodo({ when: null })
+      addTodo({ when: 'someday' })
     }
   }
 
@@ -90,7 +90,9 @@ export function Layout({ title, icon, handleAddTodo, children }: LayoutProps) {
       <header className="flex pb-8 items-center justify-between">
         <PageTitle title={title} icon={icon} />
       </header>
-      <main className="h-full overflow-hidden">{children}</main>
+      <main className="h-full overflow-hidden flex flex-col gap-2">
+        {children}
+      </main>
       {/* Floating Action Button */}
       {handleAddTodo && (
         <div className="fixed bottom-3 right-3">

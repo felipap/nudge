@@ -116,7 +116,7 @@ function SortableItem({ id, renderItem }: SortableItemProps) {
   }
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes}>
+    <div ref={setNodeRef} style={style} {...attributes} tabIndex={undefined}>
       {renderItem({ ...attributes, ...listeners })}
     </div>
   )

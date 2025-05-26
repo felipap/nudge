@@ -22,7 +22,7 @@ export interface Task {
   cancelledAt: string | null
   context: string | null
   deletedAt: string | null
-  when: 'today' | 'tonight' | 'anytime' | null
+  when: 'today' | 'tonight' | 'someday' | null
   projectId: string | null
   // Time when the item was sent to logbook.
   loggedAt: string | null

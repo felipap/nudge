@@ -1,7 +1,7 @@
 import { DraggableAttributes } from '@dnd-kit/core'
 import dayjs from 'dayjs'
 import { Check } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { FaStar } from 'react-icons/fa'
 import { FaMoon } from 'react-icons/fa6'
 import { twMerge } from 'tailwind-merge'
@@ -36,7 +36,6 @@ export const TaskItem = ({
 }: Props) => {
   const { editTodo } = useTodoState()
 
-  const [value, setValue] = useState(task.text)
   const ref = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -46,38 +45,27 @@ export const TaskItem = ({
     }
   }, [isOpen])
 
-  const handleSave = () => {
-    if (value.trim() !== '' && value !== task.text) {
-      editTodo(task.id, { text: value })
+  const handleSave = (newValue: string) => {
+    if (newValue.trim() !== '' && newValue !== task.text) {
+      editTodo(task.id, { text: newValue })
     }
     onClose()
-    setValue(value)
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && value.trim()) {
-      e.preventDefault()
-      handleSave()
-    } else if (e.key === 'Escape' && isOpen) {
-      setValue(task.text)
-      onClose()
-    }
-  }
-
-  useEffect(() => {
-    if (isFocused) {
-      ref.current?.focus()
-    }
-    if (isOpen) {
-      inputRef.current?.focus()
-    }
-  }, [isFocused, inputRef])
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     ref.current?.focus()
+  //   }
+  //   if (isOpen) {
+  //     inputRef.current?.focus()
+  //   }
+  // }, [isFocused, inputRef])
 
   return (
     <div
       ref={ref}
       className={twMerge(
-        'flex items-center gap-1.5 group transition duration-75 px-1 rounded-sm',
+        'flex items-center gap-3 group transition duration-75 px-1 rounded-sm',
         'focus:outline-none focus:ring-0 focus:border-none',
         // task.completedAt && 'opacity-50',
         isOpen && 'shadow-md py-1 border',
@@ -104,7 +92,7 @@ export const TaskItem = ({
       </div>
       <div
         className={twMerge(
-          'w-full h-[28px] flex items-center overflow-hidden',
+          'w-full h-[28px] flex gap-2 items-center overflow-hidden',
           !isOpen && 'cursor-move'
         )}
         // {...(!isOpen && dragHandleProps)}
@@ -117,14 +105,18 @@ export const TaskItem = ({
           }
         }}
       >
+        {showStarIfToday && task.when === 'today' && (
+          <FaStar className="w-3.5 h-3.5 text-amber-300" />
+        )}
+        {showStarIfToday && task.when === 'tonight' && (
+          <FaMoon className="w-3.5 h-3.5 text-blue-300" />
+        )}
         {isOpen ? (
           <OpenItem
             ref={inputRef}
             task={task}
-            value={value}
-            setValue={setValue}
-            handleSave={handleSave}
-            handleKeyDown={handleKeyDown}
+            defaultValue={task.text}
+            save={handleSave}
           />
         ) : (
           <div
@@ -132,13 +124,7 @@ export const TaskItem = ({
               'min-w-0 flex flex-row gap-2 items-center flex-1 cursor-pointer select-none text-[14px] px-1 py-0 transition-all text-ellipsis whitespace-nowrap overflow-hidden '
             )}
           >
-            {showStarIfToday && task.when === 'today' && (
-              <FaStar className="w-3.5 h-3.5 text-amber-300" />
-            )}
-            {showStarIfToday && task.when === 'tonight' && (
-              <FaMoon className="w-3.5 h-3.5 text-blue-300" />
-            )}
-            {value || '\u00A0'}
+            {task.text || '\u00A0'}
           </div>
         )}
       </div>

@@ -34,10 +34,6 @@ export const TaskList = withBoundary(
       return (a.anytimeRank ?? 0) - (b.anytimeRank ?? 0)
     })
 
-    const filteredTasks = sortedTasks.filter(
-      (task) => task // !task.completedAt || recentToggledTodos.includes(task.id)
-    )
-
     const toggleTasks = async (ids: string[], completed?: boolean) => {
       const anyItemIsCompleted = ids.some(
         (id) => tasks.find((t) => t.id === id)?.completedAt
@@ -51,7 +47,10 @@ export const TaskList = withBoundary(
 
     const changeTasksWhen = (ids: string[], when: Task['when']) => {
       for (const id of ids) {
-        editTodo(id, { when })
+        const task = tasks.find((t) => t.id === id)!
+        if (task) {
+          editTodo(id, { when: task.when === when ? null : when })
+        }
       }
     }
 
@@ -66,7 +65,7 @@ export const TaskList = withBoundary(
         startIndex,
         endIndex,
         isToday,
-        tasks: filteredTasks.map((t, i) => ({
+        tasks: sortedTasks.map((t, i) => ({
           index: i,
           id: t.id,
           text: t.text,
@@ -75,7 +74,7 @@ export const TaskList = withBoundary(
         })),
       })
       reorderTodos(
-        filteredTasks.map((t) => t.id),
+        sortedTasks.map((t) => t.id),
         startIndex,
         endIndex,
         isToday
@@ -85,7 +84,7 @@ export const TaskList = withBoundary(
     return (
       <FocusedGroupedList
         onAddTodo={onAddTodo}
-        itemIds={filteredTasks.map((task) => task.id)}
+        itemIds={sortedTasks.map((task) => task.id)}
         onUndo={undo}
         toggleTasks={toggleTasks}
         changeTasksWhen={changeTasksWhen}
@@ -93,7 +92,7 @@ export const TaskList = withBoundary(
       >
         {({ onOpenTodo, onFocus, onCloseTodo, selection, openTodoId }) => (
           <DraggableList
-            items={filteredTasks}
+            items={sortedTasks}
             getItemId={(task) => task.id}
             onReorder={handleReorder}
             renderItem={({ item: task, dragHandleProps }) => (
