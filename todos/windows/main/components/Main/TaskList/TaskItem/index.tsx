@@ -1,37 +1,41 @@
 import { DraggableAttributes } from '@dnd-kit/core'
-import { FaStar } from 'react-icons/fa'
+import dayjs from 'dayjs'
 import { Check } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { FaStar } from 'react-icons/fa'
+import { FaMoon } from 'react-icons/fa6'
 import { twMerge } from 'tailwind-merge'
-import { type Task } from '../../../../../src/store/types'
+import { type Task } from '../../../../../../src/store/types'
+import { useTodoState } from '../../../../../shared/lib/useTodoState'
+import { OpenItem } from './OpenItem'
 
 interface Props {
   task: Task
   onToggle: (id: string) => void
-  onDelete: (id: string) => void
-  onEdit: (id: string, newText: string) => void
   dragHandleProps: DraggableAttributes & Record<string, any>
   isOpen: boolean
   onOpen: () => void
   onFocus: () => void
   onClose: () => void
   showStarIfToday?: boolean
+  visibleDate?: boolean
   isFocused: boolean
 }
 
 export const TaskItem = ({
   task,
   onToggle,
-  onDelete,
-  onEdit,
   dragHandleProps,
   isOpen,
   isFocused,
   showStarIfToday,
+  visibleDate = false,
   onOpen,
   onFocus,
   onClose,
 }: Props) => {
+  const { editTodo } = useTodoState()
+
   const [value, setValue] = useState(task.text)
   const ref = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -44,35 +48,11 @@ export const TaskItem = ({
 
   const handleSave = () => {
     if (value.trim() !== '' && value !== task.text) {
-      onEdit(task.id, value)
+      editTodo(task.id, { text: value })
     }
     onClose()
     setValue(value)
   }
-
-  useEffect(() => {
-    if (!isFocused) {
-      return
-    }
-
-    function handleKeyDown(e: KeyboardEvent) {
-      if (isOpen) {
-        return
-      }
-
-      if (e.key === 'k' && e.metaKey) {
-        e.preventDefault()
-        onToggle(task.id)
-      } else if (e.key === 'Backspace') {
-        onDelete(task.id)
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isFocused, isOpen])
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && value.trim()) {
@@ -99,7 +79,7 @@ export const TaskItem = ({
       className={twMerge(
         'flex items-center gap-1.5 group transition duration-75 px-1 rounded-sm',
         'focus:outline-none focus:ring-0 focus:border-none',
-        task.completedAt && 'opacity-50',
+        // task.completedAt && 'opacity-50',
         isOpen && 'shadow-md py-1 border',
         isFocused && 'bg-blue-500/10'
       )}
@@ -109,16 +89,25 @@ export const TaskItem = ({
         }
       }}
     >
-      <Checkbox
-        onClick={() => onToggle(task.id)}
-        checked={!!task.completedAt}
-      />
+      <div className="flex items-center gap-2">
+        <Checkbox
+          onClick={() => onToggle(task.id)}
+          checked={!!task.completedAt}
+        />
+        {visibleDate && (task.completedAt || task.cancelledAt) && (
+          <div className="text-sm font-medium whitespace-nowrap text-blue-500">
+            {dayjs(new Date(task.completedAt || task.cancelledAt || '')).format(
+              'MMM D'
+            )}
+          </div>
+        )}
+      </div>
       <div
         className={twMerge(
           'w-full h-[26px] flex items-center overflow-hidden',
           !isOpen && 'cursor-move'
         )}
-        {...(!isOpen && dragHandleProps)}
+        // {...(!isOpen && dragHandleProps)}
         onDoubleClick={() => {
           onOpen()
         }}
@@ -129,7 +118,7 @@ export const TaskItem = ({
         }}
       >
         {isOpen ? (
-          <OpenTaskItem
+          <OpenItem
             ref={inputRef}
             task={task}
             value={value}
@@ -146,45 +135,14 @@ export const TaskItem = ({
             {showStarIfToday && task.when === 'today' && (
               <FaStar className="w-3.5 h-3.5 text-amber-300" />
             )}
+            {showStarIfToday && task.when === 'tonight' && (
+              <FaMoon className="w-3.5 h-3.5 text-blue-300" />
+            )}
             {value || '\u00A0'}
           </div>
         )}
       </div>
     </div>
-  )
-}
-
-interface OpenTaskItemProps {
-  task: Task
-  value: string
-  ref: React.RefObject<HTMLInputElement | null>
-  setValue: (value: string) => void
-  handleSave: () => void
-  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void
-}
-
-function OpenTaskItem({
-  task,
-  value,
-  ref,
-  setValue,
-  handleSave,
-  handleKeyDown,
-}: OpenTaskItemProps) {
-  return (
-    <input
-      ref={ref}
-      type="text"
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      onBlur={handleSave}
-      onKeyDown={handleKeyDown}
-      className={twMerge(
-        'w-full flex-1 text-sm bg-transparent cursor-text px-1 py-0 transition-all text-ellipsis whitespace-nowrap',
-        'border-none focus:border-none focus:!outline-none !drop-shadow-none !shadow-none ring-0',
-        task.completedAt && 'line-through text-gray-500 cursor-default'
-      )}
-    />
   )
 }
 

@@ -19,12 +19,15 @@ export interface Task {
   createdAt: string
   updatedAt: string
   completedAt: string | null
+  cancelledAt: string | null
   context: string | null
   deletedAt: string | null
   when: 'today' | 'tonight' | 'anytime' | null
   projectId: string | null
-  rank: number
-  todayRank: number
+  // Time when the item was sent to logbook.
+  loggedAt: string | null
+  anytimeRank: number
+  todayRank: number | null
 }
 
 export interface State {

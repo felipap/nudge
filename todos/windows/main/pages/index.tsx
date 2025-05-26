@@ -1,8 +1,12 @@
+import { Outlet, useRouter } from '@tanstack/react-router'
+import { useEffect } from 'react'
+import { useTodoState } from '../../shared/lib/useTodoState'
 import { WindowControls } from '../../shared/ui/WindowControls'
-import { Outlet } from '@tanstack/react-router'
-import { Sidebar } from './Sidebar'
+import { Sidebar } from '../components/Sidebar'
 
 export default function App() {
+  useRegisterGlobalShortcuts()
+
   return (
     <div className="flex h-screen bg-white relative overflow-hidden">
       <nav className="absolute top-3 left-3 w-full z-30 h-[50px]">
@@ -21,4 +25,28 @@ export default function App() {
       </div>
     </div>
   )
+}
+
+function useRegisterGlobalShortcuts() {
+  const { history } = useRouter()
+  const { logAllCompleted } = useTodoState()
+
+  useEffect(() => {
+    const handleShortcut = (event: KeyboardEvent) => {
+      // cmd+shift+l
+      if (event.metaKey && event.shiftKey && event.key === 'l') {
+        logAllCompleted()
+      }
+      // cmd+[
+      if (event.metaKey && event.key === '[') {
+        history.back()
+      }
+      // cmd+]
+      if (event.metaKey && event.key === ']') {
+        history.forward()
+      }
+    }
+    window.addEventListener('keydown', handleShortcut)
+    return () => window.removeEventListener('keydown', handleShortcut)
+  }, [])
 }

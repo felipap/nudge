@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Task } from '../../../../../src/store/types'
 import { useTodoState } from '../../../../shared/lib/useTodoState'
 import { DraggableList } from '../../../../shared/ui/DraggableList'
@@ -9,38 +8,42 @@ import { TaskItem } from './TaskItem'
 interface Props {
   tasks: Task[]
   isToday?: boolean
-  onAddTodo: () => void
+  onAddTodo?: () => void
   showStarIfToday?: boolean
+  restoreOnDelete?: boolean
+  visibleItemDate?: boolean
 }
 
 export const TaskList = withBoundary(
-  ({ tasks, isToday = false, onAddTodo, showStarIfToday = false }: Props) => {
-    const {
-      addTodo,
-      toggleTodo: toggleTodoBackend,
-      deleteTodo,
-      editTodo,
-      reorderTodos,
-      undo,
-    } = useTodoState()
+  ({
+    tasks,
+    isToday = false,
+    onAddTodo,
+    showStarIfToday = false,
+    restoreOnDelete = false,
+    visibleItemDate = false,
+  }: Props) => {
+    const { toggleTodoCompletion, deleteTodo, reorderTodos, undo } =
+      useTodoState()
 
-    const [recentToggledTodos, setRecentToggledTodos] = useState<string[]>([])
-
-    // Sort tasks by rank
+    // Sort tasks by anytimeRank
     const sortedTasks = [...tasks].sort((a, b) => {
       if (isToday) {
-        return a.todayRank - b.todayRank
+        return (a.todayRank || 0) - (b.todayRank || 0)
       }
-      return (a.rank ?? 0) - (b.rank ?? 0)
+      return (a.anytimeRank ?? 0) - (b.anytimeRank ?? 0)
     })
 
     const filteredTasks = sortedTasks.filter(
-      (task) => !task.completedAt || recentToggledTodos.includes(task.id)
+      (task) => task // !task.completedAt || recentToggledTodos.includes(task.id)
     )
 
     async function toggleTodo(id: string) {
-      await toggleTodoBackend(id)
-      setRecentToggledTodos([id, ...recentToggledTodos])
+      const task = tasks.find((t) => t.id === id)
+      if (!task) {
+        return
+      }
+      await toggleTodoCompletion(id, !task.completedAt)
     }
 
     const handleReorder = (startIndex: number, endIndex: number) => {
@@ -52,7 +55,7 @@ export const TaskList = withBoundary(
           index: i,
           id: t.id,
           text: t.text,
-          rank: t.rank,
+          anytimeRank: t.anytimeRank,
           todayRank: t.todayRank,
         })),
       })
@@ -70,8 +73,9 @@ export const TaskList = withBoundary(
         todoIds={filteredTasks.map((task) => task.id)}
         onDelete={deleteTodo}
         onUndo={undo}
+        restoreOnDelete={restoreOnDelete}
       >
-        {({ onOpenTodo, onFocus, onCloseTodo, focusedTodoId, openTodoId }) => (
+        {({ onOpenTodo, onFocus, onCloseTodo, focusedTodoIds, openTodoId }) => (
           <DraggableList
             items={filteredTasks}
             getItemId={(task) => task.id}
@@ -81,17 +85,13 @@ export const TaskList = withBoundary(
                 task={task}
                 onToggle={toggleTodo}
                 onFocus={() => onFocus(task.id)}
-                onDelete={deleteTodo}
-                onEdit={(id, newText) => {
-                  editTodo(id, newText)
-                  onCloseTodo()
-                }}
                 dragHandleProps={dragHandleProps}
-                isFocused={task.id === focusedTodoId}
+                isFocused={focusedTodoIds.includes(task.id)}
                 isOpen={task.id === openTodoId}
                 onOpen={() => onOpenTodo(task.id)}
                 onClose={onCloseTodo}
                 showStarIfToday={showStarIfToday}
+                visibleDate={visibleItemDate}
               />
             )}
           />

@@ -8,7 +8,7 @@ export * from './types'
 
 export const store = create<State>()(
   persist((set, get, store: StoreApi<State>) => DEFAULT_STATE, {
-    name: 'nudge-store',
+    name: 'store',
     storage: {
       getItem: (name) => {
         const value = fileStore.get(name)
@@ -29,16 +29,7 @@ const getNextRank = (tasks: Task[]): number => {
   if (tasks.length === 0) {
     return 1000
   }
-  const maxRank = Math.max(...tasks.map((t) => t.rank))
-  return maxRank + 1000
-}
-
-const getNextTodayRank = (tasks: Task[]): number => {
-  const todayTasks = tasks.filter((t) => t.todayRank !== null)
-  if (todayTasks.length === 0) {
-    return 1000
-  }
-  const maxRank = Math.max(...todayTasks.map((t) => t.todayRank!))
+  const maxRank = Math.max(...tasks.map((t) => t.anytimeRank))
   return maxRank + 1000
 }
 
@@ -55,7 +46,9 @@ export const addTodo = (text: string): Task => {
     createdAt: new Date().toISOString(),
     deletedAt: null,
     projectId: null,
-    rank: getNextRank(currentTodos),
+    cancelledAt: null,
+    loggedAt: null,
+    anytimeRank: getNextRank(currentTodos),
     todayRank: null,
   }
 
@@ -205,7 +198,7 @@ export const reorderTasks = (
       if (b.todayRank === null) return -1
       return a.todayRank - b.todayRank
     }
-    return a.rank - b.rank
+    return a.anytimeRank - b.anytimeRank
   })
 
   const [movedTodo] = sortedTodos.splice(startIndex, 1)
@@ -222,7 +215,7 @@ export const reorderTasks = (
     }
     return {
       ...todo,
-      rank: newRank,
+      anytimeRank: newRank,
     }
   })
 

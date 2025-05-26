@@ -1,9 +1,8 @@
-import { Link, useRouter, useMatches } from '@tanstack/react-router'
+import { Link, useMatches, useRouter } from '@tanstack/react-router'
 import { ListIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { BsFillTrash2Fill } from 'react-icons/bs'
 import { FaBook, FaStar } from 'react-icons/fa6'
-import { RiArchive2Fill } from 'react-icons/ri'
 import { twMerge } from 'tailwind-merge'
 import { useProjects, useTasks } from '../../../shared/ipc'
 import { CircularProgress } from '../../../shared/ui/CircularProgress'
@@ -30,7 +29,7 @@ export function Sidebar() {
           // } else if (num === 3) {
           //   routerInstance.navigate({ to: '/someday' })
         } else if (num === 3) {
-          routerInstance.navigate({ to: '/completed' })
+          routerInstance.navigate({ to: '/logbook' })
         } else if (num === 4) {
           routerInstance.navigate({ to: '/trash' })
         }
@@ -84,7 +83,7 @@ export function Sidebar() {
         </section>
         <section className="flex flex-col gap-1">
           <SidebarButton
-            href="/completed"
+            href="/logbook"
             icon={<FaBook className="w-4.5 text-green-500" />}
           >
             Logbook

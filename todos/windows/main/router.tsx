@@ -1,27 +1,26 @@
 import {
-  createRouter,
-  createRoute,
   createRootRoute,
+  createRoute,
+  createRouter,
 } from '@tanstack/react-router'
 import App from './pages/index'
 
 // Import pages
 import AnytimePage from './pages/anytime/screen'
+import LogbookPage from './pages/logbook/screen'
+import ProjectPage from './pages/project/[projectId]/screen'
+import SomedayPage from './pages/someday/screen'
 import TodayPage from './pages/today/screen'
 import TrashPage from './pages/trash/screen'
-import ProjectPage from './pages/project/[projectId]/screen'
-import CompletedPage from './pages/completed/screen'
-import SomedayPage from './pages/someday/screen'
 
 // Create routes
 const rootRoute = createRootRoute({
   component: App,
-})
-
-const indexRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/',
-  component: AnytimePage,
+  beforeLoad: ({ location }) => {
+    if (location.pathname === '/') {
+      throw router.navigate({ to: '/anytime' })
+    }
+  },
 })
 
 const todayRoute = createRoute({
@@ -36,10 +35,10 @@ const trashRoute = createRoute({
   component: TrashPage,
 })
 
-const completedRoute = createRoute({
+const logbookRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/completed',
-  component: CompletedPage,
+  path: '/logbook',
+  component: LogbookPage,
 })
 
 const anytimeRoute = createRoute({
@@ -62,12 +61,11 @@ const somedayRoute = createRoute({
 
 // Create and export the router
 const routeTree = rootRoute.addChildren([
-  indexRoute,
   todayRoute,
   anytimeRoute,
   trashRoute,
   projectRoute,
-  completedRoute,
+  logbookRoute,
   somedayRoute,
 ])
 

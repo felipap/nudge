@@ -2,7 +2,7 @@ import { DraggableAttributes } from '@dnd-kit/core'
 import { Check } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { type Task } from '../../../src/store'
+import { type Task } from '../../../../src/store'
 
 interface Props {
   task: Task

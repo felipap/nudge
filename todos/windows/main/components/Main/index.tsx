@@ -5,7 +5,7 @@ import { useTodoState } from '../../../shared/lib/useTodoState'
 import { TaskList } from './TaskList'
 
 export type Page =
-  | 'completed'
+  | 'logbook'
   | 'anytime'
   | 'today'
   | 'trash'
@@ -17,10 +17,18 @@ interface Props {
   icon?: React.ReactNode
   page: Page
   projectId?: string
+  preventCreate?: boolean
   filter: (task: Task) => boolean
 }
 
-export function Main({ title, filter, icon, page, projectId }: Props) {
+export function OldMainComponent_REPLACE({
+  title,
+  filter,
+  icon,
+  page,
+  projectId,
+  preventCreate = false,
+}: Props) {
   const { addTodo, tasks } = useTodoState()
 
   const pageTasks = useMemo(() => {
@@ -37,8 +45,6 @@ export function Main({ title, filter, icon, page, projectId }: Props) {
       addTodo({ when: 'today' })
     } else if (page === 'anytime') {
       addTodo({ when: 'anytime' })
-    } else if (page === 'completed') {
-      addTodo({ completedAt: new Date().toISOString() })
     } else if (page === 'trash') {
       addTodo({ deletedAt: new Date().toISOString() })
     } else if (page === 'someday') {
@@ -55,19 +61,53 @@ export function Main({ title, filter, icon, page, projectId }: Props) {
         <TaskList
           tasks={pageTasks}
           isToday={page === 'today'}
-          onAddTodo={handleAddTodo}
+          onAddTodo={preventCreate ? undefined : handleAddTodo}
           showStarIfToday={page !== 'today'}
         />
       </main>
       {/* Floating Action Button */}
-      <div className="fixed bottom-3 right-3">
-        <AddTodoButton onClick={handleAddTodo} />
-      </div>
+      {!preventCreate && (
+        <div className="fixed bottom-3 right-3">
+          <AddTodoButton onClick={handleAddTodo} />
+        </div>
+      )}
     </div>
   )
 }
 
-function PageTitle({ title, icon }: { title: string; icon?: React.ReactNode }) {
+interface LayoutProps {
+  children: React.ReactNode
+  title: string
+  icon?: React.ReactNode
+  page: Page
+  projectId?: string
+  handleAddTodo?: () => void
+}
+
+export function Layout({ title, icon, handleAddTodo, children }: LayoutProps) {
+  return (
+    <div className="px-10 pt-[50px] w-full h-full">
+      <header className="flex pb-8 items-center justify-between">
+        <PageTitle title={title} icon={icon} />
+      </header>
+      <main className="h-full overflow-hidden">{children}</main>
+      {/* Floating Action Button */}
+      {handleAddTodo && (
+        <div className="fixed bottom-3 right-3">
+          <AddTodoButton onClick={handleAddTodo} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+export function PageTitle({
+  title,
+  icon,
+}: {
+  title: string
+  icon?: React.ReactNode
+}) {
   return (
     <h1 className="text-2xl font-semibold flex items-center gap-4">
       {icon}
@@ -76,7 +116,7 @@ function PageTitle({ title, icon }: { title: string; icon?: React.ReactNode }) {
   )
 }
 
-function AddTodoButton({ onClick }: { onClick: () => void }) {
+export function AddTodoButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}

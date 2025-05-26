@@ -1,6 +1,6 @@
 import { useParams } from '@tanstack/react-router'
 import { useProjects } from '../../../../shared/ipc'
-import { Main } from '../../Main'
+import { OldMainComponent_REPLACE } from '../../../components/Main'
 
 export default function Screen() {
   const { projectId } = useParams({ from: '/project/$projectId' })
@@ -14,7 +14,7 @@ export default function Screen() {
   }
 
   return (
-    <Main
+    <OldMainComponent_REPLACE
       title={title}
       page="project"
       projectId={project.id}

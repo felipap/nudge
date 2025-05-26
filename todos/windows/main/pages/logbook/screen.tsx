@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { BsFillTrash2Fill } from 'react-icons/bs'
+import { FaBook } from 'react-icons/fa6'
 import { useTodoState } from '../../../shared/lib/useTodoState'
 import { Layout } from '../../components/Main'
 import { TaskList } from '../../components/Main/TaskList'
@@ -8,16 +8,16 @@ export default function Screen() {
   const { tasks } = useTodoState()
 
   const pageTasks = useMemo(() => {
-    return tasks.filter((t) => !!t.deletedAt)
+    return tasks.filter((t) => !!t.loggedAt && !t.deletedAt)
   }, [tasks])
 
   return (
     <Layout
-      icon={<BsFillTrash2Fill className="w-5 text-gray-400" />}
-      title="Trash"
-      page="trash"
+      icon={<FaBook className="w-5 text-green-500" />}
+      title="Logbook"
+      page="logbook"
     >
-      <TaskList tasks={pageTasks} showStarIfToday restoreOnDelete />
+      <TaskList tasks={pageTasks} showStarIfToday visibleItemDate />
     </Layout>
   )
 }

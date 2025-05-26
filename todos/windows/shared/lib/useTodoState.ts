@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Task } from '../../../src/store'
 import { useBackendState } from '../../shared/ipc'
 
@@ -8,7 +8,7 @@ const getNextRank = (tasks: Task[]): number => {
   if (tasks.length === 0) {
     return 1000
   }
-  const maxRank = Math.max(...tasks.map((t) => t.rank ?? 0))
+  const maxRank = Math.max(...tasks.map((t) => t.anytimeRank ?? 0))
   return maxRank + 1000
 }
 
@@ -26,12 +26,18 @@ export function useTodoState() {
   const [newTodo, setNewTodo] = useState('')
   const previousStates = useRef<{ tasks: Task[] }[]>([])
 
-  const tasks = state?.tasks ?? []
+  const [taskCounter, setTaskCounter] = useState(0)
+
+  const tasksRef = useRef<Task[]>([])
+  useEffect(() => {
+    setTaskCounter((c) => c + 1)
+    tasksRef.current = state?.tasks ?? []
+  }, [state?.tasks])
 
   const saveState = async (newState: { tasks: Task[] }) => {
-    previousStates.current.push({ tasks })
-    // Keep only last 10 states to prevent memory bloat
-    if (previousStates.current.length > 10) {
+    previousStates.current.push({ tasks: tasksRef.current })
+    // Keep only last 2 states to prevent memory bloat
+    if (previousStates.current.length > 2) {
       previousStates.current.shift()
     }
     await window.electronAPI.setPartialState(newState)
@@ -54,24 +60,28 @@ export function useTodoState() {
           text: '',
           deletedAt: null,
           completedAt: null,
+          cancelledAt: null,
+          loggedAt: null,
           context: null,
           projectId: null,
-          rank: getNextRank(tasks),
+          anytimeRank: getNextRank(tasksRef.current),
           when: 'today',
           todayRank: 0,
           ...task,
         },
-        ...tasks,
+        ...tasksRef.current,
       ],
     })
   }
 
-  async function toggleTodo(id: string) {
-    const updatedTodos = tasks.map((task) => {
+  async function toggleTodoCompletion(id: string, value: boolean) {
+    const updatedTodos = tasksRef.current.map((task) => {
       if (task.id === id) {
         return {
           ...task,
-          completedAt: task.completedAt ? null : new Date().toISOString(),
+          completedAt: value
+            ? task.completedAt || new Date().toISOString()
+            : null,
         }
       }
       return task
@@ -82,10 +92,13 @@ export function useTodoState() {
     })
   }
 
-  async function deleteTodo(id: string) {
-    const updatedTodos = tasks.map((task) => {
+  async function deleteTodo(id: string, restore: boolean = false) {
+    const updatedTodos = tasksRef.current.map((task) => {
       if (task.id === id) {
-        return { ...task, deletedAt: new Date().toISOString() }
+        return {
+          ...task,
+          deletedAt: restore ? null : new Date().toISOString(),
+        }
       }
       return task
     })
@@ -95,17 +108,32 @@ export function useTodoState() {
     })
   }
 
-  async function editTodo(id: string, newText: string) {
-    const updatedTodos = tasks.map((task) => {
+  async function editTodo(id: string, data: Partial<Task>) {
+    const updatedTodos = tasksRef.current.map((task) => {
       if (task.id === id) {
         return {
           ...task,
-          text: newText.trim(),
+          ...data,
           updatedAt: new Date().toISOString(),
         }
       }
       return task
     })
+
+    await saveState({
+      tasks: updatedTodos,
+    })
+  }
+
+  async function logAllCompleted() {
+    const updatedTodos = tasksRef.current.map((task) => {
+      if ((task.completedAt || task.cancelledAt) && !task.loggedAt) {
+        return { ...task, loggedAt: new Date().toISOString() }
+      }
+      return task
+    })
+
+    console.log('new todos', updatedTodos)
 
     await saveState({
       tasks: updatedTodos,
@@ -120,7 +148,7 @@ export function useTodoState() {
   ) {
     // Get the tasks in their current visible order
     const visibleTasks = visibleTaskIds.map(
-      (id) => tasks.find((t) => t.id === id)!
+      (id) => tasksRef.current.find((t) => t.id === id)!
     )
 
     // Perform the reorder on the visible tasks
@@ -134,7 +162,7 @@ export function useTodoState() {
     })
 
     // Update all tasks, preserving ranks for non-visible tasks
-    const updatedTodos = tasks.map((task) => {
+    const updatedTodos = tasksRef.current.map((task) => {
       const newRank = newRanks.get(task.id)
       if (newRank === undefined) return task
 
@@ -146,7 +174,7 @@ export function useTodoState() {
       } else {
         return {
           ...task,
-          rank: newRank,
+          anytimeRank: newRank,
         }
       }
     })
@@ -157,13 +185,14 @@ export function useTodoState() {
   }
 
   return {
-    tasks,
+    tasks: tasksRef.current,
     newTodo,
     setNewTodo,
     addTodo,
-    toggleTodo,
+    toggleTodoCompletion,
     deleteTodo,
     editTodo,
+    logAllCompleted,
     reorderTodos,
     undo,
   }
