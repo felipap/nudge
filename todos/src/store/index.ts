@@ -50,6 +50,7 @@ export const addTodo = (text: string): Task => {
     text: text.trim(),
     context: null,
     completedAt: null,
+    when: 'today',
     updatedAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
     deletedAt: null,

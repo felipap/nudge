@@ -27,16 +27,16 @@ export function Sidebar() {
           routerInstance.navigate({ to: '/today' })
         } else if (num === 2) {
           routerInstance.navigate({ to: '/anytime' })
+          // } else if (num === 3) {
+          //   routerInstance.navigate({ to: '/someday' })
         } else if (num === 3) {
-          routerInstance.navigate({ to: '/someday' })
-        } else if (num === 4) {
           routerInstance.navigate({ to: '/completed' })
-        } else if (num === 5) {
+        } else if (num === 4) {
           routerInstance.navigate({ to: '/trash' })
         }
-        // Projects: 6 and above
-        else if (num >= 6 && num - 6 < projects.length) {
-          const project = projects[num - 6]
+        // Projects: 5 and above
+        else if (num >= 5 && num - 5 < projects.length) {
+          const project = projects[num - 5]
           routerInstance.navigate({
             to: '/project/$projectId',
             params: { projectId: project.id },
@@ -75,12 +75,12 @@ export function Sidebar() {
           <SidebarButton href="/anytime" icon={<ListIcon className="w-4.5" />}>
             Anytime
           </SidebarButton>
-          <SidebarButton
+          {/* <SidebarButton
             href="/someday"
             icon={<RiArchive2Fill className="w-4.5 text-yellow-900/60" />}
           >
             Someday
-          </SidebarButton>
+          </SidebarButton> */}
         </section>
         <section className="flex flex-col gap-1">
           <SidebarButton
@@ -105,8 +105,7 @@ export function Sidebar() {
             {projects.map((project) => (
               <SidebarButton
                 key={project.id}
-                href="/project/$projectId"
-                params={{ projectId: project.id }}
+                href={`/project/${project.id}`}
                 icon={
                   <CircularProgress
                     progress={getProjectProgress(project.id)}
@@ -128,16 +127,12 @@ interface SidebarButtonProps {
   children: React.ReactNode
   icon: React.ReactNode
   href: string
-  params?: Record<string, string>
   onClick?: () => void
 }
 
 function SidebarButton({ children, icon, href, ...props }: SidebarButtonProps) {
   const matches = useMatches()
-  const isActive =
-    matches.some((match) => match.pathname === href) ||
-    (href === '/project/$projectId' &&
-      window.location.pathname.startsWith('/project/'))
+  const isActive = matches.some((match) => match.pathname === href)
 
   return (
     <Link

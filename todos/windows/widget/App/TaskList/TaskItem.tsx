@@ -98,6 +98,9 @@ export const TaskItem = ({
         isFocused && 'bg-gray-100'
       )}
       onClick={() => {
+        if (isOpen) {
+          return
+        }
         onFocus()
       }}
       {...(!isOpen && dragHandleProps)}

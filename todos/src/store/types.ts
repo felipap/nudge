@@ -21,6 +21,7 @@ export interface Task {
   completedAt: string | null
   context: string | null
   deletedAt: string | null
+  when: 'today' | 'tonight' | 'anytime' | null
   projectId: string | null
   rank: number
   todayRank: number

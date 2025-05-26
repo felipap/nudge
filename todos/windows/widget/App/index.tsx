@@ -2,7 +2,7 @@ import { PinIcon } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 import { useBackendState } from '../../shared/ipc'
 import { useTodoState } from '../../shared/lib/useTodoState'
-import { TaskList } from '../../shared/ui/TaskList'
+import { TaskList } from './TaskList'
 import { PlusIcon } from './PlusIcon'
 
 export default function App() {

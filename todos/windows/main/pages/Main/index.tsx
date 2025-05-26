@@ -28,10 +28,21 @@ export function Main({ title, filter, icon, page, projectId }: Props) {
   }, [tasks, filter])
 
   const handleAddTodo = () => {
-    if (page === 'project' && projectId) {
-      addTodo('', projectId)
-    } else {
-      addTodo('')
+    if (page === 'project') {
+      if (!projectId) {
+        throw new Error('projectId is required')
+      }
+      addTodo({ projectId })
+    } else if (page === 'today') {
+      addTodo({ when: 'today' })
+    } else if (page === 'anytime') {
+      addTodo({ when: 'anytime' })
+    } else if (page === 'completed') {
+      addTodo({ completedAt: new Date().toISOString() })
+    } else if (page === 'trash') {
+      addTodo({ deletedAt: new Date().toISOString() })
+    } else if (page === 'someday') {
+      addTodo({ when: null })
     }
   }
 
@@ -41,9 +52,13 @@ export function Main({ title, filter, icon, page, projectId }: Props) {
         <PageTitle title={title} icon={icon} />
       </header>
       <main className="h-full overflow-hidden">
-        <TaskList tasks={pageTasks} isToday={page === 'today'} />
+        <TaskList
+          tasks={pageTasks}
+          isToday={page === 'today'}
+          onAddTodo={handleAddTodo}
+          showStarIfToday={page !== 'today'}
+        />
       </main>
-
       {/* Floating Action Button */}
       <div className="fixed bottom-3 right-3">
         <AddTodoButton onClick={handleAddTodo} />

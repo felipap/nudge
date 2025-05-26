@@ -1,4 +1,5 @@
 import { DraggableAttributes } from '@dnd-kit/core'
+import { FaStar } from 'react-icons/fa'
 import { Check } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
@@ -14,6 +15,7 @@ interface Props {
   onOpen: () => void
   onFocus: () => void
   onClose: () => void
+  showStarIfToday?: boolean
   isFocused: boolean
 }
 
@@ -25,6 +27,7 @@ export const TaskItem = ({
   dragHandleProps,
   isOpen,
   isFocused,
+  showStarIfToday,
   onOpen,
   onFocus,
   onClose,
@@ -85,21 +88,25 @@ export const TaskItem = ({
     if (isFocused) {
       ref.current?.focus()
     }
-  }, [isFocused])
+    if (isOpen) {
+      inputRef.current?.focus()
+    }
+  }, [isFocused, inputRef])
 
   return (
     <div
       ref={ref}
       className={twMerge(
-        'flex items-center gap-1.5 group transition duration-75 px-1 rounded-sm cursor-move',
+        'flex items-center gap-1.5 group transition duration-75 px-1 rounded-sm',
         'focus:outline-none focus:ring-0 focus:border-none',
         task.completedAt && 'opacity-50',
-        isOpen && 'bg-gray-400/40',
+        isOpen && 'shadow-md py-1 border',
         isFocused && 'bg-blue-500/10'
       )}
-      {...(!isOpen && dragHandleProps)}
       onClick={() => {
-        onFocus()
+        if (!isOpen) {
+          onFocus()
+        }
       }}
     >
       <Checkbox
@@ -107,9 +114,18 @@ export const TaskItem = ({
         checked={!!task.completedAt}
       />
       <div
-        className="w-full h-[26px] flex items-center overflow-hidden"
+        className={twMerge(
+          'w-full h-[26px] flex items-center overflow-hidden',
+          !isOpen && 'cursor-move'
+        )}
+        {...(!isOpen && dragHandleProps)}
         onDoubleClick={() => {
           onOpen()
+        }}
+        onClick={() => {
+          if (!isOpen) {
+            onFocus()
+          }
         }}
       >
         {isOpen ? (
@@ -124,9 +140,12 @@ export const TaskItem = ({
         ) : (
           <div
             className={twMerge(
-              'min-w-0 flex-1 cursor-pointer select-none text-sm px-1 py-0 transition-all text-ellipsis whitespace-nowrap overflow-hidden '
+              'min-w-0 flex flex-row gap-2 items-center flex-1 cursor-pointer select-none text-sm px-1 py-0 transition-all text-ellipsis whitespace-nowrap overflow-hidden '
             )}
           >
+            {showStarIfToday && task.when === 'today' && (
+              <FaStar className="w-3.5 h-3.5 text-amber-300" />
+            )}
             {value || '\u00A0'}
           </div>
         )}

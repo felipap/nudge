@@ -1,7 +1,7 @@
 import { FaBook } from 'react-icons/fa6'
 import { Main } from '../Main'
 
-export default function Page() {
+export default function Screen() {
   return (
     <Main
       icon={<FaBook className="w-4.5 text-green-500" />}

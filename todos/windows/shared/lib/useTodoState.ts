@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid'
-import { useState, useRef } from 'react'
-import { useBackendState } from '../../shared/ipc'
+import { useRef, useState } from 'react'
 import { Task } from '../../../src/store'
+import { useBackendState } from '../../shared/ipc'
 
 // Helper functions for ranks
 const getNextRank = (tasks: Task[]): number => {
@@ -44,22 +44,25 @@ export function useTodoState() {
     }
   }
 
-  async function addTodo(text: string, projectId?: string) {
-    const task: Task = {
-      id: nanoid(),
-      text: text.trim(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      deletedAt: null,
-      completedAt: null,
-      context: null,
-      projectId: projectId ?? null,
-      rank: getNextRank(tasks),
-      todayRank: null,
-    }
-
+  async function addTodo(task: Partial<Task>) {
     await saveState({
-      tasks: [task, ...tasks],
+      tasks: [
+        {
+          id: nanoid(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          text: '',
+          deletedAt: null,
+          completedAt: null,
+          context: null,
+          projectId: null,
+          rank: getNextRank(tasks),
+          when: 'today',
+          todayRank: 0,
+          ...task,
+        },
+        ...tasks,
+      ],
     })
   }
 
