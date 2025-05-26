@@ -5,28 +5,27 @@ import { useBackendState } from '../../shared/ipc'
 import { FocusableTodoList } from './FocusableTodoList'
 import { PlusIcon } from './PlusIcon'
 import { SortableList } from './SortableList'
-import { TodoItem } from './TodoItem'
+import { TaskItem } from './TaskItem'
 import { useTodoState } from './useTodoState'
 
 export default function App() {
   const {
-    todos,
-    newTodo,
-    setNewTodo,
+    tasks,
     addTodo,
     toggleTodo: toggleTodoBackend,
     deleteTodo,
     editTodo,
     reorderTodos,
+    undo,
   } = useTodoState()
 
   const [recentToggledTodos, setRecentToggledTodos] = useState<string[]>([])
-  const filteredTodos = todos.filter(
-    (todo) => !todo.completed || recentToggledTodos.includes(todo.id)
+  const filteredTasks = tasks.filter(
+    (task) => !task.completedAt || recentToggledTodos.includes(task.id)
   )
 
-  function toggleTodo(id: string) {
-    toggleTodoBackend(id)
+  async function toggleTodo(id: string) {
+    await toggleTodoBackend(id)
     setRecentToggledTodos([id, ...recentToggledTodos])
   }
 
@@ -41,7 +40,12 @@ export default function App() {
         </div>
       </header>
       <main className="h-full overflow-hidden px-2">
-        <FocusableTodoList todoIds={filteredTodos.map((todo) => todo.id)}>
+        <FocusableTodoList
+          onAddTodo={() => addTodo('')}
+          todoIds={filteredTasks.map((task) => task.id)}
+          onDelete={deleteTodo}
+          onUndo={undo}
+        >
           {({
             onOpenTodo,
             onFocus,
@@ -50,23 +54,23 @@ export default function App() {
             openTodoId,
           }) => (
             <SortableList
-              items={filteredTodos}
-              getItemId={(todo) => todo.id}
+              items={filteredTasks}
+              getItemId={(task) => task.id}
               onReorder={reorderTodos}
-              renderItem={({ item: todo, dragHandleProps }) => (
-                <TodoItem
-                  todo={todo}
+              renderItem={({ item: task, dragHandleProps }) => (
+                <TaskItem
+                  task={task}
                   onToggle={toggleTodo}
-                  onFocus={() => onFocus(todo.id)}
+                  onFocus={() => onFocus(task.id)}
                   onDelete={deleteTodo}
                   onEdit={(id, newText) => {
                     editTodo(id, newText)
                     onCloseTodo()
                   }}
                   dragHandleProps={dragHandleProps}
-                  isFocused={todo.id === focusedTodoId}
-                  isOpen={todo.id === openTodoId}
-                  onOpen={() => onOpenTodo(todo.id)}
+                  isFocused={task.id === focusedTodoId}
+                  isOpen={task.id === openTodoId}
+                  onOpen={() => onOpenTodo(task.id)}
                   onClose={onCloseTodo}
                 />
               )}

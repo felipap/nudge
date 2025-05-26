@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { State } from '../../src/types'
+import { State } from '../../src/store'
 
 export async function getState() {
   return await window.electronAPI.getState()

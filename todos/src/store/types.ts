@@ -1,18 +1,20 @@
 export const DEFAULT_STATE: State = {
   autoLaunch: false,
-  todos: [],
+  tasks: [],
   isTodoWindowPinned: false,
 }
 
-export interface Todo {
+export interface Task {
   id: string
   text: string
-  completed: boolean
   createdAt: string
+  updatedAt: string
+  completedAt: string | null
+  context: string | null
 }
 
 export interface State {
   autoLaunch: boolean
-  todos: Todo[]
+  tasks: Task[]
   isTodoWindowPinned: boolean
 }

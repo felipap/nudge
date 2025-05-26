@@ -10,12 +10,18 @@ interface FocusState {
 
 interface Props {
   onEditComplete?: () => void
+  onDelete: (id: string) => void
+  onUndo: () => void
+  onAddTodo: () => void
   children: (focusState: FocusState) => ReactNode
   todoIds: string[]
 }
 
 export function FocusableTodoList({
   onEditComplete,
+  onDelete,
+  onUndo,
+  onAddTodo,
   children,
   todoIds,
 }: Props) {
@@ -41,18 +47,29 @@ export function FocusableTodoList({
 
         if (e.key === 'ArrowDown') {
           nextIndex =
-            currentIndex === -1 ? 0 : (currentIndex + 1) % todoIds.length
+            currentIndex === -1
+              ? 0
+              : Math.min(currentIndex + 1, todoIds.length - 1)
         } else {
           nextIndex =
             currentIndex === -1
               ? todoIds.length - 1
-              : (currentIndex - 1 + todoIds.length) % todoIds.length
+              : Math.max(currentIndex - 1, 0)
         }
 
         setFocusedTodoId(todoIds[nextIndex])
       } else if (e.key === 'Enter' && focusedTodoId !== null) {
         e.preventDefault()
         setOpenTodoId(focusedTodoId)
+      } else if (e.key === 'Escape' && openTodoId !== null) {
+        setOpenTodoId(null)
+        setFocusedTodoId(null)
+      } else if (e.key === 'Backspace' && focusedTodoId !== null) {
+        onDelete(focusedTodoId)
+      } else if (e.key === 'z' && e.ctrlKey) {
+        onUndo()
+      } else if (e.key === 'n' && e.metaKey) {
+        onAddTodo()
       }
     }
 

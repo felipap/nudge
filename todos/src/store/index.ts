@@ -1,8 +1,8 @@
+import { nanoid } from 'nanoid'
 import { create, StoreApi } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { fileStore } from './backend'
-import { DEFAULT_STATE, State, Todo } from './types'
-import { nanoid } from 'nanoid'
+import { DEFAULT_STATE, State, Task } from './types'
 
 export * from './types'
 
@@ -25,56 +25,59 @@ export const store = create<State>()(
 )
 
 // Todo actions
-export const addTodo = (text: string): Todo => {
-  const todo: Todo = {
+export const addTodo = (text: string): Task => {
+  const todo: Task = {
     id: nanoid(),
     text: text.trim(),
-    completed: false,
+    context: null,
+    completedAt: null,
+    updatedAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
   }
 
-  const currentTodos = store.getState().todos
-  store.setState({ todos: [todo, ...currentTodos] })
+  const currentTodos = store.getState().tasks
+  store.setState({ tasks: [todo, ...currentTodos] })
   return todo
 }
 
-export const toggleTodo = (id: string): Todo | undefined => {
-  const currentTodos = store.getState().todos
+export const toggleTodo = (id: string): Task | undefined => {
+  const currentTodos = store.getState().tasks
   const updatedTodos = currentTodos.map((todo) => {
     if (todo.id === id) {
-      return { ...todo, completed: !todo.completed }
+      const completedAt = todo.completedAt ? null : new Date().toISOString()
+      return { ...todo, completedAt }
     }
     return todo
   })
 
-  store.setState({ todos: updatedTodos })
+  store.setState({ tasks: updatedTodos })
   return updatedTodos.find((t) => t.id === id)
 }
 
-export const deleteTodo = (id: string): Todo | undefined => {
-  const currentTodos = store.getState().todos
+export const deleteTodo = (id: string): Task | undefined => {
+  const currentTodos = store.getState().tasks
   const todoToDelete = currentTodos.find((t) => t.id === id)
   const updatedTodos = currentTodos.filter((todo) => todo.id !== id)
 
-  store.setState({ todos: updatedTodos })
+  store.setState({ tasks: updatedTodos })
   return todoToDelete
 }
 
-export const editTodo = (id: string, text: string): Todo | undefined => {
-  const currentTodos = store.getState().todos
+export const editTodo = (id: string, text: string): Task | undefined => {
+  const currentTodos = store.getState().tasks
   const updatedTodos = currentTodos.map((todo) => {
     if (todo.id === id) {
-      return { ...todo, text: text.trim() }
+      return { ...todo, text: text.trim(), updatedAt: new Date().toISOString() }
     }
     return todo
   })
 
-  store.setState({ todos: updatedTodos })
+  store.setState({ tasks: updatedTodos })
   return updatedTodos.find((t) => t.id === id)
 }
 
-export const getTodos = (): Todo[] => {
-  return store.getState().todos
+export const getTodos = (): Task[] => {
+  return store.getState().tasks
 }
 
 export const getState = () => store.getState()

@@ -38,13 +38,9 @@ export function createTray() {
 
     const template: MenuItemConstructorOptions[] = [
       {
-        label: todoWindow.isVisible() ? 'Hide Window' : 'Show Window',
+        label: 'Show Window',
         click: () => {
-          if (todoWindow.isVisible()) {
-            todoWindow.hide()
-          } else {
-            todoWindow.show()
-          }
+          todoWindow.show()
         },
       },
       {

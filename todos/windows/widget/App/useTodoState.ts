@@ -1,71 +1,99 @@
-import { useState } from 'react'
+import { nanoid } from 'nanoid'
+import { useState, useRef } from 'react'
 import { useBackendState } from '../../shared/ipc'
+import { Task } from '../../../src/store'
 
 export function useTodoState() {
   const { state } = useBackendState()
   const [newTodo, setNewTodo] = useState('')
+  const previousStates = useRef<{ tasks: Task[] }[]>([])
 
-  const todos = state?.todos ?? []
+  const tasks = state?.tasks ?? []
+
+  const saveState = async (newState: { tasks: Task[] }) => {
+    previousStates.current.push({ tasks })
+    // Keep only last 10 states to prevent memory bloat
+    if (previousStates.current.length > 10) {
+      previousStates.current.shift()
+    }
+    await window.electronAPI.setPartialState(newState)
+  }
+
+  async function undo() {
+    const previousState = previousStates.current.pop()
+    if (previousState) {
+      await window.electronAPI.setPartialState(previousState)
+    }
+  }
 
   async function addTodo(text: string) {
-    const todo = {
-      id: crypto.randomUUID(),
+    const task: Task = {
+      id: nanoid(),
       text: text.trim(),
-      completed: false,
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      completedAt: null,
+      context: null,
     }
 
-    await window.electronAPI.setPartialState({
-      todos: [todo, ...todos],
+    await saveState({
+      tasks: [task, ...tasks],
     })
   }
 
   async function toggleTodo(id: string) {
-    const updatedTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, completed: !todo.completed }
+    const updatedTodos = tasks.map((task) => {
+      if (task.id === id) {
+        return {
+          ...task,
+          completedAt: task.completedAt ? null : new Date().toISOString(),
+        }
       }
-      return todo
+      return task
     })
 
-    await window.electronAPI.setPartialState({
-      todos: updatedTodos,
+    await saveState({
+      tasks: updatedTodos,
     })
   }
 
   async function deleteTodo(id: string) {
-    const updatedTodos = todos.filter((todo) => todo.id !== id)
+    const updatedTodos = tasks.filter((task) => task.id !== id)
 
-    await window.electronAPI.setPartialState({
-      todos: updatedTodos,
+    await saveState({
+      tasks: updatedTodos,
     })
   }
 
   async function editTodo(id: string, newText: string) {
-    const updatedTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, text: newText.trim() }
+    const updatedTodos = tasks.map((task) => {
+      if (task.id === id) {
+        return {
+          ...task,
+          text: newText.trim(),
+          updatedAt: new Date().toISOString(),
+        }
       }
-      return todo
+      return task
     })
 
-    await window.electronAPI.setPartialState({
-      todos: updatedTodos,
+    await saveState({
+      tasks: updatedTodos,
     })
   }
 
   async function reorderTodos(startIndex: number, endIndex: number) {
-    const updatedTodos = Array.from(todos)
+    const updatedTodos = Array.from(tasks)
     const [removed] = updatedTodos.splice(startIndex, 1)
     updatedTodos.splice(endIndex, 0, removed)
 
-    await window.electronAPI.setPartialState({
-      todos: updatedTodos,
+    await saveState({
+      tasks: updatedTodos,
     })
   }
 
   return {
-    todos,
+    tasks,
     newTodo,
     setNewTodo,
     addTodo,
@@ -73,5 +101,6 @@ export function useTodoState() {
     deleteTodo,
     editTodo,
     reorderTodos,
+    undo,
   }
 }
