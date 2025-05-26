@@ -22,6 +22,8 @@ export interface Task {
   context: string | null
   deletedAt: string | null
   projectId: string | null
+  rank: number
+  todayRank: number
 }
 
 export interface State {

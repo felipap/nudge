@@ -75,7 +75,7 @@ export function Main({ page, projectId }: Props) {
         <PageTitle title={title} />
       </header>
       <main className="h-full overflow-hidden">
-        <TaskList tasks={pageTasks} />
+        <TaskList tasks={pageTasks} isToday={page === 'today'} />
       </main>
 
       {/* Floating Action Button */}

@@ -9,7 +9,7 @@ interface Props {
   onToggle: (id: string) => void
   onDelete: (id: string) => void
   onEdit: (id: string, newText: string) => void
-  dragHandleProps?: DraggableAttributes
+  dragHandleProps: DraggableAttributes & Record<string, any>
   isOpen: boolean
   onOpen: () => void
   onFocus: () => void
@@ -91,28 +91,25 @@ export const TaskItem = ({
     <div
       ref={ref}
       className={twMerge(
-        'flex items-center gap-1.5 group transition duration-75 px-1 py-0.5 rounded-sm',
+        'flex items-center gap-1.5 group transition duration-75 px-1 rounded-sm cursor-move',
         'focus:outline-none focus:ring-0 focus:border-none',
         task.completedAt && 'opacity-50',
         isOpen && 'bg-gray-400/40',
-        isFocused && 'bg-gray-100'
+        isFocused && 'bg-blue-500/10'
       )}
-      // onClick={() => {
-      //   onFocus()
-      // }}
-      {...(!isOpen && dragHandleProps)}
+      onClick={() => {
+        onFocus()
+      }}
+      // {...(!isOpen && dragHandleProps)}
     >
       <Checkbox
         onClick={() => onToggle(task.id)}
         checked={!!task.completedAt}
       />
       <div
-        className="w-full h-[26`px] flex items-center overflow-hidden"
+        className="w-full h-[26px] flex items-center overflow-hidden"
         onDoubleClick={() => {
-          // if (!isFocused) {
-          onFocus()
           onOpen()
-          // }
         }}
       >
         {isOpen ? (

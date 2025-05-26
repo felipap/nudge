@@ -17,6 +17,8 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import { type ReactNode } from 'react'
 
+const DEBUG = false
+
 interface Props<T> {
   items: T[]
   getItemId: (item: T) => string
@@ -46,9 +48,23 @@ export function DraggableList<T>({
       return
     }
 
+    if (DEBUG) {
+      console.log('DraggableList handleDragEnd:', {
+        activeId: active.id,
+        overId: over.id,
+        items: items.map((item, i) => ({
+          index: i,
+          id: getItemId(item),
+        })),
+      })
+    }
+
     const oldIndex = items.findIndex((item) => getItemId(item) === active.id)
     const newIndex = items.findIndex((item) => getItemId(item) === over.id)
 
+    if (DEBUG) {
+      console.log('DraggableList indices:', { oldIndex, newIndex })
+    }
     onReorder(oldIndex, newIndex)
   }
 
@@ -101,7 +117,7 @@ function SortableItem({ id, renderItem }: SortableItemProps) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
-      {renderItem(attributes)}
+      {renderItem({ ...attributes, ...listeners })}
     </div>
   )
 }

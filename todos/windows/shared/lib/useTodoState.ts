@@ -3,6 +3,24 @@ import { useState, useRef } from 'react'
 import { useBackendState } from '../../shared/ipc'
 import { Task } from '../../../src/store'
 
+// Helper functions for ranks
+const getNextRank = (tasks: Task[]): number => {
+  if (tasks.length === 0) {
+    return 1000
+  }
+  const maxRank = Math.max(...tasks.map((t) => t.rank ?? 0))
+  return maxRank + 1000
+}
+
+const getNextTodayRank = (tasks: Task[]): number => {
+  const todayTasks = tasks.filter((t) => t.todayRank !== null)
+  if (todayTasks.length === 0) {
+    return 1000
+  }
+  const maxRank = Math.max(...todayTasks.map((t) => t.todayRank!))
+  return maxRank + 1000
+}
+
 export function useTodoState() {
   const { state } = useBackendState()
   const [newTodo, setNewTodo] = useState('')
@@ -36,6 +54,8 @@ export function useTodoState() {
       completedAt: null,
       context: null,
       projectId: projectId ?? null,
+      rank: getNextRank(tasks),
+      todayRank: null,
     }
 
     await saveState({
@@ -89,10 +109,44 @@ export function useTodoState() {
     })
   }
 
-  async function reorderTodos(startIndex: number, endIndex: number) {
-    const updatedTodos = Array.from(tasks)
-    const [removed] = updatedTodos.splice(startIndex, 1)
-    updatedTodos.splice(endIndex, 0, removed)
+  async function reorderTodos(
+    visibleTaskIds: string[],
+    startIndex: number,
+    endIndex: number,
+    isToday: boolean = false
+  ) {
+    // Get the tasks in their current visible order
+    const visibleTasks = visibleTaskIds.map(
+      (id) => tasks.find((t) => t.id === id)!
+    )
+
+    // Perform the reorder on the visible tasks
+    const [movedTask] = visibleTasks.splice(startIndex, 1)
+    visibleTasks.splice(endIndex, 0, movedTask)
+
+    // Calculate new ranks for visible tasks
+    const newRanks = new Map<string, number>()
+    visibleTasks.forEach((task, index) => {
+      newRanks.set(task.id, (index + 1) * 1000)
+    })
+
+    // Update all tasks, preserving ranks for non-visible tasks
+    const updatedTodos = tasks.map((task) => {
+      const newRank = newRanks.get(task.id)
+      if (newRank === undefined) return task
+
+      if (isToday) {
+        return {
+          ...task,
+          todayRank: task.todayRank !== null ? newRank : null,
+        }
+      } else {
+        return {
+          ...task,
+          rank: newRank,
+        }
+      }
+    })
 
     await saveState({
       tasks: updatedTodos,

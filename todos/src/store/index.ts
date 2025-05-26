@@ -24,8 +24,27 @@ export const store = create<State>()(
   })
 )
 
+// Helper functions for ranks
+const getNextRank = (tasks: Task[]): number => {
+  if (tasks.length === 0) {
+    return 1000
+  }
+  const maxRank = Math.max(...tasks.map((t) => t.rank))
+  return maxRank + 1000
+}
+
+const getNextTodayRank = (tasks: Task[]): number => {
+  const todayTasks = tasks.filter((t) => t.todayRank !== null)
+  if (todayTasks.length === 0) {
+    return 1000
+  }
+  const maxRank = Math.max(...todayTasks.map((t) => t.todayRank!))
+  return maxRank + 1000
+}
+
 // Todo actions
 export const addTodo = (text: string): Task => {
+  const currentTodos = store.getState().tasks
   const todo: Task = {
     id: nanoid(),
     text: text.trim(),
@@ -35,9 +54,10 @@ export const addTodo = (text: string): Task => {
     createdAt: new Date().toISOString(),
     deletedAt: null,
     projectId: null,
+    rank: getNextRank(currentTodos),
+    todayRank: null,
   }
 
-  const currentTodos = store.getState().tasks
   store.setState({ tasks: [todo, ...currentTodos] })
   return todo
 }
@@ -169,4 +189,41 @@ export const assignTaskToProject = (
 
   store.setState({ tasks: updatedTasks })
   return updatedTasks.find((t) => t.id === taskId)
+}
+
+export const reorderTasks = (
+  startIndex: number,
+  endIndex: number,
+  isToday: boolean = false
+) => {
+  const currentTodos = store.getState().tasks
+  const sortedTodos = [...currentTodos].sort((a, b) => {
+    if (isToday) {
+      if (a.todayRank === null && b.todayRank === null) return 0
+      if (a.todayRank === null) return 1
+      if (b.todayRank === null) return -1
+      return a.todayRank - b.todayRank
+    }
+    return a.rank - b.rank
+  })
+
+  const [movedTodo] = sortedTodos.splice(startIndex, 1)
+  sortedTodos.splice(endIndex, 0, movedTodo)
+
+  // Recalculate ranks
+  const updatedTodos = sortedTodos.map((todo, index) => {
+    const newRank = (index + 1) * 1000
+    if (isToday) {
+      return {
+        ...todo,
+        todayRank: todo.todayRank !== null ? newRank : null,
+      }
+    }
+    return {
+      ...todo,
+      rank: newRank,
+    }
+  })
+
+  store.setState({ tasks: updatedTodos })
 }

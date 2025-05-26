@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { setPartialState } from '../windows/shared/ipc'
-import { State, store } from './store'
+import { State, store, reorderTasks } from './store'
 
 export function setupIPC() {
   // Set up state change listener
@@ -68,4 +68,11 @@ export function setupIPC() {
   ipcMain.on('openExternal', (_event, url: string) => {
     shell.openExternal(url)
   })
+
+  ipcMain.on(
+    'reorderTasks',
+    (_event, startIndex: number, endIndex: number, isToday: boolean) => {
+      reorderTasks(startIndex, endIndex, isToday)
+    }
+  )
 }
