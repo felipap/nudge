@@ -97,10 +97,10 @@ export const TaskItem = ({
         isOpen && 'bg-gray-400/40',
         isFocused && 'bg-blue-500/10'
       )}
+      {...(!isOpen && dragHandleProps)}
       onClick={() => {
         onFocus()
       }}
-      {...(!isOpen && dragHandleProps)}
     >
       <Checkbox
         onClick={() => onToggle(task.id)}

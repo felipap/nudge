@@ -6,7 +6,7 @@ import { FaBook, FaStar } from 'react-icons/fa6'
 import { RiArchive2Fill } from 'react-icons/ri'
 import { twMerge } from 'tailwind-merge'
 import { useProjects, useTasks } from '../../../shared/ipc'
-import { CircularProgress } from './CircularProgress'
+import { CircularProgress } from '../../../shared/ui/CircularProgress'
 
 export function Sidebar() {
   const routerInstance = useRouter()

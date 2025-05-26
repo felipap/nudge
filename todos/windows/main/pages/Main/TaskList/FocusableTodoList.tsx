@@ -79,7 +79,10 @@ export function FocusableTodoList({
 
   return children({
     openTodoId,
-    onOpenTodo: (id) => setOpenTodoId(id),
+    onOpenTodo: (id) => {
+      setFocusedTodoId(null)
+      setOpenTodoId(id)
+    },
     onCloseTodo: () => {
       setOpenTodoId(null)
       setFocusedTodoId(null)

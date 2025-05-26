@@ -3,13 +3,15 @@ import {
   createRoute,
   createRootRoute,
 } from '@tanstack/react-router'
-import { Main } from './App/Main'
-import App from './App'
+import App from './pages/index'
 
-// Define route params and search params types
-export interface ProjectParams {
-  projectId: string
-}
+// Import pages
+import AnytimePage from './pages/anytime/screen'
+import TodayPage from './pages/today/screen'
+import TrashPage from './pages/trash/screen'
+import ProjectPage from './pages/project/[projectId]/screen'
+import CompletedPage from './pages/completed/screen'
+import SomedayPage from './pages/someday/screen'
 
 // Create routes
 const rootRoute = createRootRoute({
@@ -19,45 +21,43 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: () => <Main page="anytime" />,
+  component: AnytimePage,
 })
 
 const todayRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/today',
-  component: () => <Main page="today" />,
-})
-
-const anytimeRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/anytime',
-  component: () => <Main page="anytime" />,
-})
-
-const somedayRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/someday',
-  component: () => <Main page="someday" />,
-})
-
-const completedRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/completed',
-  component: () => <Main page="completed" />,
+  component: TodayPage,
 })
 
 const trashRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/trash',
-  component: () => <Main page="trash" />,
+  component: TrashPage,
+})
+
+const completedRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/completed',
+  component: CompletedPage,
+})
+
+const anytimeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/anytime',
+  component: AnytimePage,
 })
 
 const projectRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/project/$projectId',
-  component: ({ params }) => (
-    <Main page="project" projectId={params.projectId} />
-  ),
+  component: ProjectPage,
+})
+
+const somedayRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/someday',
+  component: SomedayPage,
 })
 
 // Create and export the router
@@ -65,10 +65,10 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   todayRoute,
   anytimeRoute,
-  somedayRoute,
-  completedRoute,
   trashRoute,
   projectRoute,
+  completedRoute,
+  somedayRoute,
 ])
 
 export const router = createRouter({ routeTree })
