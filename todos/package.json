@@ -1,7 +1,7 @@
 {
   "name": "pi-todos",
   "productName": "Todos",
-  "version": "1.0.2",
+  "version": "0.1.0",
   "description": "Intelligent to-do app",
   "main": ".vite/build/main.js",
   "scripts": {

@@ -49,3 +49,16 @@ jobs:
           name: Todos-macOS-arm64-zip
           path: todos/out/make/**/*.zip
           if-no-files-found: ignore
+
+      # Only create release on todos-specific version tags
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/todos-v')
+        uses: softprops/action-gh-release@v1
+        with:
+          name: 'Todos ${{ github.ref_name }}'
+          files: |
+            todos/out/make/**/*.dmg
+            todos/out/make/**/*.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true

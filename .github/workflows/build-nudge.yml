@@ -9,7 +9,7 @@ on:
     paths:
       - 'nudge/**'
     tags:
-      - 'v*.*.*' # Trigger on version tags like v1.0.0
+      - 'nudge-v*.*.*' # Trigger on nudge-specific version tags
 
 jobs:
   build:
@@ -49,3 +49,16 @@ jobs:
           name: Nudge-macOS-arm64-zip
           path: nudge/out/make/**/*.zip
           if-no-files-found: ignore
+
+      # Only create release on nudge-specific version tags
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/nudge-v')
+        uses: softprops/action-gh-release@v1
+        with:
+          name: 'Nudge ${{ github.ref_name }}'
+          files: |
+            nudge/out/make/**/*.dmg
+            nudge/out/make/**/*.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true
