@@ -1,0 +1,43 @@
+name: Build and Release Electron App
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*' # Trigger on version tags like v1.0.0
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Specify your Node.js version
+
+      - name: Install pnpm
+        working-directory: ./todos
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        working-directory: ./todos
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Electron app
+        working-directory: ./todos
+        run: pnpm run make
+
+      - name: Upload DMG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Todos-macOS-arm64
+          path: todos/out/make/zip/darwin/arm64/*.zip # electron-forge often zips the dmg, adjust if your output is different
+          # Or if it's directly a .dmg:
+          # path: todos/out/make/*.dmg
+          # You might need to adjust the path depending on electron-forge's output structure.
+          # Check the output of `pnpm run make` locally to confirm the exact path.

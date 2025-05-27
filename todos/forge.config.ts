@@ -1,3 +1,4 @@
+import { MakerDMG } from '@electron-forge/maker-dmg'
 import { MakerZIP } from '@electron-forge/maker-zip'
 import { VitePlugin } from '@electron-forge/plugin-vite'
 import type { ForgeConfig } from '@electron-forge/shared-types'
@@ -13,6 +14,7 @@ const config: ForgeConfig = {
   makers: [
     // new MakerSquirrel({}),
     new MakerZIP({}, ['darwin']),
+    new MakerDMG({}, ['darwin']),
     // new MakerRpm({}),
     // new MakerDeb({}),
   ],

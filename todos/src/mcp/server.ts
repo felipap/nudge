@@ -2,7 +2,18 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import { z } from 'zod'
-import { addTodo, deleteTodo, editTodo, getTodos, toggleTodo } from '../store'
+import {
+  addProject,
+  addTodo,
+  deleteTodo,
+  editProject,
+  editTodo,
+  getProjects,
+  getTodos,
+  Project,
+  Task,
+  toggleTodo,
+} from '../store'
 
 // Add timezone plugin
 dayjs.extend(timezone)
@@ -31,7 +42,7 @@ export function getServer() {
         content: [
           {
             type: 'text',
-            text: `Added todo: ${todo.text}`,
+            text: `Added: ${todo.text} (${todo.id})`,
           },
         ],
       }
@@ -39,13 +50,14 @@ export function getServer() {
   )
 
   server.tool(
-    'pi-toggle-todo',
+    'pi-toggle-completed',
     'Toggle the completion status of a todo',
     {
       id: z.string().describe('The ID of the todo to toggle'),
+      completed: z.boolean().describe('The new completion status'),
     },
-    async ({ id }: { id: string }) => {
-      const todo = toggleTodo(id)
+    async ({ id, completed }: { id: string; completed: boolean }) => {
+      const todo = toggleTodo(id, completed)
 
       return {
         content: [
@@ -73,7 +85,7 @@ export function getServer() {
         content: [
           {
             type: 'text',
-            text: `Deleted todo: ${todo?.text}`,
+            text: `Deleted: ${todo?.text} (${todo?.id})`,
           },
         ],
       }
@@ -84,7 +96,7 @@ export function getServer() {
     'pi-edit-todo',
     'Edit the text of a todo item',
     {
-      id: z.string().describe('The ID of the todo to edit'),
+      id: z.string(),
       text: z.string().describe('The new text for the todo'),
     },
     async ({ id, text }: { id: string; text: string }) => {
@@ -94,7 +106,7 @@ export function getServer() {
         content: [
           {
             type: 'text',
-            text: `Updated todo to: ${todo?.text}`,
+            text: `Updated: ${todo?.text} (${todo?.id})`,
           },
         ],
       }
@@ -122,7 +134,7 @@ export function getServer() {
           content: [
             {
               type: 'text',
-              text: 'No todos found',
+              text: '[]',
             },
           ],
         }
@@ -132,25 +144,138 @@ export function getServer() {
         content: [
           {
             type: 'text',
-            text: `
-<list>${todos
-              .map((todo) => {
-                const status = todo.deletedAt
-                  ? 'deleted'
-                  : todo.completedAt
-                  ? 'done'
-                  : 'pending'
+            text: jsonToXml(
+              todos.map((todo) => ({
+                todo: formatTask(todo),
+              })),
+              'list'
+            ),
+          },
+        ],
+      }
+    }
+  )
 
-                return `
-<todo>
-<id>${todo.id}</id>
-<content>${todo.text}</content>
-<status>${status}</status>
-<createdAt>${todo.createdAt}</createdAt>
-</todo>`
-              })
-              .join('\n')}
-</list>`.trim(),
+  // PROJECTS
+  //
+  //
+  //
+  //
+  //
+
+  server.tool('pi-list-projects', 'List all projects', {}, async () => {
+    const projects = getProjects()
+
+    if (projects.length === 0) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: '[]',
+          },
+        ],
+      }
+    }
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: jsonToXml(
+            projects.map((project) => ({
+              project: formatProject(project),
+            })),
+            'list'
+          ),
+        },
+      ],
+    }
+  })
+
+  server.tool(
+    'pi-edit-project',
+    'Edit the title or description of a project',
+    {
+      id: z.string().describe('The ID of the project to edit'),
+      title: z.string().describe('The new title for the project'),
+      description: z
+        .string()
+        .optional()
+        .describe('The new description for the project'),
+    },
+    async ({
+      id,
+      title,
+      description,
+    }: {
+      id: string
+      title: string
+      description?: string
+    }) => {
+      // Fetch the existing project to get the current description if a new one isn't provided
+      const projects = getProjects()
+      const existingProject = projects.find((p) => p.id === id)
+
+      if (!existingProject) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Project with ID "${id}" not found.`,
+            },
+          ],
+        }
+      }
+
+      const newDescription =
+        description === undefined
+          ? existingProject.description
+          : description === ''
+          ? null
+          : description
+
+      const project = editProject(id, title, newDescription)
+
+      if (!project) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Project not found: ${id}.`,
+            },
+          ],
+        }
+      }
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Updated: ${project.title} (${project.id})`,
+          },
+        ],
+      }
+    }
+  )
+
+  server.tool(
+    'pi-create-project',
+    'Create a new project',
+    {
+      title: z.string().describe('The title for the new project'),
+      description: z
+        .string()
+        .optional()
+        .describe('The description for the new project'),
+    },
+    async ({ title, description }: { title: string; description?: string }) => {
+      const project = addProject(title, description || '') // Pass empty string if description is undefined
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Created: ${project.title} (${project.id})`,
           },
         ],
       }
@@ -158,4 +283,51 @@ export function getServer() {
   )
 
   return server
+}
+
+function formatTask(task: Task) {
+  return {
+    id: task.id,
+    content: task.text,
+    status: task.deletedAt ? 'deleted' : task.completedAt ? 'done' : 'pending',
+    createdAt: task.createdAt,
+  }
+}
+
+function formatProject(project: Project) {
+  return {
+    id: project.id,
+    title: project.title,
+    description: project.description,
+  }
+}
+
+// Helper function to convert JSON to XML
+function jsonToXml(json: any, rootElementName: string = 'root'): string {
+  let xml = ''
+  if (Array.isArray(json)) {
+    json.forEach((item) => {
+      xml += jsonToXml(item, rootElementName)
+    })
+    return xml
+  }
+
+  xml += `<${rootElementName}>`
+
+  if (typeof json === 'object' && json !== null) {
+    for (const key in json) {
+      if (json.hasOwnProperty(key)) {
+        if (typeof json[key] === 'object' && json[key] !== null) {
+          xml += jsonToXml(json[key], key)
+        } else {
+          xml += `<${key}>${json[key]}</${key}>`
+        }
+      }
+    }
+  } else {
+    xml += json
+  }
+
+  xml += `</${rootElementName}>`
+  return xml
 }

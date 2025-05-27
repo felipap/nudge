@@ -56,7 +56,10 @@ export const addTodo = (text: string): Task => {
   return todo
 }
 
-export const toggleTodo = (id: string): Task | undefined => {
+export const toggleTodo = (
+  id: string,
+  completed: boolean
+): Task | undefined => {
   const currentTodos = store.getState().tasks
   const updatedTodos = currentTodos.map((todo) => {
     if (todo.id === id) {
