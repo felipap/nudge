@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'framer-motion'
 import { Task } from '../../../../src/store/types'
 import { useTodoState } from '../../../shared/lib/useTodoState'
 import { DraggableList } from '../../../shared/ui/DraggableList'
@@ -97,18 +98,25 @@ export const TaskList = withBoundary(
             getItemId={(task) => task.id}
             onReorder={handleReorder}
             renderItem={({ item: task, dragHandleProps }) => (
-              <TaskItem
-                task={task}
-                onToggle={(id) => toggleTasks([id])}
-                onFocus={() => onFocus(task.id)}
-                dragHandleProps={dragHandleProps}
-                isFocused={selection.includes(task.id)}
-                isOpen={task.id === openTodoId}
-                onOpen={() => onOpenTodo(task.id)}
-                onClose={onCloseTodo}
-                showStarIfToday={showStarIfToday}
-                visibleDate={visibleItemDate}
-              />
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <TaskItem
+                  task={task}
+                  onToggle={(id) => toggleTasks([id])}
+                  onFocus={() => onFocus(task.id)}
+                  dragHandleProps={dragHandleProps}
+                  isFocused={selection.includes(task.id)}
+                  isOpen={task.id === openTodoId}
+                  onOpen={() => onOpenTodo(task.id)}
+                  onClose={onCloseTodo}
+                  showStarIfToday={showStarIfToday}
+                  visibleDate={visibleItemDate}
+                />
+              </motion.div>
             )}
           />
         )}

@@ -1,4 +1,4 @@
-name: Build and Release Todos App
+name: Build and Release Nudge App
 permissions:
   contents: write
 
@@ -7,7 +7,7 @@ on:
     branches:
       - main
     paths:
-      - 'todos/**'
+      - 'nudge/**'
     tags:
       - 'v*.*.*' # Trigger on version tags like v1.0.0
 
@@ -25,27 +25,27 @@ jobs:
           node-version: '20.11' # Match the exact version from package.json
 
       - name: Enable Corepack
-        working-directory: ./todos
+        working-directory: ./nudge
         run: corepack enable
 
       - name: Install dependencies
-        working-directory: ./todos
+        working-directory: ./nudge
         run: pnpm install --frozen-lockfile
 
       - name: Build Electron app
-        working-directory: ./todos
+        working-directory: ./nudge
         run: pnpm run make
 
       - name: Upload DMG artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Todos-macOS-arm64
-          path: todos/out/make/**/*.dmg
+          name: Nudge-macOS-arm64
+          path: nudge/out/make/**/*.dmg
           if-no-files-found: warn
 
       - name: Upload ZIP artifact (fallback)
         uses: actions/upload-artifact@v4
         with:
-          name: Todos-macOS-arm64-zip
-          path: todos/out/make/**/*.zip
+          name: Nudge-macOS-arm64-zip
+          path: nudge/out/make/**/*.zip
           if-no-files-found: ignore

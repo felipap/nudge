@@ -1,3 +1,4 @@
+import { AnimatePresence } from 'framer-motion'
 import {
   closestCenter,
   DndContext,
@@ -80,13 +81,15 @@ export function DraggableList<T>({
           strategy={verticalListSortingStrategy}
         >
           {items.map((item) => (
-            <SortableItem
-              key={getItemId(item)}
-              id={getItemId(item)}
-              renderItem={(dragHandleProps) =>
-                renderItem({ item, dragHandleProps })
-              }
-            />
+            <AnimatePresence>
+              <SortableItem
+                key={getItemId(item)}
+                id={getItemId(item)}
+                renderItem={(dragHandleProps) =>
+                  renderItem({ item, dragHandleProps })
+                }
+              />
+            </AnimatePresence>
           ))}
         </SortableContext>
       </div>

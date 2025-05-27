@@ -1,7 +1,7 @@
 {
   "name": "pi-todos",
   "productName": "Todos",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Intelligent to-do app",
   "main": ".vite/build/main.js",
   "scripts": {
@@ -70,6 +70,7 @@
     "dayjs": "^1.11.13",
     "electron-store": "^10.0.1",
     "express": "^5.1.0",
+    "framer-motion": "^12.14.0",
     "lodash": "^4.17.21",
     "lucide-react": "^0.501.0",
     "nanoid": "^5.1.5",

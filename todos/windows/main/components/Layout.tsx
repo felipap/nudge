@@ -59,7 +59,7 @@ export function PageTitle({
   icon?: React.ReactNode
 }) {
   return (
-    <h1 className="text-2xl font-semibold flex items-center gap-3">
+    <h1 className="text-2xl font-semibold flex items-center gap-3 select-none">
       {icon}
       {title}
     </h1>

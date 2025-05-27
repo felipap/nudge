@@ -13,7 +13,7 @@ export default defineConfig({
     outDir: '../../.vite/renderer/widget_window',
     rollupOptions: {
       // Ensure these dependencies are bundled, not externalized
-      external: ['@tanstack/react-router', '@dnd-kit/core'],
+      external: ['@tanstack/react-router', '@dnd-kit/core', 'framer-motion'],
     },
   },
 })
