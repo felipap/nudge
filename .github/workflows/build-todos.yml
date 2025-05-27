@@ -1,4 +1,6 @@
 name: Build and Release Electron App
+permissions:
+  contents: write
 
 on:
   push:
@@ -21,7 +23,12 @@ jobs:
           node-version: '20.11' # Match the exact version from package.json
 
       - name: Enable Corepack
+        working-directory: ./todos
         run: corepack enable
+
+      - name: Install specific pnpm version
+        working-directory: ./todos
+        run: corepack use pnpm@8.15.4
 
       - name: Install dependencies
         working-directory: ./todos
@@ -29,7 +36,7 @@ jobs:
 
       - name: Build Electron app
         working-directory: ./todos
-        run: pnpm run make
+        run: DEBUG=true pnpm run make
 
       - name: Upload DMG artifact
         uses: actions/upload-artifact@v4
