@@ -46,9 +46,9 @@ export function createTray() {
       {
         label: 'Keep on top',
         type: 'checkbox',
-        checked: state.iswidgetWindowPinned,
+        checked: state.isWidgetPinned,
         click: () => {
-          store.setState({ iswidgetWindowPinned: !state.iswidgetWindowPinned })
+          store.setState({ isWidgetPinned: !state.isWidgetPinned })
         },
       },
       { type: 'separator' },
@@ -71,7 +71,8 @@ export function createTray() {
     //   mainWindow.hide()
     // } else {
     // }
-    mainWindow.show()
+    // mainWindow.show()
+    widgetWindow.show()
   })
 
   let lastTrayIconBounds: Electron.Rectangle | null = null

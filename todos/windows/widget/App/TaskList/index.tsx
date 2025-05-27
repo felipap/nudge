@@ -1,37 +1,53 @@
 import { useState } from 'react'
-import { Task } from '../../../../src/store/types'
 import { useTodoState } from '../../../shared/lib/useTodoState'
 import { DraggableList } from '../../../shared/ui/DraggableList'
 import { FocusableTodoList } from './FocusableTodoList'
 import { TaskItem } from './TaskItem'
 
-interface Props {
-  tasks: Task[]
-}
-
-export function TaskList({ tasks }: Props) {
+export function TaskList() {
   const {
+    tasksRef,
     addTodo,
-    toggleTodo: toggleTodoBackend,
+    toggleTodoCompletion,
     deleteTodo,
     editTodo,
     reorderTodos,
+    tasks,
     undo,
   } = useTodoState()
 
   const [recentToggledTodos, setRecentToggledTodos] = useState<string[]>([])
   const filteredTasks = tasks.filter(
-    (task) => !task.completedAt || recentToggledTodos.includes(task.id)
+    (task) =>
+      !task.deletedAt &&
+      (!task.completedAt || recentToggledTodos.includes(task.id))
   )
 
   async function toggleTodo(id: string) {
-    await toggleTodoBackend(id)
+    const task = tasksRef.current.find((task) => task.id === id)
+    if (!task) {
+      return
+    }
+    await toggleTodoCompletion(id, task.completedAt === null)
     setRecentToggledTodos([id, ...recentToggledTodos])
+  }
+
+  // Sort tasks by anytimeRank
+  const sortedTasks = [...tasks].sort((a, b) => {
+    return a.anytimeRank - b.anytimeRank
+  })
+
+  const handleReorder = (startIndex: number, endIndex: number) => {
+    reorderTodos(
+      sortedTasks.map((t) => t.id),
+      startIndex,
+      endIndex
+    )
   }
 
   return (
     <FocusableTodoList
-      onAddTodo={() => addTodo('')}
+      onAddTodo={() => addTodo({ text: '' })}
       todoIds={filteredTasks.map((task) => task.id)}
       onDelete={deleteTodo}
       onUndo={undo}
@@ -40,17 +56,12 @@ export function TaskList({ tasks }: Props) {
         <DraggableList
           items={filteredTasks}
           getItemId={(task) => task.id}
-          onReorder={reorderTodos}
+          onReorder={handleReorder}
           renderItem={({ item: task, dragHandleProps }) => (
             <TaskItem
               task={task}
               onToggle={toggleTodo}
               onFocus={() => onFocus(task.id)}
-              onDelete={deleteTodo}
-              onEdit={(id, newText) => {
-                editTodo(id, newText)
-                onCloseTodo()
-              }}
               dragHandleProps={dragHandleProps}
               isFocused={task.id === focusedTodoId}
               isOpen={task.id === openTodoId}

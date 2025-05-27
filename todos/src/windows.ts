@@ -20,7 +20,7 @@ export function createMainWindow() {
     width: 800,
     height: 600,
     resizable: true,
-    // show: false,
+    show: false,
     frame: false,
     center: true,
     vibrancy: 'fullscreen-ui',
@@ -86,24 +86,24 @@ export function createWidgetWindow() {
     x: primaryDisplay.workArea.x + primaryDisplay.workArea.width - 250 - 5,
     y: primaryDisplay.workArea.y + primaryDisplay.workArea.height - 200 - 5,
     vibrancy: 'fullscreen-ui',
-    alwaysOnTop: getState().iswidgetWindowPinned,
+    alwaysOnTop: getState().isWidgetPinned,
     webPreferences: {
       preload: path.join(__dirname, '../renderer/preload.js'),
       webSecurity: false,
     },
   })
 
-  let lastPinnedState = getState().iswidgetWindowPinned
+  let lastPinnedState = getState().isWidgetPinned
   store.subscribe((state) => {
-    console.log('change to:', state.iswidgetWindowPinned)
-    if (state.iswidgetWindowPinned !== lastPinnedState) {
+    console.log('change to:', state.isWidgetPinned)
+    if (state.isWidgetPinned !== lastPinnedState) {
       console.log(
-        'its different. will change iswidgetWindowPinned',
-        state.iswidgetWindowPinned,
+        'its different. will change isWidgetPinned',
+        state.isWidgetPinned,
         lastPinnedState
       )
-      win.setAlwaysOnTop(state.iswidgetWindowPinned)
-      lastPinnedState = state.iswidgetWindowPinned
+      win.setAlwaysOnTop(state.isWidgetPinned)
+      lastPinnedState = state.isWidgetPinned
     }
   })
 

@@ -3,12 +3,11 @@ import { Check } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { type Task } from '../../../../src/store'
+import { useTodoState } from '../../../shared/lib/useTodoState'
 
 interface Props {
   task: Task
   onToggle: (id: string) => void
-  onDelete: (id: string) => void
-  onEdit: (id: string, newText: string) => void
   dragHandleProps?: DraggableAttributes
   isOpen: boolean
   onOpen: () => void
@@ -20,8 +19,6 @@ interface Props {
 export const TaskItem = ({
   task,
   onToggle,
-  onDelete,
-  onEdit,
   dragHandleProps,
   isOpen,
   isFocused,
@@ -29,6 +26,8 @@ export const TaskItem = ({
   onFocus,
   onClose,
 }: Props) => {
+  const { deleteTodo, editTodo } = useTodoState()
+
   const [value, setValue] = useState(task.text)
   const ref = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -41,35 +40,19 @@ export const TaskItem = ({
 
   const handleSave = () => {
     if (value.trim() !== '' && value !== task.text) {
-      onEdit(task.id, value)
+      editTodo(task.id, { text: value })
     }
     onClose()
     setValue(value)
   }
 
-  useEffect(() => {
-    if (!isFocused) {
-      return
-    }
-
-    function handleKeyDown(e: KeyboardEvent) {
-      if (isOpen) {
-        return
-      }
-
-      if (e.key === 'k' && e.metaKey) {
-        e.preventDefault()
-        onToggle(task.id)
-      } else if (e.key === 'Backspace') {
-        onDelete(task.id)
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isFocused, isOpen])
+  useFocusedShorcuts(isFocused, {
+    onDelete: async () => {
+      console.log('onDelete', task.id)
+      await deleteTodo(task.id)
+    },
+    onToggle: () => onToggle(task.id),
+  })
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && value.trim()) {
@@ -97,13 +80,13 @@ export const TaskItem = ({
         isOpen && 'bg-gray-400/40',
         isFocused && 'bg-gray-100'
       )}
+      {...(!isOpen && dragHandleProps)}
       onClick={() => {
-        if (isOpen) {
-          return
-        }
+        // if (isOpen) {
+        //   return
+        // }
         onFocus()
       }}
-      {...(!isOpen && dragHandleProps)}
     >
       <Checkbox
         onClick={() => onToggle(task.id)}
@@ -165,4 +148,30 @@ function Checkbox({
       {checked && <Check className="w-3 h-3 text-white" />}
     </button>
   )
+}
+
+function useFocusedShorcuts(
+  isFocused: boolean,
+  triggers: { onDelete: () => void; onToggle: () => void }
+) {
+  useEffect(() => {
+    if (!isFocused) {
+      return
+    }
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Backspace') {
+        triggers.onDelete()
+      } else if (e.key === 'k' && e.metaKey) {
+        e.preventDefault()
+        triggers.onToggle()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isFocused])
 }

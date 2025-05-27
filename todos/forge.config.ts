@@ -14,9 +14,9 @@ const config: ForgeConfig = {
   makers: [
     // new MakerSquirrel({}),
     // new MakerZIP({}, ['darwin']),
-    new MakerDMG({}, ['darwin']),
     // new MakerRpm({}),
     // new MakerDeb({}),
+    new MakerDMG({}, ['darwin']),
     new MakerZIP({}, ['darwin']),
   ],
   plugins: [

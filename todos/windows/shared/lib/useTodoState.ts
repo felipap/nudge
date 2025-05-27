@@ -198,6 +198,7 @@ export function useTodoState() {
     addTodo,
     toggleTodoCompletion,
     deleteTodo,
+    tasksRef,
     editTodo,
     logAllCompleted,
     reorderTodos,
