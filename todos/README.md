@@ -1,4 +1,4 @@
-# Nudge
+# todos
 
 Productivity util for macOS that watches your screen and tells you when you're
 procrastinating.

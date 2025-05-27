@@ -26,17 +26,13 @@ jobs:
         working-directory: ./todos
         run: corepack enable
 
-      - name: Install specific pnpm version
-        working-directory: ./todos
-        run: corepack use pnpm@8.15.4
-
       - name: Install dependencies
         working-directory: ./todos
         run: pnpm install --frozen-lockfile
 
       - name: Build Electron app
         working-directory: ./todos
-        run: DEBUG=true pnpm run make
+        run: pnpm run make
 
       - name: Upload DMG artifact
         uses: actions/upload-artifact@v4

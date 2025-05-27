@@ -11,5 +11,9 @@ export default defineConfig({
   build: {
     sourcemap: true,
     outDir: '../../.vite/renderer/pref_window',
+    rollupOptions: {
+      // Ensure these dependencies are bundled, not externalized
+      external: ['@tanstack/react-router', '@dnd-kit/core'],
+    },
   },
 })

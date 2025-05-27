@@ -14,7 +14,7 @@ const config: ForgeConfig = {
   makers: [
     // new MakerSquirrel({}),
     // new MakerZIP({}, ['darwin']),
-    // new MakerDMG({}, ['darwin']),
+    new MakerDMG({}, ['darwin']),
     // new MakerRpm({}),
     // new MakerDeb({}),
     new MakerZIP({}, ['darwin']),
@@ -31,25 +31,25 @@ const config: ForgeConfig = {
           config: 'vite.main.config.ts',
           target: 'main',
         },
-        // {
-        //   entry: 'windows/shared/preload.ts',
-        //   config: 'vite.preload.config.ts',
-        //   target: 'preload',
-        // },
+        {
+          entry: 'windows/shared/preload.ts',
+          config: 'vite.preload.config.ts',
+          target: 'preload',
+        },
       ],
       renderer: [
         {
           name: 'main_window',
           config: 'vite.mainWindow.config.ts',
         },
-        // {
-        //   name: 'widget_window',
-        //   config: 'vite.widgetWindow.config.ts',
-        // },
-        // {
-        //   name: 'pref_window',
-        //   config: 'vite.prefWindow.config.ts',
-        // },
+        {
+          name: 'widget_window',
+          config: 'vite.widgetWindow.config.ts',
+        },
+        {
+          name: 'pref_window',
+          config: 'vite.prefWindow.config.ts',
+        },
       ],
     }),
     // Fuses are used to enable/disable various Electron functionality
