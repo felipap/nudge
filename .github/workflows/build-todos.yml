@@ -9,7 +9,7 @@ on:
     paths:
       - 'todos/**'
     tags:
-      - 'v*.*.*' # Trigger on version tags like v1.0.0
+      - 'todos-v*.*.*' # Trigger on version tags like v1.0.0
 
 jobs:
   build:
