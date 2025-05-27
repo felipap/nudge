@@ -74,7 +74,7 @@ export function DraggableList<T>({
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex flex-col gap-0 overflow-scroll h-full w-full">
+      <div className="flex flex-col gap-0 h-full w-full">
         <SortableContext
           items={items.map(getItemId)}
           strategy={verticalListSortingStrategy}

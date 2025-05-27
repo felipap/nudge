@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 import { BsFillTrash2Fill } from 'react-icons/bs'
 import { useTodoState } from '../../../shared/lib/useTodoState'
 import { Button } from '../../../shared/ui/Button'
-import { Layout } from '../../components/Main'
-import { TaskList } from '../../components/Main/TaskList'
+import { Layout } from '../../components/Layout'
+import { TaskList } from '../../components/TaskList'
 
 export default function Screen() {
   const { tasks, clearTrash } = useTodoState()
@@ -17,10 +17,17 @@ export default function Screen() {
       icon={<BsFillTrash2Fill className="w-5 text-gray-400" />}
       title="Trash"
       page="trash"
+      backgroundIcon={
+        pageTasks.length === 0 && (
+          <BsFillTrash2Fill className="w-20 h-20 text-gray-400" />
+        )
+      }
     >
-      <Button className="self-start mb-4" onClick={clearTrash}>
-        Clear Trash
-      </Button>
+      {pageTasks.length > 0 && (
+        <Button className="self-start mb-4" onClick={clearTrash}>
+          Clear Trash
+        </Button>
+      )}
       <TaskList tasks={pageTasks} showStarIfToday restoreOnDelete />
     </Layout>
   )

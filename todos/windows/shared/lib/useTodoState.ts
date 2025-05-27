@@ -79,6 +79,7 @@ export function useTodoState() {
       if (task.id === id) {
         return {
           ...task,
+          loggedAt: task.loggedAt && !value ? null : task.loggedAt,
           completedAt: value
             ? task.completedAt || new Date().toISOString()
             : null,

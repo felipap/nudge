@@ -1,14 +1,16 @@
 import { useMemo } from 'react'
 import { RiArchive2Fill } from 'react-icons/ri'
 import { useTodoState } from '../../../shared/lib/useTodoState'
-import { Layout } from '../../components/Main'
-import { TaskList } from '../../components/Main/TaskList'
+import { Layout } from '../../components/Layout'
+import { TaskList } from '../../components/TaskList'
 
 export default function Screen() {
   const { tasks, addTodo } = useTodoState()
 
   const somedayTasks = useMemo(() => {
-    return tasks.filter((t) => t.when === 'someday' && !t.loggedAt)
+    return tasks.filter(
+      (t) => t.when === 'someday' && !t.loggedAt && !t.deletedAt
+    )
   }, [tasks])
 
   function handleAddTodo() {

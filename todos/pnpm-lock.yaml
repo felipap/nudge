@@ -26,9 +26,6 @@ dependencies:
   '@tanstack/react-router':
     specifier: ^1.120.10
     version: 1.120.10(react-dom@19.0.0)(react@19.0.0)
-  '@types/react-beautiful-dnd':
-    specifier: ^13.1.8
-    version: 13.1.8
   assert:
     specifier: ^2.1.0
     version: 2.1.0
@@ -92,6 +89,9 @@ dependencies:
   tailwindcss:
     specifier: ^4.0.12
     version: 4.0.14
+  tiny-invariant:
+    specifier: ^1.3.3
+    version: 1.3.3
   zod:
     specifier: ^3.24.2
     version: 3.24.2
@@ -151,6 +151,9 @@ devDependencies:
   '@types/react':
     specifier: ^19.0.10
     version: 19.0.10
+  '@types/react-beautiful-dnd':
+    specifier: ^13.1.8
+    version: 13.1.8
   '@types/react-dom':
     specifier: ^19.0.4
     version: 19.0.4(@types/react@19.0.10)
@@ -1628,7 +1631,7 @@ packages:
     resolution: {integrity: sha512-E3TyFsro9pQuK4r8S/OL6G99eq7p8v29sX0PM7oT8Z+PJfZvSQTx4zTQbUJ+QZXioAF0e7TGBEcA1XhYhCweyQ==}
     dependencies:
       '@types/react': 19.0.10
-    dev: false
+    dev: true
 
   /@types/react-dom@19.0.4(@types/react@19.0.10):
     resolution: {integrity: sha512-4fSQ8vWFkg+TGhePfUzVmat3eC14TXYSsiiDSLI0dVLsrm9gZFABjPy/Qu6TKgl1tq1Bu1yDsuQgY3A3DOjCcg==}

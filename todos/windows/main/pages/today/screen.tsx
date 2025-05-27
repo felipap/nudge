@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { FaMoon, FaStar } from 'react-icons/fa6'
 import { useTodoState } from '../../../shared/lib/useTodoState'
-import { Layout } from '../../components/Main'
-import { TaskList } from '../../components/Main/TaskList'
+import { Layout } from '../../components/Layout'
+import { TaskList } from '../../components/TaskList'
 
 export default function Screen() {
   const { tasks, addTodo } = useTodoState()

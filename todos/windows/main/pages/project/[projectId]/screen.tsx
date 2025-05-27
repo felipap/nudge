@@ -3,9 +3,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useProjects } from '../../../../shared/ipc'
 import { useTodoState } from '../../../../shared/lib/useTodoState'
-import { Layout, PageTitle } from '../../../components/Main'
-import { TaskList } from '../../../components/Main/TaskList'
+import { Layout, PageTitle } from '../../../components/Layout'
 import { ProjectProgressIndicator } from '../../../components/Sidebar'
+import { TaskList } from '../../../components/TaskList'
 
 export default function Screen() {
   // params

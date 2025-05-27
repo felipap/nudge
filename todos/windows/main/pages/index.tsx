@@ -20,7 +20,7 @@ export default function App() {
       <div className="w-[200px] flex-shrink-0">
         <Sidebar />
       </div>
-      <div className="flex-1">
+      <div className="flex-1 overflow-scroll">
         <Outlet />
       </div>
     </div>
