@@ -7,36 +7,35 @@ import { useTodoState } from '../../../shared/lib/useTodoState'
 
 interface Props {
   task: Task
-  onToggle: (id: string) => void
   dragHandleProps?: DraggableAttributes
   isOpen: boolean
   onOpen: () => void
-  onFocus: () => void
+  focus: () => void
+  blur: () => void
   onClose: () => void
   isFocused: boolean
 }
 
 export const TaskItem = ({
   task,
-  onToggle,
   dragHandleProps,
   isOpen,
   isFocused,
   onOpen,
-  onFocus,
+  focus,
+  blur,
   onClose,
 }: Props) => {
-  const { deleteTodo, editTodo } = useTodoState()
+  const { deleteTodo, toggleTodoCompletion, editTodo } = useTodoState()
 
   const [value, setValue] = useState(task.text)
   const ref = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [isOpen])
+  async function toggleTask() {
+    await toggleTodoCompletion(task.id, task.completedAt === null)
+    blur()
+  }
 
   const handleSave = () => {
     if (value.trim() !== '' && value !== task.text) {
@@ -46,12 +45,13 @@ export const TaskItem = ({
     setValue(value)
   }
 
-  useFocusedShorcuts(isFocused, {
+  useFocusedShorcuts(isFocused && !isOpen, {
     onDelete: async () => {
       console.log('onDelete', task.id)
       await deleteTodo(task.id)
     },
-    onToggle: () => onToggle(task.id),
+    onToggle: toggleTask,
+    onEscape: blur,
   })
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -82,21 +82,18 @@ export const TaskItem = ({
       )}
       {...(!isOpen && dragHandleProps)}
       onClick={() => {
-        // if (isOpen) {
-        //   return
-        // }
-        onFocus()
+        if (isOpen) {
+          return
+        }
+        focus()
       }}
     >
-      <Checkbox
-        onClick={() => onToggle(task.id)}
-        checked={!!task.completedAt}
-      />
+      <Checkbox onClick={toggleTask} checked={!!task.completedAt} />
       <div
         className="w-full h-[26`px] flex items-center overflow-hidden"
         onDoubleClick={() => {
           // if (!isFocused) {
-          onFocus()
+          focus()
           onOpen()
           // }
         }}
@@ -152,7 +149,7 @@ function Checkbox({
 
 function useFocusedShorcuts(
   isFocused: boolean,
-  triggers: { onDelete: () => void; onToggle: () => void }
+  triggers: { onDelete: () => void; onToggle: () => void; onEscape: () => void }
 ) {
   useEffect(() => {
     if (!isFocused) {
@@ -165,6 +162,8 @@ function useFocusedShorcuts(
       } else if (e.key === 'k' && e.metaKey) {
         e.preventDefault()
         triggers.onToggle()
+      } else if (e.key === 'Escape') {
+        triggers.onEscape()
       }
     }
 

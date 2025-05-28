@@ -18,7 +18,7 @@ export default function App() {
           <PinButton />
         </div>
       </header>
-      <main className="h-full overflow-hidden px-2">
+      <main className="h-full overflow-scroll px-2 ">
         <TaskList />
       </main>
 

@@ -1,41 +1,10 @@
-import { useState } from 'react'
 import { useTodoState } from '../../../shared/lib/useTodoState'
 import { DraggableList } from '../../../shared/ui/DraggableList'
 import { FocusableTodoList } from './FocusableTodoList'
 import { TaskItem } from './TaskItem'
 
 export function TaskList() {
-  const {
-    tasksRef,
-    addTodo,
-    toggleTodoCompletion,
-    deleteTodo,
-    editTodo,
-    reorderTodos,
-    tasks,
-    undo,
-  } = useTodoState()
-
-  const [recentToggledTodos, setRecentToggledTodos] = useState<string[]>([])
-  const filteredTasks = tasks.filter(
-    (task) =>
-      !task.deletedAt &&
-      (!task.completedAt || recentToggledTodos.includes(task.id))
-  )
-
-  async function toggleTodo(id: string) {
-    const task = tasksRef.current.find((task) => task.id === id)
-    if (!task) {
-      return
-    }
-    await toggleTodoCompletion(id, task.completedAt === null)
-    setRecentToggledTodos([id, ...recentToggledTodos])
-  }
-
-  // Sort tasks by anytimeRank
-  const sortedTasks = [...tasks].sort((a, b) => {
-    return a.anytimeRank - b.anytimeRank
-  })
+  const { addTodo, deleteTodo, reorderTodos, tasks, undo } = useTodoState()
 
   const handleReorder = (startIndex: number, endIndex: number) => {
     reorderTodos(
@@ -45,23 +14,40 @@ export function TaskList() {
     )
   }
 
+  const filteredTasks = tasks.filter(
+    (task) => !task.deletedAt && true
+    // (!task.completedAt || recentToggledTodos.includes(task.id))
+  )
+
+  // Sort tasks by anytimeRank
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
+    return a.anytimeRank - b.anytimeRank
+  })
+
   return (
     <FocusableTodoList
       onAddTodo={() => addTodo({ text: '' })}
-      todoIds={filteredTasks.map((task) => task.id)}
+      todoIds={sortedTasks.map((task) => task.id)}
       onDelete={deleteTodo}
       onUndo={undo}
     >
-      {({ onOpenTodo, onFocus, onCloseTodo, focusedTodoId, openTodoId }) => (
+      {({
+        onOpenTodo,
+        focus,
+        blur,
+        onCloseTodo,
+        focusedTodoId,
+        openTodoId,
+      }) => (
         <DraggableList
-          items={filteredTasks}
+          items={sortedTasks}
           getItemId={(task) => task.id}
           onReorder={handleReorder}
           renderItem={({ item: task, dragHandleProps }) => (
             <TaskItem
               task={task}
-              onToggle={toggleTodo}
-              onFocus={() => onFocus(task.id)}
+              blur={() => blur(task.id)}
+              focus={() => focus(task.id)}
               dragHandleProps={dragHandleProps}
               isFocused={task.id === focusedTodoId}
               isOpen={task.id === openTodoId}

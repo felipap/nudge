@@ -78,8 +78,8 @@ export function createWidgetWindow() {
   const primaryDisplay = screen.getPrimaryDisplay()
 
   const win = new BrowserWindow({
-    width: 250,
-    height: 200,
+    width: 350,
+    height: 300,
     resizable: true,
     // show: false,
     frame: false,

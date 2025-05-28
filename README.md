@@ -1,4 +1,4 @@
-# compass
+# pi
 
 Intelligent tools for productivity.
 

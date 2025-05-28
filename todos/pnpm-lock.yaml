@@ -44,6 +44,9 @@ dependencies:
   dayjs:
     specifier: ^1.11.13
     version: 1.11.13
+  dotenv:
+    specifier: ^16.5.0
+    version: 16.5.0
   electron-store:
     specifier: ^10.0.1
     version: 10.0.1
@@ -2750,6 +2753,11 @@ packages:
     engines: {node: '>=18'}
     dependencies:
       type-fest: 4.41.0
+    dev: false
+
+  /dotenv@16.5.0:
+    resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
+    engines: {node: '>=12'}
     dev: false
 
   /ds-store@0.1.6:
