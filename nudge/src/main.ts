@@ -10,15 +10,13 @@ import {
   createPreferencesWindow,
   prefWindow,
 } from './windows'
-import { createMcpApp } from './mcp'
 
 export let tray: Tray
 
-export const mcpApp = createMcpApp()
-
-mcpApp.listen(3040, () => {
-  console.log('MCP Stateless Streamable HTTP Server listening on port 3040')
-})
+// export const mcpApp = createMcpApp()
+// mcpApp.listen(3040, () => {
+//   console.log('MCP Stateless Streamable HTTP Server listening on port 3040')
+// })
 
 // Declare isQuitting property for TypeScript
 declare global {
