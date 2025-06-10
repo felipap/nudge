@@ -20,7 +20,7 @@ export function createMainWindow() {
     width: 800,
     height: 600,
     resizable: true,
-    show: false,
+    // show: false,
     frame: false,
     center: true,
     vibrancy: 'fullscreen-ui',
@@ -30,16 +30,19 @@ export function createMainWindow() {
     },
   })
 
+  app.setName('Todos')
+  app.dock.setIcon(path.join(__dirname, '../../images/todos-icon.png'))
+
   // Hide from macOS docker
   // app.dock.hide()
 
-  win.on('show', () => {
-    app.dock.show()
-  })
+  // win.on('show', () => {
+  //   app.dock.show()
+  // })
 
-  win.on('close', () => {
-    app.dock.show()
-  })
+  // win.on('close', () => {
+  //   app.dock.show()
+  // })
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {

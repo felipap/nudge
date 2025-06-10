@@ -1,9 +1,9 @@
 import { DraggableAttributes } from '@dnd-kit/core'
 import dayjs from 'dayjs'
-import { Check } from 'lucide-react'
+import { Check, Circle, CircleStop, Dot, Flag } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { FaStar } from 'react-icons/fa'
-import { FaMoon } from 'react-icons/fa6'
+import { FaFlag, FaMoon } from 'react-icons/fa6'
 import { twMerge } from 'tailwind-merge'
 import { type Task } from '../../../../../src/store/types'
 import { useTodoState } from '../../../../shared/lib/useTodoState'
@@ -16,7 +16,7 @@ interface Props {
   isOpen: boolean
   onOpen: () => void
   onFocus: () => void
-  onClose: () => void
+  close: () => void
   showStarIfToday?: boolean
   visibleDate?: boolean
   isFocused: boolean
@@ -32,7 +32,7 @@ export const TaskItem = ({
   visibleDate = false,
   onOpen,
   onFocus,
-  onClose,
+  close,
 }: Props) => {
   const { editTodo } = useTodoState()
 
@@ -49,7 +49,7 @@ export const TaskItem = ({
     if (newValue.trim() !== '' && newValue !== task.text) {
       editTodo(task.id, { text: newValue })
     }
-    onClose()
+    close()
   }
 
   // useEffect(() => {
@@ -66,8 +66,7 @@ export const TaskItem = ({
       ref={ref}
       className={twMerge(
         'flex items-center gap-3 group transition duration-75 px-1 rounded-sm',
-        'focus:outline-none focus:ring-0 focus:border-none',
-        // task.completedAt && 'opacity-50',
+        'focus:outline-none focus:ring-0 focus:border-none relative',
         isOpen && 'shadow-md py-1 border',
         isFocused && 'bg-blue-500/10'
       )}
@@ -92,10 +91,10 @@ export const TaskItem = ({
       </div>
       <div
         className={twMerge(
-          'w-full h-[28px] flex gap-2 items-center overflow-hidden',
+          'w-full h-[28px] flex gap-2 items-center overflow-hidden relative',
           !isOpen && 'cursor-move'
         )}
-        // {...(!isOpen && dragHandleProps)}
+        {...(!isOpen && dragHandleProps)}
         onDoubleClick={() => {
           onOpen()
         }}
@@ -104,6 +103,7 @@ export const TaskItem = ({
             onFocus()
           }
         }}
+        tabIndex={undefined}
       >
         {showStarIfToday && task.when === 'today' && (
           <FaStar className="w-3.5 h-3.5 text-amber-300" />
@@ -114,6 +114,7 @@ export const TaskItem = ({
         {isOpen ? (
           <OpenItem
             ref={inputRef}
+            blur={close}
             task={task}
             defaultValue={task.text}
             save={handleSave}
@@ -121,13 +122,19 @@ export const TaskItem = ({
         ) : (
           <div
             className={twMerge(
-              'min-w-0 flex flex-row gap-2 items-center flex-1 cursor-pointer select-none text-[14px] px-1 py-0 transition-all text-ellipsis whitespace-nowrap overflow-hidden '
+              'min-w-0 flex flex-row gap-2 items-center flex-1 cursor-pointer select-none text-[14px] px-1 py-0 transition-all text-ellipsis whitespace-nowrap overflow-hidden ',
+              task.completedAt && 'opacity-40'
             )}
           >
             {task.text || '\u00A0'}
           </div>
         )}
       </div>
+      {task.highLeverage && (
+        <div className="mr-2">
+          <FaFlag className="w-3 h-3 text-red-500" />
+        </div>
+      )}
     </div>
   )
 }

@@ -62,6 +62,14 @@ export const TaskList = withBoundary(
       }
     }
 
+    const toggleHighLeverage = (ids: string[]) => {
+      for (const id of ids) {
+        editTodo(id, {
+          highLeverage: !tasks.find((t) => t.id === id)?.highLeverage,
+        })
+      }
+    }
+
     const handleReorder = (startIndex: number, endIndex: number) => {
       console.log('TaskList handleReorder:', {
         startIndex,
@@ -91,8 +99,9 @@ export const TaskList = withBoundary(
         toggleTasks={toggleTasks}
         changeTasksWhen={changeTasksWhen}
         deleteTasks={deleteTasks}
+        toggleHighLeverage={toggleHighLeverage}
       >
-        {({ onOpenTodo, onFocus, onCloseTodo, selection, openTodoId }) => (
+        {({ onOpenTodo, onFocus, closeTodo, selection, openTodoId }) => (
           <DraggableList
             items={sortedTasks}
             getItemId={(task) => task.id}
@@ -112,7 +121,7 @@ export const TaskList = withBoundary(
                   isFocused={selection.includes(task.id)}
                   isOpen={task.id === openTodoId}
                   onOpen={() => onOpenTodo(task.id)}
-                  onClose={onCloseTodo}
+                  close={closeTodo}
                   showStarIfToday={showStarIfToday}
                   visibleDate={visibleItemDate}
                 />

@@ -14,6 +14,7 @@ import {
   Task,
   toggleTodo,
 } from '../store'
+import { tryCatchCallback } from './utils'
 
 // Add timezone plugin
 dayjs.extend(timezone)
@@ -35,7 +36,7 @@ export function getServer() {
     {
       text: z.string().describe('The text content of the todo'),
     },
-    async ({ text }: { text: string }) => {
+    tryCatchCallback(async ({ text }: { text: string }) => {
       const todo = addTodo(text)
 
       return {
@@ -46,7 +47,7 @@ export function getServer() {
           },
         ],
       }
-    }
+    })
   )
 
   server.tool(
@@ -56,20 +57,22 @@ export function getServer() {
       id: z.string().describe('The ID of the todo to toggle'),
       completed: z.boolean().describe('The new completion status'),
     },
-    async ({ id, completed }: { id: string; completed: boolean }) => {
-      const todo = toggleTodo(id, completed)
+    tryCatchCallback(
+      async ({ id, completed }: { id: string; completed: boolean }) => {
+        const todo = toggleTodo(id, completed)
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `Toggled todo "${todo?.text}" to ${
-              todo?.completedAt ? 'completed' : 'incomplete'
-            }`,
-          },
-        ],
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Toggled todo "${todo?.text}" to ${
+                todo?.completedAt ? 'completed' : 'incomplete'
+              }`,
+            },
+          ],
+        }
       }
-    }
+    )
   )
 
   server.tool(
@@ -78,7 +81,7 @@ export function getServer() {
     {
       id: z.string().describe('The ID of the todo to delete'),
     },
-    async ({ id }: { id: string }) => {
+    tryCatchCallback(async ({ id }: { id: string }) => {
       const todo = deleteTodo(id)
 
       return {
@@ -89,7 +92,7 @@ export function getServer() {
           },
         ],
       }
-    }
+    })
   )
 
   server.tool(
@@ -99,7 +102,7 @@ export function getServer() {
       id: z.string(),
       text: z.string().describe('The new text for the todo'),
     },
-    async ({ id, text }: { id: string; text: string }) => {
+    tryCatchCallback(async ({ id, text }: { id: string; text: string }) => {
       const todo = editTodo(id, text)
 
       return {
@@ -110,7 +113,7 @@ export function getServer() {
           },
         ],
       }
-    }
+    })
   )
 
   server.tool(
@@ -122,14 +125,57 @@ export function getServer() {
         .optional()
         .describe('If true, only show incomplete todos'),
     },
-    async ({ showIncomplete }: { showIncomplete?: boolean }) => {
-      let todos = getTodos()
+    tryCatchCallback(
+      async ({ showIncomplete }: { showIncomplete?: boolean }) => {
+        let todos = getTodos()
 
-      if (!showIncomplete) {
-        todos = todos.filter((todo) => !todo.completedAt)
+        if (!showIncomplete) {
+          todos = todos.filter((todo) => !todo.completedAt)
+        }
+
+        if (todos.length === 0) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: '[]',
+              },
+            ],
+          }
+        }
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: jsonToXml(
+                todos.map((todo) => ({
+                  todo: formatTask(todo),
+                })),
+                'list'
+              ),
+            },
+          ],
+        }
       }
+    )
+  )
 
-      if (todos.length === 0) {
+  // PROJECTS
+  //
+  //
+  //
+  //
+  //
+
+  server.tool(
+    'pi-list-projects',
+    'List all projects',
+    {},
+    tryCatchCallback(async () => {
+      const projects = getProjects()
+
+      if (projects.length === 0) {
         return {
           content: [
             {
@@ -145,52 +191,16 @@ export function getServer() {
           {
             type: 'text',
             text: jsonToXml(
-              todos.map((todo) => ({
-                todo: formatTask(todo),
+              projects.map((project) => ({
+                project: formatProject(project),
               })),
               'list'
             ),
           },
         ],
       }
-    }
+    })
   )
-
-  // PROJECTS
-  //
-  //
-  //
-  //
-  //
-
-  server.tool('pi-list-projects', 'List all projects', {}, async () => {
-    const projects = getProjects()
-
-    if (projects.length === 0) {
-      return {
-        content: [
-          {
-            type: 'text',
-            text: '[]',
-          },
-        ],
-      }
-    }
-
-    return {
-      content: [
-        {
-          type: 'text',
-          text: jsonToXml(
-            projects.map((project) => ({
-              project: formatProject(project),
-            })),
-            'list'
-          ),
-        },
-      ],
-    }
-  })
 
   server.tool(
     'pi-edit-project',
@@ -203,59 +213,61 @@ export function getServer() {
         .optional()
         .describe('The new description for the project'),
     },
-    async ({
-      id,
-      title,
-      description,
-    }: {
-      id: string
-      title: string
-      description?: string
-    }) => {
-      // Fetch the existing project to get the current description if a new one isn't provided
-      const projects = getProjects()
-      const existingProject = projects.find((p) => p.id === id)
+    tryCatchCallback(
+      async ({
+        id,
+        title,
+        description,
+      }: {
+        id: string
+        title: string
+        description?: string
+      }) => {
+        // Fetch the existing project to get the current description if a new one isn't provided
+        const projects = getProjects()
+        const existingProject = projects.find((p) => p.id === id)
 
-      if (!existingProject) {
+        if (!existingProject) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Project with ID "${id}" not found.`,
+              },
+            ],
+          }
+        }
+
+        const newDescription =
+          description === undefined
+            ? existingProject.description
+            : description === ''
+            ? null
+            : description
+
+        const project = editProject(id, title, newDescription)
+
+        if (!project) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Project not found: ${id}.`,
+              },
+            ],
+          }
+        }
+
         return {
           content: [
             {
               type: 'text',
-              text: `Project with ID "${id}" not found.`,
+              text: `Updated: ${project.title} (${project.id})`,
             },
           ],
         }
       }
-
-      const newDescription =
-        description === undefined
-          ? existingProject.description
-          : description === ''
-          ? null
-          : description
-
-      const project = editProject(id, title, newDescription)
-
-      if (!project) {
-        return {
-          content: [
-            {
-              type: 'text',
-              text: `Project not found: ${id}.`,
-            },
-          ],
-        }
-      }
-
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `Updated: ${project.title} (${project.id})`,
-          },
-        ],
-      }
-    }
+    )
   )
 
   server.tool(
@@ -268,18 +280,26 @@ export function getServer() {
         .optional()
         .describe('The description for the new project'),
     },
-    async ({ title, description }: { title: string; description?: string }) => {
-      const project = addProject(title, description || '') // Pass empty string if description is undefined
+    tryCatchCallback(
+      async ({
+        title,
+        description,
+      }: {
+        title: string
+        description?: string
+      }) => {
+        const project = addProject(title, description || '') // Pass empty string if description is undefined
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `Created: ${project.title} (${project.id})`,
-          },
-        ],
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Created: ${project.title} (${project.id})`,
+            },
+          ],
+        }
       }
-    }
+    )
   )
 
   return server

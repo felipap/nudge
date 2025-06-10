@@ -1,4 +1,5 @@
 import { DraggableAttributes } from '@dnd-kit/core'
+import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import { Check } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
@@ -29,6 +30,8 @@ export const TaskItem = ({
   const { deleteTodo, toggleTodoCompletion, editTodo } = useTodoState()
 
   const [value, setValue] = useState(task.text)
+  const [displayValue, setDisplayValue] = useState(task.text)
+  const controls = useAnimationControls()
   const ref = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -36,6 +39,25 @@ export const TaskItem = ({
     await toggleTodoCompletion(task.id, task.completedAt === null)
     blur()
   }
+
+  // When the task value changes in the background (eg. mcp), update the value.
+  useEffect(() => {
+    setValue(task.text)
+
+    // If the text changed and we're not editing, do the fade sequence
+    if (task.text !== displayValue && !isOpen) {
+      const animateTextChange = async () => {
+        // fadeOut()
+        await controls.start({ opacity: 0 })
+        // delay() + setValue()
+        setDisplayValue(task.text)
+        // fadeIn()
+        await controls.start({ opacity: 1 })
+      }
+
+      animateTextChange()
+    }
+  }, [task.text, displayValue, isOpen, controls])
 
   const handleSave = () => {
     if (value.trim() !== '' && value !== task.text) {
@@ -113,12 +135,10 @@ export const TaskItem = ({
             )}
           />
         ) : (
-          <div
-            className={twMerge(
-              'min-w-0 flex-1 cursor-pointer select-none text-sm px-1 py-0 transition-all text-ellipsis whitespace-nowrap overflow-hidden '
-            )}
-          >
-            {value || '\u00A0'}
+          <div className="min-w-0 flex-1 cursor-pointer select-none text-sm px-1 py-0 transition-all text-ellipsis whitespace-nowrap overflow-hidden">
+            <motion.div animate={controls} transition={{ duration: 0.5 }}>
+              {displayValue || '\u00A0'}
+            </motion.div>
           </div>
         )}
       </div>

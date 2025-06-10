@@ -1,4 +1,5 @@
 import { PinIcon } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useBackendState } from '../../shared/ipc'
 import { useTodoState } from '../../shared/lib/useTodoState'
@@ -7,10 +8,17 @@ import { TaskList } from './TaskList'
 
 export default function App() {
   const { addTodo } = useTodoState()
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const hasScrolled = useHasScrolled(scrollRef)
 
   return (
     <div className="flex flex-col h-screen bg-white relative overflow-hidden">
-      <header className="flex items-center justify-between px-3 pt-3 pb-1 [app-region:drag]">
+      <header
+        className={twMerge(
+          'flex items-center justify-between px-3 pt-3 pb-2 [app-region:drag] transition-all duration-100',
+          hasScrolled && 'border-b border-gray-100'
+        )}
+      >
         <h2 className="text-[17px] pt-1 font-semibold w-full select-none">
           Todos
         </h2>
@@ -18,8 +26,10 @@ export default function App() {
           <PinButton />
         </div>
       </header>
-      <main className="h-full overflow-scroll px-2 ">
-        <TaskList />
+      <main className="h-full overflow-scroll px-2 pt-2" ref={scrollRef}>
+        <div className="pb-5">
+          <TaskList />
+        </div>
       </main>
 
       {/* Floating Action Button */}
@@ -66,4 +76,33 @@ function AddTodoButton({ onClick }: { onClick: () => void }) {
       <PlusIcon className="w-5 h-5" />
     </button>
   )
+}
+
+function useHasScrolled(ref: React.RefObject<HTMLDivElement | null>) {
+  const [hasScrolled, setHasScrolled] = useState(false)
+
+  useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+
+    const handleScroll = () => {
+      if (!ref.current) {
+        return
+      }
+
+      setHasScrolled(ref.current.scrollTop > 0)
+    }
+
+    ref.current.addEventListener('scroll', handleScroll)
+    return () => {
+      if (!ref.current) {
+        return
+      }
+
+      ref.current.removeEventListener('scroll', handleScroll)
+    }
+  }, [ref])
+
+  return hasScrolled
 }

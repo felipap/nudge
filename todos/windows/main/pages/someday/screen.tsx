@@ -23,6 +23,11 @@ export default function Screen() {
       title="Someday"
       page="someday"
       handleAddTodo={handleAddTodo}
+      backgroundIcon={
+        somedayTasks.length === 0 && (
+          <RiArchive2Fill className="w-20 h-20 text-yellow-900/60" />
+        )
+      }
     >
       <TaskList tasks={somedayTasks} />
     </Layout>

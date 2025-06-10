@@ -1,12 +1,12 @@
 import { Task } from '@/src/store'
-import { type ReactNode, useEffect, useState } from 'react'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
 import { useSelection } from './use-selection'
 import { useFocusedShortcuts } from './use-shortcuts'
 
 interface FocusState {
   openTodoId: string | null
   onOpenTodo: (id: string) => void
-  onCloseTodo: () => void
+  closeTodo: () => void
   onFocus: (id: string) => void
   onToggleFocus: (id: string) => void
   selection: string[]
@@ -20,6 +20,7 @@ interface Props {
   toggleTasks: (ids: string[]) => Promise<void>
   changeTasksWhen: (ids: string[], when: Task['when']) => void
   deleteTasks: (ids: string[]) => Promise<void>
+  toggleHighLeverage: (ids: string[]) => void
 }
 
 export function SelectableGroupList({
@@ -30,8 +31,10 @@ export function SelectableGroupList({
   toggleTasks,
   changeTasksWhen,
   deleteTasks,
+  toggleHighLeverage,
 }: Props) {
-  const [openTodoId, setOpenTodoId] = useState<string | null>(null)
+  // const [openTodoId, setOpenTodoId] = useState<string | null>(null)
+  const openTodoIdRef = useRef<string | null>(null)
 
   const {
     onArrowUp,
@@ -48,7 +51,7 @@ export function SelectableGroupList({
     selection.length > 0,
     {
       onEscape: () => {
-        setOpenTodoId(null)
+        openTodoIdRef.current = null
         setSelection([])
       },
       onToggle: async () => {
@@ -60,13 +63,16 @@ export function SelectableGroupList({
       onDelete: async () => {
         await deleteTasks(selectionRef.current)
       },
+      toggleHighLeverage: () => {
+        toggleHighLeverage(selectionRef.current)
+      },
     }
   )
 
   // Keep track of todo IDs for navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (openTodoId !== null) {
+      if (openTodoIdRef.current !== null) {
         return
       }
 
@@ -78,9 +84,10 @@ export function SelectableGroupList({
         onArrowUp(e.shiftKey)
       } else if (e.key === 'Enter' && selectionRef.current.length > 0) {
         e.preventDefault()
-        setOpenTodoId(selectionRef.current[selectionRef.current.length - 1])
-      } else if (e.key === 'Escape' && openTodoId !== null) {
-        setOpenTodoId(null)
+        openTodoIdRef.current =
+          selectionRef.current[selectionRef.current.length - 1]
+      } else if (e.key === 'Escape' && openTodoIdRef.current !== null) {
+        openTodoIdRef.current = null
         setSelection([])
       } else if (e.key === 'z' && e.ctrlKey) {
         onUndo()
@@ -95,24 +102,24 @@ export function SelectableGroupList({
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [openTodoId, itemIds])
+  }, [openTodoIdRef.current, itemIds])
 
   return children({
-    openTodoId,
+    openTodoId: openTodoIdRef.current,
     onOpenTodo: (id) => {
       setSelection([])
-      setOpenTodoId(id)
+      openTodoIdRef.current = id
     },
-    onCloseTodo: () => {
-      setOpenTodoId(null)
-      setSelection([])
+    closeTodo: () => {
+      openTodoIdRef.current = null
+      setSelection([openTodoIdRef.current ?? ''])
     },
     onFocus: (id) => {
-      setOpenTodoId(null)
+      openTodoIdRef.current = null
       setSelection([id])
     },
     onToggleFocus: (id) => {
-      setOpenTodoId(null)
+      openTodoIdRef.current = null
       if (selectionRef.current.includes(id)) {
         setSelection(
           selectionRef.current.filter((focusedId) => focusedId !== id)

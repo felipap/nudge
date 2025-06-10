@@ -5,7 +5,7 @@ interface FocusState {
   onOpenTodo: (id: string) => void
   onCloseTodo: () => void
   focus: (id: string) => void
-  blur: (id: string) => void
+  blur: (id?: string) => void
   focusedTodoId: string | null
 }
 
@@ -90,7 +90,7 @@ export function FocusableTodoList({
       setOpenTodoId(null)
       setFocusedTodoId(id)
     },
-    blur: (_) => {
+    blur: () => {
       setOpenTodoId(null)
       setFocusedTodoId(null)
     },

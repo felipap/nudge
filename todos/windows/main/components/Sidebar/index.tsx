@@ -53,7 +53,7 @@ export function Sidebar() {
 
   return (
     <div className="pt-[60px] px-3 w-full h-full bg-[#f6f7f8] border-r border-[#EEE] [app-region:drag] ">
-      <div className="flex flex-col gap-5 [app-region:no-drag]">
+      <div className="flex flex-col gap-5 [app-region:no-drag] select-none">
         <section className="flex flex-col gap-1">
           <SidebarButton
             href="/today"

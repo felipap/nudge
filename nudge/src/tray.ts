@@ -32,7 +32,7 @@ export function createTray() {
   } else {
     iconPath = path.join(__dirname, '../../images', 'nudge-tray.png')
   }
-  // iconPath = path.join(__dirname, '../../images', 'whtaever')
+  // iconPath = path.join(__dirname, '../../images', 'todos-icon.png')
 
   const icon = nativeImage.createFromPath(iconPath)
   // if you want to resize it, be careful, it creates a copy

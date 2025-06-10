@@ -30,6 +30,8 @@ export function createMainWindow() {
     },
   })
 
+  app.dock.setIcon(path.join(__dirname, '../../images', 'nudge-icon.png'))
+
   let lastPinnedState = getState().isGoalWindowPinned
   store.subscribe((state) => {
     if (state.isGoalWindowPinned !== lastPinnedState) {

@@ -6,6 +6,7 @@ import { useTodoState } from '../../../../shared/lib/useTodoState'
 import { Layout, PageTitle } from '../../../components/Layout'
 import { ProjectProgressIndicator } from '../../../components/Sidebar'
 import { TaskList } from '../../../components/TaskList'
+import { AutoExpandingTextarea } from '../../../../shared/ui/AutoExpandingTextarea'
 
 export default function Screen() {
   // params
@@ -35,7 +36,7 @@ export default function Screen() {
     <Layout
       key={project.id}
       title={
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 w-full">
           <PageTitle
             title={project.title}
             icon={<ProjectProgressIndicator projectId={project.id} />}
@@ -56,7 +57,7 @@ function NoteInput({ projectId }: { projectId: string }) {
   const { projects, editProject } = useProjects()
   const project = projects.find((p) => p.id === projectId)
   const [value, setValue] = useState<string>(project?.description ?? '')
-  const ref = useRef<HTMLInputElement>(null)
+  const ref = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     if (project?.description) {
@@ -69,12 +70,11 @@ function NoteInput({ projectId }: { projectId: string }) {
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <input
+    <div className="flex items-center gap-2 w-full">
+      <AutoExpandingTextarea
         ref={ref}
-        type="text"
         className={twMerge(
-          'text-gray-500 p-0 text-[14px] border-none outline-none  w-[400px] ring-0',
+          'text-gray-400 p-0 text-[14px] border-none outline-none w-full ring-0 resize-none leading-[135%]',
           value ? '' : 'text-grey-300 italic'
         )}
         value={value}
@@ -87,9 +87,9 @@ function NoteInput({ projectId }: { projectId: string }) {
           }
         }}
         onBlur={onBlur}
-        onChange={(e) => {
-          setValue(e.target.value)
-          editProject(projectId, { description: e.target.value })
+        onChange={(value) => {
+          setValue(value)
+          editProject(projectId, { description: value })
         }}
       />
     </div>

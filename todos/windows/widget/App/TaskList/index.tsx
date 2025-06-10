@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'framer-motion'
 import { useTodoState } from '../../../shared/lib/useTodoState'
 import { DraggableList } from '../../../shared/ui/DraggableList'
 import { FocusableTodoList } from './FocusableTodoList'
@@ -42,18 +43,29 @@ export function TaskList() {
         <DraggableList
           items={sortedTasks}
           getItemId={(task) => task.id}
-          onReorder={handleReorder}
+          onReorder={(startIndex, endIndex) => {
+            blur()
+            handleReorder(startIndex, endIndex)
+          }}
           renderItem={({ item: task, dragHandleProps }) => (
-            <TaskItem
-              task={task}
-              blur={() => blur(task.id)}
-              focus={() => focus(task.id)}
-              dragHandleProps={dragHandleProps}
-              isFocused={task.id === focusedTodoId}
-              isOpen={task.id === openTodoId}
-              onOpen={() => onOpenTodo(task.id)}
-              onClose={onCloseTodo}
-            />
+            <AnimatePresence key={task.id}>
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 1 }}
+              >
+                <TaskItem
+                  task={task}
+                  blur={() => blur(task.id)}
+                  focus={() => focus(task.id)}
+                  dragHandleProps={dragHandleProps}
+                  isFocused={task.id === focusedTodoId}
+                  isOpen={task.id === openTodoId}
+                  onOpen={() => onOpenTodo(task.id)}
+                  onClose={onCloseTodo}
+                />
+              </motion.div>
+            </AnimatePresence>
           )}
         />
       )}

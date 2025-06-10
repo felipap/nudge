@@ -11,6 +11,8 @@ import path from 'path'
 import { getState, store } from './store'
 import { mainWindow, widgetWindow } from './windows'
 
+const SHOW_THINGS_COPY = process.env.SHOW_THINGS_COPY || false
+
 dayjs.extend(relativeTime)
 
 export function createTray() {
@@ -67,12 +69,15 @@ export function createTray() {
   function updateTrayMenu() {}
 
   tray.on('click', () => {
-    // if (mainWindow.isVisible()) {
-    //   mainWindow.hide()
-    // } else {
-    // }
-    // mainWindow.show()
-    widgetWindow.show()
+    if (SHOW_THINGS_COPY) {
+      if (mainWindow.isVisible()) {
+        mainWindow.hide()
+      } else {
+        mainWindow.show()
+      }
+    } else {
+      widgetWindow.show()
+    }
   })
 
   let lastTrayIconBounds: Electron.Rectangle | null = null

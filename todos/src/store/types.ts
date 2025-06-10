@@ -19,6 +19,7 @@ export interface Task {
   createdAt: string
   updatedAt: string
   completedAt: string | null
+  highLeverage?: boolean
   cancelledAt: string | null
   context: string | null
   deletedAt: string | null

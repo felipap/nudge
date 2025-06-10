@@ -65,7 +65,7 @@ export function useTodoState() {
           context: null,
           projectId: null,
           anytimeRank: getNextRank(tasksRef.current),
-          when: 'today',
+          when: null,
           todayRank: 0,
           ...task,
         },
