@@ -24,8 +24,6 @@ export function createMainWindow() {
     resizable: false,
     frame: false,
     transparent: true,
-    minHeight: 300,
-    minWidth: 300,
     vibrancy: 'fullscreen-ui',
     // show: false,
     // alwaysOnTop: true,

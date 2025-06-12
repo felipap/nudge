@@ -3,7 +3,11 @@ import { Button } from '../../../shared/ui/Button'
 import { SparkleIcon } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 
-export const AutoTip = withBoundary(({ goal }: { goal: string }) => {
+interface Props {
+  goal: string
+}
+
+export const AutoTip = withBoundary(({ goal }: Props) => {
   const [feedback, setFeedback] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -24,22 +28,27 @@ export const AutoTip = withBoundary(({ goal }: { goal: string }) => {
     }
   }
 
-  return (
-    <div className="flex flex-col gap-2">
+  let inner
+  if (feedback) {
+    inner = (
+      <div className="text-sm p-3 rounded bg-amber-50 text-amber-700">
+        <strong>Tip:</strong> {feedback.replace(/^Tip:? /, '')}
+      </div>
+    )
+  } else {
+    inner = (
       <Button
         variant="secondary"
         onClick={handleClick}
-        className="font-medium bg-emerald-200 text-black self-start text-[14px] hover:bg-emerald-300"
-        disabled={!goal || isLoading}
-        icon={<SparkleIcon className="w-4 h-4" />}
+        className="font-medium bg-[#FFF0CE] border border-[#D29000] text-[#A57100] self-start text-[14px] hover:bg-[#f5e6b8]"
+        // disabled={!goal || isLoading}
+        size="small"
+        icon={<SparkleIcon className="w-3 h-3" />}
       >
-        Get AI Feedback
+        Get feedback
       </Button>
-      {feedback && (
-        <div className="text-sm p-3 rounded bg-amber-50 text-amber-700">
-          <strong>Tip:</strong> {feedback.replace(/^Tip:? /, '')}
-        </div>
-      )}
-    </div>
-  )
+    )
+  }
+
+  return <div className="flex flex-col gap-2">{inner}</div>
 })

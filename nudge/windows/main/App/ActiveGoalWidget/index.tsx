@@ -1,49 +1,108 @@
-import { PinIcon } from 'lucide-react'
+import { useMemo, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useBackendState } from '../../../shared/ipc'
+import { useWindowHeight } from '../../../shared/lib'
 import { Nav } from '../../../shared/ui/Nav'
+import { withBoundary } from '../../../shared/ui/withBoundary'
 import { GoalTextarea } from '../GoalTextarea'
-import { SessionButton } from '../SessionButton'
+import { SessionButton } from './SessionButton'
 
-export function ActiveGoalWidget() {
-  return (
-    <div className="flex flex-col bg-white h-screen ">
-      <Nav title="Focus session until 4pm" />
-      <main className="h-full flex flex-col shadow-inset-bottom">
-        <GoalTextarea />
-        {/* <TryNowButton /> */}
-      </main>
-      <footer className="p-2 flex flex-row items-center justify-between z-10">
-        <SessionButton />
-        <PinButton />
-      </footer>
-    </div>
-  )
-}
+export const ActiveGoalWidget = withBoundary(() => {
+  useWindowHeight(200)
 
-function PinButton() {
   const { state } = useBackendState()
+  const [editorFocus, setEditorFocus] = useState(false)
+  const goal = state?.activeGoal?.content
 
-  async function togglePin() {
-    if (state) {
-      await window.electronAPI.setPartialState({
-        isGoalWindowPinned: !state.isGoalWindowPinned,
-      })
+  const isPaused = state?.activeGoal?.pausedAt !== null
+
+  const durationSoFar = useMemo(() => {
+    if (!state?.activeGoal) {
+      return 0
     }
+
+    const now = new Date()
+    const startTime = new Date(state?.activeGoal?.startedAt)
+    return now.getTime() - startTime.getTime()
+  }, [state?.activeGoal?.startedAt])
+
+  function onClickClear() {
+    window.electronAPI.setPartialState({
+      activeGoal: null,
+    })
   }
 
-  const isPinned = state?.isGoalWindowPinned ?? false
+  function onClickPause() {
+    if (!state?.activeGoal) {
+      return
+    }
+
+    window.electronAPI.setPartialState({
+      activeGoal: {
+        ...state.activeGoal,
+        pausedAt: isPaused ? null : new Date().toISOString(),
+      },
+    })
+  }
+
+  function onClickResume() {
+    if (!state?.activeGoal) {
+      return
+    }
+
+    window.electronAPI.setPartialState({
+      activeGoal: {
+        ...state.activeGoal,
+        pausedAt: null,
+      },
+    })
+  }
 
   return (
-    <button
-      className={twMerge(
-        'w-6 h-6 pt-[2px] flex items-center justify-center rounded-full !cursor-pointer',
-        isPinned &&
-          'bg-blue-200/30 text-blue-600 hover:bg-blue-200/50 transition-all border-blue-600/20 border'
-      )}
-      onClick={togglePin}
-    >
-      <PinIcon className="w-4 h-4" />
-    </button>
+    <>
+      <Nav title="Focus session until 4pm" showPin />
+      <main
+        className={twMerge(
+          'h-full flex flex-col shadow-inset-bottom',
+          editorFocus ? '' : ''
+        )}
+        onClick={(e) => {
+          if (!editorFocus) {
+            e.preventDefault()
+            // setEditorFocus(true)
+          }
+        }}
+      >
+        <GoalTextarea
+          className="p-3"
+          value={goal}
+          onFocus={() => setEditorFocus(true)}
+          onBlur={() => setEditorFocus(false)}
+          // autoFocus={editorFocus}
+        />
+      </main>
+      <footer className="p-2 flex flex-row items-center justify-between z-10">
+        <SessionButton
+          icon={isPaused ? 'play' : null}
+          onClick={() => {
+            if (isPaused) {
+              onClickResume()
+            } else {
+              onClickClear()
+            }
+          }}
+        >
+          {isPaused ? 'Resume' : `${formatDuration(durationSoFar)}`}
+        </SessionButton>
+      </footer>
+    </>
   )
+})
+
+function formatDuration(elapsedMs: number) {
+  const s = Math.floor(elapsedMs / 1000)
+  if (s < 60) {
+    return `${s}s`
+  }
+  return `${Math.floor(s / 60)} min`
 }

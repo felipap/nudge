@@ -11,6 +11,7 @@ declare global {
     electronAPI: {
       setDebugWindowSize: (width: number, height: number) => void
       getState: () => Promise<State>
+      onStateChange: (callback: (state: State) => void) => () => void
       setPartialState: (state: Partial<State>) => Promise<void>
       setAutoLaunch: (enable: boolean) => void
       setCaptureFrequency: (frequency: number) => void
@@ -19,7 +20,8 @@ declare global {
       zoomWindow: () => void
       openExternal: (url: string) => void
       getGoalFeedback: (goal: string) => Promise<string | null>
-      setWindowHeight: (height: number) => void
+      setWindowHeight: (height: number, animate?: boolean) => Promise<void>
+      getWindowHeight: () => Promise<number>
       triggerBackgroundAction: (actionName: string, ...args: any[]) => void
       onBackgroundActionCompleted: (
         callback: (actionName: string) => void

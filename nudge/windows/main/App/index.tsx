@@ -5,9 +5,14 @@ import { GoalInputWidget } from './GoalInputWidget'
 export default function App() {
   const { state } = useBackendState()
 
-  if (state?.activeGoal) {
-    return <ActiveGoalWidget />
+  let inner
+  if (!state) {
+    return <div className="flex flex-col bg-white h-screen">Loading</div>
+  } else if (state.activeGoal) {
+    inner = <ActiveGoalWidget />
+  } else {
+    inner = <GoalInputWidget />
   }
 
-  return <GoalInputWidget />
+  return <div className="flex flex-col bg-white h-screen">{inner}</div>
 }

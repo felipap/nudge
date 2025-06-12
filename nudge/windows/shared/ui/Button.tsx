@@ -1,15 +1,20 @@
-import { ComponentProps } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { ComponentProps } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { Spinner } from './icons'
 
 const buttonVariants = cva(
-  'border-none py-1.5 px-3.5 text-md font-medium antialiased cursor-pointer rounded-md inline-flex items-center justify-center transition-all gap-2 disabled:opacity-50 disabled:!cursor-default select-none',
+  'border-0 font-medium antialiased cursor-pointer rounded-md inline-flex items-center justify-center transition-all gap-2 disabled:opacity-50 disabled:!cursor-default select-none',
   {
     variants: {
       variant: {
         default: 'bg-[#0071e3] text-white focus:bg-[#0056b3]',
         secondary: 'bg-gray-200 text-gray-600',
+      },
+      size: {
+        small: 'py-0.5 px-2 text-sm',
+        md: 'py-1.5 px-3.5 text-md',
+        lg: 'py-2 px-4 text-lg',
       },
       loading: {
         true: 'cursor-wait opacity-70',
@@ -17,6 +22,7 @@ const buttonVariants = cva(
     },
     defaultVariants: {
       variant: 'default',
+      size: 'md',
       loading: false,
     },
   }
@@ -34,6 +40,7 @@ export const Button = ({
   onClick,
   className,
   variant,
+  size = 'md',
   loading,
   disabled,
   icon,
@@ -42,7 +49,7 @@ export const Button = ({
   return (
     <button
       onClick={onClick}
-      className={twMerge(buttonVariants({ variant, loading }), className)}
+      className={twMerge(buttonVariants({ variant, size, loading }), className)}
       disabled={disabled}
       {...props}
     >

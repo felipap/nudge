@@ -82,11 +82,22 @@ export function setupIPC() {
     }
   })
 
-  ipcMain.on('setWindowHeight', (_event, height: number) => {
+  ipcMain.handle(
+    'setWindowHeight',
+    (_event, height: number, animate = false) => {
+      const win = BrowserWindow.getFocusedWindow()
+      if (win) {
+        win.setSize(win.getBounds().width, height, animate)
+      }
+    }
+  )
+
+  ipcMain.handle('getWindowHeight', () => {
     const win = BrowserWindow.getFocusedWindow()
     if (win) {
-      win.setSize(win.getBounds().width, height)
+      return win.getBounds().height
     }
+    return 0
   })
 
   ipcMain.on('closeWindow', (_event) => {

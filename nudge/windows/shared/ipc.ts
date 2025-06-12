@@ -1,24 +1,26 @@
-import { useEffect, useState } from 'react'
-import { State } from '../../src/types'
+import { useCallback, useEffect, useState } from 'react'
+import { GoalSession, State } from '../../src/types'
 
 export async function getState() {
   return await window.electronAPI.getState()
-}
-
-export async function setPartialState(state: Partial<State>) {
-  return await window.electronAPI.setPartialState(state)
 }
 
 export async function setAutoLaunch(enable: boolean) {
   return await window.electronAPI.setAutoLaunch(enable)
 }
 
-export function closeWindow() {
-  window.electronAPI.closeWindow()
+export async function setWindowHeight(height: number, animate = false) {
+  return await window.electronAPI.setWindowHeight(height, animate)
 }
 
-export function setWindowHeight(height: number) {
-  window.electronAPI.setWindowHeight(height)
+export async function getWindowHeight() {
+  return await window.electronAPI.getWindowHeight()
+}
+
+//
+
+export function closeWindow() {
+  window.electronAPI.closeWindow()
 }
 
 export function minimizeWindow() {
@@ -27,6 +29,12 @@ export function minimizeWindow() {
 
 export function zoomWindow() {
   window.electronAPI.zoomWindow()
+}
+
+// State
+
+export async function setPartialState(state: Partial<State>) {
+  return await window.electronAPI.setPartialState(state)
 }
 
 export function useBackendState() {
@@ -53,4 +61,43 @@ export function useBackendState() {
   return {
     state,
   }
+}
+
+// Goals stuff
+
+export async function startNewGoalSession(value: string, duration: number) {
+  return await window.electronAPI.setPartialState({
+    activeGoal: {
+      content: value,
+      startedAt: new Date().toISOString(),
+      pausedAt: null,
+      endedAt: null,
+      minsLeft: duration,
+    },
+  })
+}
+
+export function useGoalState() {
+  const [value, setValue] = useState<GoalSession | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true)
+      const state = await window.electronAPI.getState()
+      setValue(state.activeGoal)
+      setLoading(false)
+    }
+    load()
+  }, [])
+
+  const update = useCallback(async (newValue: GoalSession) => {
+    setSaving(true)
+    await window.electronAPI.setPartialState({ activeGoal: newValue })
+    setValue(newValue)
+    setSaving(false)
+  }, [])
+
+  return { value, loading, saving, update }
 }

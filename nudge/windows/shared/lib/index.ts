@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { getWindowHeight, setWindowHeight } from '../ipc'
 
 export function useReallyOnlyOnce(fn: () => void | Promise<void>) {
   const hasRunRef = useRef(false)
@@ -39,4 +40,18 @@ export function assert(predicate: any, message?: string) {
   if (!predicate) {
     throw Error(message || 'assert failed')
   }
+}
+
+export function useWindowHeight(height: number) {
+  useEffect(() => {
+    async function load() {
+      const currentHeight = await getWindowHeight()
+      console.log('currentHeight', currentHeight)
+      if (currentHeight !== height) {
+        console.log('setting window height', height)
+        await setWindowHeight(height, true)
+      }
+    }
+    setTimeout(load, 1)
+  }, [height])
 }

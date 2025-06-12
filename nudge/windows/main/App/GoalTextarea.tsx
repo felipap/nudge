@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useMemo, useRef } from 'react'
 import { twMerge } from 'tailwind-merge'
 import {
   AutoExpandingTextarea,
@@ -6,39 +6,21 @@ import {
 } from '../../shared/ui/AutoExpandingTextarea'
 import { withBoundary } from '../../shared/ui/withBoundary'
 
-export function useGoalState() {
-  const [value, setValue] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [saving, setSaving] = useState(false)
-
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true)
-      const state = await window.electronAPI.getState()
-      setValue(state.goals)
-      setLoading(false)
-    }
-    load()
-  }, [])
-
-  const update = useCallback(async (newValue: string) => {
-    setSaving(true)
-    await window.electronAPI.setPartialState({ goals: newValue })
-    setValue(newValue)
-    setSaving(false)
-  }, [])
-
-  return { value, loading, saving, update }
-}
+const PLACEHOLDERS = [
+  'I want to write a blog post about Bryan Johnson for 45 minutes.',
+]
 
 type Props = AutoExpandingTextareaProps
 
 export const GoalTextarea = withBoundary(({ className, ...props }: Props) => {
   const ref = useRef<HTMLTextAreaElement>(null)
+  const placeholder = useMemo(() => {
+    return PLACEHOLDERS[Math.floor(Math.random() * PLACEHOLDERS.length)]
+  }, [])
 
   return (
     <main
-      className="flex flex-col gap-2 h-full"
+      className="flex flex-col gap-2 h-full select-none"
       onClick={(e) => {
         e.stopPropagation()
         ref.current?.focus()
@@ -46,9 +28,9 @@ export const GoalTextarea = withBoundary(({ className, ...props }: Props) => {
     >
       <AutoExpandingTextarea
         ref={ref}
-        placeholder="I want to write a blog post about Bryan Johnson"
+        placeholder={`Write down a goal. Example: ${placeholder}`}
         className={twMerge(
-          'w-full p-2 border-0 bg-transparent resize-none ring-0 rounded leading-[1.4]',
+          'w-full p-2 border-0 bg-transparent resize-none ring-0 rounded leading-[1.4] placeholder:text-gray-400 ',
           className
         )}
         {...props}

@@ -11,7 +11,7 @@ import {
 } from 'electron'
 import path from 'path'
 import {
-  getGoals,
+  getCurrentGoalText,
   getMood,
   getNextCaptureAt,
   getOpenAiKey,
@@ -58,7 +58,7 @@ export function createTray() {
       })
     } else {
       template = template.concat([
-        getGoals()
+        getCurrentGoalText()
           ? {
               label: `Nudge is ${
                 mood === 'happy'

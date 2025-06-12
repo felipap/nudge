@@ -6,7 +6,7 @@ import { captureActiveScreen } from '../lib/screen'
 import { Capture } from '../types'
 import {
   addSavedCapture,
-  getGoals,
+  getCurrentGoalText,
   getNextCaptureAt,
   getOpenAiKey,
   setNextCaptureAt,
@@ -136,7 +136,12 @@ async function captureScreenTaskInner() {
   let ret
   try {
     log('[ScreenCaptureService] Sending to server...')
-    ret = await getAssessmentFromScreenshot(openai, dataUrl, getGoals(), [])
+    ret = await getAssessmentFromScreenshot(
+      openai,
+      dataUrl,
+      getCurrentGoalText(),
+      []
+    )
   } catch (e) {
     log('[ScreenCaptureService] sendToOpenAI failed', e)
     return {

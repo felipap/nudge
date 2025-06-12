@@ -21,8 +21,9 @@ export interface Todo {
 }
 
 export interface GoalSession {
-  goal: string
+  content: string
   startedAt: string
+  updatedAt: string | null
   pausedAt: string | null
   endedAt: string | null
   minsLeft: number
@@ -33,8 +34,6 @@ export interface State {
   lastCapture: Capture | null
   nextCaptureAt: string | null
   savedCaptures: Capture[]
-  goals: string | null
-  goalLastUpdatedAt: string | null
   autoLaunch: boolean
   captureFrequency: number
   isGoalWindowPinned: boolean

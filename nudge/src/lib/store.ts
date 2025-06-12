@@ -10,8 +10,6 @@ const DEFAULT_STATE: State = {
   nextCaptureAt: null,
   savedCaptures: [],
   activeGoal: null,
-  goals: `I need help staying focused on work instead of Youtube or other distractions.`,
-  goalLastUpdatedAt: null,
   autoLaunch: false,
   captureFrequency: 1,
   isGoalWindowPinned: false,
@@ -90,7 +88,7 @@ export const getOpenAiKey = () => store.getState().openAiKey
 
 export const getState = () => store.getState()
 
-export const getGoals = () => store.getState().goals
+export const getCurrentGoalText = () => store.getState().activeGoal?.content
 
 export const getLastCaptureAt = () => store.getState().lastCapture?.at
 
