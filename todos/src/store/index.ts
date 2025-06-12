@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid'
 import { create, StoreApi } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { fileStore } from './backend'
-import { DEFAULT_STATE, State, Task, Project } from './types'
+import { DEFAULT_STATE, Project, State, Task } from './types'
 
 export * from './types'
 
@@ -34,18 +34,20 @@ const getNextRank = (tasks: Task[]): number => {
 }
 
 // Todo actions
-export const addTodo = (text: string): Task => {
+export const addTodo = (
+  args: Pick<Task, 'projectId' | 'when'> & { text: string }
+): Task => {
   const currentTodos = store.getState().tasks
   const todo: Task = {
     id: nanoid(),
-    text: text.trim(),
+    text: args.text.trim(),
     context: null,
     completedAt: null,
-    when: 'today',
+    when: args.when,
     updatedAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
     deletedAt: null,
-    projectId: null,
+    projectId: args.projectId || null,
     cancelledAt: null,
     loggedAt: null,
     anytimeRank: getNextRank(currentTodos),
@@ -87,11 +89,20 @@ export const deleteTodo = (id: string): Task | undefined => {
   return todoToDelete
 }
 
-export const editTodo = (id: string, text: string): Task | undefined => {
+export const editTodo = (
+  id: string,
+  text: string,
+  projectId?: string
+): Task | undefined => {
   const currentTodos = store.getState().tasks
   const updatedTodos = currentTodos.map((todo) => {
     if (todo.id === id) {
-      return { ...todo, text: text.trim(), updatedAt: new Date().toISOString() }
+      return {
+        ...todo,
+        text: text.trim(),
+        updatedAt: new Date().toISOString(),
+        projectId: projectId || null,
+      }
     }
     return todo
   })

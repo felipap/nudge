@@ -1,6 +1,7 @@
 import React from 'react'
+import { twMerge } from 'tailwind-merge'
 
-function CloseSVG({ className }: { className?: string }) {
+export function CloseSVG({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 12 12"
@@ -64,23 +65,28 @@ function ZoomSVG({ className }: { className?: string }) {
   )
 }
 
-function WindowControlCircle({
-  color,
+export function WindowControlCircle({
   label,
   icon,
   onClick,
+  className,
+  ...props
 }: {
-  color: string
   label: string
   icon: React.ReactNode
   onClick: () => void
+  className?: string
+  style?: React.CSSProperties
 }) {
   return (
     <span
       aria-label={label}
-      className="w-[13px] h-[13px] rounded-full inline-block border border-black/10 dark:border-white/10 relative"
-      style={{ backgroundColor: color }}
+      className={twMerge(
+        'w-[13px] h-[13px] rounded-full inline-block border border-black/10 dark:border-white/10 relative cursor-pointer transition-colors',
+        className
+      )}
       onClick={onClick}
+      {...props}
     >
       <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
         {icon}
@@ -102,7 +108,7 @@ export function WindowControls({
     <div className="flex gap-2 items-center select-none group">
       <WindowControlCircle
         onClick={onClose}
-        color="#ff5f56"
+        style={{ backgroundColor: '#ff5f56' }}
         label="Close"
         icon={
           <CloseSVG className="w-[9px] h-[9px] text-black/70 dark:text-white/80" />
@@ -110,7 +116,7 @@ export function WindowControls({
       />
       <WindowControlCircle
         onClick={onMinimize}
-        color="#ffbd2e"
+        style={{ backgroundColor: '#ffbd2e' }}
         label="Minimize"
         icon={
           <MinimizeSVG className="w-[9px] h-[9px] text-black/70 dark:text-white/80" />
@@ -118,7 +124,7 @@ export function WindowControls({
       />
       <WindowControlCircle
         onClick={onZoom}
-        color="#27c93f"
+        style={{ backgroundColor: '#27c93f' }}
         label="Zoom"
         icon={
           <ZoomSVG className="w-[9px] h-[9px] text-black/70 dark:text-white/80" />

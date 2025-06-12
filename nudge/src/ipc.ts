@@ -82,21 +82,28 @@ export function setupIPC() {
     }
   })
 
-  ipcMain.on('close', (_event) => {
+  ipcMain.on('setWindowHeight', (_event, height: number) => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) {
+      win.setSize(win.getBounds().width, height)
+    }
+  })
+
+  ipcMain.on('closeWindow', (_event) => {
     const win = BrowserWindow.getFocusedWindow()
     if (win) {
       win.close()
     }
   })
 
-  ipcMain.on('minimize', (_event) => {
+  ipcMain.on('minimizeWindow', (_event) => {
     const win = BrowserWindow.getFocusedWindow()
     if (win) {
       win.minimize()
     }
   })
 
-  ipcMain.on('zoom', (_event) => {
+  ipcMain.on('zoomWindow', (_event) => {
     const win = BrowserWindow.getFocusedWindow()
     if (win) {
       if (win.isMaximized()) {

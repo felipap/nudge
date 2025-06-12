@@ -13,9 +13,9 @@ declare global {
       listenToggleDarkMode: (callback: (isDarkMode: boolean) => void) => void
       setAutoLaunch: (enable: boolean) => Promise<void>
       getSystemTheme: () => Promise<string>
-      close: () => void
-      minimize: () => void
-      zoom: () => void
+      closeWindow: () => void
+      minimizeWindow: () => void
+      zoomWindow: () => void
       openExternal: (url: string) => void
       getGoalFeedback: (goal: string) => Promise<string | null>
     }

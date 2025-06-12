@@ -13,6 +13,8 @@
 /* @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *)); */
 
 @theme {
+  --font-display: 'SF Pro Display', ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Noto Color Emoji';
   --font-sans: 'SF Pro', ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Noto Color Emoji';
   --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
@@ -100,6 +102,11 @@ textarea {
   padding-bottom: 10rem;
 }
 
+.font-display-3p {
+  font-family: var(--font-display);
+  letter-spacing: 3% !important;
+}
+
 /* Text sizes */
 
 .text-body {
@@ -174,4 +181,8 @@ textarea {
 
 .textarea-reset {
   @apply resize-none outline-none border-none;
+}
+
+.shadow-inset-bottom {
+  box-shadow: inset 0 -10px 10px -10px rgba(0, 0, 0, 0.05);
 }

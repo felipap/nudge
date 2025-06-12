@@ -1,7 +1,7 @@
 import Store from 'electron-store'
 import { create, StoreApi } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { Capture, Mood, State, Todo } from '../types'
+import type { Capture, Mood, State } from '../types'
 import { screenCaptureService } from './ScreenCaptureService'
 
 const DEFAULT_STATE: State = {
@@ -9,12 +9,12 @@ const DEFAULT_STATE: State = {
   lastCapture: null,
   nextCaptureAt: null,
   savedCaptures: [],
+  activeGoal: null,
   goals: `I need help staying focused on work instead of Youtube or other distractions.`,
   goalLastUpdatedAt: null,
   autoLaunch: false,
   captureFrequency: 1,
   isGoalWindowPinned: false,
-  isTodoWindowPinned: false,
 }
 
 const electronStore = new Store<State>({
@@ -38,59 +38,6 @@ export const store = create<State>()(
     },
   })
 )
-
-// Todo actions
-export const addTodo = (text: string): Todo => {
-  const todo: Todo = {
-    id: crypto.randomUUID(),
-    text: text.trim(),
-    completed: false,
-    createdAt: new Date().toISOString(),
-  }
-
-  const currentTodos = store.getState().todos
-  store.setState({ todos: [todo, ...currentTodos] })
-  return todo
-}
-
-export const toggleTodo = (id: string): Todo | undefined => {
-  const currentTodos = store.getState().todos
-  const updatedTodos = currentTodos.map((todo) => {
-    if (todo.id === id) {
-      return { ...todo, completed: !todo.completed }
-    }
-    return todo
-  })
-
-  store.setState({ todos: updatedTodos })
-  return updatedTodos.find((t) => t.id === id)
-}
-
-export const deleteTodo = (id: string): Todo | undefined => {
-  const currentTodos = store.getState().todos
-  const todoToDelete = currentTodos.find((t) => t.id === id)
-  const updatedTodos = currentTodos.filter((todo) => todo.id !== id)
-
-  store.setState({ todos: updatedTodos })
-  return todoToDelete
-}
-
-export const editTodo = (id: string, text: string): Todo | undefined => {
-  const currentTodos = store.getState().todos
-  const updatedTodos = currentTodos.map((todo) => {
-    if (todo.id === id) {
-      return { ...todo, text: text.trim() }
-    }
-    return todo
-  })
-
-  store.setState({ todos: updatedTodos })
-  return updatedTodos.find((t) => t.id === id)
-}
-
-export const getTodos = (): Todo[] => {
-  return store.getState().todos
-}
 
 // Export store actions
 export const updateLastCapture = (

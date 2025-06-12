@@ -35,19 +35,44 @@ export function getServer() {
     'Add a new todo item to the list',
     {
       text: z.string().describe('The text content of the todo'),
+      projectId: z
+        .string()
+        .describe('The ID of the project to add the todo to')
+        .optional(),
+      when: z
+        .enum(['today', 'tonight', 'anytime', 'someday'])
+        .describe('The when the todo is due')
+        .optional(),
     },
-    tryCatchCallback(async ({ text }: { text: string }) => {
-      const todo = addTodo(text)
+    tryCatchCallback(
+      async ({
+        text,
+        projectId,
+        when,
+      }: {
+        text: string
+        projectId?: string
+        when?: string
+      }) => {
+        const todo = addTodo({
+          text,
+          projectId,
+          when:
+            when === 'anytime'
+              ? null
+              : ((when || null) as 'today' | 'tonight' | 'someday' | null),
+        })
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `Added: ${todo.text} (${todo.id})`,
-          },
-        ],
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Added: ${todo.text} (${todo.id})\n${JSON.stringify(todo)}`,
+            },
+          ],
+        }
       }
-    })
+    )
   )
 
   server.tool(
@@ -101,64 +126,76 @@ export function getServer() {
     {
       id: z.string(),
       text: z.string().describe('The new text for the todo'),
+      projectId: z
+        .string()
+        .describe('The ID of the project to add the todo to')
+        .optional(),
     },
-    tryCatchCallback(async ({ id, text }: { id: string; text: string }) => {
-      const todo = editTodo(id, text)
+    tryCatchCallback(
+      async ({
+        id,
+        text,
+        projectId,
+      }: {
+        id: string
+        text: string
+        projectId?: string
+      }) => {
+        const todo = editTodo(id, text, projectId)
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `Updated: ${todo?.text} (${todo?.id})`,
-          },
-        ],
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Updated: ${todo?.text} (${todo?.id})`,
+            },
+          ],
+        }
       }
-    })
+    )
   )
 
   server.tool(
     'pi-list-todos',
     'List all todos',
     {
-      showIncomplete: z
+      showCompleted: z
         .boolean()
         .optional()
-        .describe('If true, only show incomplete todos'),
+        .describe('If true, also show completed todos'),
     },
-    tryCatchCallback(
-      async ({ showIncomplete }: { showIncomplete?: boolean }) => {
-        let todos = getTodos()
+    tryCatchCallback(async ({ showCompleted }: { showCompleted?: boolean }) => {
+      let todos = getTodos()
 
-        if (!showIncomplete) {
-          todos = todos.filter((todo) => !todo.completedAt)
-        }
+      if (!showCompleted) {
+        todos = todos.filter((todo) => !todo.completedAt)
+      }
 
-        if (todos.length === 0) {
-          return {
-            content: [
-              {
-                type: 'text',
-                text: '[]',
-              },
-            ],
-          }
-        }
-
+      if (todos.length === 0) {
         return {
           content: [
             {
               type: 'text',
-              text: jsonToXml(
-                todos.map((todo) => ({
-                  todo: formatTask(todo),
-                })),
-                'list'
-              ),
+              text: '[]',
             },
           ],
         }
       }
-    )
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: jsonToXml(
+              todos.map((todo) => ({
+                todo: formatTask(todo),
+              })),
+              'list'
+            ),
+          },
+        ],
+      }
+    })
   )
 
   // PROJECTS

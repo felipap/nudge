@@ -1,9 +1,9 @@
-import { SparkleIcon } from '../../shared/ui/icons'
-import { Button } from '../../shared/ui/Button'
 import { useState } from 'react'
-import { withBoundary } from '../../shared/ui/withBoundary'
+import { Button } from '../../../shared/ui/Button'
+import { SparkleIcon } from '../../../shared/ui/icons'
+import { withBoundary } from '../../../shared/ui/withBoundary'
 
-export const GoalFeedbackButton = withBoundary(({ goal }: { goal: string }) => {
+export const AutoTip = withBoundary(({ goal }: { goal: string }) => {
   const [feedback, setFeedback] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 

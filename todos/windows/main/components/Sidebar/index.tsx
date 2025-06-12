@@ -164,8 +164,10 @@ function SidebarButton({ children, icon, href, ...props }: SidebarButtonProps) {
       )}
       {...props}
     >
-      {icon}
-      {children}
+      <span className="shrink-0">{icon}</span>
+      <span className="line-clamp-1 text-ellipsis whitespace-nowrap block">
+        {children}
+      </span>
     </Link>
   )
 }

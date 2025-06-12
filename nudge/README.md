@@ -1,11 +1,11 @@
 # Nudge
 
-Productivity util for macOS that watches your screen and tells you when you're
-procrastinating.
+AI that watches your computer screen and tells you when you're procrastinating.
 
-## To do
+## To-dos
 
 - [ ] Show how long goal has been active for.
+- [ ] Issue: can't close the window.
 - [ ] Use natural language to set goal duration.
 - [ ] Allow users to modify screenshot frequency.
 - [ ] Let users introspect logs.

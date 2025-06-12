@@ -16,7 +16,7 @@ export function TaskList() {
   }
 
   const filteredTasks = tasks.filter(
-    (task) => !task.deletedAt && true
+    (task) => !task.deletedAt && task.when === 'today' && !task.loggedAt
     // (!task.completedAt || recentToggledTodos.includes(task.id))
   )
 

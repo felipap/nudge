@@ -14,11 +14,12 @@ declare global {
       setPartialState: (state: Partial<State>) => Promise<void>
       setAutoLaunch: (enable: boolean) => void
       setCaptureFrequency: (frequency: number) => void
-      close: () => void
-      minimize: () => void
-      zoom: () => void
+      closeWindow: () => void
+      minimizeWindow: () => void
+      zoomWindow: () => void
       openExternal: (url: string) => void
       getGoalFeedback: (goal: string) => Promise<string | null>
+      setWindowHeight: (height: number) => void
       triggerBackgroundAction: (actionName: string, ...args: any[]) => void
       onBackgroundActionCompleted: (
         callback: (actionName: string) => void

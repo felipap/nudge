@@ -20,6 +20,14 @@ export interface Todo {
   createdAt: string
 }
 
+export interface GoalSession {
+  goal: string
+  startedAt: string
+  pausedAt: string | null
+  endedAt: string | null
+  minsLeft: number
+}
+
 export interface State {
   openAiKey: string | null
   lastCapture: Capture | null
@@ -30,5 +38,5 @@ export interface State {
   autoLaunch: boolean
   captureFrequency: number
   isGoalWindowPinned: boolean
-  isTodoWindowPinned: boolean
+  activeGoal: GoalSession | null
 }

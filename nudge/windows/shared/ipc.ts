@@ -13,16 +13,20 @@ export async function setAutoLaunch(enable: boolean) {
   return await window.electronAPI.setAutoLaunch(enable)
 }
 
-export function close() {
-  window.electronAPI.close()
+export function closeWindow() {
+  window.electronAPI.closeWindow()
 }
 
-export function minimize() {
-  window.electronAPI.minimize()
+export function setWindowHeight(height: number) {
+  window.electronAPI.setWindowHeight(height)
 }
 
-export function zoom() {
-  window.electronAPI.zoom()
+export function minimizeWindow() {
+  window.electronAPI.minimizeWindow()
+}
+
+export function zoomWindow() {
+  window.electronAPI.zoomWindow()
 }
 
 export function useBackendState() {
