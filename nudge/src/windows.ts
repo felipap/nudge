@@ -21,6 +21,8 @@ export function createMainWindow() {
   const win = new BrowserWindow({
     width: windowWidth,
     height: windowHeight,
+    minHeight: windowHeight,
+    minWidth: windowWidth,
     resizable: false,
     frame: false,
     transparent: true,

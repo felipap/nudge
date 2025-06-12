@@ -4,12 +4,14 @@ AI that watches your computer screen and tells you when you're procrastinating.
 
 ## To-dos
 
-- [ ] Show how long goal has been active for.
-- [ ] Issue: can't close the window.
+- [ ] Fix window still resizable.
+- [ ] Fix framer-motion causing 504 issues with Vite.
 - [ ] Use natural language to set goal duration.
 - [ ] Allow users to modify screenshot frequency.
 - [ ] Let users introspect logs.
 - [ ] Come up with an icon for release.
+- [x] Show how long goal has been active for.
+- [x] Issue: can't close the window.
 
 ## Stack
 

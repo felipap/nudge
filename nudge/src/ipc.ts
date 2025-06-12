@@ -6,6 +6,54 @@ import { getOpenAiKey, setOpenAiKey, store } from './lib/store'
 import { State } from './types'
 
 export function setupIPC() {
+  ipcMain.handle(
+    'setWindowHeight',
+    (_event, height: number, animate = false) => {
+      const win = BrowserWindow.getFocusedWindow()
+      if (win) {
+        win.setSize(win.getBounds().width, height, animate)
+      }
+    }
+  )
+
+  ipcMain.handle('getWindowHeight', () => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) {
+      return win.getBounds().height
+    }
+    return 0
+  })
+
+  ipcMain.on('closeWindow', (_event) => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) {
+      win.close()
+    }
+  })
+
+  ipcMain.on('minimizeWindow', (_event) => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) {
+      win.minimize()
+    }
+  })
+
+  ipcMain.on('zoomWindow', (_event) => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) {
+      if (win.isMaximized()) {
+        win.unmaximize()
+      } else {
+        win.maximize()
+      }
+    }
+  })
+
+  //
+  //
+  //
+  //
+
   // Set up state change listener
   store.subscribe((state) => {
     // Emit state change to all windows
@@ -79,49 +127,6 @@ export function setupIPC() {
     console.log('_event', _event)
     if (_event) {
       _event.reply('background-action-completed', 'captureNow')
-    }
-  })
-
-  ipcMain.handle(
-    'setWindowHeight',
-    (_event, height: number, animate = false) => {
-      const win = BrowserWindow.getFocusedWindow()
-      if (win) {
-        win.setSize(win.getBounds().width, height, animate)
-      }
-    }
-  )
-
-  ipcMain.handle('getWindowHeight', () => {
-    const win = BrowserWindow.getFocusedWindow()
-    if (win) {
-      return win.getBounds().height
-    }
-    return 0
-  })
-
-  ipcMain.on('closeWindow', (_event) => {
-    const win = BrowserWindow.getFocusedWindow()
-    if (win) {
-      win.close()
-    }
-  })
-
-  ipcMain.on('minimizeWindow', (_event) => {
-    const win = BrowserWindow.getFocusedWindow()
-    if (win) {
-      win.minimize()
-    }
-  })
-
-  ipcMain.on('zoomWindow', (_event) => {
-    const win = BrowserWindow.getFocusedWindow()
-    if (win) {
-      if (win.isMaximized()) {
-        win.unmaximize()
-      } else {
-        win.maximize()
-      }
     }
   })
 

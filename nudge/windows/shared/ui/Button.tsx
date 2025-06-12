@@ -4,11 +4,11 @@ import { twMerge } from 'tailwind-merge'
 import { Spinner } from './icons'
 
 const buttonVariants = cva(
-  'border-0 font-medium antialiased cursor-pointer rounded-md inline-flex items-center justify-center transition-all gap-2 disabled:opacity-50 disabled:!cursor-default select-none',
+  'border-0 font-medium antialiased cursor-pointer whitespace-nowrap rounded-md inline-flex items-center justify-center transition-all gap-2 disabled:opacity-50 disabled:!cursor-default select-none',
   {
     variants: {
       variant: {
-        default: 'bg-[#0071e3] text-white focus:bg-[#0056b3]',
+        default: 'bg-[#0071e3] text-white',
         secondary: 'bg-gray-200 text-gray-600',
       },
       size: {

@@ -2,13 +2,15 @@ import { useMemo, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useBackendState } from '../../../shared/ipc'
 import { useWindowHeight } from '../../../shared/lib'
+import { Button } from '../../../shared/ui/Button'
 import { Nav } from '../../../shared/ui/Nav'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { GoalTextarea } from '../GoalTextarea'
 import { SessionButton } from './SessionButton'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export const ActiveGoalWidget = withBoundary(() => {
-  useWindowHeight(200)
+  useWindowHeight(250)
 
   const { state } = useBackendState()
   const [editorFocus, setEditorFocus] = useState(false)
@@ -58,9 +60,28 @@ export const ActiveGoalWidget = withBoundary(() => {
     })
   }
 
+  function onClickMainButton() {
+    if (isPaused) {
+      onClickResume()
+    } else {
+      onClickPause()
+    }
+  }
+
+  const minsLeft = useMemo(() => {
+    if (!state?.activeGoal) {
+      return 0
+    }
+    // Use startedAt + minsLeft to calculate the time left
+    const startedAt = new Date(state.activeGoal.startedAt)
+    const minsLeft = state.activeGoal.minsLeft
+    const timeLeft = new Date(startedAt.getTime() + minsLeft * 60000)
+    return Math.floor((timeLeft.getTime() - Date.now()) / 60000)
+  }, [state?.activeGoal?.startedAt])
+
   return (
     <>
-      <Nav title="Focus session until 4pm" showPin />
+      <Nav title={`Focus session for ${formatDuration(minsLeft)}`} showPin />
       <main
         className={twMerge(
           'h-full flex flex-col shadow-inset-bottom',
@@ -81,19 +102,43 @@ export const ActiveGoalWidget = withBoundary(() => {
           // autoFocus={editorFocus}
         />
       </main>
-      <footer className="p-2 flex flex-row items-center justify-between z-10">
-        <SessionButton
-          icon={isPaused ? 'play' : null}
-          onClick={() => {
-            if (isPaused) {
-              onClickResume()
-            } else {
-              onClickClear()
-            }
-          }}
-        >
-          {isPaused ? 'Resume' : `${formatDuration(durationSoFar)}`}
-        </SessionButton>
+      <footer className="flex flex-row items-center justify-between p-2">
+        <div className="flex flex-row gap-2 items-center">
+          <SessionButton
+            className={twMerge(
+              'w-[90px] h-[28px] rounded-[5px]',
+              isPaused
+                ? 'bg-gray-200 text-gray-800 border-gray-300 hover:text-[#004E0C] hover:bg-[#B3EBAA] hover:border-[#33AC46]'
+                : 'bg-[#B2E5FF] border-[#58B4FF] text-blue-700 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300'
+            )}
+            icon={isPaused ? null : null}
+            hoverIcon={isPaused ? 'play' : 'pause'}
+            text={isPaused ? 'Paused' : `${formatDuration(durationSoFar)}`}
+            hoverText={isPaused ? 'Resume' : `Pause`}
+            onClick={onClickMainButton}
+          />
+
+          <AnimatePresence>
+            {isPaused && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <Button
+                  className={twMerge(
+                    'px-3.5 h-[28px] rounded-[5px] border bg-pink-50 border-pink-200 text-pink-950'
+                  )}
+                  // icon={isPaused ? 'play' : 'pause'}
+                  onClick={onClickClear}
+                >
+                  New goal
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </footer>
     </>
   )
