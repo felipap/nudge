@@ -54,7 +54,7 @@ export const Button = ({
       {...props}
     >
       {loading && <Spinner />}
-      {icon}
+      {!loading && icon}
       {children}
     </button>
   )

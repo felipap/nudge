@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useMemo, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useBackendState } from '../../../shared/ipc'
 import { useWindowHeight } from '../../../shared/lib'
@@ -7,14 +8,14 @@ import { Nav } from '../../../shared/ui/Nav'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { GoalTextarea } from '../GoalTextarea'
 import { SessionButton } from './SessionButton'
-import { AnimatePresence, motion } from 'framer-motion'
 
 export const ActiveGoalWidget = withBoundary(() => {
   useWindowHeight(250)
 
   const { state } = useBackendState()
   const [editorFocus, setEditorFocus] = useState(false)
-  const goal = state?.activeGoal?.content
+
+  const [goal, setGoal] = useActiveGoalContentWithSync()
 
   const isPaused = state?.activeGoal?.pausedAt !== null
 
@@ -97,6 +98,7 @@ export const ActiveGoalWidget = withBoundary(() => {
         <GoalTextarea
           className="p-3"
           value={goal}
+          onChange={(value) => setGoal(value)}
           onFocus={() => setEditorFocus(true)}
           onBlur={() => setEditorFocus(false)}
           // autoFocus={editorFocus}
@@ -150,4 +152,35 @@ function formatDuration(elapsedMs: number) {
     return `${s}s`
   }
   return `${Math.floor(s / 60)} min`
+}
+
+// Save the input in the backend so it persists across restarts? Trying not to
+// pay any penalties here by using a local state as primary.
+function useActiveGoalContentWithSync() {
+  const { state, stateRef, setPartialState } = useBackendState()
+
+  const [value, setValue] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (state?.activeGoal) {
+      if (value === null) {
+        setValue(state?.activeGoal?.content || '')
+      }
+    }
+  }, [!!state])
+
+  useEffect(() => {
+    if (value !== null && value !== '') {
+      if (stateRef.current?.activeGoal) {
+        setPartialState({
+          activeGoal: {
+            ...stateRef.current!.activeGoal,
+            content: value,
+          },
+        })
+      }
+    }
+  }, [value])
+
+  return [value || '', setValue] as const
 }

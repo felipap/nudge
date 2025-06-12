@@ -1,6 +1,6 @@
 import { app, BrowserWindow, screen } from 'electron'
 import path from 'node:path'
-import { getState, store } from './lib/store'
+import { getState, store } from './store'
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
 declare const MAIN_WINDOW_VITE_NAME: string
@@ -16,7 +16,7 @@ export function createMainWindow() {
 
   const windowWidth = 350
   const windowHeight = 200
-  const edgeOffset = 10
+  const edgeOffset = 5
 
   const win = new BrowserWindow({
     width: windowWidth,
@@ -35,7 +35,7 @@ export function createMainWindow() {
       windowWidth -
       edgeOffset,
     y: primaryDisplay.workArea.y + edgeOffset,
-    alwaysOnTop: getState().isGoalWindowPinned,
+    alwaysOnTop: getState().isWindowPinned,
     webPreferences: {
       preload: path.join(__dirname, '../renderer/preload.js'),
       webSecurity: false,
@@ -45,11 +45,11 @@ export function createMainWindow() {
   app.dock.setIcon(path.join(__dirname, '../../images', 'nudge-icon.png'))
   // app.dock.
 
-  let lastPinnedState = getState().isGoalWindowPinned
+  let lastPinnedState = getState().isWindowPinned
   store.subscribe((state) => {
-    if (state.isGoalWindowPinned !== lastPinnedState) {
-      win.setAlwaysOnTop(state.isGoalWindowPinned, 'floating')
-      lastPinnedState = state.isGoalWindowPinned
+    if (state.isWindowPinned !== lastPinnedState) {
+      win.setAlwaysOnTop(state.isWindowPinned, 'floating')
+      lastPinnedState = state.isWindowPinned
     }
   })
 

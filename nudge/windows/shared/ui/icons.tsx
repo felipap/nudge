@@ -1,4 +1,5 @@
 import { ComponentProps } from 'react'
+import { twMerge } from 'tailwind-merge'
 
 export {
   Bug as BugIcon,
@@ -14,10 +15,10 @@ export {
   ZoomIn as ZoomInIcon,
 } from 'lucide-react'
 
-export function Spinner(props: ComponentProps<'svg'>) {
+export function Spinner({ className, ...props }: ComponentProps<'svg'>) {
   return (
     <svg
-      className="animate-spin h-4 w-4"
+      className={twMerge('animate-spin', className)}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

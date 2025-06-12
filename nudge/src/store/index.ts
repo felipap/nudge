@@ -1,43 +1,40 @@
-import Store from 'electron-store'
 import { create, StoreApi } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { Capture, Mood, State } from '../types'
-import { screenCaptureService } from './ScreenCaptureService'
+import { screenCaptureService } from '../lib/ScreenCaptureService'
+import { fileStore } from './backend'
+import type { Capture, Mood, State } from './types'
+import { DEFAULT_STATE } from './types'
 
-const DEFAULT_STATE: State = {
-  openAiKey: null,
-  lastCapture: null,
-  nextCaptureAt: null,
-  savedCaptures: [],
-  activeGoal: null,
-  autoLaunch: false,
-  captureFrequency: 1,
-  isGoalWindowPinned: false,
-}
-
-const electronStore = new Store<State>({
-  defaults: DEFAULT_STATE,
-}) as any
+export * from './types'
 
 export const store = create<State>()(
   persist((set, get, store: StoreApi<State>) => DEFAULT_STATE, {
     name: 'nudge-store',
     storage: {
       getItem: (name) => {
-        const value = electronStore.get(name)
+        const value = fileStore.get(name)
         return value
       },
       setItem: (name, value) => {
-        electronStore.set(name, value)
+        fileStore.set(name, value)
       },
       removeItem: (name) => {
-        electronStore.delete(name)
+        fileStore.delete(name)
       },
     },
   })
 )
 
-// Export store actions
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 export const updateLastCapture = (
   summary: string,
   isFollowingGoals: boolean
@@ -51,8 +48,6 @@ export const updateLastCapture = (
   })
 }
 
-// Export selectors
-
 export const clearLastCapture = () => {
   store.setState({ lastCapture: null })
 }
@@ -60,8 +55,6 @@ export const clearLastCapture = () => {
 export const setOpenAiKey = (key: string | null) => {
   store.setState({ openAiKey: key })
 }
-
-//
 
 export const getSavedCaptures = () => store.getState().savedCaptures
 
@@ -76,13 +69,6 @@ export const addSavedCapture = (capture: Capture) => {
     savedCaptures: nextValue,
   })
 }
-
-// console.log('state is', store.getState())
-
-// store.setState({
-//   goals: 'I want to relax tonight and not work anymore.',
-//   nextCaptureAt: null,
-// })
 
 export const getOpenAiKey = () => store.getState().openAiKey
 

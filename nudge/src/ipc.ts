@@ -2,8 +2,8 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { setPartialState } from '../windows/shared/ipc'
 import { getGoalFeedback } from './lib/ai'
 import { screenCaptureService } from './lib/ScreenCaptureService'
-import { getOpenAiKey, setOpenAiKey, store } from './lib/store'
-import { State } from './types'
+import { getOpenAiKey, setOpenAiKey, store } from './store'
+import { State } from './store/types'
 
 export function setupIPC() {
   ipcMain.handle(
@@ -105,7 +105,8 @@ export function setupIPC() {
         }
         const feedback = await getGoalFeedback(goal, openAiKey)
         console.log('feedback', feedback, feedback.feedback)
-        return feedback.isGood ? null : feedback.feedback!
+        return feedback
+        // return feedback.isGood ? null : feedback.feedback!
       } catch (error) {
         console.error('Error in get-goal-feedback handler:', error)
         throw error

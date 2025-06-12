@@ -42,12 +42,12 @@ export function PinButton() {
   async function togglePin() {
     if (state) {
       await window.electronAPI.setPartialState({
-        isGoalWindowPinned: !state.isGoalWindowPinned,
+        isWindowPinned: !state.isWindowPinned,
       })
     }
   }
 
-  const isPinned = state?.isGoalWindowPinned ?? false
+  const isPinned = state?.isWindowPinned ?? false
 
   return (
     <button

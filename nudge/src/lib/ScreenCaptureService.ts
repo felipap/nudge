@@ -3,7 +3,6 @@ import { Notification } from 'electron'
 import { getAssessmentFromScreenshot, getOpenAiClient } from '../lib/ai'
 import { debug, log, warn } from '../lib/logger'
 import { captureActiveScreen } from '../lib/screen'
-import { Capture } from '../types'
 import {
   addSavedCapture,
   getCurrentGoalText,
@@ -12,7 +11,8 @@ import {
   setNextCaptureAt,
   store,
   updateLastCapture,
-} from './store'
+} from '../store'
+import { Capture } from '../store/types'
 
 const DOUBLE_NUDGE_THRESHOLD = 1 * 60 * 1000
 
@@ -119,6 +119,12 @@ class ScreenCaptureService {
 async function captureScreenTaskInner() {
   log('[ScreenCaptureService] Capturing screen at:', new Date().toISOString())
 
+  const goal = getCurrentGoalText()
+  if (!goal) {
+    warn('[ScreenCaptureService] No goal found')
+    return
+  }
+
   const { error, data: dataUrl } = await captureActiveScreen()
   if (error) {
     warn('[ScreenCaptureService] Failed to capture active screen')
@@ -136,12 +142,7 @@ async function captureScreenTaskInner() {
   let ret
   try {
     log('[ScreenCaptureService] Sending to server...')
-    ret = await getAssessmentFromScreenshot(
-      openai,
-      dataUrl,
-      getCurrentGoalText(),
-      []
-    )
+    ret = await getAssessmentFromScreenshot(openai, dataUrl, goal, [])
   } catch (e) {
     log('[ScreenCaptureService] sendToOpenAI failed', e)
     return {

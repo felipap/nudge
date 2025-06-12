@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
-import { GoalSession, State } from '../../src/types'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { GoalSession, State } from '../../src/store'
 
 export async function getState() {
   return await window.electronAPI.getState()
@@ -15,6 +15,10 @@ export async function setWindowHeight(height: number, animate = false) {
 
 export async function getWindowHeight() {
   return await window.electronAPI.getWindowHeight()
+}
+
+export async function getGoalFeedback(goal: string) {
+  return await window.electronAPI.getGoalFeedback(goal)
 }
 
 //
@@ -39,16 +43,19 @@ export async function setPartialState(state: Partial<State>) {
 
 export function useBackendState() {
   const [state, setState] = useState<State | null>(null)
+  const stateRef = useRef<State | null>(null)
 
   useEffect(() => {
     async function load() {
       const state = await window.electronAPI.getState()
+      stateRef.current = state
       setState(state)
     }
     load()
 
     // Subscribe to state changes
     const unsubscribe = window.electronAPI.onStateChange((newState) => {
+      stateRef.current = state
       setState(newState)
     })
 
@@ -60,6 +67,8 @@ export function useBackendState() {
 
   return {
     state,
+    stateRef,
+    setPartialState,
   }
 }
 

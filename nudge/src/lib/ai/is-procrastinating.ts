@@ -7,7 +7,7 @@ import { ChatCompletionContentPart } from 'openai/resources'
 import { z } from 'zod'
 import { log } from '../logger'
 
-const DEBUG = false
+const DEBUG = true
 
 dayjs.extend(relativeTime)
 
@@ -22,10 +22,12 @@ export type Assessment = z.infer<typeof AssessmentStruct>
 export async function getAssessmentFromScreenshot(
   client: OpenAI,
   base64content: string,
-  userGoals: string,
+  goal: string,
   previousCaptures: string[]
 ): Promise<{ data: Assessment; model: string }> {
-  const systemPrompt = makePrompt(userGoals, previousCaptures)
+  assert(goal, 'goal is required')
+
+  const systemPrompt = makePrompt(goal, previousCaptures)
   if (DEBUG) {
     log('[ai/assessment] systemPrompt', systemPrompt)
   }
@@ -71,7 +73,7 @@ export async function getAssessmentFromScreenshot(
   }
 }
 
-function makePrompt(userGoals: string, previousCaptures: string[]) {
+function makePrompt(goal: string, previousCaptures: string[]) {
   return `You're a productivity buddy that helps the user keep it's promises.
 
 (1) You'll be given a screenshot of the user's screen and you'll be asked to provide a summary of what you see.
@@ -79,7 +81,7 @@ function makePrompt(userGoals: string, previousCaptures: string[]) {
 (3) If the user is breaking their goals, provide a very short (<300 chars) message nudging the user back on track. Try different angles to get their attention.
 
 <USER_GOALS>
-${userGoals}
+${goal}
 </USER_GOALS>
 
 <PREVIOUS_CAPTURES>

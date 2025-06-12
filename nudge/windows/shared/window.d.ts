@@ -1,3 +1,4 @@
+import type { GoalFeedback } from '../../src/lib/ai/goal-feedback'
 import type { State } from '../../src/types'
 
 type DataAndError<T> = {
@@ -19,7 +20,7 @@ declare global {
       minimizeWindow: () => void
       zoomWindow: () => void
       openExternal: (url: string) => void
-      getGoalFeedback: (goal: string) => Promise<string | null>
+      getGoalFeedback: (goal: string) => Promise<GoalFeedback>
       setWindowHeight: (height: number, animate?: boolean) => Promise<void>
       getWindowHeight: () => Promise<number>
       triggerBackgroundAction: (actionName: string, ...args: any[]) => void

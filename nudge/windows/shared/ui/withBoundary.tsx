@@ -1,4 +1,6 @@
-export function withBoundary(Comp: any) {
+import { ComponentType } from 'react'
+
+export function withBoundary<T>(Comp: ComponentType<T>): ComponentType<T> {
   return Comp
 }
 

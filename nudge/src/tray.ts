@@ -11,13 +11,15 @@ import {
 } from 'electron'
 import path from 'path'
 import {
+  store,
   getCurrentGoalText,
   getMood,
   getNextCaptureAt,
   getOpenAiKey,
+  getState,
   onMoodChange,
   onOpenAiKeyChange,
-} from './lib/store'
+} from './store'
 import { mainWindow, prefWindow } from './windows'
 
 dayjs.extend(relativeTime)
@@ -77,6 +79,13 @@ export function createTray() {
                 prefWindow.show()
               },
             },
+        {
+          label: `Capturing ${dayjs(getNextCaptureAt()).fromNow()}`,
+          click: () => {
+            ipcMain.emit('captureNow', null)
+            updateTrayMenu()
+          },
+        },
         { type: 'separator' },
         // {
         //   label: screenCaptureService.isRunning
@@ -92,12 +101,18 @@ export function createTray() {
         //   },
         // },
         {
-          label: `Capturing ${dayjs(getNextCaptureAt()).fromNow()}`,
+          label: `Float on top`,
+          type: 'checkbox',
+          checked: getState().isWindowPinned,
           click: () => {
-            ipcMain.emit('captureNow', null)
+            store.setState({
+              ...getState(),
+              isWindowPinned: !getState().isWindowPinned,
+            })
             updateTrayMenu()
           },
         },
+
         {
           label: needsConfiguration
             ? 'Enter your OpenAI key...'
