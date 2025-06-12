@@ -5,9 +5,11 @@ procrastinating.
 
 ## To do
 
-- [ ] Reset goals every day.
-- [ ] Allow users to modify frequency
-- [ ] Come up with an icon
+- [ ] Show how long goal has been active for.
+- [ ] Use natural language to set goal duration.
+- [ ] Allow users to modify screenshot frequency.
+- [ ] Let users introspect logs.
+- [ ] Come up with an icon for release.
 
 ## Stack
 

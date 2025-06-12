@@ -6,7 +6,11 @@ export default defineConfig({
   optimizeDeps: {
     // This is how you prevent Vite's development esbuild from unpacking certain
     // modules. https://github.com/vitejs/vite/discussions/14813
-    exclude: ['class-variance-authority', '@tanstack/react-router'],
+    exclude: [
+      'class-variance-authority',
+      '@tanstack/react-router',
+      'react-icons',
+    ],
   },
   build: {
     sourcemap: true,
