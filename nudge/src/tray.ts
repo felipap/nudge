@@ -11,42 +11,49 @@ import {
 } from 'electron'
 import path from 'path'
 import {
-  store,
-  getCurrentGoalText,
-  getMood,
+  IndicatorState,
   getNextCaptureAt,
   getOpenAiKey,
   getState,
-  onMoodChange,
+  getStateIndicator,
+  onIndicatorStateChange,
   onOpenAiKeyChange,
+  store,
 } from './store'
 import { mainWindow, prefWindow } from './windows'
 
 dayjs.extend(relativeTime)
 
+function getTrayIconForStatus(status: IndicatorState) {
+  const base = app.isPackaged
+    ? path.join(process.resourcesPath, 'images')
+    : path.join(__dirname, '../../images')
+
+  if (status === 'capturing') {
+    return path.join(base, 'nudge-capturing.png')
+  } else if (status === 'assessing') {
+    return path.join(base, 'nudge-assessing.png')
+  } else if (status === 'inactive') {
+    return path.join(base, 'nudge-inactive.png')
+  } else {
+    return path.join(base, 'nudge-default.png')
+  }
+}
+
 export function createTray() {
   // For a real app, you'd use a proper icon file
   // tray = new Tray(path.join(__dirname, "../../icon.png"))
 
-  let iconPath
-  if (app.isPackaged) {
-    iconPath = path.join(process.resourcesPath, 'images', 'nudge-tray.png')
-  } else {
-    iconPath = path.join(__dirname, '../../images', 'nudge-tray.png')
-  }
-  // iconPath = path.join(__dirname, '../../images', 'todos-icon.png')
-
+  const iconPath = getTrayIconForStatus(getStateIndicator())
   const icon = nativeImage.createFromPath(iconPath)
   // if you want to resize it, be careful, it creates a copy
-  const trayIcon = icon.resize({ width: 16 })
+  const trayIcon = icon.resize({ width: 18, quality: 'best' })
   // here is the important part (has to be set on the resized version)
-  trayIcon.setTemplateImage(true)
+  // trayIcon.setTemplateImage(true)
 
   const tray = new Tray(trayIcon)
 
   function getTrayMenu() {
-    const mood = getMood()
-
     const hasOpenAiKey = !!getOpenAiKey()
     const needsConfiguration = !hasOpenAiKey
 
@@ -60,25 +67,25 @@ export function createTray() {
       })
     } else {
       template = template.concat([
-        getCurrentGoalText()
-          ? {
-              label: `Nudge is ${
-                mood === 'happy'
-                  ? 'pleased, for now'
-                  : mood === 'angry'
-                  ? 'disappointed'
-                  : mood === 'thinking'
-                  ? 'thinking'
-                  : 'waiting'
-              }`,
-              enabled: false,
-            }
-          : {
-              label: `Set goals`,
-              click: () => {
-                prefWindow.show()
-              },
-            },
+        // getCurrentGoalText()
+        //   ? {
+        //       label: `Nudge is ${
+        //         mood === 'happy'
+        //           ? 'pleased, for now'
+        //           : mood === 'angry'
+        //           ? 'disappointed'
+        //           : mood === 'thinking'
+        //           ? 'thinking'
+        //           : 'waiting'
+        //       }`,
+        //       enabled: false,
+        //     }
+        //   : {
+        //       label: `Set goals`,
+        //       click: () => {
+        //         prefWindow.show()
+        //       },
+        //     },
         {
           label: `Capturing ${dayjs(getNextCaptureAt()).fromNow()}`,
           click: () => {
@@ -86,20 +93,18 @@ export function createTray() {
             updateTrayMenu()
           },
         },
+        {
+          label: `${mainWindow.isVisible() ? 'Hide' : 'Show'} window`,
+          click: () => {
+            if (mainWindow.isVisible()) {
+              mainWindow.hide()
+            } else {
+              mainWindow.show()
+            }
+            updateTrayMenu()
+          },
+        },
         { type: 'separator' },
-        // {
-        //   label: screenCaptureService.isRunning
-        //     ? 'Pause screen capture'
-        //     : 'Start screen capture',
-        //   click: () => {
-        //     if (screenCaptureService.isRunning) {
-        //       screenCaptureService.stop()
-        //     } else {
-        //       screenCaptureService.start()
-        //     }
-        //     updateTrayMenu()
-        //   },
-        // },
         {
           label: `Float on top`,
           type: 'checkbox',
@@ -140,7 +145,12 @@ export function createTray() {
   function updateTrayMenu() {
     const contextMenu = Menu.buildFromTemplate(getTrayMenu())
 
-    const mood = getMood()
+    const status = getStateIndicator()
+    const iconPath = getTrayIconForStatus(status)
+    const icon = nativeImage.createFromPath(iconPath)
+    const resizedIcon = icon.resize({ width: 18, quality: 'best' })
+    tray.setImage(resizedIcon)
+
     // tray.setContextMenu(contextMenu)
     // tray.setTitle(
     //   mood === 'happy'
@@ -152,6 +162,14 @@ export function createTray() {
     //     : ':|'
     // )
   }
+
+  mainWindow.on('hide', () => {
+    updateTrayMenu()
+  })
+
+  mainWindow.on('show', () => {
+    updateTrayMenu()
+  })
 
   tray.on('click', () => {
     if (mainWindow.isVisible() && !getState().isWindowPinned) {
@@ -175,7 +193,7 @@ export function createTray() {
     updateTrayMenu()
   })
 
-  onMoodChange(() => {
+  onIndicatorStateChange(() => {
     updateTrayMenu()
   })
 

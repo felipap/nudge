@@ -1,8 +1,7 @@
 import { create, StoreApi } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { screenCaptureService } from '../lib/ScreenCaptureService'
 import { fileStore } from './backend'
-import type { Capture, Mood, State } from './types'
+import type { Capture, State } from './types'
 import { DEFAULT_STATE } from './types'
 
 export * from './types'
@@ -37,11 +36,6 @@ export const store = create<State>()(
 
 export const updateLastCapture = (summary: string, isPositive: boolean) => {
   store.setState({
-    lastCapture: {
-      summary,
-      at: new Date().toISOString(),
-      isPositive: isPositive,
-    },
     activeCapture: {
       summary,
       at: new Date().toISOString(),
@@ -53,13 +47,16 @@ export const updateLastCapture = (summary: string, isPositive: boolean) => {
 
 export const clearLastCapture = () => {
   store.setState({
-    lastCapture: null,
     activeCapture: null,
   })
 }
 
 export const setOpenAiKey = (key: string | null) => {
   store.setState({ openAiKey: key })
+}
+
+export const setPartialState = (partial: Partial<State>) => {
+  store.setState(partial)
 }
 
 export const getSavedCaptures = () => store.getState().savedCaptures
@@ -85,8 +82,6 @@ export const getNoCurrentGoalOrPaused = () =>
 
 export const getCurrentGoalText = () => store.getState().activeGoal?.content
 
-export const getLastCaptureAt = () => store.getState().lastCapture?.at
-
 export const getNextCaptureAt = () => store.getState().nextCaptureAt
 
 export const setNextCaptureAt = (at: string | null) => {
@@ -105,22 +100,26 @@ export function onOpenAiKeyChange(callback: (key: string | null) => void) {
   })
 }
 
-export function onMoodChange(callback: (mood: Mood) => void) {
+export function onIndicatorStateChange(
+  callback: (mood: IndicatorState) => void
+) {
   return store.subscribe((state) => {
-    callback(getMood())
+    callback(getStateIndicator())
   })
 }
 
-export function getMood() {
+export function getStateIndicator(): IndicatorState {
   const state = store.getState()
-  if (screenCaptureService.isCapturing) {
-    return 'thinking'
+  if (state.isCapturing) {
+    return 'capturing'
   }
-  if (!state.openAiKey) {
-    return 'waiting'
+  if (state.isAssessing) {
+    return 'assessing'
   }
-  if (!state.lastCapture) {
-    return 'thinking'
+  if (state.activeGoal) {
+    return 'active'
   }
-  return state.lastCapture.isPositive ? 'happy' : 'angry'
+  return 'inactive'
 }
+
+export type IndicatorState = 'active' | 'inactive' | 'capturing' | 'assessing'

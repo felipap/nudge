@@ -7,7 +7,6 @@ export const USER_TZ = 'America/Los_Angeles' // FIXME
 
 export const DEFAULT_STATE: State = {
   openAiKey: null,
-  lastCapture: null,
   nextCaptureAt: null,
   savedCaptures: [],
   activeGoal: null,
@@ -16,9 +15,9 @@ export const DEFAULT_STATE: State = {
   autoLaunch: false,
   activeCapture: null,
   savedGoalInputValue: null,
+  isCapturing: false,
+  isAssessing: false,
 }
-
-export type Mood = 'happy' | 'angry' | 'thinking' | 'waiting'
 
 export interface Capture {
   summary: string
@@ -53,7 +52,6 @@ export interface State {
       })
     | null
 
-  lastCapture: Capture | null
   nextCaptureAt: string | null
   savedCaptures: Capture[]
   captureFrequencySeconds: number
@@ -61,6 +59,8 @@ export interface State {
   activeGoal: GoalSession | null
   // Minor things
   savedGoalInputValue: string | null
+  isCapturing: boolean
+  isAssessing: boolean
   // Settings
   autoLaunch: boolean
 }

@@ -5,7 +5,7 @@ import { useBackendState } from '../../../shared/ipc'
 import { FaSkull, FaHandPeace, ThumbsUp } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 
-const TWO_MINUTES = 2 * 60 * 1_000
+const ONE_MINUTE = 1 * 60 * 1_000
 
 // Would prefer to call it Feedback but don't want to conflict with the goal
 // feedback component.
@@ -17,7 +17,7 @@ export const Feedback = withBoundary(() => {
     state &&
     state.activeCapture &&
     // within the last 2 minutes
-    new Date(state.activeCapture.at).getTime() > Date.now() - TWO_MINUTES &&
+    new Date(state.activeCapture.at).getTime() > Date.now() - ONE_MINUTE &&
     state.activeGoal &&
     // Goal started before last capture
     new Date(state.activeCapture.at).getTime() >

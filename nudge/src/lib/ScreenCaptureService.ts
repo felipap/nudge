@@ -10,6 +10,7 @@ import {
   getNoCurrentGoalOrPaused,
   getOpenAiKey,
   setNextCaptureAt,
+  setPartialState,
   store,
   updateLastCapture,
 } from '../store'
@@ -93,6 +94,7 @@ class ScreenCaptureService {
         error('[ScreenCaptureService] Error capturing screen:', e)
       }
       this.isCapturing = false
+
       return
     }
 
@@ -139,11 +141,14 @@ async function captureScreenTaskInner() {
     return
   }
 
+  setPartialState({ isCapturing: true, isAssessing: false })
+
   const { error, data: dataUrl } = await captureActiveScreen()
   if (error) {
     warn('[ScreenCaptureService] Failed to capture active screen')
     return
   }
+  setPartialState({ isCapturing: false, isAssessing: true })
 
   const openAiKey = getOpenAiKey()
   if (!openAiKey) {
@@ -163,6 +168,8 @@ async function captureScreenTaskInner() {
       error: 'Failed to send to server',
     }
   }
+
+  setPartialState({ isCapturing: false, isAssessing: false })
 
   updateLastCapture(ret.data.screenSummary, ret.data.isFollowingGoals)
 
@@ -197,7 +204,7 @@ function shouldNotifyUser(capture: Capture) {
 
 function showNotification(body: string) {
   const notif = new Notification({
-    title: 'Gentle nudge',
+    title: 'Nudge says',
     body: body,
     silent: true,
     sound: 'Blow.aiff',
