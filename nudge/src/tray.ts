@@ -66,28 +66,24 @@ export function createTray() {
         },
       })
     } else {
+      const nextCaptureAt = getNextCaptureAt()
+      const captureFromNow = nextCaptureAt
+        ? new Date(nextCaptureAt).getTime() - Date.now()
+        : null
+      const captureStatus =
+        captureFromNow === null
+          ? 'Not capturing'
+          : captureFromNow < 5_000
+          ? 'Captured'
+          : captureFromNow < 0
+          ? 'Capturing'
+          : captureFromNow < 60_000
+          ? `Capturing in ${Math.floor(captureFromNow / 1000)}s`
+          : 'Capturing in ' + dayjs(nextCaptureAt).fromNow()
+
       template = template.concat([
-        // getCurrentGoalText()
-        //   ? {
-        //       label: `Nudge is ${
-        //         mood === 'happy'
-        //           ? 'pleased, for now'
-        //           : mood === 'angry'
-        //           ? 'disappointed'
-        //           : mood === 'thinking'
-        //           ? 'thinking'
-        //           : 'waiting'
-        //       }`,
-        //       enabled: false,
-        //     }
-        //   : {
-        //       label: `Set goals`,
-        //       click: () => {
-        //         prefWindow.show()
-        //       },
-        //     },
         {
-          label: `Capturing ${dayjs(getNextCaptureAt()).fromNow()}`,
+          label: captureStatus,
           click: () => {
             ipcMain.emit('captureNow', null)
             updateTrayMenu()
@@ -201,6 +197,7 @@ export function createTray() {
   // tray.setToolTip('Buddy')
   updateTrayMenu()
 
+  // Update every 2 seconds.
   setInterval(() => {
     updateTrayMenu()
   }, 2000)
