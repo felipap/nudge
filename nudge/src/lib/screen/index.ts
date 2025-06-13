@@ -1,10 +1,9 @@
 // Utils for capturing the screen.
 
+import { desktopCapturer, screen } from 'electron'
 import fs from 'fs'
 import path from 'path'
-import { desktopCapturer, screen } from 'electron'
 import { log } from '../logger'
-import dayjs from 'dayjs'
 
 export async function captureActiveScreen(): Promise<
   | {

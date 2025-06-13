@@ -75,7 +75,7 @@ export function setupIPC() {
   ipcMain.on('setCaptureFrequency', (_event, frequency: number) => {
     store.setState({
       ...store.getState(),
-      captureFrequency: frequency,
+      captureFrequencySeconds: frequency,
     })
   })
 

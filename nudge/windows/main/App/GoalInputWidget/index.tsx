@@ -1,6 +1,5 @@
 // I need to work on the design for Nudge until 4pm. This means mostly Figma, maybe some Cursor. It's ok if I use Spotify and Youtube if it's for music.
 
-import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import {
@@ -13,7 +12,7 @@ import { Button } from '../../../shared/ui/Button'
 import { Spinner } from '../../../shared/ui/icons'
 import { Nav } from '../../../shared/ui/Nav'
 import { GoalTextarea } from '../GoalTextarea'
-import { AutoTip } from './AutoTip'
+import { Feedback } from './Feedback'
 
 function onStoppedTypingForMs(
   value: string,
@@ -36,14 +35,20 @@ export function GoalInputWidget() {
   const [value, setValue] = useGoalInputStateWithBackendBackup()
 
   // loading feedback
-  const { feedback, impliedDuration, isLoadingDuration } =
-    useEvolvingFeedback(value)
+  const { feedback, impliedDuration, isLoadingDuration } = useEvolvingFeedback(
+    value,
+    value.trim().length < 30
+  )
 
   //
 
   function onClickStart() {
     console.log('start session')
     startNewGoalSession(value, impliedDuration || 30)
+    // Let's try to avoid a flash.
+    setTimeout(() => {
+      setValue(null)
+    }, 300)
   }
 
   const hasEmptyGoal = value.trim().length < 10
@@ -57,21 +62,7 @@ export function GoalInputWidget() {
 
         {/* Feedback from AI */}
         <div className="p-2">
-          <AnimatePresence>
-            {hasLongEnoughGoal && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-              >
-                <AutoTip
-                  loadingFeedback={isLoadingDuration}
-                  feedback={feedback}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <Feedback loading={isLoadingDuration} feedback={feedback} />
         </div>
       </main>
       <footer className="p-[10px] flex flex-row items-center justify-between z-10 shrink-0">
@@ -135,23 +126,22 @@ function StartSessionButton({
 function useGoalInputStateWithBackendBackup() {
   const { state, setPartialState } = useBackendState()
 
-  const [value, setValue] = useState<string | null>(null)
+  const [localValue, setLocalValue] = useState<string | null>(null)
 
   useEffect(() => {
     if (state?.savedGoalInputValue) {
-      if (value === null) {
-        setValue(state?.savedGoalInputValue || '')
+      if (localValue === null) {
+        setLocalValue(state?.savedGoalInputValue || '')
       }
     }
   }, [!!state])
 
-  useEffect(() => {
-    if (value !== null && value !== '') {
-      setPartialState({ savedGoalInputValue: value })
-    }
-  }, [value])
+  function setValue(value: string | null) {
+    setLocalValue(value)
+    setPartialState({ savedGoalInputValue: value })
+  }
 
-  return [value || '', setValue] as const
+  return [localValue || '', setValue] as const
 }
 
 function formatDuration(mins: number) {
@@ -166,7 +156,7 @@ function formatDuration(mins: number) {
 
 // Get continuous feedback from AI as the user types. We get whether the goal is
 // good, or feedback on it, and the duration implied by the goal.
-function useEvolvingFeedback(value: string) {
+function useEvolvingFeedback(value: string, skip = false) {
   const [feedback, setFeedback] = useState<string | null>(null)
   const [isLoadingDuration, setLoadingDuration] = useState(false)
   const [duration, setDuration] = useState<number | null>(null)
@@ -178,6 +168,9 @@ function useEvolvingFeedback(value: string) {
       setLoadingDuration(true)
     },
     async () => {
+      if (skip) {
+        return
+      }
       const feedback = await getGoalFeedback(value)
       console.log('feedback', feedback)
       if (feedback.isGood) {

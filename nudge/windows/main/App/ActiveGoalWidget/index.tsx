@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
+import { Notification } from './Notification'
 import { useEffect, useMemo, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useBackendState } from '../../../shared/ipc'
@@ -16,18 +17,9 @@ export const ActiveGoalWidget = withBoundary(() => {
   const [editorFocus, setEditorFocus] = useState(false)
 
   const [goal, setGoal] = useActiveGoalContentWithSync()
+  const ellapsedLabel = useEfficientEllapsedLabel(state?.activeGoal?.startedAt)
 
   const isPaused = state?.activeGoal?.pausedAt !== null
-
-  const durationSoFar = useMemo(() => {
-    if (!state?.activeGoal) {
-      return 0
-    }
-
-    const now = new Date()
-    const startTime = new Date(state?.activeGoal?.startedAt)
-    return now.getTime() - startTime.getTime()
-  }, [state?.activeGoal?.startedAt])
 
   function onClickClear() {
     window.electronAPI.setPartialState({
@@ -82,7 +74,7 @@ export const ActiveGoalWidget = withBoundary(() => {
 
   return (
     <>
-      <Nav title={`Focus session for ${formatDuration(minsLeft)}`} showPin />
+      <Nav title={`Focus session for ${formatDuration(minsLeft)}`} />
       <main
         className={twMerge(
           'h-full flex flex-col shadow-inset-bottom',
@@ -104,43 +96,43 @@ export const ActiveGoalWidget = withBoundary(() => {
           // autoFocus={editorFocus}
         />
       </main>
-      <footer className="flex flex-row items-center justify-between p-2">
-        <div className="flex flex-row gap-2 items-center">
-          <SessionButton
-            className={twMerge(
-              'w-[90px] h-[28px] rounded-[5px]',
-              isPaused
-                ? 'bg-gray-200 text-gray-800 border-gray-300 hover:text-[#004E0C] hover:bg-[#B3EBAA] hover:border-[#33AC46]'
-                : 'bg-[#B2E5FF] border-[#58B4FF] text-blue-700 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300'
-            )}
-            icon={isPaused ? null : null}
-            hoverIcon={isPaused ? 'play' : 'pause'}
-            text={isPaused ? 'Paused' : `${formatDuration(durationSoFar)}`}
-            hoverText={isPaused ? 'Resume' : `Pause`}
-            onClick={onClickMainButton}
-          />
+      <footer className="flex flex-row items-center justify-between p-2 gap-4 pr-4">
+        <SessionButton
+          className={twMerge(
+            'w-[90px] h-[28px] rounded-[5px]',
+            isPaused
+              ? 'bg-gray-200 text-gray-800 border-gray-300 hover:text-[#004E0C] hover:bg-[#B3EBAA] hover:border-[#33AC46]'
+              : 'bg-[#B2E5FF] border-[#58B4FF] text-blue-700 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300'
+          )}
+          icon={isPaused ? null : null}
+          hoverIcon={isPaused ? 'play' : 'pause'}
+          text={isPaused ? 'Paused' : `${ellapsedLabel}`}
+          hoverText={isPaused ? 'Resume' : `Pause`}
+          onClick={onClickMainButton}
+        />
 
-          <AnimatePresence>
-            {isPaused && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
+        <AnimatePresence>
+          {isPaused ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+            >
+              <Button
+                className={twMerge(
+                  'px-3.5 h-[28px] rounded-[5px] border bg-pink-50 border-pink-200 text-pink-950'
+                )}
+                // icon={isPaused ? 'play' : 'pause'}
+                onClick={onClickClear}
               >
-                <Button
-                  className={twMerge(
-                    'px-3.5 h-[28px] rounded-[5px] border bg-pink-50 border-pink-200 text-pink-950'
-                  )}
-                  // icon={isPaused ? 'play' : 'pause'}
-                  onClick={onClickClear}
-                >
-                  New goal
-                </Button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+                New goal
+              </Button>
+            </motion.div>
+          ) : (
+            <Notification />
+          )}
+        </AnimatePresence>
       </footer>
     </>
   )
@@ -183,4 +175,34 @@ function useActiveGoalContentWithSync() {
   }, [value])
 
   return [value || '', setValue] as const
+}
+
+// Returns a label for how long the current goal has been active for, but
+// without re-rendering every second past 60s.
+function useEfficientEllapsedLabel(startedAt: string | undefined) {
+  const [counter, setCounter] = useState(0)
+
+  // TODO do this efficiently!!
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCounter((c) => c + 1)
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const durationSoFar = useMemo(() => {
+    if (!startedAt) {
+      return null
+    }
+
+    const now = new Date()
+    const startTime = new Date(startedAt)
+    return now.getTime() - startTime.getTime()
+  }, [startedAt])
+
+  if (durationSoFar === null) {
+    return null
+  }
+
+  return formatDuration(durationSoFar)
 }

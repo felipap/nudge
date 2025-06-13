@@ -154,7 +154,7 @@ export function createTray() {
   }
 
   tray.on('click', () => {
-    if (mainWindow.isVisible()) {
+    if (mainWindow.isVisible() && !getState().isWindowPinned) {
       mainWindow.hide()
     } else {
       mainWindow.show()

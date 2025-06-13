@@ -7,7 +7,7 @@ import { ChatCompletionContentPart } from 'openai/resources'
 import { z } from 'zod'
 import { log } from '../logger'
 
-const DEBUG = true
+const DEBUG = false
 
 dayjs.extend(relativeTime)
 

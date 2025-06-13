@@ -1,13 +1,13 @@
+import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
 import { withBoundary } from '../../../shared/ui/withBoundary'
-import { AnimatePresence, motion } from 'framer-motion'
 
 interface Props {
-  loadingFeedback: boolean
+  loading?: boolean
   feedback: string | null
 }
 
-export const AutoTip = withBoundary(({ loadingFeedback, feedback }: Props) => {
+export const Feedback = withBoundary(({ loading = false, feedback }: Props) => {
   // const [feedback, setFeedback] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 

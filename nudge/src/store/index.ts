@@ -35,15 +35,12 @@ export const store = create<State>()(
 //
 //
 
-export const updateLastCapture = (
-  summary: string,
-  isFollowingGoals: boolean
-) => {
+export const updateLastCapture = (summary: string, isPositive: boolean) => {
   store.setState({
     lastCapture: {
       summary,
       at: new Date().toISOString(),
-      isPositive: !isFollowingGoals,
+      isPositive: isPositive,
     },
   })
 }
@@ -74,6 +71,9 @@ export const getOpenAiKey = () => store.getState().openAiKey
 
 export const getState = () => store.getState()
 
+export const getNoCurrentGoalOrPaused = () =>
+  !store.getState().activeGoal || store.getState().activeGoal.pausedAt
+
 export const getCurrentGoalText = () => store.getState().activeGoal?.content
 
 export const getLastCaptureAt = () => store.getState().lastCapture?.at
@@ -81,6 +81,12 @@ export const getLastCaptureAt = () => store.getState().lastCapture?.at
 export const getNextCaptureAt = () => store.getState().nextCaptureAt
 
 export const setNextCaptureAt = (at: string | null) => {
+  // Sanity check: it's more than 10 seconds from now.
+  if (at && new Date(at).getTime() < Date.now() + 10000) {
+    throw Error('nextCaptureAt is within 10 seconds. Probably a bug.')
+  }
+
+  console.log('setting nextCaptureAt', at)
   store.setState({ nextCaptureAt: at })
 }
 

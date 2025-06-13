@@ -1,12 +1,13 @@
 import dayjs from 'dayjs'
 import { Notification } from 'electron'
 import { getAssessmentFromScreenshot, getOpenAiClient } from '../lib/ai'
-import { debug, log, warn } from '../lib/logger'
+import { debug, error, log, warn } from '../lib/logger'
 import { captureActiveScreen } from '../lib/screen'
 import {
   addSavedCapture,
   getCurrentGoalText,
   getNextCaptureAt,
+  getNoCurrentGoalOrPaused,
   getOpenAiKey,
   setNextCaptureAt,
   store,
@@ -15,6 +16,8 @@ import {
 import { Capture } from '../store/types'
 
 const DOUBLE_NUDGE_THRESHOLD = 1 * 60 * 1000
+
+let lastCaptureAt: Date | null = null
 
 let lastNotificationAt: Date | null = null
 
@@ -30,11 +33,11 @@ class ScreenCaptureService {
 
   constructor() {
     // Convert minutes to milliseconds
-    this.frequencyMs = (store.getState().captureFrequency || 60) * 1000
+    this.frequencyMs = (store.getState().captureFrequencySeconds || 60) * 1000
 
     // Subscribe to frequency changes
     store.subscribe((state) => {
-      this.frequencyMs = (state.captureFrequency || 60) * 1000
+      this.frequencyMs = (state.captureFrequencySeconds || 60) * 1000
     })
 
     console.log(
@@ -84,9 +87,10 @@ class ScreenCaptureService {
     if (force) {
       this.isCapturing = true
       try {
+        log('forced!')
         await captureScreenTaskInner()
       } catch (e) {
-        log('[ScreenCaptureService] Error capturing screen:', e)
+        error('[ScreenCaptureService] Error capturing screen:', e)
       }
       this.isCapturing = false
       return
@@ -104,12 +108,17 @@ class ScreenCaptureService {
       return
     }
 
+    log(`capturing because nextCaptureAt=${nextCaptureAt}`)
+
     try {
       await captureScreenTaskInner()
+      // await new Promise((resolve) => setTimeout(resolve, 5000))
+      console.log('skipping capture')
     } catch (e) {
       log('[ScreenCaptureService] Error capturing screen:', e)
     }
 
+    console.log('this.frequencyMs', this.frequencyMs)
     setNextCaptureAt(new Date(Date.now() + this.frequencyMs).toISOString())
 
     this.isCapturing = false
@@ -118,6 +127,11 @@ class ScreenCaptureService {
 
 async function captureScreenTaskInner() {
   log('[ScreenCaptureService] Capturing screen at:', new Date().toISOString())
+
+  if (getNoCurrentGoalOrPaused()) {
+    debug('[ScreenCaptureService] No goal or paused')
+    return
+  }
 
   const goal = getCurrentGoalText()
   if (!goal) {

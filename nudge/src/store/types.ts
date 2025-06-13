@@ -11,7 +11,7 @@ export const DEFAULT_STATE: State = {
   nextCaptureAt: null,
   savedCaptures: [],
   activeGoal: null,
-  captureFrequency: 1,
+  captureFrequencySeconds: 1,
   isWindowPinned: false,
   autoLaunch: false,
   savedGoalInputValue: null,
@@ -46,7 +46,7 @@ export interface State {
   lastCapture: Capture | null
   nextCaptureAt: string | null
   savedCaptures: Capture[]
-  captureFrequency: number
+  captureFrequencySeconds: number
   isWindowPinned: boolean
   activeGoal: GoalSession | null
   // Minor things

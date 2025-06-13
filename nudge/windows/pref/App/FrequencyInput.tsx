@@ -6,7 +6,7 @@ export const FrequencyInput = () => {
   useEffect(() => {
     const loadState = async () => {
       const state = await window.electronAPI.getState()
-      setFrequency(state.captureFrequency)
+      setFrequency(state.captureFrequencySeconds)
     }
     loadState()
   }, [])
