@@ -14,6 +14,7 @@ declare global {
       getState: () => Promise<State>
       onStateChange: (callback: (state: State) => void) => () => void
       setPartialState: (state: Partial<State>) => Promise<void>
+      clearActiveCapture: () => Promise<void>
       setAutoLaunch: (enable: boolean) => void
       setCaptureFrequency: (frequency: number) => void
       closeWindow: () => void

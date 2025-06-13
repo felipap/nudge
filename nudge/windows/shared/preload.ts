@@ -79,6 +79,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.send('openExternal', url)
   },
 
+  clearActiveCapture: async (goal: string) => {
+    return await ipcRenderer.invoke('clearActiveCapture', goal)
+  },
+
   getGoalFeedback: async (goal: string) => {
     return await ipcRenderer.invoke('getGoalFeedback', goal)
   },

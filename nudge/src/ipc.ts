@@ -114,24 +114,31 @@ export function setupIPC() {
     }
   )
 
-  ipcMain.on('setPartialState', (_event, state: Partial<State>) => {
+  ipcMain.handle('clearActiveCapture', () => {
+    store.setState({
+      ...store.getState(),
+      activeCapture: null,
+    })
+  })
+
+  ipcMain.handle('setPartialState', (_event, state: Partial<State>) => {
     store.setState({
       ...store.getState(),
       ...state,
     })
   })
 
-  ipcMain.on('captureNow', (_event) => {
+  ipcMain.handle('captureNow', (_event) => {
     console.log('captureNow', _event)
     screenCaptureService.captureNow()
 
     console.log('_event', _event)
     if (_event) {
-      _event.reply('background-action-completed', 'captureNow')
+      _event.sender.send('background-action-completed', 'captureNow')
     }
   })
 
-  ipcMain.on('openExternal', (_event, url: string) => {
+  ipcMain.handle('openExternal', (_event, url: string) => {
     shell.openExternal(url)
   })
 }

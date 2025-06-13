@@ -1,13 +1,17 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Notification } from './Notification'
 import { useEffect, useMemo, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { useBackendState } from '../../../shared/ipc'
+import {
+  clearActiveCapture,
+  setPartialState,
+  useBackendState,
+} from '../../../shared/ipc'
 import { useWindowHeight } from '../../../shared/lib'
 import { Button } from '../../../shared/ui/Button'
 import { Nav } from '../../../shared/ui/Nav'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { GoalTextarea } from '../GoalTextarea'
+import { Feedback } from './Feedback'
 import { SessionButton } from './SessionButton'
 
 export const ActiveGoalWidget = withBoundary(() => {
@@ -21,18 +25,20 @@ export const ActiveGoalWidget = withBoundary(() => {
 
   const isPaused = state?.activeGoal?.pausedAt !== null
 
-  function onClickClear() {
-    window.electronAPI.setPartialState({
+  async function onClickClear() {
+    await setPartialState({
       activeGoal: null,
     })
   }
 
-  function onClickPause() {
+  async function onClickPause() {
     if (!state?.activeGoal) {
       return
     }
 
-    window.electronAPI.setPartialState({
+    await clearActiveCapture()
+
+    await setPartialState({
       activeGoal: {
         ...state.activeGoal,
         pausedAt: isPaused ? null : new Date().toISOString(),
@@ -40,12 +46,12 @@ export const ActiveGoalWidget = withBoundary(() => {
     })
   }
 
-  function onClickResume() {
+  async function onClickResume() {
     if (!state?.activeGoal) {
       return
     }
 
-    window.electronAPI.setPartialState({
+    await setPartialState({
       activeGoal: {
         ...state.activeGoal,
         pausedAt: null,
@@ -96,7 +102,7 @@ export const ActiveGoalWidget = withBoundary(() => {
           // autoFocus={editorFocus}
         />
       </main>
-      <footer className="flex flex-row items-center justify-between p-2 gap-4 pr-4">
+      <footer className="flex flex-row items-center justify-between p-2 gap-4">
         <SessionButton
           className={twMerge(
             'w-[90px] h-[28px] rounded-[5px]',
@@ -130,7 +136,7 @@ export const ActiveGoalWidget = withBoundary(() => {
               </Button>
             </motion.div>
           ) : (
-            <Notification />
+            <Feedback />
           )}
         </AnimatePresence>
       </footer>

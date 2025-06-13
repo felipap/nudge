@@ -12,7 +12,7 @@ import { Button } from '../../../shared/ui/Button'
 import { Spinner } from '../../../shared/ui/icons'
 import { Nav } from '../../../shared/ui/Nav'
 import { GoalTextarea } from '../GoalTextarea'
-import { Feedback } from './Feedback'
+import { GoalFeedback } from './GoalFeedback'
 
 function onStoppedTypingForMs(
   value: string,
@@ -62,7 +62,7 @@ export function GoalInputWidget() {
 
         {/* Feedback from AI */}
         <div className="p-2">
-          <Feedback loading={isLoadingDuration} feedback={feedback} />
+          <GoalFeedback loading={isLoadingDuration} feedback={feedback} />
         </div>
       </main>
       <footer className="p-[10px] flex flex-row items-center justify-between z-10 shrink-0">

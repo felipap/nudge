@@ -14,6 +14,7 @@ export const DEFAULT_STATE: State = {
   captureFrequencySeconds: 1,
   isWindowPinned: false,
   autoLaunch: false,
+  activeCapture: null,
   savedGoalInputValue: null,
 }
 
@@ -43,6 +44,15 @@ export interface GoalSession {
 
 export interface State {
   openAiKey: string | null
+
+  activeCapture:
+    | (Capture & {
+        // Adding this here for the semantics. An `activeCapture` might be
+        // expired without being cleared.
+        expiresAt: string
+      })
+    | null
+
   lastCapture: Capture | null
   nextCaptureAt: string | null
   savedCaptures: Capture[]

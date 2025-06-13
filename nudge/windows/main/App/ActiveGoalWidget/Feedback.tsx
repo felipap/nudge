@@ -9,24 +9,28 @@ const TWO_MINUTES = 2 * 60 * 1_000
 
 // Would prefer to call it Feedback but don't want to conflict with the goal
 // feedback component.
-export const Notification = withBoundary(() => {
+export const Feedback = withBoundary(() => {
   const { state } = useBackendState()
   useUpdateEvery(20_000)
 
   const relevantCapture =
     state &&
-    state.lastCapture &&
+    state.activeCapture &&
     // within the last 2 minutes
-    new Date(state.lastCapture.at).getTime() > Date.now() - TWO_MINUTES &&
+    new Date(state.activeCapture.at).getTime() > Date.now() - TWO_MINUTES &&
     state.activeGoal &&
     // Goal started before last capture
-    new Date(state.lastCapture.at).getTime() >
+    new Date(state.activeCapture.at).getTime() >
       new Date(state.activeGoal.startedAt).getTime() &&
-    // // Goal was not updated or was updated before last capture
+    // Goal was not updated or was updated before last capture
     (!state.activeGoal.updatedAt ||
       new Date(state.activeGoal.updatedAt).getTime() <
-        new Date(state.lastCapture.at).getTime()) &&
-    state.lastCapture
+        new Date(state.activeCapture.at).getTime()) &&
+    // Goal was not paused since last capture
+    (!state.activeGoal.pausedAt ||
+      new Date(state.activeGoal.pausedAt).getTime() >
+        new Date(state.activeCapture.at).getTime()) &&
+    state.activeCapture
 
   console.log('relevantCapture', relevantCapture)
 
@@ -41,7 +45,7 @@ export const Notification = withBoundary(() => {
       >
         <div
           className={twMerge(
-            'text-[14px] font-medium text-gray-500 font-display-3p overflow-hidden text-ellipsis whitespace-nowrap flex flex-row gap-2 items-center',
+            'text-[14px] pr-3 font-medium text-gray-500 font-display-3p overflow-hidden text-ellipsis whitespace-nowrap flex flex-row gap-2 items-center',
             relevantCapture.isPositive ? 'text-green-800' : 'text-red-800'
           )}
         >

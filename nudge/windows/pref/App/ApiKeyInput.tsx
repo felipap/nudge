@@ -1,8 +1,9 @@
 import { CheckCircle2 } from 'lucide-react'
 import { FC, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { Button } from '../../shared/ui/Button'
+import { setPartialState } from '../../shared/ipc'
 import { useReallyOnlyOnce } from '../../shared/lib'
+import { Button } from '../../shared/ui/Button'
 import { MacButton } from '../../shared/ui/MacButton'
 
 export const ApiKeyInput: FC = () => {
@@ -26,7 +27,7 @@ export const ApiKeyInput: FC = () => {
 
   const handleSave = async () => {
     setIsLoading(true)
-    window.electronAPI.setPartialState({ openAiKey: apiKey })
+    setPartialState({ openAiKey: apiKey })
 
     // Reset success state after 2 seconds
     setTimeout(() => {

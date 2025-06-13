@@ -59,6 +59,9 @@ export function ThumbsUp({ className, ...props }: ComponentProps<'svg'>) {
   )
 }
 
+// react-icons is giving me shit with Vite, so I'm trying to just copy the items
+// here. https://react-icons.github.io/react-icons/icons/fa/
+
 export function FaSkull({ className, ...props }: ComponentProps<'svg'>) {
   return (
     <svg

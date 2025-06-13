@@ -42,11 +42,20 @@ export const updateLastCapture = (summary: string, isPositive: boolean) => {
       at: new Date().toISOString(),
       isPositive: isPositive,
     },
+    activeCapture: {
+      summary,
+      at: new Date().toISOString(),
+      isPositive: isPositive,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 2).toISOString(),
+    },
   })
 }
 
 export const clearLastCapture = () => {
-  store.setState({ lastCapture: null })
+  store.setState({
+    lastCapture: null,
+    activeCapture: null,
+  })
 }
 
 export const setOpenAiKey = (key: string | null) => {

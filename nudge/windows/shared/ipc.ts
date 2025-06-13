@@ -37,6 +37,10 @@ export function zoomWindow() {
 
 // State
 
+export async function clearActiveCapture() {
+  return await window.electronAPI.clearActiveCapture()
+}
+
 export async function setPartialState(state: Partial<State>) {
   return await window.electronAPI.setPartialState(state)
 }
