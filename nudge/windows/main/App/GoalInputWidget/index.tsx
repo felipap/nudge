@@ -165,6 +165,10 @@ function useEvolvingFeedback(value: string, skip = false) {
     value,
     1_000,
     () => {
+      if (skip) {
+        return
+      }
+
       setLoadingDuration(true)
     },
     async () => {
