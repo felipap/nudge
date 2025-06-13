@@ -5,9 +5,9 @@ import { debug, error, log, warn } from '../lib/logger'
 import { captureActiveScreen } from '../lib/screen'
 import {
   addSavedCapture,
-  getCurrentGoalText,
+  getActiveGoal,
   getNextCaptureAt,
-  getNoCurrentGoalOrPaused,
+  hasNoCurrentGoalOrPaused,
   getOpenAiKey,
   setNextCaptureAt,
   setPartialState,
@@ -16,9 +16,7 @@ import {
 } from '../store'
 import { Capture } from '../store/types'
 
-const DOUBLE_NUDGE_THRESHOLD = 1 * 60 * 1000
-
-let lastCaptureAt: Date | null = null
+const DOUBLE_NUDGE_THRESHOLD = 5 * 60 * 1000
 
 let lastNotificationAt: Date | null = null
 
@@ -130,14 +128,20 @@ class ScreenCaptureService {
 async function captureScreenTaskInner() {
   log('[ScreenCaptureService] Capturing screen at:', new Date().toISOString())
 
-  if (getNoCurrentGoalOrPaused()) {
+  if (hasNoCurrentGoalOrPaused()) {
     debug('[ScreenCaptureService] No goal or paused')
     return
   }
 
-  const goal = getCurrentGoalText()
+  const goal = getActiveGoal()
   if (!goal) {
     warn('[ScreenCaptureService] No goal found')
+    return
+  }
+
+  // Start checking goals 1 minute after start.
+  if (dayjs().isBefore(dayjs(goal.startedAt).add(1, 'minute'))) {
+    debug('[ScreenCaptureService] Skipping goal check because too soon')
     return
   }
 
@@ -161,7 +165,7 @@ async function captureScreenTaskInner() {
   let ret
   try {
     log('[ScreenCaptureService] Sending to server...')
-    ret = await getAssessmentFromScreenshot(openai, dataUrl, goal, [])
+    ret = await getAssessmentFromScreenshot(openai, dataUrl, goal.content, [])
   } catch (e) {
     log('[ScreenCaptureService] sendToOpenAI failed', e)
     return {

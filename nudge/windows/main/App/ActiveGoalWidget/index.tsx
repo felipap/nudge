@@ -41,7 +41,7 @@ export const ActiveGoalWidget = withBoundary(() => {
     await setPartialState({
       activeGoal: {
         ...state.activeGoal,
-        pausedAt: isPaused ? null : new Date().toISOString(),
+        pausedAt: new Date().toISOString(),
       },
     })
   }
@@ -80,7 +80,7 @@ export const ActiveGoalWidget = withBoundary(() => {
 
   return (
     <>
-      <Nav title={`Focus session for ${formatDuration(minsLeft)}`} />
+      <Nav title={`Focus session active`} />
       <main
         className={twMerge(
           'h-full flex flex-col shadow-inset-bottom',
@@ -102,7 +102,7 @@ export const ActiveGoalWidget = withBoundary(() => {
           // autoFocus={editorFocus}
         />
       </main>
-      <footer className="flex flex-row items-center justify-between p-2 gap-4">
+      <footer className="flex flex-row items-center justify-between p-2 gap-4 select-none">
         <SessionButton
           className={twMerge(
             'w-[90px] h-[28px] rounded-[5px]',

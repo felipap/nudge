@@ -77,10 +77,10 @@ export const getOpenAiKey = () => store.getState().openAiKey
 
 export const getState = () => store.getState()
 
-export const getNoCurrentGoalOrPaused = () =>
+export const hasNoCurrentGoalOrPaused = () =>
   !store.getState().activeGoal || store.getState().activeGoal.pausedAt
 
-export const getCurrentGoalText = () => store.getState().activeGoal?.content
+export const getActiveGoal = () => store.getState().activeGoal
 
 export const getNextCaptureAt = () => store.getState().nextCaptureAt
 

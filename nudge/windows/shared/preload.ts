@@ -34,8 +34,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     }
   },
 
-  setPartialState: (state: Partial<State>) => {
-    ipcRenderer.send('setPartialState', state)
+  setPartialState: async (state: Partial<State>) => {
+    return await ipcRenderer.invoke('setPartialState', state)
   },
 
   getState: async () => {

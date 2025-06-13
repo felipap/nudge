@@ -73,8 +73,10 @@ export function createTray() {
       const captureStatus =
         captureFromNow === null
           ? 'Not capturing'
-          : captureFromNow < 5_000
+          : captureFromNow < 30_000
           ? 'Captured'
+          : captureFromNow < 10_000
+          ? 'Captured just now'
           : captureFromNow < 0
           ? 'Capturing'
           : captureFromNow < 60_000
