@@ -1,9 +1,10 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { setPartialState } from '../windows/shared/ipc'
-import { getGoalFeedback } from './lib/ai'
+import { getGoalFeedback, validateModelKey } from './lib/ai'
 import { screenCaptureService } from './lib/ScreenCaptureService'
 import { getOpenAiKey, setOpenAiKey, store } from './store'
 import { State } from './store/types'
+import { AvailableModel } from '../windows/shared/available-models'
 
 export function setupIPC() {
   ipcMain.handle(
@@ -120,6 +121,18 @@ export function setupIPC() {
       activeCapture: null,
     })
   })
+
+  ipcMain.handle(
+    'validateModelKey',
+    async (_event, model: AvailableModel, key: string) => {
+      const openAiKey = getOpenAiKey()
+      if (!openAiKey) {
+        throw new Error('No OpenAI key')
+      }
+      const isValid = await validateModelKey(model, key)
+      return isValid
+    }
+  )
 
   ipcMain.handle('setPartialState', (_event, state: Partial<State>) => {
     store.setState({

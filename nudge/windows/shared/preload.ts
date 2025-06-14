@@ -6,6 +6,7 @@
 
 import { contextBridge, ipcRenderer } from 'electron'
 import type { State } from '../../src/types'
+import { AvailableModel } from './available-models'
 
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
@@ -89,5 +90,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   captureNow: async () => {
     return await ipcRenderer.invoke('captureNow')
+  },
+
+  validateModelKey: async (model: AvailableModel, key: string) => {
+    return await ipcRenderer.invoke('validateModelKey', model, key)
   },
 })

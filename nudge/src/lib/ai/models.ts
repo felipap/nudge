@@ -1,17 +1,14 @@
 import OpenAI from 'openai'
 import type { AvailableModel } from '../../../windows/shared/available-models'
 
-export interface ActivatedModel {
-  model: AvailableModel
-  apiKey: string
-}
-
-export async function checkModelApiKey(
+export async function validateModelKey(
   model: AvailableModel,
-  apiKey: string
+  key: string
 ): Promise<boolean> {
   if (model === 'openai-4o' || model === 'openai-4o-mini') {
-    return checkOpenAIKey(apiKey)
+    const isValid = await checkOpenAIKey(key)
+    console.log('isValid', isValid)
+    return isValid
   }
 
   throw new Error(`Unknown model: ${model}`)
@@ -19,6 +16,11 @@ export async function checkModelApiKey(
 
 async function checkOpenAIKey(apiKey: string) {
   const openai = new OpenAI({ apiKey })
-  const models = await openai.models.list()
-  return models.data.length > 0
+  try {
+    const models = await openai.models.list()
+    return models.data.length > 0
+  } catch (error) {
+    console.error('Error checking OpenAI key', error)
+    return false
+  }
 }

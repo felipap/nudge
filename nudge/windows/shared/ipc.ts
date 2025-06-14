@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { GoalSession, State } from '../../src/store'
+import { AvailableModel } from './available-models'
 
 export async function getState() {
   return await window.electronAPI.getState()
@@ -19,6 +20,10 @@ export async function getWindowHeight() {
 
 export async function getGoalFeedback(goal: string) {
   return await window.electronAPI.getGoalFeedback(goal)
+}
+
+export async function validateModelKey(model: AvailableModel, key: string) {
+  return await window.electronAPI.validateModelKey(model, key)
 }
 
 //
@@ -52,6 +57,7 @@ export function useBackendState() {
   useEffect(() => {
     async function load() {
       const state = await window.electronAPI.getState()
+      console.log('load', state)
       stateRef.current = state
       setState(state)
     }
@@ -59,7 +65,7 @@ export function useBackendState() {
 
     // Subscribe to state changes
     const unsubscribe = window.electronAPI.onStateChange((newState) => {
-      stateRef.current = state
+      stateRef.current = newState
       setState(newState)
     })
 

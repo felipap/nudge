@@ -1,3 +1,5 @@
+import { AvailableModel } from '../../windows/shared/available-models'
+
 export const USER_TZ = 'America/Los_Angeles' // FIXME
 
 // export type IPCResponse<T> = {
@@ -17,12 +19,23 @@ export const DEFAULT_STATE: State = {
   savedGoalInputValue: null,
   isCapturing: false,
   isAssessing: false,
+  modelSelection: {
+    name: 'openai-4o',
+    key: null,
+    validatedAt: null,
+  },
 }
 
 export interface Capture {
   summary: string
   at: string
   isPositive: boolean
+}
+
+export interface ActiveModel {
+  name: AvailableModel
+  key: string | null
+  validatedAt: string | null
 }
 
 export interface Todo {
@@ -43,7 +56,7 @@ export interface GoalSession {
 
 export interface State {
   openAiKey: string | null
-
+  modelSelection: ActiveModel
   activeCapture:
     | (Capture & {
         // Adding this here for the semantics. An `activeCapture` might be

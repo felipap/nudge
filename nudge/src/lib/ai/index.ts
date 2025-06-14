@@ -14,5 +14,6 @@ export function getOpenAiClient(openAiKey: string) {
   return saved
 }
 
-export * from './is-procrastinating'
 export * from './goal-feedback'
+export * from './is-procrastinating'
+export * from './models'

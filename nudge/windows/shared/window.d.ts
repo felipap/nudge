@@ -29,6 +29,7 @@ declare global {
         callback: (actionName: string) => void
       ) => () => void
       captureNow: () => void
+      validateModelKey: (model: AvailableModel, key: string) => Promise<boolean>
     }
   }
 }
