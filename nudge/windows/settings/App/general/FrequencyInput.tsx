@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Description, Label, LabelStack } from '../ui'
 
 export const FrequencyInput = () => {
   const [frequency, setFrequency] = useState<number>(1)
@@ -21,14 +22,13 @@ export const FrequencyInput = () => {
   }
 
   return (
-    <label
-      htmlFor="frequency"
-      className="flex flex-row gap-1 justify-between items-start pr-1"
-    >
-      <div className="flex flex-col">
-        <span className="text-black">Capture frequency (seconds)</span>
-        <p>How often to capture your screen.</p>
-      </div>
+    <fieldset className="flex flex-row gap-2 items-center justify-between">
+      <LabelStack>
+        <Label>Capture frequency (seconds)</Label>
+        <Description>
+          How often to capture your screen to assess your focus.
+        </Description>
+      </LabelStack>
       <input
         className="mt-1 w-16 rounded-md text-black text-sm px-1.5 h-8 border border-gray-300"
         type="number"
@@ -38,6 +38,6 @@ export const FrequencyInput = () => {
         min="15"
         max="300"
       />
-    </label>
+    </fieldset>
   )
 }

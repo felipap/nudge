@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Description, Fieldset, Label, LabelStack } from '../ui'
 
 export function LaunchOnStartup() {
   const [autoLaunch, setAutoLaunch] = useState<boolean>(true)
@@ -14,14 +15,11 @@ export function LaunchOnStartup() {
   }
 
   return (
-    <label
-      htmlFor="auto-launch"
-      className="flex flex-row gap-1 justify-between items-center pr-3"
-    >
-      <div className="flex flex-col">
-        <span className="text-black">Launch on startup</span>
-        <p>Automatically start Nudge when you log in.</p>
-      </div>
+    <Fieldset>
+      <LabelStack>
+        <Label>Launch on startup</Label>
+        <Description>Automatically start Nudge when you log in.</Description>
+      </LabelStack>
       <input
         className="mt-1 w-4 h-4"
         type="checkbox"
@@ -29,6 +27,6 @@ export function LaunchOnStartup() {
         checked={autoLaunch}
         onChange={handleAutoLaunchChange}
       />
-    </label>
+    </Fieldset>
   )
 }

@@ -88,7 +88,7 @@ export function createMainWindow() {
 
 export function createSettingsWindow() {
   const windowWidth = 600
-  const windowHeight = 440
+  const windowHeight = 500
 
   const win = new BrowserWindow({
     show: true,

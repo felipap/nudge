@@ -1,4 +1,4 @@
-import { AtomIcon, LucideCalendarRange } from 'lucide-react'
+import { AtomIcon, CogIcon, LucideCalendarRange } from 'lucide-react'
 import { ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { closeWindow, minimizeWindow, zoomWindow } from '../../shared/ipc'
@@ -24,7 +24,7 @@ export function Nav({ tab, onTabChange }: Props) {
     <div
       className={twMerge(
         'relative flex flex-col items-center justify-between pb-[10px] pt-[12px] gap-[8px] select-none',
-        'bg-[#F9F9FA] border-b border-gray-200'
+        'bg-[#F4F4F4] border-b border-gray-200 [app-region:drag]'
       )}
     >
       <div className="top-3 left-3 absolute">
@@ -43,28 +43,28 @@ export function Nav({ tab, onTabChange }: Props) {
       <h1 className="text-[15px] leading-[20px] tracking-[1%] font-semibold font-display text-black">
         {tabTitle}
       </h1>
-      <div className="flex flex-row gap-[9px]">
+      <div className="flex flex-row gap-[9px] [app-region:no-drag]">
         <TabButton
           title="General"
-          icon={<KeyboardIcon className="w-[20px] stroke-inherit" />}
+          icon={<CogIcon className="w-[23px]" />}
           isActive={tab === 'general'}
           onClick={() => onTabChange('general')}
         />
         <TabButton
           title="Timeline"
-          icon={<LucideCalendarRange className="w-[20px]" />}
+          icon={<LucideCalendarRange className="w-[23px]" />}
           isActive={tab === 'timeline'}
           onClick={() => onTabChange('timeline')}
         />
         <TabButton
           title="Shorcuts"
-          icon={<KeyboardIcon className="w-[20px]" />}
+          icon={<KeyboardIcon className="w-[23px]" />}
           isActive={tab === 'shorcuts'}
           onClick={() => onTabChange('shorcuts')}
         />
         <TabButton
           title="Advanced"
-          icon={<AtomIcon className="w-[20px]" />}
+          icon={<AtomIcon className="w-[23px]" />}
           isActive={tab === 'advanced'}
           onClick={() => onTabChange('advanced')}
         />

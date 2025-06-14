@@ -61,6 +61,7 @@
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.0.12",
     "@types/react-beautiful-dnd": "^13.1.8",
+    "ai": "^4.3.16",
     "assert": "^2.1.0",
     "chalk": "^5.4.1",
     "class-variance-authority": "^0.7.1",
