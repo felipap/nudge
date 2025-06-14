@@ -8,9 +8,9 @@ import {
 } from '../../../shared/ipc'
 import { useWindowHeight } from '../../../shared/lib'
 import { Button } from '../../../shared/ui/Button'
-import { Nav } from '../../../shared/ui/Nav'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { GoalTextarea } from '../GoalTextarea'
+import { Nav } from '../Nav'
 import { Feedback } from './Feedback'
 import { SessionButton } from './SessionButton'
 

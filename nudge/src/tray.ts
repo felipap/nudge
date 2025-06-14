@@ -8,6 +8,7 @@ import {
   app,
   ipcMain,
   nativeImage,
+  nativeTheme,
 } from 'electron'
 import path from 'path'
 import {
@@ -29,14 +30,22 @@ function getTrayIconForStatus(status: IndicatorState) {
     ? path.join(process.resourcesPath, 'images')
     : path.join(__dirname, '../../images')
 
+  const suffix = nativeTheme.shouldUseDarkColors ? '-white' : ''
+  // console.log(
+  //   'nativeTheme.shouldUseDarkColors',
+  //   nativeTheme.shouldUseDarkColors
+  // )
+
+  // return path.join(base, `nudge-capturingTemplate.png`)
+
   if (status === 'capturing') {
-    return path.join(base, 'nudge-capturing.png')
+    return path.join(base, `nudge-capturing${suffix}.png`)
   } else if (status === 'assessing') {
-    return path.join(base, 'nudge-assessing.png')
+    return path.join(base, `nudge-assessing${suffix}.png`)
   } else if (status === 'inactive') {
-    return path.join(base, 'nudge-inactive.png')
+    return path.join(base, `nudge-inactive${suffix}.png`)
   } else {
-    return path.join(base, 'nudge-default.png')
+    return path.join(base, `nudge-defaultTemplate.png`)
   }
 }
 
@@ -49,7 +58,12 @@ export function createTray() {
   // if you want to resize it, be careful, it creates a copy
   const trayIcon = icon.resize({ width: 18, quality: 'best' })
   // here is the important part (has to be set on the resized version)
-  // trayIcon.setTemplateImage(true)
+  trayIcon.setTemplateImage(true)
+
+  // Set up theme change listener
+  nativeTheme.on('updated', () => {
+    updateTrayMenu()
+  })
 
   const tray = new Tray(trayIcon)
 
@@ -141,12 +155,13 @@ export function createTray() {
   }
 
   function updateTrayMenu() {
-    const contextMenu = Menu.buildFromTemplate(getTrayMenu())
+    Menu.buildFromTemplate(getTrayMenu())
 
     const status = getStateIndicator()
     const iconPath = getTrayIconForStatus(status)
     const icon = nativeImage.createFromPath(iconPath)
     const resizedIcon = icon.resize({ width: 18, quality: 'best' })
+    resizedIcon.setTemplateImage(true)
     tray.setImage(resizedIcon)
 
     // tray.setContextMenu(contextMenu)

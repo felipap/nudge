@@ -10,8 +10,8 @@ import {
 import { useWindowHeight } from '../../../shared/lib'
 import { Button } from '../../../shared/ui/Button'
 import { Spinner } from '../../../shared/ui/icons'
-import { Nav } from '../../../shared/ui/Nav'
 import { GoalTextarea } from '../GoalTextarea'
+import { Nav } from '../Nav'
 import { GoalFeedback } from './GoalFeedback'
 
 function onStoppedTypingForMs(

@@ -1,10 +1,10 @@
 import { CheckCircle2 } from 'lucide-react'
 import { FC, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { setPartialState } from '../../shared/ipc'
-import { useReallyOnlyOnce } from '../../shared/lib'
-import { Button } from '../../shared/ui/Button'
-import { MacButton } from '../../shared/ui/MacButton'
+import { setPartialState } from '../../../shared/ipc'
+import { useReallyOnlyOnce } from '../../../shared/lib'
+import { Button } from '../../../shared/ui/Button'
+import { MacButton } from '../../../shared/ui/MacButton'
 
 export const ApiKeyInput: FC = () => {
   const [apiKey, setApiKey] = useState('')

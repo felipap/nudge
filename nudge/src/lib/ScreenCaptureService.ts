@@ -33,6 +33,9 @@ class ScreenCaptureService {
   constructor() {
     // Convert minutes to milliseconds
     this.frequencyMs = (store.getState().captureFrequencySeconds || 60) * 1000
+    if (this.frequencyMs < 5) {
+      throw new Error('Frequency is too low')
+    }
 
     // Subscribe to frequency changes
     store.subscribe((state) => {
@@ -140,10 +143,10 @@ async function captureScreenTaskInner() {
   }
 
   // Start checking goals 1 minute after start.
-  if (dayjs().isBefore(dayjs(goal.startedAt).add(1, 'minute'))) {
-    debug('[ScreenCaptureService] Skipping goal check because too soon')
-    return
-  }
+  // if (dayjs().isBefore(dayjs(goal.startedAt).add(1, 'minute'))) {
+  //   debug('[ScreenCaptureService] Skipping goal check because too soon')
+  //   return
+  // }
 
   setPartialState({ isCapturing: true, isAssessing: false })
 

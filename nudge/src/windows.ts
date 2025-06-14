@@ -86,13 +86,23 @@ export function createMainWindow() {
   return win
 }
 
-export function createPreferencesWindow() {
+export function createSettingsWindow() {
+  const windowWidth = 600
+  const windowHeight = 440
+
   const win = new BrowserWindow({
-    width: 500,
-    height: 400,
+    show: true,
+    alwaysOnTop: true,
+    width: windowWidth,
+    height: windowHeight,
+    minHeight: windowHeight,
+    minWidth: windowWidth,
+    center: true,
     resizable: false,
-    show: false,
-    // alwaysOnTop: true,
+    frame: false,
+    transparent: true,
+    vibrancy: 'fullscreen-ui',
+
     webPreferences: {
       preload: path.join(__dirname, '../renderer/preload.js'),
       webSecurity: false,

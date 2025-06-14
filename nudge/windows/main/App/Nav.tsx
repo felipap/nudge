@@ -1,8 +1,8 @@
 import { PinIcon } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
-import { useBackendState } from '../ipc'
-import { LogoIconCompleted } from './logos'
-import { CloseSVG, WindowControlCircle } from './WindowControls'
+import { useBackendState } from '../../shared/ipc'
+import { LogoIconCompleted } from '../../shared/ui/logos'
+import { CloseSVG, WindowControlCircle } from '../../shared/ui/WindowControls'
 
 interface Props {
   title: string

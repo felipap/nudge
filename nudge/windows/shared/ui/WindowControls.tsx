@@ -99,13 +99,20 @@ export function WindowControls({
   onClose,
   onMinimize,
   onZoom,
+  className,
 }: {
   onClose: () => void
   onMinimize: () => void
   onZoom: () => void
+  className?: string
 }) {
   return (
-    <div className="flex gap-2 items-center select-none group">
+    <div
+      className={twMerge(
+        'flex gap-2 items-center select-none group',
+        className
+      )}
+    >
       <WindowControlCircle
         onClick={onClose}
         style={{ backgroundColor: '#ff5f56' }}
