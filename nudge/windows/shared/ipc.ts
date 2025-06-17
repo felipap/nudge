@@ -71,7 +71,6 @@ export function useBackendState() {
   useEffect(() => {
     async function load() {
       const state = await window.electronAPI.getState()
-      console.log('load', state)
       stateRef.current = state
       setState(state)
     }

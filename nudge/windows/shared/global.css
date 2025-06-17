@@ -9,10 +9,52 @@
 @plugin '@tailwindcss/forms';
 
 /* https://tailwindcss.com/docs/dark-mode */
-@custom-variant dark (&:where(.dark, .dark *));
+/* @custom-variant dark (&:where(.dark, .dark *)); */
 /* @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *)); */
 
+.apple-system-background {
+  background-color: var(--apple-system-background);
+}
+
+@variant dark {
+  .apple-system-background {
+    background-color: var(--apple-system-background-dark);
+  }
+}
+
+:root {
+  color-scheme: light dark;
+  /* Apple colors */
+  --apple-system-background-dark: #000000ff;
+  --apple-secondary-system-background-dark: #1c1c1eff;
+  --apple-tertiary-system-background-dark: #2c2c2eff;
+  --apple-system-background: #ffffffff;
+  --apple-secondary-system-background: #f2f2f7ff;
+  --apple-tertiary-system-background: #ffffffff;
+  --apple-system-grouped-background-dark: #000000ff;
+  --apple-secondary-system-grouped-background-dark: #1c1c1eff;
+  --apple-tertiary-system-grouped-background-dark: #2c2c2eff;
+  --apple-system-grouped-background: #f2f2f7ff;
+  --apple-secondary-system-grouped-background: #ffffffff;
+  --apple-tertiary-system-grouped-background: #f2f2f7ff;
+
+  /* Apple gray colors https://sarunw.com/posts/dark-color-cheat-sheet/ */
+  --apple-system-gray-1-dark: #8e8e93ff;
+  --apple-system-gray-2-dark: #636366ff;
+  --apple-system-gray-3-dark: #48484aff;
+  --apple-system-gray-4-dark: #3a3a3cff;
+  --apple-system-gray-5-dark: #2c2c2eff;
+  --apple-system-gray-6-dark: #1c1c1eff;
+  --apple-system-gray-1-light: #8e8e93ff;
+  --apple-system-gray-2-light: #aeaeb2ff;
+  --apple-system-gray-3-light: #c7c7ccff;
+  --apple-system-gray-4-light: #d1d1d6ff;
+  --apple-system-gray-5-light: #e5e5eaff;
+  --apple-system-gray-6-light: #f2f2f7ff;
+}
+
 @theme {
+  /* Fonts */
   --font-display: 'SF Pro Display', ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Noto Color Emoji';
   --font-sans: 'SF Pro', ui-sans-serif, system-ui, sans-serif,
@@ -30,7 +72,7 @@
   --text-color-secondary: #888;
   --text-color-tertiary: #888;
   --text-color-inverted: #fff;
-  --background-one: #fff;
+  --background-one: #f0f0f0;
   --background-two: #f0f0f0;
   --background-three: #fff;
   --highlight-color: #3b82f6;
@@ -41,6 +83,10 @@
   --text-sm: 13px;
   --text-md: 14px;
   --text-lg: 18px;
+}
+
+:root {
+  color-scheme: light dark;
 }
 
 @layer base {
@@ -146,13 +192,13 @@ textarea {
   }
 }
 
-@layer utilities {
-  .bg-one,
-  /* There must be a better way */
-  .hover\:bg-one:hover {
-    background-color: var(--background-one);
-  }
+.bg-one,
+/* There must be a better way */
+.hover\:bg-one:hover {
+  /* background-color: var(--background-one); */
+}
 
+@layer utilities {
   .bg-two,
   .hover\:bg-two:hover {
     background-color: var(--background-two);

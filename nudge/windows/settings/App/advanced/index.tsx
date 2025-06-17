@@ -17,7 +17,8 @@ export function AdvancedTab() {
             Feed instructions to the vision model that understands your computer
             activity.{' '}
             <strong className="font-medium block text-black antialiased">
-              Use cautiously: this can drastically alter Nudge's behavior.
+              Use with caution: instructions can drastically change Nudge's
+              behavior.
             </strong>
           </>
         }

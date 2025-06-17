@@ -8,6 +8,11 @@ import { contextBridge, ipcRenderer } from 'electron'
 import type { State } from '../../src/store'
 import { AvailableModel } from './available-models'
 
+contextBridge.exposeInMainWorld('darkMode', {
+  toggle: () => ipcRenderer.invoke('dark-mode:toggle'),
+  system: () => ipcRenderer.invoke('dark-mode:system'),
+})
+
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld('electronAPI', {

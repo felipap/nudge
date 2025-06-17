@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, nativeTheme, shell } from 'electron'
 import { AvailableModel } from '../windows/shared/available-models'
 import { getGoalFeedback, validateModelKey } from './lib/ai'
 import { screenCaptureService } from './lib/ScreenCaptureService'
@@ -8,6 +8,19 @@ import assert from 'assert'
 import { warn } from './lib/logger'
 
 export function setupIPC() {
+  ipcMain.handle('dark-mode:toggle', () => {
+    if (nativeTheme.shouldUseDarkColors) {
+      nativeTheme.themeSource = 'light'
+    } else {
+      nativeTheme.themeSource = 'dark'
+    }
+    return nativeTheme.shouldUseDarkColors
+  })
+
+  ipcMain.handle('dark-mode:system', () => {
+    nativeTheme.themeSource = 'system'
+  })
+
   ipcMain.handle(
     'setWindowHeight',
     (_event, height: number, animate = false) => {

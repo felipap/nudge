@@ -1,8 +1,12 @@
-import { AtomIcon, CogIcon, LucideCalendarRange } from 'lucide-react'
-import { ReactNode } from 'react'
+import {
+  AtomIcon,
+  CogIcon,
+  KeyboardIcon,
+  LucideCalendarRange,
+} from 'lucide-react'
+import { ReactNode, useEffect } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { closeWindow, minimizeWindow, zoomWindow } from '../../shared/ipc'
-import { KeyboardIcon } from '../../shared/ui/icons'
 import { WindowControls } from '../../shared/ui/WindowControls'
 
 export type Tab = 'general' | 'timeline' | 'shortcuts' | 'advanced'
@@ -13,6 +17,8 @@ interface Props {
 }
 
 export function Nav({ tab, onTabChange }: Props) {
+  useTabStateWithCmdShortcuts(tab, onTabChange)
+
   const tabTitle = {
     general: 'General',
     timeline: 'Timeline',
@@ -58,7 +64,7 @@ export function Nav({ tab, onTabChange }: Props) {
         />
         <TabButton
           title="Shortcuts"
-          icon={<KeyboardIcon className="w-[23px]" />}
+          icon={<KeyboardIcon className="w-[30px]" />}
           isActive={tab === 'shortcuts'}
           onClick={() => onTabChange('shortcuts')}
         />
@@ -95,4 +101,29 @@ function TabButton({ title, icon, isActive, onClick }: TabButtonProps) {
       </span>
     </button>
   )
+}
+
+function useTabStateWithCmdShortcuts(
+  tab: Tab,
+  onTabChange: (tab: Tab) => void
+) {
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.metaKey && e.key >= '1' && e.key <= '4') {
+        const tabMap: Record<string, Tab> = {
+          '1': 'general',
+          '2': 'timeline',
+          '3': 'shortcuts',
+          '4': 'advanced',
+        }
+        const newTab = tabMap[e.key]
+        if (newTab && newTab !== tab) {
+          onTabChange(newTab)
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [tab, onTabChange])
 }
