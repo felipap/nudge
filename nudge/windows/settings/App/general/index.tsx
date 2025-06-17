@@ -9,7 +9,7 @@ export function General() {
       {/* <About />z */}
       <SectionWithHeader
         title="Model Selection"
-        subtitle="Nudge works best with OpenAI's 4o but you can choose to use other models for unknown reasons."
+        subtitle="Nudge works best with OpenAI's 4o model."
       >
         <ModelFieldGroup />
       </SectionWithHeader>

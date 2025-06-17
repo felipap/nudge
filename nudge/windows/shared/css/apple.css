@@ -1,0 +1,32 @@
+:root {
+  /* Apple colors */
+  --bg-apple-system-dark: #000000ff;
+  --bg-apple-secondary-system-dark: #1c1c1eff;
+  --bg-apple-tertiary-system-dark: #2c2c2eff;
+  --bg-apple-system-light: #ffffffff;
+  --bg-apple-secondary-system-light: #f2f2f7ff;
+  --bg-apple-tertiary-system-light: #ffffffff;
+  --bg-apple-system-grouped-dark: #000000ff;
+  --bg-apple-secondary-system-grouped-dark: #1c1c1eff;
+  --bg-apple-tertiary-system-grouped-dark: #2c2c2eff;
+  --bg-apple-system-grouped-light: #f2f2f7ff;
+  --bg-apple-secondary-system-grouped-light: #ffffffff;
+  --bg-apple-tertiary-system-grouped-light: #f2f2f7ff;
+
+  /* Apple gray colors https://sarunw.com/posts/dark-color-cheat-sheet/ */
+  --apple-system-gray-1-dark: #8e8e93ff;
+  --apple-system-gray-2-dark: #636366ff;
+  --apple-system-gray-3-dark: #48484aff;
+  --apple-system-gray-4-dark: #3a3a3cff;
+  --apple-system-gray-5-dark: #2c2c2eff;
+  --apple-system-gray-6-dark: #1c1c1eff;
+  --apple-system-gray-1-light: #8e8e93ff;
+  --apple-system-gray-2-light: #aeaeb2ff;
+  --apple-system-gray-3-light: #c7c7ccff;
+  --apple-system-gray-4-light: #d1d1d6ff;
+  --apple-system-gray-5-light: #e5e5eaff;
+  --apple-system-gray-6-light: #f2f2f7ff;
+
+  --apple-highlight-color-light: #0d5be1;
+  --apple-highlight-color-dark: #0e87ff;
+}

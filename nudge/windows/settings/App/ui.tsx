@@ -12,11 +12,11 @@ export function SectionWithHeader({
   return (
     <section className="flex flex-col gap-3">
       <header className="mb-1">
-        <h2 className="font-display-3p text-[16px] text-black font-medium antialiased max-w-[550px]">
+        <h2 className="font-display-3p text-[16px] text-contrast font-medium antialiased max-w-[550px]">
           {title}
         </h2>
         {subtitle && (
-          <p className="font-display-3p text-[14px]  text-[#888] mt-0.5 leading-[1.3]">
+          <p className="font-display-3p text-[14px]  text-secondary mt-0.5 leading-[1.3]">
             {subtitle}
           </p>
         )}
@@ -36,7 +36,7 @@ export function Label({
   return (
     <label
       className={twMerge(
-        'font-display-3p text-[14px] text-black font-medium antialiased',
+        'font-display-3p text-[14px] text-contrast font-medium antialiased',
         className
       )}
     >
@@ -46,7 +46,9 @@ export function Label({
 }
 
 export function Description({ children }: { children: React.ReactNode }) {
-  return <p className="font-display-3p text-[14px] text-[#888]">{children}</p>
+  return (
+    <p className="font-display-3p text-[14px] text-secondary">{children}</p>
+  )
 }
 
 export function LabelStack({ children }: { children: React.ReactNode }) {
@@ -70,5 +72,5 @@ export function Fieldset({
 }
 
 export function Hr() {
-  return <div className="border-b border-[#E0E0E0]" />
+  return <div className="border-b border-two" />
 }

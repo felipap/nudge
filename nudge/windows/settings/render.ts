@@ -26,7 +26,7 @@
  * ```
  */
 
-import '../shared/global.css'
+import '../shared/css/global.css'
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'

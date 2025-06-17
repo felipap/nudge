@@ -1,0 +1,200 @@
+/* https://tailwindcss.com/blog/tailwindcss-v4#css-first-configuration */
+
+@layer theme, base, components, utilities;
+
+@import './apple.css';
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@plugin '@tailwindcss/forms';
+
+/* https://tailwindcss.com/docs/dark-mode */
+/* @custom-variant dark (&:where(.dark, .dark *)); */
+/* @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *)); */
+
+:root {
+  color-scheme: light dark;
+
+  /* Fonts */
+  --font-display: 'SF Pro Display', ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Noto Color Emoji';
+  --font-sans: 'SF Pro', ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Noto Color Emoji';
+  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+
+  /* Layout */
+  --nav-height: 60px;
+  --column-width: 100%;
+}
+
+@theme {
+  /* Colors */
+  --text-color-contrast: #000;
+  --text-color-primary: #000;
+  --text-color-secondary: #888;
+  --text-color-tertiary: #888;
+  --text-color-inverted: #fff;
+  --background-one: #f0f0f0;
+  --background-two: #f0f0f0;
+  --background-three: #fff;
+  --highlight-color: #3b82f6;
+  --twitter-blue: #1da1f2;
+
+  /*  */
+  --color-nav: #f0f0f0;
+  --color-background: #eee;
+  --color-tab-active: #eaeaeb;
+  --border-color-one: #dadada;
+  --border-color-two: #dadada;
+  --color-btn: #fff;
+  --color-input: #fff;
+  --color-tertiary: #f0f0f0;
+
+  /* Apple colors */
+  --color-apple-system: var(--bg-apple-system-light);
+  --color-apple-secondary-system: var(--bg-apple-secondary-system-light);
+  --color-apple-tertiary-system: var(--bg-apple-tertiary-system-light);
+  --color-apple-system-grouped: var(--bg-apple-system-grouped-light);
+  --color-apple-secondary-system-grouped: var(
+    --color-apple-secondary-system-grouped-light
+  );
+  --color-apple-tertiary-system-grouped: var(
+    --color-apple-tertiary-system-grouped-light
+  );
+  --color-apple-system-gray-1: var(--apple-system-gray-1-light);
+  --color-apple-system-gray-2: var(--apple-system-gray-2-light);
+  --color-apple-system-gray-3: var(--apple-system-gray-3-light);
+  --color-apple-system-gray-4: var(--apple-system-gray-4-light);
+  --color-apple-system-gray-5: var(--apple-system-gray-5-light);
+  --color-apple-system-gray-6: var(--apple-system-gray-6-light);
+  --color-apple-highlight-color: var(--apple-highlight-color-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-color-contrast: #fff;
+    --text-color-primary: #fff;
+    --text-color-secondary: #888;
+    --text-color-tertiary: #666;
+    --text-color-inverted: #000;
+    --background-one: #111;
+    --background-two: #2a2a2a;
+    --background-three: #101010;
+
+    /* Apple colors */
+    --color-nav: var(--apple-system-gray-4-dark);
+    --color-background: var(--apple-system-gray-5-dark);
+    --color-tab-active: var(--apple-system-gray-3-dark);
+    --border-color-one: var(--apple-system-gray-6-dark);
+    --border-color-two: var(--apple-system-gray-4-dark);
+    --color-btn: var(--apple-system-gray-4-dark);
+    --color-input: var(--apple-system-gray-4-dark);
+    --color-tertiary: var(--apple-system-gray-3-dark);
+
+    --color-apple-system: var(--bg-apple-system-dark);
+    --color-apple-secondary-system: var(--bg-apple-secondary-system-dark);
+    --color-apple-tertiary-system: var(--bg-apple-tertiary-system-dark);
+    --color-apple-system-grouped: var(--bg-apple-system-grouped-dark);
+    --color-apple-secondary-system-grouped: var(
+      --bg-apple-secondary-system-grouped-dark
+    );
+    --color-apple-tertiary-system-grouped: var(
+      --bg-apple-tertiary-system-grouped-dark
+    );
+    --color-apple-system-gray-1: var(--apple-system-gray-1-dark);
+    --color-apple-system-gray-2: var(--apple-system-gray-2-dark);
+    --color-apple-system-gray-3: var(--apple-system-gray-3-dark);
+    --color-apple-system-gray-4: var(--apple-system-gray-4-dark);
+    --color-apple-system-gray-5: var(--apple-system-gray-5-dark);
+    --color-apple-system-gray-6: var(--apple-system-gray-6-dark);
+    --color-apple-highlight-color: var(--apple-highlight-color-dark);
+  }
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    @apply dark:border-[#1e1c1e] border-[#ddd];
+  }
+}
+
+/* Layout */
+
+.column-width {
+  /* max-width: var(--column-width); */
+  padding-left: 20px;
+  padding-right: 30px;
+}
+
+body {
+  /* background-color: var(--background-one); */
+  color: var(--text-color-primary);
+}
+
+.text-inverted {
+  color: var(--text-color-inverted);
+}
+
+button {
+  cursor: pointer;
+}
+
+textarea {
+  @apply border-inherit;
+}
+
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+  /* https://github.com/tailwindlabs/tailwindcss/discussions/14508 */
+}
+
+/* LAYOUT CLASSES */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 10rem;
+}
+
+.font-display-3p {
+  font-family: var(--font-display);
+  letter-spacing: 3% !important;
+}
+
+/* Text sizes */
+
+.text-body {
+  font-size: var(--text-body);
+}
+
+.text-heading {
+  font-size: 1.5rem;
+}
+
+/* Text colors */
+
+.message-content {
+  font-size: 14px;
+  line-height: 1.3;
+
+  li,
+  ol,
+  p {
+    margin: 0;
+    /* padding: 0; */
+  }
+}
+
+.textarea-reset {
+  @apply resize-none outline-none border-none;
+}
+
+.shadow-inset-bottom {
+  box-shadow: inset 0 -10px 10px -10px rgba(0, 0, 0, 0.05);
+}

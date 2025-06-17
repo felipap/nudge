@@ -30,7 +30,7 @@ export function Nav({ tab, onTabChange }: Props) {
     <div
       className={twMerge(
         'relative flex flex-col items-center justify-between pb-[10px] pt-[12px] gap-[8px] select-none',
-        'bg-[#F4F4F4] border-b border-gray-200 [app-region:drag]'
+        'bg-nav border-b border-one [app-region:drag]'
       )}
     >
       <div className="top-3 left-3 absolute [app-region:no-drag]">
@@ -46,7 +46,7 @@ export function Nav({ tab, onTabChange }: Props) {
           }}
         />
       </div>
-      <h1 className="text-[15px] leading-[20px] tracking-[1%] font-semibold font-display text-black">
+      <h1 className="text-[15px] leading-[20px] tracking-[1%] font-semibold font-display text-contrast dark:antialiased">
         {tabTitle}
       </h1>
       <div className="flex flex-row gap-[6px] [app-region:no-drag]">
@@ -91,12 +91,15 @@ function TabButton({ title, icon, isActive, onClick }: TabButtonProps) {
     <button
       onClick={onClick}
       className={twMerge(
-        'flex flex-col items-center gap-[3px] py-[6px] min-w-[65px] px-2 rounded-[5px] hover:bg-[#EAEAEB] transition-colors cursor-pointer active:bg-[#DADADA] active:text-[#222]',
-        isActive && 'text-[#0D5BE1] bg-[#EAEAEB] '
+        'flex flex-col items-center gap-[3px] py-[6px] min-w-[65px] px-2 rounded-[5px] transition-colors cursor-pointer',
+        ' hover:bg-tab-active active:bg-apple-system-gray-2 text-secondary active:text-primary',
+        isActive && 'text-apple-highlight-color bg-tab-active '
       )}
     >
       <div className="flex items-center justify-center h-[21px]">{icon}</div>
-      <span className={twMerge('text-[13px] font-display-3p', isActive && '')}>
+      <span
+        className={twMerge('text-[12.5px] font-display-3p', isActive && '')}
+      >
         {title}
       </span>
     </button>

@@ -133,7 +133,7 @@ function InputWithAutoValidation({
           <KeyStatusIndicator state={state} />
         ) : (
           <button
-            className="text-amber-600 opacity-100 bg-one pl-2 pr-1"
+            className="text-amber-600 dark:text-amber-300 opacity-100 bg-tertiary rounded-sm pl-1.5 pr-1.5"
             onClick={onClickCheckKey}
           >
             Check

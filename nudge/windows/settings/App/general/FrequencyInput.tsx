@@ -30,7 +30,7 @@ export const FrequencyInput = () => {
         </Description>
       </LabelStack>
       <input
-        className="mt-1 w-[120px] rounded-md text-black text-sm px-1.5 h-8 border border-gray-300"
+        className="mt-1 w-[120px] rounded-md text-contrast text-sm px-1.5 h-8 border-0 shadow-sm bg-btn"
         type="number"
         id="frequency"
         value={frequency}

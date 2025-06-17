@@ -7,7 +7,7 @@ interface Props extends ComponentProps<'textarea'> {
 }
 
 const selectStyles = cva(
-  'border border-transparent dark:border-gray-700 rounded-md py-0 font-text tracking-[-0.2px] text-[14px] bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:text-gray-400 shadow-sm transition-colors resize-none w-full',
+  'border !border-transparent rounded-md py-0 font-text tracking-[-0.2px] text-[14px] bg-input text-contrast  focus:outline-none focus:ring-2 focus:ring-apple-highlight-color disabled:bg-apple-system-gray-4 disabled:text-apple-system-gray-2 shadow-inset-bottom transition-colors resize-none w-full',
   {
     variants: {
       size: {
