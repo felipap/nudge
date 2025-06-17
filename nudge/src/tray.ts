@@ -86,7 +86,7 @@ export function createTray() {
         captureFromNow === null
           ? 'Not capturing'
           : captureFromNow < 30_000
-          ? 'Captured'
+          ? 'Captured (stuck?)'
           : captureFromNow < 10_000
           ? 'Captured just now'
           : captureFromNow < 0

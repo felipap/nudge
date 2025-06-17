@@ -92,7 +92,7 @@ export function createSettingsWindow() {
 
   const win = new BrowserWindow({
     show: true,
-    // alwaysOnTop: true,
+    alwaysOnTop: true,
     width: windowWidth,
     height: windowHeight,
     minHeight: windowHeight,
@@ -102,7 +102,6 @@ export function createSettingsWindow() {
     frame: false,
     transparent: true,
     vibrancy: 'fullscreen-ui',
-
     webPreferences: {
       preload: path.join(__dirname, '../renderer/preload.js'),
       webSecurity: false,

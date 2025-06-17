@@ -12,25 +12,6 @@ export const GoalFeedback = withBoundary(
     // const [feedback, setFeedback] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false)
 
-    const handleClick = async () => {
-      //   if (!goal) {
-      //     return
-      //   }
-      //   setIsLoading(true)
-      //   const start = Date.now()
-      //   try {
-      //     const feedback = await window.electronAPI.getGoalFeedback(goal)
-      //     console.log('feedback', feedback)
-      //     setFeedback(feedback)
-      //   } catch (error) {
-      //     console.error('Error getting goal feedback:', error)
-      //   } finally {
-      //     const elapsed = Date.now() - start
-      //     console.log('elapsed:', (elapsed / 1000).toFixed(2) + 's')
-      //     setIsLoading(false)
-      //   }
-    }
-
     let inner = null
     if (feedback) {
       inner = (

@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useBackendState } from '../../../shared/ipc'
-import { FaSkull, FaHandPeace, ThumbsUp } from '../../../shared/ui/icons'
+import { FaHandPeace, FaSkull } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 
 const ONE_MINUTE = 1 * 60 * 1_000
@@ -34,9 +34,33 @@ export const Feedback = withBoundary(() => {
 
   console.log('relevantCapture', relevantCapture)
 
+  if (!relevantCapture) {
+    return <AnimatePresence></AnimatePresence>
+  }
+
   let inner = null
-  if (relevantCapture) {
+  let className = 'text-gray-500'
+  if (relevantCapture.impossibleToAssess) {
+    inner = <>Improve your goal</>
+  } else if (relevantCapture.inFlow) {
     inner = (
+      <>
+        Doing great
+        <FaHandPeace className="h-3 w-3 text-green-800" />
+      </>
+    )
+    className = 'text-green-800'
+  } else {
+    inner = (
+      <>
+        Try to concentrate <FaSkull className="h-3 w-3 text-red-800" />
+      </>
+    )
+    className = 'text-red-800'
+  }
+
+  return (
+    <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -46,25 +70,14 @@ export const Feedback = withBoundary(() => {
         <div
           className={twMerge(
             'text-[14px] pr-3 font-medium text-gray-500 font-display-3p overflow-hidden text-ellipsis whitespace-nowrap flex flex-row gap-2 items-center',
-            relevantCapture.isPositive ? 'text-green-800' : 'text-red-800'
+            className
           )}
         >
-          {relevantCapture.isPositive ? (
-            <>
-              Doing great
-              <FaHandPeace className="h-3 w-3 text-green-800" />
-            </>
-          ) : (
-            <>
-              Try to concentrate <FaSkull className="h-3 w-3 text-red-800" />
-            </>
-          )}
+          {inner}
         </div>
       </motion.div>
-    )
-  }
-
-  return <AnimatePresence>{inner}</AnimatePresence>
+    </AnimatePresence>
+  )
 })
 
 function useUpdateEvery(ms: number) {

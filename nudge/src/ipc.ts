@@ -179,7 +179,7 @@ export function setupIPC() {
           endedAt: null,
           pausedAt: null,
           resumedAt: null,
-          ellapsedBeforePausedMs: 0,
+          elapsedBeforePausedMs: 0,
           goalDurationMs: durationMs,
         },
       })
@@ -207,8 +207,8 @@ export function setupIPC() {
       session: {
         ...session,
         pausedAt: pausedAt.toISOString(),
-        ellapsedBeforePausedMs:
-          (session.ellapsedBeforePausedMs || 0) +
+        elapsedBeforePausedMs:
+          (session.elapsedBeforePausedMs || 0) +
           (pausedAt.getTime() - new Date(lastResumedAt).getTime()),
       },
     })

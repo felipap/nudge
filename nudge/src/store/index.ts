@@ -34,12 +34,10 @@ export const store = create<State>()(
 //
 //
 
-export const updateLastCapture = (summary: string, isPositive: boolean) => {
+export const updateLastCapture = (capture: Capture) => {
   store.setState({
     activeCapture: {
-      summary,
-      at: new Date().toISOString(),
-      isPositive: isPositive,
+      ...capture,
       expiresAt: new Date(Date.now() + 1000 * 60 * 2).toISOString(),
     },
   })

@@ -5,7 +5,7 @@ import { closeWindow, minimizeWindow, zoomWindow } from '../../shared/ipc'
 import { KeyboardIcon } from '../../shared/ui/icons'
 import { WindowControls } from '../../shared/ui/WindowControls'
 
-export type Tab = 'general' | 'timeline' | 'shorcuts' | 'advanced'
+export type Tab = 'general' | 'timeline' | 'shortcuts' | 'advanced'
 
 interface Props {
   tab: Tab
@@ -16,7 +16,7 @@ export function Nav({ tab, onTabChange }: Props) {
   const tabTitle = {
     general: 'General',
     timeline: 'Timeline',
-    shorcuts: 'Shorcuts',
+    shortcuts: 'Shortcuts',
     advanced: 'Advanced',
   }[tab]
 
@@ -27,7 +27,7 @@ export function Nav({ tab, onTabChange }: Props) {
         'bg-[#F4F4F4] border-b border-gray-200 [app-region:drag]'
       )}
     >
-      <div className="top-3 left-3 absolute">
+      <div className="top-3 left-3 absolute [app-region:no-drag]">
         <WindowControls
           onClose={() => {
             closeWindow()
@@ -43,7 +43,7 @@ export function Nav({ tab, onTabChange }: Props) {
       <h1 className="text-[15px] leading-[20px] tracking-[1%] font-semibold font-display text-black">
         {tabTitle}
       </h1>
-      <div className="flex flex-row gap-[9px] [app-region:no-drag]">
+      <div className="flex flex-row gap-[6px] [app-region:no-drag]">
         <TabButton
           title="General"
           icon={<CogIcon className="w-[23px]" />}
@@ -57,10 +57,10 @@ export function Nav({ tab, onTabChange }: Props) {
           onClick={() => onTabChange('timeline')}
         />
         <TabButton
-          title="Shorcuts"
+          title="Shortcuts"
           icon={<KeyboardIcon className="w-[23px]" />}
-          isActive={tab === 'shorcuts'}
-          onClick={() => onTabChange('shorcuts')}
+          isActive={tab === 'shortcuts'}
+          onClick={() => onTabChange('shortcuts')}
         />
         <TabButton
           title="Advanced"
@@ -85,7 +85,7 @@ function TabButton({ title, icon, isActive, onClick }: TabButtonProps) {
     <button
       onClick={onClick}
       className={twMerge(
-        'flex flex-col items-center gap-[3px] py-[6px] w-[65px] rounded-[5px] hover:bg-[#EAEAEB] transition-colors cursor-pointer active:bg-[#DADADA] active:text-[#222]',
+        'flex flex-col items-center gap-[3px] py-[6px] min-w-[65px] px-2 rounded-[5px] hover:bg-[#EAEAEB] transition-colors cursor-pointer active:bg-[#DADADA] active:text-[#222]',
         isActive && 'text-[#0D5BE1] bg-[#EAEAEB] '
       )}
     >

@@ -10,7 +10,8 @@ export const USER_TZ = 'America/Los_Angeles' // FIXME
 export interface Capture {
   summary: string
   at: string
-  isPositive: boolean
+  inFlow: boolean
+  impossibleToAssess: boolean
 }
 
 export interface ModelSelection {
@@ -37,7 +38,7 @@ export interface ActiveSession {
   // Never set `pausedAt` or `resumedAt` at the same time.
   resumedAt: string | null
   pausedAt: string | null
-  ellapsedBeforePausedMs: number
+  elapsedBeforePausedMs: number
   //
   goalDurationMs: number
 }
@@ -50,10 +51,10 @@ export interface State {
         // Adding this here for the semantics. An `activeCapture` might be
         // expired without being cleared.
         expiresAt: string
+        impossibleToAssess: boolean
       })
     | null
   nextCaptureAt: string | null
-  savedCaptures: Capture[]
   session: ActiveSession | null
   // capture state
   isCapturing: boolean
@@ -66,6 +67,9 @@ export interface State {
   autoLaunch: boolean
   // frontend things
   savedGoalInputValue: string | null
+  // history of captures
+  savedCaptures: Capture[]
+  customInstructions: string | null
 }
 
 export const DEFAULT_STATE: State = {
@@ -85,6 +89,7 @@ export const DEFAULT_STATE: State = {
   },
   captureEverySeconds: 60,
   isWindowPinned: false,
+  customInstructions: null,
   autoLaunch: false,
   // frontend things
   savedGoalInputValue: null,

@@ -18,7 +18,7 @@ export const ConfirmGoalWidget = withBoundary(() => {
   const [editorFocus, setEditorFocus] = useState(false)
 
   const [goal, setGoal] = useActiveGoalContentWithSync()
-  const ellapsedLabel = useEfficientEllapsedLabel(state?.session?.startedAt)
+  const elapsedLabel = useEfficientEllapsedLabel(state?.session?.startedAt)
 
   const isPaused = state?.session?.pausedAt !== null
 

@@ -28,8 +28,8 @@ function onStoppedTypingForMs(
   }, [value])
 }
 
-export function GoalInputWidget() {
-  useWindowHeight(330)
+export function InputWidget() {
+  useWindowHeight(290)
 
   // form state
   const [value, setValue] = useGoalInputStateWithBackendBackup()
@@ -55,10 +55,14 @@ export function GoalInputWidget() {
   const hasLongEnoughGoal = value.trim().length > 30
 
   return (
-    <div className="flex flex-col bg-white h-screen ">
+    <>
       <Nav title="Choose your next goal" />
-      <main className="h-full flex flex-col shadow-inset-bottom bg-[#FAFAFA]">
-        <GoalTextarea value={value} onChange={setValue} className="p-3" />
+      <main className="h-full flex flex-col shadow-inset-bottom bg-[#FAFAFA] overflow-scroll">
+        <GoalTextarea
+          value={value}
+          onChange={setValue}
+          className="p-3 overflow-hidden"
+        />
 
         {/* Feedback from AI */}
         <div className="p-2">
@@ -75,7 +79,7 @@ export function GoalInputWidget() {
           onClick={onClickStart}
         />
       </footer>
-    </div>
+    </>
   )
 }
 
@@ -160,6 +164,12 @@ function useEvolvingFeedback(value: string, skip = false) {
   const [feedback, setFeedback] = useState<string | null>(null)
   const [isLoadingDuration, setLoadingDuration] = useState(false)
   const [duration, setDuration] = useState<number | null>(null)
+  // Saved the value that the current feedback applies to.
+  const [valueForFeedback, setValueForFeedback] = useState<string | null>(null)
+
+  // useEffect(() => {
+
+  // }, [])
 
   onStoppedTypingForMs(
     value,
@@ -169,6 +179,7 @@ function useEvolvingFeedback(value: string, skip = false) {
         return
       }
 
+      setFeedback(null)
       setLoadingDuration(true)
     },
     async () => {
@@ -179,7 +190,9 @@ function useEvolvingFeedback(value: string, skip = false) {
       console.log('feedback', feedback)
       if (feedback.isGood) {
         setFeedback(null)
+        setValueForFeedback(null)
       } else {
+        setValueForFeedback(value)
         setFeedback(feedback.feedback)
       }
 

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { Notification } from 'electron'
-import { getAssessmentFromScreenshot, getOpenAiClient } from '../lib/ai'
+import { assessFlowFromScreenshot, getOpenAiClient } from '../lib/ai'
 import { debug, error, log, warn } from '../lib/logger'
 import { captureActiveScreen } from '../lib/screen'
 import {
@@ -182,7 +182,7 @@ async function captureScreenTaskInner() {
   let ret
   try {
     log('[ScreenCaptureService] Sending to server...')
-    ret = await getAssessmentFromScreenshot(openai, dataUrl, goal.content, [])
+    ret = await assessFlowFromScreenshot(openai, dataUrl, goal.content, [])
   } catch (e) {
     log('[ScreenCaptureService] sendToOpenAI failed', e)
     return {
@@ -192,13 +192,14 @@ async function captureScreenTaskInner() {
 
   setPartialState({ isCapturing: false, isAssessing: false })
 
-  updateLastCapture(ret.data.screenSummary, ret.data.isFollowingGoals)
-
   const capture: Capture = {
-    summary: ret.data.screenSummary || '',
     at: new Date().toISOString(),
-    isPositive: ret.data.isFollowingGoals,
+    inFlow: ret.data.goalUnclear ? true : ret.data.isFollowingGoals,
+    summary: ret.data.goalUnclear ? '' : ret.data.screenSummary || '',
+    impossibleToAssess: ret.data.goalUnclear,
   }
+
+  updateLastCapture(capture)
 
   addSavedCapture(capture)
 
@@ -225,7 +226,7 @@ function shouldNotifyUser(capture: Capture) {
 
 function showNotification(body: string) {
   const notif = new Notification({
-    title: 'Nudge says',
+    title: 'Message from Nudge',
     body: body,
     silent: true,
     sound: 'Blow.aiff',

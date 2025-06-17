@@ -6,17 +6,17 @@ export function SectionWithHeader({
   children,
 }: {
   title: string
-  subtitle?: string
+  subtitle?: string | React.ReactNode
   children: React.ReactNode
 }) {
   return (
-    <section className="flex flex-col gap-4">
-      <header className="max-w-[450px]">
-        <h2 className="font-display-3p text-[16px] text-black font-medium antialiased">
+    <section className="flex flex-col gap-3">
+      <header className="mb-1">
+        <h2 className="font-display-3p text-[16px] text-black font-medium antialiased max-w-[550px]">
           {title}
         </h2>
         {subtitle && (
-          <p className="font-display-3p text-[14px] text-[#AAA] mt-0.5 leading-[1.4]">
+          <p className="font-display-3p text-[14px]  text-[#888] mt-0.5 leading-[1.3]">
             {subtitle}
           </p>
         )}

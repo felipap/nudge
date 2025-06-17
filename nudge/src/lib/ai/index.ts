@@ -15,5 +15,5 @@ export function getOpenAiClient(openAiKey: string) {
 }
 
 export * from './goal-feedback'
-export * from './is-procrastinating'
+export * from './assess-flow'
 export * from './models'

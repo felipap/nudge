@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import {
   clearActiveCapture,
@@ -23,7 +23,8 @@ export const ActiveGoalWidget = withBoundary(() => {
   const [editorFocus, setEditorFocus] = useState(false)
 
   const [goal, setGoal] = useActiveGoalContentWithSync()
-  const ellapsedLabel = useEfficientEllapsedLabel(state?.session?.startedAt)
+  const { timeElapsedLabel, timeLeftLabel, isOvertime, isNearlyOver } =
+    useEfficientSessionTimeLabels()
 
   const isPaused = state?.session?.pausedAt !== null
 
@@ -59,21 +60,17 @@ export const ActiveGoalWidget = withBoundary(() => {
     }
   }
 
-  const minsLeft = useMemo(() => {
-    if (!state?.session) {
-      return 0
-    }
-    // Use startedAt + minsLeft to calculate the time left
-    return 0
-    // const startedAt = new Date(state.session.startedAt)
-    // const minsLeft = state.session
-    // const timeLeft = new Date(startedAt.getTime() + minsLeft * 60000)
-    // return Math.floor((timeLeft.getTime() - Date.now()) / 60000)
-  }, [state?.session?.startedAt])
-
   return (
     <>
-      <Nav title={isPaused ? `Focus session paused` : `Focus session active`} />
+      <Nav
+        title={
+          isPaused
+            ? `Focus session paused`
+            : isOvertime
+            ? `Focus session overtime`
+            : `Focus session active`
+        }
+      />
       <main
         className={twMerge(
           'h-full flex flex-col shadow-inset-bottom',
@@ -98,13 +95,18 @@ export const ActiveGoalWidget = withBoundary(() => {
       <footer className="flex flex-row items-center justify-between p-2 gap-4 select-none">
         <SessionButton
           className={twMerge(
+            'antialiased',
             isPaused
               ? 'bg-gray-200 text-gray-800 border-gray-300 hover:text-[#004E0C] hover:bg-[#B3EBAA] hover:border-[#33AC46]'
+              : isNearlyOver
+              ? 'bg-[#fff4ef] border-[#e8a34e] text-red-700 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300'
+              : isOvertime
+              ? 'bg-[#ffefef] border-[#ff8989] text-red-700 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300'
               : 'bg-[#B2E5FF] border-[#58B4FF] text-blue-700 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300'
           )}
-          icon={isPaused ? null : null}
+          icon={isPaused ? 'pause' : null}
           hoverIcon={isPaused ? 'play' : 'pause'}
-          text={isPaused ? 'Paused' : `${ellapsedLabel}`}
+          text={isPaused ? 'Paused' : `${timeLeftLabel}`}
           hoverText={isPaused ? 'Resume' : `Pause`}
           onClick={onClickMainButton}
         />
@@ -177,54 +179,64 @@ function useActiveGoalContentWithSync() {
 
 // Returns a label for how long the current goal has been active for, but
 // without re-rendering every second past 60s.
-function useEfficientEllapsedLabel(startedAt: string | undefined) {
+function useEfficientSessionTimeLabels() {
   const { state } = useBackendState()
   const [now, setNow] = useState(new Date())
 
-  // TODO do this efficiently!!
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date())
+      // TODO do this efficiently!!
     }, 1_000)
     return () => clearInterval(interval)
   }, [])
 
-  const durationSoFar = useMemo(() => {
-    if (!startedAt) {
-      return null
-    }
-
-    const now = new Date()
-    const startTime = new Date(startedAt)
-    return now.getTime() - startTime.getTime()
-  }, [startedAt, now])
-
-  if (durationSoFar === null) {
-    return null
-  }
-
   const session = state?.session
-  if (session) {
-    // if (session.pausedAt) {
-    //   return formatDuration(session.ellapsedBeforePausedMs || 0)
-    // }
-
-    let ellapsedMs = 0
-    if (session.pausedAt) {
-      ellapsedMs = session.ellapsedBeforePausedMs || 0
-    } else {
-      ellapsedMs =
-        (session.ellapsedBeforePausedMs || 0) +
-        (now.getTime() -
-          new Date(session.resumedAt || session.startedAt).getTime())
+  if (!session) {
+    return {
+      timeElapsedLabel: '--',
+      timeLeftLabel: '--',
     }
-
-    if (ellapsedMs < 120_000) {
-      return `${Math.floor(ellapsedMs / 1000)}s ellapsed`
-    }
-    return `${Math.floor(ellapsedMs / 1000 / 60)}m ellapsed`
-    // return formatDuration(session.goalDurationMs - ellapsedMs)
   }
 
-  return formatDuration(durationSoFar)
+  // Calculate total time elapsed.
+  let elapsedMs
+  if (session.pausedAt) {
+    elapsedMs = session.elapsedBeforePausedMs || 0
+  } else {
+    elapsedMs =
+      (session.elapsedBeforePausedMs || 0) +
+      (now.getTime() -
+        new Date(session.resumedAt || session.startedAt).getTime())
+  }
+
+  // Format elapsed time.
+  let timeElapsedLabel = ''
+  if (elapsedMs < 60_000) {
+    timeElapsedLabel = `${Math.floor(elapsedMs / 1000)}s`
+  } else {
+    timeElapsedLabel = `${Math.floor(elapsedMs / 1000 / 60)}m`
+  }
+
+  // Format time left.
+  let timeLeftLabel = null
+  const diffMs = session.goalDurationMs - elapsedMs
+  if (diffMs < -60_000) {
+    timeLeftLabel = `${Math.floor(-diffMs / 1000 / 60)}m overtime`
+  } else if (diffMs < -10_000) {
+    timeLeftLabel = `${Math.floor(-diffMs / 1000)}s overtime`
+  } else if (diffMs <= 0) {
+    timeLeftLabel = "Time's up"
+  } else if (diffMs < 60_000) {
+    timeLeftLabel = `${Math.floor(diffMs / 1000)}s left`
+  } else {
+    timeLeftLabel = `${Math.floor(diffMs / 1000 / 60)}m left`
+  }
+
+  return {
+    timeElapsedLabel,
+    timeLeftLabel,
+    isOvertime: diffMs < 0,
+    isNearlyOver: diffMs < 60_000 && diffMs >= 0,
+  }
 }

@@ -5,7 +5,7 @@ import { ModelFieldGroup } from './ModelFieldGroup'
 
 export function General() {
   return (
-    <main className="p-4 pb-10 flex flex-col gap-5 text-[13px] w-full">
+    <main className="p-4 pb-10 grid grid-cols-1 gap-5 text-[13px] w-full">
       {/* <About />z */}
       <SectionWithHeader
         title="Model Selection"
@@ -21,8 +21,6 @@ export function General() {
       <section>
         <LaunchOnStartup />
       </section>
-      <Hr />
-      <div className="h-[40px] w-full bg-red-500" />
     </main>
   )
 }

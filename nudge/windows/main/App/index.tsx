@@ -1,7 +1,7 @@
 import { useBackendState } from '../../shared/ipc'
 import { ActiveGoalWidget } from './ActiveGoalWidget'
 import { ConfirmGoalWidget } from './ConfirmGoalWidget'
-import { GoalInputWidget } from './GoalInputWidget'
+import { InputWidget } from './InputWidget'
 
 export default function App() {
   const { state } = useBackendState()
@@ -14,7 +14,7 @@ export default function App() {
   } else if (state.session) {
     inner = <ActiveGoalWidget />
   } else {
-    inner = <GoalInputWidget />
+    inner = <InputWidget />
   }
 
   return <div className="flex flex-col bg-white h-screen">{inner}</div>

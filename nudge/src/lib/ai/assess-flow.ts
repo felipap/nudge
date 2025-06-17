@@ -13,13 +13,16 @@ dayjs.extend(relativeTime)
 
 const AssessmentStruct = z.object({
   screenSummary: z.string(),
-  isFollowingGoals: z.boolean(),
   messageToUser: z.string(),
+  isFollowingGoals: z.boolean(),
+  goalUnclear: z
+    .boolean()
+    .describe(`Set to true when the goal is absolutely unclear.`),
 })
 
 export type Assessment = z.infer<typeof AssessmentStruct>
 
-export async function getAssessmentFromScreenshot(
+export async function assessFlowFromScreenshot(
   client: OpenAI,
   base64content: string,
   goal: string,
