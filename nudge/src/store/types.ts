@@ -7,32 +7,13 @@ export const USER_TZ = 'America/Los_Angeles' // FIXME
 //   error: string | null
 // }
 
-export const DEFAULT_STATE: State = {
-  openAiKey: null,
-  nextCaptureAt: null,
-  savedCaptures: [],
-  activeGoal: null,
-  captureFrequencySeconds: 1,
-  isWindowPinned: false,
-  autoLaunch: false,
-  activeCapture: null,
-  savedGoalInputValue: null,
-  isCapturing: false,
-  isAssessing: false,
-  modelSelection: {
-    name: 'openai-4o',
-    key: null,
-    validatedAt: null,
-  },
-}
-
 export interface Capture {
   summary: string
   at: string
   isPositive: boolean
 }
 
-export interface ActiveModel {
+export interface ModelSelection {
   name: AvailableModel
   key: string | null
   validatedAt: string | null
@@ -45,18 +26,25 @@ export interface Todo {
   createdAt: string
 }
 
-export interface GoalSession {
+export interface ActiveSession {
   content: string
+  contentUpdatedAt: string | null
+  //
   startedAt: string
-  updatedAt: string | null
-  pausedAt: string | null
   endedAt: string | null
-  minsLeft: number
+  // Set to true to show the confirmation widget.
+  confirmContinue?: boolean
+  // Never set `pausedAt` or `resumedAt` at the same time.
+  resumedAt: string | null
+  pausedAt: string | null
+  ellapsedBeforePausedMs: number
+  //
+  goalDurationMs: number
 }
 
 export interface State {
-  openAiKey: string | null
-  modelSelection: ActiveModel
+  // The latest capture, which must be relevant for the current goal. Set to
+  // null when the user makes updates to the active goal, or clears it entirely.
   activeCapture:
     | (Capture & {
         // Adding this here for the semantics. An `activeCapture` might be
@@ -64,16 +52,40 @@ export interface State {
         expiresAt: string
       })
     | null
-
   nextCaptureAt: string | null
   savedCaptures: Capture[]
-  captureFrequencySeconds: number
-  isWindowPinned: boolean
-  activeGoal: GoalSession | null
-  // Minor things
-  savedGoalInputValue: string | null
+  session: ActiveSession | null
+  // capture state
   isCapturing: boolean
   isAssessing: boolean
-  // Settings
+  lastClosedAt: string | null
+  // settings
+  modelSelection: ModelSelection
+  captureEverySeconds: number
+  isWindowPinned: boolean
   autoLaunch: boolean
+  // frontend things
+  savedGoalInputValue: string | null
+}
+
+export const DEFAULT_STATE: State = {
+  nextCaptureAt: null,
+  session: null,
+  savedCaptures: [],
+  activeCapture: null,
+  // capture state
+  isCapturing: false,
+  isAssessing: false,
+  lastClosedAt: null,
+  // settings
+  modelSelection: {
+    name: 'openai-4o',
+    key: null,
+    validatedAt: null,
+  },
+  captureEverySeconds: 60,
+  isWindowPinned: false,
+  autoLaunch: false,
+  // frontend things
+  savedGoalInputValue: null,
 }

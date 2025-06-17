@@ -1,7 +1,7 @@
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
 import { ComponentProps, useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { ActiveModel } from '../../../../src/store/types'
+import { ModelSelection } from '../../../../src/store/types'
 import {
   AVAILABLE_MODELS,
   type AvailableModel,
@@ -165,7 +165,7 @@ function KeyStatusIndicator({
 
 function useModelChoiceWithBackend() {
   const { state, setPartialState, stateRef } = useBackendState()
-  const [model, setLocalModel] = useState<ActiveModel | null>(null)
+  const [model, setLocalModel] = useState<ModelSelection | null>(null)
 
   useEffect(() => {
     if (!state?.modelSelection) {
@@ -175,7 +175,7 @@ function useModelChoiceWithBackend() {
     setLocalModel(state.modelSelection)
   }, [!!state?.modelSelection])
 
-  async function setModel(value: ActiveModel) {
+  async function setModel(value: ModelSelection) {
     if (!stateRef.current) {
       return
     }

@@ -9,6 +9,7 @@ AI that watches your computer screen and tells you when you're procrastinating.
 - [ ] Allow users to modify screenshot frequency.
 - [ ] Let users introspect logs.
 - [ ] Come up with an icon for release.
+- [ ] After restart past session goal, ask user what they want to do.
 - [x] Show how long goal has been active for.
 - [x] Issue: can't close the window.
 - [x] Use natural language to set goal duration.
@@ -61,3 +62,7 @@ sips -z 1024 1024 original.png --out MyIcon.iconset/icon_512x512@2x.png
 # Convert the iconset to icns
 iconutil -c icns MyIcon.iconset
 ```
+
+## License
+
+MIT

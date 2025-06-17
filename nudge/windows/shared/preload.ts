@@ -5,7 +5,7 @@
 // preload.ts
 
 import { contextBridge, ipcRenderer } from 'electron'
-import type { State } from '../../src/types'
+import type { State } from '../../src/store'
 import { AvailableModel } from './available-models'
 
 // Expose protected methods that allow the renderer process to use
@@ -86,6 +86,18 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   getGoalFeedback: async (goal: string) => {
     return await ipcRenderer.invoke('getGoalFeedback', goal)
+  },
+
+  pauseSession: async () => {
+    return await ipcRenderer.invoke('pauseSession')
+  },
+
+  resumeSession: async () => {
+    return await ipcRenderer.invoke('resumeSession')
+  },
+
+  startSession: async (goal: string, durationMs: number) => {
+    return await ipcRenderer.invoke('startSession', goal, durationMs)
   },
 
   captureNow: async () => {

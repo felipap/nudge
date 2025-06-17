@@ -30,6 +30,11 @@ declare global {
       ) => () => void
       captureNow: () => void
       validateModelKey: (model: AvailableModel, key: string) => Promise<boolean>
+      // session stuff
+      pauseSession: () => Promise<void>
+      resumeSession: () => Promise<void>
+      startSession: (goal: string, durationMs: number) => Promise<void>
+      clearSession: () => Promise<void>
     }
   }
 }

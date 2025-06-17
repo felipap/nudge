@@ -8,7 +8,7 @@ export * from './types'
 
 export const store = create<State>()(
   persist((set, get, store: StoreApi<State>) => DEFAULT_STATE, {
-    name: 'nudge-store',
+    name: 'store',
     storage: {
       getItem: (name) => {
         const value = fileStore.get(name)
@@ -51,10 +51,6 @@ export const clearLastCapture = () => {
   })
 }
 
-export const setOpenAiKey = (key: string | null) => {
-  store.setState({ openAiKey: key })
-}
-
 export const setPartialState = (partial: Partial<State>) => {
   store.setState(partial)
 }
@@ -73,14 +69,12 @@ export const addSavedCapture = (capture: Capture) => {
   })
 }
 
-export const getOpenAiKey = () => store.getState().openAiKey
-
 export const getState = () => store.getState()
 
 export const hasNoCurrentGoalOrPaused = () =>
-  !store.getState().activeGoal || store.getState().activeGoal.pausedAt
+  !store.getState().session || store.getState().session.pausedAt
 
-export const getActiveGoal = () => store.getState().activeGoal
+export const getActiveGoal = () => store.getState().session
 
 export const getNextCaptureAt = () => store.getState().nextCaptureAt
 
@@ -92,12 +86,6 @@ export const setNextCaptureAt = (at: string | null) => {
 
   console.log('setting nextCaptureAt', at)
   store.setState({ nextCaptureAt: at })
-}
-
-export function onOpenAiKeyChange(callback: (key: string | null) => void) {
-  return store.subscribe((state) => {
-    callback(state.openAiKey)
-  })
 }
 
 export function onIndicatorStateChange(
@@ -116,7 +104,7 @@ export function getStateIndicator(): IndicatorState {
   if (state.isAssessing) {
     return 'assessing'
   }
-  if (state.activeGoal) {
+  if (state.session) {
     return 'active'
   }
   return 'inactive'

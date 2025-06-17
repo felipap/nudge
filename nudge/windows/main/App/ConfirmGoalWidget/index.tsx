@@ -1,10 +1,7 @@
-import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useMemo, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import {
   clearActiveCapture,
-  pauseSession,
-  resumeSession,
   setPartialState,
   useBackendState,
 } from '../../../shared/ipc'
@@ -13,10 +10,8 @@ import { Button } from '../../../shared/ui/Button'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { GoalTextarea } from '../GoalTextarea'
 import { Nav } from '../Nav'
-import { Feedback } from './Feedback'
-import { SessionButton } from './SessionButton'
 
-export const ActiveGoalWidget = withBoundary(() => {
+export const ConfirmGoalWidget = withBoundary(() => {
   useWindowHeight(250)
 
   const { state } = useBackendState()
@@ -40,7 +35,12 @@ export const ActiveGoalWidget = withBoundary(() => {
 
     await clearActiveCapture()
 
-    await pauseSession()
+    await setPartialState({
+      session: {
+        ...state.session,
+        pausedAt: new Date().toISOString(),
+      },
+    })
   }
 
   async function onClickResume() {
@@ -48,7 +48,12 @@ export const ActiveGoalWidget = withBoundary(() => {
       return
     }
 
-    await resumeSession()
+    await setPartialState({
+      session: {
+        ...state.session,
+        pausedAt: null,
+      },
+    })
   }
 
   function onClickMainButton() {
@@ -64,16 +69,29 @@ export const ActiveGoalWidget = withBoundary(() => {
       return 0
     }
     // Use startedAt + minsLeft to calculate the time left
-    return 0
-    // const startedAt = new Date(state.session.startedAt)
-    // const minsLeft = state.session
+    const startedAt = new Date(state.session.startedAt)
+    // const minsLeft = state.session.minsLeft
     // const timeLeft = new Date(startedAt.getTime() + minsLeft * 60000)
     // return Math.floor((timeLeft.getTime() - Date.now()) / 60000)
+    return 123
   }, [state?.session?.startedAt])
 
+  function onClickContinue() {
+    const session = state?.session
+    if (!session) {
+      return
+    }
+    setPartialState({
+      session: {
+        ...session,
+        confirmContinue: false,
+      },
+    })
+  }
+
   return (
-    <>
-      <Nav title={isPaused ? `Focus session paused` : `Focus session active`} />
+    <div className="flex flex-col h-full border-2 border-red-500 rounded-[11px]">
+      <Nav title={`Continue previous session?`} />
       <main
         className={twMerge(
           'h-full flex flex-col shadow-inset-bottom',
@@ -95,44 +113,25 @@ export const ActiveGoalWidget = withBoundary(() => {
           // autoFocus={editorFocus}
         />
       </main>
-      <footer className="flex flex-row items-center justify-between p-2 gap-4 select-none">
-        <SessionButton
+      <footer className="flex flex-row items-center  p-2 gap-4 select-none">
+        <Button
           className={twMerge(
-            isPaused
-              ? 'bg-gray-200 text-gray-800 border-gray-300 hover:text-[#004E0C] hover:bg-[#B3EBAA] hover:border-[#33AC46]'
-              : 'bg-[#B2E5FF] border-[#58B4FF] text-blue-700 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300'
+            'border subpixel-antialiased transition-colors group relative px-4 h-[35px] text-[15px] rounded-[5px] bg-[#B3EBAA] border-[#86cd7b] text-[#004E0C]'
           )}
-          icon={isPaused ? null : null}
-          hoverIcon={isPaused ? 'play' : 'pause'}
-          text={isPaused ? 'Paused' : `${ellapsedLabel}`}
-          hoverText={isPaused ? 'Resume' : `Pause`}
-          onClick={onClickMainButton}
-        />
-
-        <AnimatePresence>
-          {isPaused ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.1 }}
-            >
-              <Button
-                className={twMerge(
-                  'px-3.5 h-[28px] rounded-[5px] border bg-pink-50 border-pink-200 text-pink-950'
-                )}
-                // icon={isPaused ? 'play' : 'pause'}
-                onClick={onClickClear}
-              >
-                New goal
-              </Button>
-            </motion.div>
-          ) : (
-            <Feedback />
+          onClick={onClickContinue}
+        >
+          Continue
+        </Button>
+        <Button
+          className={twMerge(
+            'border subpixel-antialiased transition-colors group relative px-4 h-[35px] text-[15px] rounded-[5px] hover:bg-[#B3EBAA] hover:border-[#33AC46]'
           )}
-        </AnimatePresence>
+          onClick={onClickContinue}
+        >
+          New goal
+        </Button>
       </footer>
-    </>
+    </div>
   )
 })
 
@@ -178,14 +177,13 @@ function useActiveGoalContentWithSync() {
 // Returns a label for how long the current goal has been active for, but
 // without re-rendering every second past 60s.
 function useEfficientEllapsedLabel(startedAt: string | undefined) {
-  const { state } = useBackendState()
-  const [now, setNow] = useState(new Date())
+  const [counter, setCounter] = useState(0)
 
   // TODO do this efficiently!!
   useEffect(() => {
     const interval = setInterval(() => {
-      setNow(new Date())
-    }, 1_000)
+      setCounter((c) => c + 1)
+    }, 5000)
     return () => clearInterval(interval)
   }, [])
 
@@ -197,33 +195,10 @@ function useEfficientEllapsedLabel(startedAt: string | undefined) {
     const now = new Date()
     const startTime = new Date(startedAt)
     return now.getTime() - startTime.getTime()
-  }, [startedAt, now])
+  }, [startedAt, counter])
 
   if (durationSoFar === null) {
     return null
-  }
-
-  const session = state?.session
-  if (session) {
-    // if (session.pausedAt) {
-    //   return formatDuration(session.ellapsedBeforePausedMs || 0)
-    // }
-
-    let ellapsedMs = 0
-    if (session.pausedAt) {
-      ellapsedMs = session.ellapsedBeforePausedMs || 0
-    } else {
-      ellapsedMs =
-        (session.ellapsedBeforePausedMs || 0) +
-        (now.getTime() -
-          new Date(session.resumedAt || session.startedAt).getTime())
-    }
-
-    if (ellapsedMs < 120_000) {
-      return `${Math.floor(ellapsedMs / 1000)}s ellapsed`
-    }
-    return `${Math.floor(ellapsedMs / 1000 / 60)}m ellapsed`
-    // return formatDuration(session.goalDurationMs - ellapsedMs)
   }
 
   return formatDuration(durationSoFar)

@@ -40,6 +40,20 @@ export function zoomWindow() {
   window.electronAPI.zoomWindow()
 }
 
+// Session stuff
+
+export async function pauseSession() {
+  return await window.electronAPI.pauseSession()
+}
+
+export async function resumeSession() {
+  return await window.electronAPI.resumeSession()
+}
+
+export async function startSession(goal: string, durationMs: number) {
+  return await window.electronAPI.startSession(goal, durationMs)
+}
+
 // State
 
 export async function clearActiveCapture() {
@@ -84,18 +98,6 @@ export function useBackendState() {
 
 // Goals stuff
 
-export async function startNewGoalSession(value: string, duration: number) {
-  return await window.electronAPI.setPartialState({
-    activeGoal: {
-      content: value,
-      startedAt: new Date().toISOString(),
-      pausedAt: null,
-      endedAt: null,
-      minsLeft: duration,
-    },
-  })
-}
-
 export function useGoalState() {
   const [value, setValue] = useState<GoalSession | null>(null)
   const [loading, setLoading] = useState(false)
@@ -105,7 +107,7 @@ export function useGoalState() {
     const load = async () => {
       setLoading(true)
       const state = await window.electronAPI.getState()
-      setValue(state.activeGoal)
+      setValue(state.session)
       setLoading(false)
     }
     load()
@@ -113,7 +115,7 @@ export function useGoalState() {
 
   const update = useCallback(async (newValue: GoalSession) => {
     setSaving(true)
-    await window.electronAPI.setPartialState({ activeGoal: newValue })
+    await window.electronAPI.setPartialState({ session: newValue })
     setValue(newValue)
     setSaving(false)
   }, [])

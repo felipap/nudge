@@ -7,8 +7,8 @@ import {
   addSavedCapture,
   getActiveGoal,
   getNextCaptureAt,
+  getState,
   hasNoCurrentGoalOrPaused,
-  getOpenAiKey,
   setNextCaptureAt,
   setPartialState,
   store,
@@ -32,14 +32,14 @@ class ScreenCaptureService {
 
   constructor() {
     // Convert minutes to milliseconds
-    this.frequencyMs = (store.getState().captureFrequencySeconds || 60) * 1000
+    this.frequencyMs = (store.getState().captureEverySeconds || 60) * 1000
     if (this.frequencyMs < 5) {
       throw new Error('Frequency is too low')
     }
 
     // Subscribe to frequency changes
     store.subscribe((state) => {
-      this.frequencyMs = (state.captureFrequencySeconds || 60) * 1000
+      this.frequencyMs = (state.captureEverySeconds || 60) * 1000
     })
 
     console.log(
@@ -49,6 +49,20 @@ class ScreenCaptureService {
   }
 
   start(): void {
+    // session.defaultSession.setDisplayMediaRequestHandler(
+    //   (request, callback) => {
+    //     desktopCapturer.getSources({ types: ["screen"] }).then((sources) => {
+    //       // Grant access to the first screen found.
+    //       callback({ video: sources[0], audio: "loopback" })
+    //     })
+    //     // If true, use the system picker if available.
+    //     // Note: this is currently experimental. If the system picker
+    //     // is available, it will be used and the media request handler
+    //     // will not be invoked.
+    //   },
+    //   { useSystemPicker: true }
+    // )
+
     if (this.isRunning) {
       debug('[ScreenCaptureService] Service already running')
       return
@@ -157,7 +171,7 @@ async function captureScreenTaskInner() {
   }
   setPartialState({ isCapturing: false, isAssessing: true })
 
-  const openAiKey = getOpenAiKey()
+  const openAiKey = getState().modelSelection.key
   if (!openAiKey) {
     warn('[ScreenCaptureService] No OpenAI key found')
     return

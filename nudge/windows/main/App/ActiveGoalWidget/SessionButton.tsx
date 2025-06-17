@@ -23,7 +23,7 @@ export function SessionButton({
   return (
     <Button
       className={twMerge(
-        'border subpixel-antialiased transition-colors group relative',
+        'border subpixel-antialiased transition-colors group relative min-w-[90px] h-[28px] rounded-[5px]',
         className
       )}
       onClick={onClick}

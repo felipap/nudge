@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import {
   getGoalFeedback,
-  startNewGoalSession,
+  startSession,
   useBackendState,
 } from '../../../shared/ipc'
 import { useWindowHeight } from '../../../shared/lib'
@@ -44,7 +44,7 @@ export function GoalInputWidget() {
 
   function onClickStart() {
     console.log('start session')
-    startNewGoalSession(value, impliedDuration || 30)
+    startSession(value, (impliedDuration || 30) * 60 * 1000)
     // Let's try to avoid a flash.
     setTimeout(() => {
       setValue(null)

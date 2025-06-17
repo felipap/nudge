@@ -1,10 +1,11 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
-import { setPartialState } from '../windows/shared/ipc'
+import { AvailableModel } from '../windows/shared/available-models'
 import { getGoalFeedback, validateModelKey } from './lib/ai'
 import { screenCaptureService } from './lib/ScreenCaptureService'
-import { getOpenAiKey, setOpenAiKey, store } from './store'
+import { getState, setPartialState, store } from './store'
 import { State } from './store/types'
-import { AvailableModel } from '../windows/shared/available-models'
+import assert from 'assert'
+import { warn } from './lib/logger'
 
 export function setupIPC() {
   ipcMain.handle(
@@ -65,10 +66,6 @@ export function setupIPC() {
     })
   })
 
-  ipcMain.on('setOpenAiKey', (_event, key: string) => {
-    setOpenAiKey(key)
-  })
-
   ipcMain.handle('getState', () => {
     return store.getState()
   })
@@ -76,7 +73,7 @@ export function setupIPC() {
   ipcMain.on('setCaptureFrequency', (_event, frequency: number) => {
     store.setState({
       ...store.getState(),
-      captureFrequencySeconds: frequency,
+      captureEverySeconds: frequency,
     })
   })
 
@@ -100,7 +97,7 @@ export function setupIPC() {
     'getGoalFeedback',
     async (_: Electron.IpcMainInvokeEvent, goal: string) => {
       try {
-        const openAiKey = getOpenAiKey()
+        const openAiKey = getState().modelSelection.key
         if (!openAiKey) {
           throw new Error('No OpenAI key')
         }
@@ -125,7 +122,7 @@ export function setupIPC() {
   ipcMain.handle(
     'validateModelKey',
     async (_event, model: AvailableModel, key: string) => {
-      const openAiKey = getOpenAiKey()
+      const openAiKey = getState().modelSelection.key
       if (!openAiKey) {
         throw new Error('No OpenAI key')
       }
@@ -153,5 +150,83 @@ export function setupIPC() {
 
   ipcMain.handle('openExternal', (_event, url: string) => {
     shell.openExternal(url)
+  })
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  // Session stuff
+
+  ipcMain.handle(
+    'startSession',
+    async (_event, goal: string, durationMs: number) => {
+      const state = getState()
+      if (state.session) {
+        warn('[src/ipc] Session already started')
+        return
+      }
+
+      return await setPartialState({
+        session: {
+          content: goal,
+          contentUpdatedAt: null,
+          startedAt: new Date().toISOString(),
+          endedAt: null,
+          pausedAt: null,
+          resumedAt: null,
+          ellapsedBeforePausedMs: 0,
+          goalDurationMs: durationMs,
+        },
+      })
+    }
+  )
+
+  ipcMain.handle('pauseSession', () => {
+    const session = getState().session
+    if (!session) {
+      return
+    }
+
+    if (session.pausedAt) {
+      warn('[src/ipc] Session already paused')
+      return
+    }
+
+    const lastResumedAt = session.resumedAt || session.startedAt
+    assert(lastResumedAt, '!lastResumedAt')
+
+    const pausedAt = new Date()
+
+    store.setState({
+      ...store.getState(),
+      session: {
+        ...session,
+        pausedAt: pausedAt.toISOString(),
+        ellapsedBeforePausedMs:
+          (session.ellapsedBeforePausedMs || 0) +
+          (pausedAt.getTime() - new Date(lastResumedAt).getTime()),
+      },
+    })
+  })
+
+  ipcMain.handle('resumeSession', () => {
+    const session = getState().session
+    if (!session) {
+      return
+    }
+
+    store.setState({
+      ...store.getState(),
+      session: {
+        ...session,
+        pausedAt: null,
+        resumedAt: new Date().toISOString(),
+      },
+    })
   })
 }

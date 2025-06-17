@@ -7,7 +7,7 @@ export const FrequencyInput = () => {
   useEffect(() => {
     const loadState = async () => {
       const state = await window.electronAPI.getState()
-      setFrequency(state.captureFrequencySeconds)
+      setFrequency(state.captureEverySeconds)
     }
     loadState()
   }, [])
@@ -30,12 +30,13 @@ export const FrequencyInput = () => {
         </Description>
       </LabelStack>
       <input
-        className="mt-1 w-16 rounded-md text-black text-sm px-1.5 h-8 border border-gray-300"
+        className="mt-1 w-[120px] rounded-md text-black text-sm px-1.5 h-8 border border-gray-300"
         type="number"
         id="frequency"
         value={frequency}
         onChange={onChange}
-        min="15"
+        min="60"
+        // prefix="seconds"
         max="300"
       />
     </fieldset>

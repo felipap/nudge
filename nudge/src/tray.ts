@@ -14,11 +14,9 @@ import path from 'path'
 import {
   IndicatorState,
   getNextCaptureAt,
-  getOpenAiKey,
   getState,
   getStateIndicator,
   onIndicatorStateChange,
-  onOpenAiKeyChange,
   store,
 } from './store'
 import { mainWindow, prefWindow } from './windows'
@@ -68,7 +66,7 @@ export function createTray() {
   const tray = new Tray(trayIcon)
 
   function getTrayMenu() {
-    const hasOpenAiKey = !!getOpenAiKey()
+    const hasOpenAiKey = !!getState().modelSelection.key
     const needsConfiguration = !hasOpenAiKey
 
     let template: (MenuItemConstructorOptions | MenuItem | false)[] = []
@@ -202,9 +200,9 @@ export function createTray() {
     // contextMenu.popup()
   })
 
-  onOpenAiKeyChange(() => {
-    updateTrayMenu()
-  })
+  // onOpenAiKeyChange(() => {
+  //   updateTrayMenu()
+  // })
 
   onIndicatorStateChange(() => {
     updateTrayMenu()
