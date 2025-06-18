@@ -57,7 +57,7 @@ export function InputWidget() {
   return (
     <>
       <Nav title="Choose your next goal" />
-      <main className="h-full flex flex-col shadow-inset-bottom bg-[#FAFAFA] overflow-scroll">
+      <main className="h-full flex flex-col shadow-inset-bottom bg-[#FAFAFA] dark:bg-[#333333AA] overflow-scroll">
         <GoalTextarea
           value={value}
           onChange={setValue}

@@ -25,6 +25,7 @@ export function AdvancedTab() {
       >
         <Textarea
           value={customInstructions}
+          placeholder="e.g. Never complain about Spotify or Youtube if I'm listening to music."
           onChange={(e) => setCustomInstructions(e.target.value)}
           rows={4}
         />

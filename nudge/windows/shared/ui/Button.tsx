@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge'
 import { Spinner } from './icons'
 
 const buttonVariants = cva(
-  'border-0 font-medium antialiased cursor-pointer whitespace-nowrap rounded-md inline-flex items-center justify-center transition-all gap-2 disabled:opacity-50 disabled:!cursor-default select-none',
+  'border-0 font-medium antialiased cursor-pointer whitespace-nowrap rounded-md inline-flex items-center justify-center transition-all gap-2 disabled:opacity-50 disabled:!cursor-default select-none ',
   {
     variants: {
       variant: {
@@ -13,7 +13,7 @@ const buttonVariants = cva(
       },
       size: {
         small: 'py-0.5 px-2 text-sm',
-        md: 'py-1.5 px-3.5 text-md',
+        md: 'py-1.5 px-3.5 text-[13px]',
         lg: 'py-2 px-4 text-lg',
       },
       loading: {

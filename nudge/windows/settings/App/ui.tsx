@@ -51,19 +51,35 @@ export function Description({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function LabelStack({ children }: { children: React.ReactNode }) {
-  return <div className="flex flex-col gap-0">{children}</div>
+export function LabelStack({
+  children,
+  className,
+  ...props
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <div className={twMerge('flex flex-col gap-0', className)} {...props}>
+      {children}
+    </div>
+  )
 }
 
 export function Fieldset({
   children,
+  className,
   ...props
 }: {
   children: React.ReactNode
+  className?: string
 }) {
   return (
     <fieldset
-      className="flex flex-row gap-2 items-center justify-between"
+      className={twMerge(
+        'flex flex-row gap-2 items-center justify-between',
+        className
+      )}
       {...props}
     >
       {children}

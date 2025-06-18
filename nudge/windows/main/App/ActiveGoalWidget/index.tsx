@@ -97,7 +97,7 @@ export const ActiveGoalWidget = withBoundary(() => {
           className={twMerge(
             'antialiased',
             isPaused
-              ? 'bg-gray-200 text-gray-800 border-gray-300 hover:text-[#004E0C] hover:bg-[#B3EBAA] hover:border-[#33AC46]'
+              ? 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-500 hover:text-[#004E0C] hover:bg-[#B3EBAA] hover:border-[#33AC46]'
               : isNearlyOver
               ? 'bg-[#fff4ef] border-[#e8a34e] text-red-700 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300'
               : isOvertime
@@ -121,7 +121,7 @@ export const ActiveGoalWidget = withBoundary(() => {
             >
               <Button
                 className={twMerge(
-                  'px-3.5 h-[28px] rounded-[5px] border bg-pink-50 border-pink-200 text-pink-950'
+                  'px-3.5 h-[28px] rounded-[5px] border bg-pink-50 border-pink-200 dark:border-pink-700 dark:bg-pink-900 dark:text-pink-100 text-pink-950'
                 )}
                 // icon={isPaused ? 'play' : 'pause'}
                 onClick={onClickClear}

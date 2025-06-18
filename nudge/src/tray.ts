@@ -23,11 +23,14 @@ import { mainWindow, prefWindow } from './windows'
 
 dayjs.extend(relativeTime)
 
-function getTrayIconForStatus(status: IndicatorState) {
+export function getImagePath(name: string) {
   const base = app.isPackaged
     ? path.join(process.resourcesPath, 'images')
     : path.join(__dirname, '../../images')
+  return path.join(base, name)
+}
 
+function getTrayIconForStatus(status: IndicatorState) {
   const suffix = nativeTheme.shouldUseDarkColors ? '-white' : ''
   // console.log(
   //   'nativeTheme.shouldUseDarkColors',
@@ -35,15 +38,14 @@ function getTrayIconForStatus(status: IndicatorState) {
   // )
 
   // return path.join(base, `nudge-capturingTemplate.png`)
-
   if (status === 'capturing') {
-    return path.join(base, `nudge-capturing${suffix}.png`)
+    return getImagePath(`nudge-capturing${suffix}.png`)
   } else if (status === 'assessing') {
-    return path.join(base, `nudge-assessing${suffix}.png`)
+    return getImagePath(`nudge-assessing${suffix}.png`)
   } else if (status === 'inactive') {
-    return path.join(base, `nudge-inactive${suffix}.png`)
+    return getImagePath(`nudge-inactive${suffix}.png`)
   } else {
-    return path.join(base, `nudge-defaultTemplate.png`)
+    return getImagePath(`nudge-defaultTemplate.png`)
   }
 }
 

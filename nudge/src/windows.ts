@@ -1,6 +1,7 @@
 import { app, BrowserWindow, screen } from 'electron'
 import path from 'node:path'
 import { getState, store } from './store'
+import { getImagePath } from './tray'
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
 declare const MAIN_WINDOW_VITE_NAME: string
@@ -27,7 +28,7 @@ export function createMainWindow() {
     frame: false,
     transparent: true,
     vibrancy: 'fullscreen-ui',
-    // show: false,
+    show: false,
     // alwaysOnTop: true,
     x:
       primaryDisplay.workArea.x +
@@ -42,7 +43,7 @@ export function createMainWindow() {
     },
   })
 
-  app.dock.setIcon(path.join(__dirname, '../../images', 'nudge-icon.png'))
+  app.dock.setIcon(getImagePath('icon.png'))
   // app.dock.
 
   let lastPinnedState = getState().isWindowPinned
@@ -91,8 +92,8 @@ export function createSettingsWindow() {
   const windowHeight = 500
 
   const win = new BrowserWindow({
-    show: true,
-    alwaysOnTop: true,
+    show: false,
+    // alwaysOnTop: true,
     width: windowWidth,
     height: windowHeight,
     minHeight: windowHeight,

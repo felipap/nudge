@@ -11,7 +11,12 @@ interface Props {
 
 export function Nav({ title, showPin = false }: Props) {
   return (
-    <nav className="flex flex-row h-[40px] items-center border-b border-gray-100 shrink-0">
+    <nav
+      className={twMerge(
+        'flex flex-row h-[40px] items-center shrink-0',
+        'border-b border-gray-100 dark:border-gray-800'
+      )}
+    >
       <div className="[app-region:drag] self-stretch flex-1 px-3 flex items-center flex-row select-none">
         <div className="flex flex-row items-center gap-3">
           <LogoIconCompleted width={18} height={18} />
@@ -25,7 +30,7 @@ export function Nav({ title, showPin = false }: Props) {
 
         <WindowControlCircle
           onClick={() => window.electronAPI.closeWindow()}
-          className="hover:bg-[#ff5f56] bg-[#EEE] w-[14px] h-[14px]"
+          className="hover:bg-[#ff5f56] bg-[#EEE] dark:bg-gray-500 w-[14px] h-[14px]"
           label="Close"
           icon={
             <CloseSVG className="w-[9px] h-[9px] text-black/70 dark:text-white/80" />

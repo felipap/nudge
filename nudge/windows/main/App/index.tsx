@@ -17,5 +17,9 @@ export default function App() {
     inner = <InputWidget />
   }
 
-  return <div className="flex flex-col h-screen">{inner}</div>
+  return (
+    <div className="flex flex-col h-screen bg-white dark:bg-gray-900/50">
+      {inner}
+    </div>
+  )
 }

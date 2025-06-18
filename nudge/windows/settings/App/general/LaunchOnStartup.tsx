@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Checkbox } from '../../../shared/ui/native/Checkbox'
 import { Description, Fieldset, Label, LabelStack } from '../ui'
 
 export function LaunchOnStartup() {
@@ -15,18 +16,20 @@ export function LaunchOnStartup() {
   }
 
   return (
-    <Fieldset>
-      <LabelStack>
-        <Label>Launch on startup</Label>
-        <Description>Automatically start Nudge when you log in.</Description>
-      </LabelStack>
-      <input
-        className="mt-1 w-4 h-4"
-        type="checkbox"
-        id="auto-launch"
-        checked={autoLaunch}
-        onChange={handleAutoLaunchChange}
-      />
+    <Fieldset className="justify-cesnter ml-6 flex">
+      <div className="flex flex-row gap-2 items-start justify-start">
+        <Checkbox
+          id="auto-launch"
+          className="mt-1"
+          // label="Launch on startup"
+          checked={autoLaunch}
+          onChange={handleAutoLaunchChange}
+        />
+        <LabelStack htmlFor="auto-launch  ">
+          <Label>Launch on startup</Label>
+          <Description>Automatically start Nudge when you log in.</Description>
+        </LabelStack>
+      </div>
     </Fieldset>
   )
 }

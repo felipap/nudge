@@ -46,17 +46,18 @@ export const Feedback = withBoundary(() => {
     inner = (
       <>
         Doing great
-        <FaHandPeace className="h-3 w-3 text-green-800" />
+        <FaHandPeace className="h-3 w-3 text-green-800 dark:text-green-300" />
       </>
     )
-    className = 'text-green-800'
+    className = 'text-green-800 dark:text-green-300'
   } else {
     inner = (
       <>
-        Try to concentrate <FaSkull className="h-3 w-3 text-red-800" />
+        Try to concentrate{' '}
+        <FaSkull className="h-3 w-3 text-red-800 dark:text-red-300" />
       </>
     )
-    className = 'text-red-800'
+    className = 'text-red-800 dark:text-red-300'
   }
 
   return (
