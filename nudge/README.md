@@ -6,13 +6,16 @@ AI that watches your computer screen and tells you when you're procrastinating.
 
 - [ ] Fix window still resizable.
 - [ ] Fix framer-motion causing 504 issues with Vite.
-- [ ] Allow users to modify screenshot frequency.
-- [ ] Let users introspect logs.
 - [ ] Come up with an icon for release.
-- [ ] After restart past session goal, ask user what they want to do.
+- [x] Allow users to modify screenshot frequency.
 - [x] Show how long goal has been active for.
 - [x] Issue: can't close the window.
 - [x] Use natural language to set goal duration.
+
+### Later
+
+- [ ] Let users introspect logs.
+- [ ] After restart past session goal, ask user what they want to do.
 
 ## Stack
 

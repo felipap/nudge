@@ -1,11 +1,15 @@
-# compass
+# nudge
 
-Intelligent tools for productivity.
+An AI that watches your computer and prevents distractions. 👉
 
+<!-- Intelligent tools for productivity. -->
+
+<!--
 ## todos
 
 A simple to-do app with MCP support. 📝
+-->
 
-## nudge
+<!-- ## nudge
 
-An AI that watches your computer and prevents distractions. 👉
+An AI that watches your computer and prevents distractions. 👉 -->

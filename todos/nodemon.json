@@ -1,5 +1,0 @@
-{
-  "watch": ["src/**/*.ts", "window/**/*.ts"],
-  "ext": "ts",
-  "exec": "tsc && electron ."
-}
