@@ -19,7 +19,7 @@ export default defineConfig({
       // Ensure these dependencies are bundled, not externalized
       external: [
         // '@tanstack/react-router',
-        // 'framer-motion',
+        'framer-motion',
       ],
     },
   },
