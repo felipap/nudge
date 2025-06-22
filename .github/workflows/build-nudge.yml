@@ -14,6 +14,11 @@ on:
 jobs:
   build:
     runs-on: macos-latest
+    env:
+      CSC_IDENTITY: ${{ secrets.MACOS_CERTIFICATE_ID }}
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
     steps:
       - name: Checkout code
@@ -38,6 +43,13 @@ jobs:
           echo "Not a release tag, exiting early"
           exit 0
 
+      - name: Import code signing certificate
+        if: startsWith(github.ref, 'refs/tags/nudge-v')
+        uses: apple-actions/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.CERTIFICATE_P12 }}
+          p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -54,12 +66,31 @@ jobs:
         working-directory: ./nudge
         run: pnpm run make
 
-      - name: Upload DMG artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Nudge-macOS-arm64
-          path: nudge/out/make/**/*.dmg
-          if-no-files-found: warn
+      - name: List Electron output
+        run: ls -R ./nudge/out/make
+
+      # - name: Notarize .app
+      #   run: |
+      #     xcrun notarytool submit ./nudge/out/make/Nudge-1.0.0-arm64.dmg \
+      #       --apple-id "$APPLE_ID" \
+      #       --team-id "$APPLE_TEAM_ID" \
+      #       --password "$APPLE_ID_PASSWORD" \
+      #       --wait
+      #   env:
+      #     APPLE_ID: ${{ secrets.APPLE_ID }}
+      #     APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+      #     APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+      # - name: Upload DMG artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: Nudge-macOS-arm64
+      #     path: nudge/out/make/**/*.dmg
+      #     if-no-files-found: warn
+
+      # - name: Staple notarization ticket to .dmg
+      #   run: |
+      #     xcrun stapler staple ./nudge/out/make/Nudge-1.0.0-arm64.dmg
 
       - name: Upload ZIP artifact (fallback)
         uses: actions/upload-artifact@v4

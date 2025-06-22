@@ -20,6 +20,7 @@ import {
   store,
 } from './store'
 import { mainWindow, prefWindow } from './windows'
+import { screenCaptureService } from './lib/ScreenCaptureService'
 
 dayjs.extend(relativeTime)
 
@@ -101,7 +102,8 @@ export function createTray() {
         {
           label: captureStatus,
           click: () => {
-            ipcMain.emit('captureNow', null)
+            screenCaptureService.captureNow()
+            // ipcMain.emit('captureNow', null)
             updateTrayMenu()
           },
         },

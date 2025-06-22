@@ -1,15 +1,50 @@
+import 'dotenv/config'
+
 import { MakerDMG } from '@electron-forge/maker-dmg'
 import { MakerZIP } from '@electron-forge/maker-zip'
 import { VitePlugin } from '@electron-forge/plugin-vite'
 import type { ForgeConfig } from '@electron-forge/shared-types'
 
-const config: ForgeConfig = {
-  packagerConfig: {
-    appBundleId: 'engineering.pi.nudge',
-    asar: true,
-    icon: 'images/MyIcon.icns',
-    extraResource: ['images'],
+const packagerConfig: ForgeConfig['packagerConfig'] = {
+  appBundleId: 'engineering.pi.nudge',
+  asar: true,
+  icon: 'images/MyIcon.icns',
+  extraResource: ['images'],
+  // Code signing configuration
+  osxSign: {
+    identity: process.env.CSC_IDENTITY || process.env.APPLE_IDENTITY,
   },
+  osxNotarize: process.env.APPLE_ID
+    ? {
+        appleId: process.env.APPLE_ID,
+        appleIdPassword: process.env.APPLE_ID_PASSWORD,
+        teamId: process.env.APPLE_TEAM_ID,
+      }
+    : undefined,
+}
+
+if (packagerConfig.osxNotarize) {
+  console.log('process.env.APPLE_TEAM_ID', process.env.APPLE_TEAM_ID)
+
+  if (!process.env.APPLE_ID) {
+    throw new Error('APPLE_ID is not set')
+  }
+  if (!process.env.APPLE_ID_PASSWORD) {
+    throw new Error('APPLE_ID_PASSWORD is not set')
+  }
+  if (!process.env.APPLE_TEAM_ID) {
+    throw new Error('APPLE_TEAM_ID is not set')
+  }
+
+  packagerConfig.osxNotarize = {
+    appleId: process.env.APPLE_ID,
+    appleIdPassword: process.env.APPLE_ID_PASSWORD,
+    teamId: process.env.APPLE_TEAM_ID,
+  }
+}
+
+const config: ForgeConfig = {
+  packagerConfig,
   rebuildConfig: {},
   makers: [
     // new MakerSquirrel({}),
@@ -17,7 +52,7 @@ const config: ForgeConfig = {
     process.env.GITHUB_ACTIONS ? new MakerDMG({}, ['darwin']) : null,
     // new MakerRpm({}),
     // new MakerDeb({}),
-  ],
+  ].filter(Boolean),
   plugins: [
     new VitePlugin({
       // `build` can specify multiple entry builds, which can be Main process,
