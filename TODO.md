@@ -44,3 +44,7 @@
 - [ ] Let users introspect captures and understand what's wrong.
 - [ ] After restart past session goal, ask user what they want to do.
 - [ ] iPhone app.
+
+### Good READMEs
+
+https://github.com/ghostty-org/ghostty

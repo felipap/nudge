@@ -23,6 +23,8 @@ import {
 } from './store'
 import { mainWindow, prefWindow } from './windows'
 
+//
+
 dayjs.extend(relativeTime)
 
 export function getImagePath(name: string) {
