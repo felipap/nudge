@@ -59,8 +59,9 @@ jobs:
         working-directory: ./nudge
         run: pnpm run make
 
-      - name: List Electron output
-        run: ls -R ./nudge/out/make
+      ## For debugging
+      # - name: List Electron output
+      #   run: ls -R ./nudge/out/make
 
       - name: Upload ZIP artifact (fallback)
         uses: actions/upload-artifact@v4
