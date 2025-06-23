@@ -7,6 +7,8 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
+TODO.md
+
 # removing todos for now
 todos
 

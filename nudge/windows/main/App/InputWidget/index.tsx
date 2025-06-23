@@ -56,7 +56,7 @@ export function InputWidget() {
 
   return (
     <>
-      <Nav title="Choose your next goal" />
+      <Nav title="What do you want to do next?" />
       <main className="h-full flex flex-col shadow-inset-bottom bg-[#FAFAFA] dark:bg-[#333333AA] overflow-scroll">
         <GoalTextarea
           value={value}
@@ -99,7 +99,7 @@ function StartSessionButton({
   let text = 'Start focus session'
   if (disableReason) {
     if (disableReason === 'empty') {
-      text = 'Write down a goal'
+      text = 'Describe an activity and a duration'
     } else if (disableReason === 'too-short') {
       text = 'Write a bit more'
     }

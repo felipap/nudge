@@ -9,27 +9,12 @@ An AI that watches your computer and prevents distractions. 👉
 
 [Download the latest release](https://github.com/felipap/nudge/releases/latest)
 
-## Installation
-
-1. Download the DMG file
-2. Open it and drag Nudge to Applications
-3. Launch Nudge from Applications
-4. Grant screen recording permissions when prompted
-
 ## Usage
 
 - Set a focus goal in natural language ("work on my presentation for 2 hours")
 - Nudge monitors your screen activity and detects when you're getting distracted
 - Get AI-powered tips to help you refocus
 - Pause/resume sessions as needed
-
-## Features
-
-- AI-powered distraction detection
-- Natural language goal setting
-- Customizable monitoring frequency
-- Menu bar integration
-- OpenAI GPT-4 integration
 
 ## Requirements
 

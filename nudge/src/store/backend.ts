@@ -3,6 +3,7 @@ import Store from 'electron-store'
 import { DEFAULT_STATE, State } from './types'
 
 // You'll find this in the root project folder as data-backup.json
+// Will be stored in ~/Library/Application Support/Nudge/data.json
 export const fileStore = new Store<State>({
   name: 'data',
   defaults: DEFAULT_STATE,

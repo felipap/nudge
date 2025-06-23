@@ -1,3 +1,5 @@
+// This file is a huge mess.
+
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import {
@@ -6,11 +8,11 @@ import {
   MenuItemConstructorOptions,
   Tray,
   app,
-  ipcMain,
   nativeImage,
   nativeTheme,
 } from 'electron'
 import path from 'path'
+import { screenCaptureService } from './lib/ScreenCaptureService'
 import {
   IndicatorState,
   getNextCaptureAt,
@@ -20,7 +22,6 @@ import {
   store,
 } from './store'
 import { mainWindow, prefWindow } from './windows'
-import { screenCaptureService } from './lib/ScreenCaptureService'
 
 dayjs.extend(relativeTime)
 
@@ -46,7 +47,7 @@ function getTrayIconForStatus(status: IndicatorState) {
   } else if (status === 'inactive') {
     return getImagePath(`nudge-inactive${suffix}.png`)
   } else {
-    return getImagePath(`nudge-defaultTemplate.png`)
+    return getImagePath(`nudge-default.png`)
   }
 }
 
@@ -68,7 +69,7 @@ export function createTray() {
 
   const tray = new Tray(trayIcon)
 
-  function getTrayMenu() {
+  function buildTrayMenu() {
     const hasOpenAiKey = !!getState().modelSelection.key
     const needsConfiguration = !hasOpenAiKey
 
@@ -85,28 +86,35 @@ export function createTray() {
       const captureFromNow = nextCaptureAt
         ? new Date(nextCaptureAt).getTime() - Date.now()
         : null
-      const captureStatus =
-        captureFromNow === null
-          ? 'Not capturing'
-          : captureFromNow < 30_000
-          ? 'Captured (stuck?)'
-          : captureFromNow < 10_000
-          ? 'Captured just now'
-          : captureFromNow < 0
-          ? 'Capturing'
-          : captureFromNow < 60_000
-          ? `Capturing in ${Math.floor(captureFromNow / 1000)}s`
-          : 'Capturing in ' + dayjs(nextCaptureAt).fromNow()
 
-      template = template.concat([
-        {
+      // 🟢
+      // If there's an active session, show button to capture now.
+      const activeSession = getState().session
+      if (activeSession) {
+        const captureStatus =
+          captureFromNow === null
+            ? 'Not capturing'
+            : captureFromNow < 30_000
+            ? 'Captured (stuck?)'
+            : captureFromNow < 10_000
+            ? 'Captured just now'
+            : captureFromNow < 0
+            ? 'Capturing'
+            : captureFromNow < 60_000
+            ? `Checking in ${Math.floor(captureFromNow / 1000)}s`
+            : 'Checking in ' + dayjs(nextCaptureAt).fromNow()
+
+        template.push({
           label: captureStatus,
           click: () => {
             screenCaptureService.captureNow()
             // ipcMain.emit('captureNow', null)
             updateTrayMenu()
           },
-        },
+        })
+      }
+
+      template = template.concat([
         {
           label: `${mainWindow.isVisible() ? 'Hide' : 'Show'} window`,
           click: () => {
@@ -124,6 +132,12 @@ export function createTray() {
           type: 'checkbox',
           checked: getState().isWindowPinned,
           click: () => {
+            // If window isn't visible, show it.
+            const isPinned = getState().isWindowPinned
+            if (!isPinned && !mainWindow.isVisible()) {
+              mainWindow.show()
+            }
+
             store.setState({
               ...getState(),
               isWindowPinned: !getState().isWindowPinned,
@@ -157,7 +171,8 @@ export function createTray() {
   }
 
   function updateTrayMenu() {
-    Menu.buildFromTemplate(getTrayMenu())
+    const contextMenu = Menu.buildFromTemplate(buildTrayMenu())
+    tray.setContextMenu(contextMenu)
 
     const status = getStateIndicator()
     const iconPath = getTrayIconForStatus(status)
@@ -186,23 +201,17 @@ export function createTray() {
     updateTrayMenu()
   })
 
-  tray.on('click', () => {
-    if (mainWindow.isVisible() && !getState().isWindowPinned) {
-      mainWindow.hide()
-    } else {
-      mainWindow.show()
-    }
-  })
+  // tray.on('click', () => {})
 
-  let lastTrayIconBounds: Electron.Rectangle | null = null
+  const lastTrayIconBounds: Electron.Rectangle | null = null
 
-  tray.on('right-click', (event, bounds) => {
-    const contextMenu = Menu.buildFromTemplate(getTrayMenu())
-    tray.popUpContextMenu(contextMenu)
-    lastTrayIconBounds = bounds
+  // tray.on('right-click', (event, bounds) => {
+  //   const contextMenu = Menu.buildFromTemplate(getTrayMenu())
+  //   tray.popUpContextMenu(contextMenu)
+  //   lastTrayIconBounds = bounds
 
-    // contextMenu.popup()
-  })
+  //   // contextMenu.popup()
+  // })
 
   // onOpenAiKeyChange(() => {
   //   updateTrayMenu()
