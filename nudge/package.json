@@ -9,7 +9,7 @@
     "dev": "nodemon --exec \"npm run start\"",
     "package": "electron-forge package",
     "ts-check": "tsc --noEmit",
-    "make": "electron-forge make --arch=arm64",
+    "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
@@ -58,7 +58,6 @@
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@electron-forge/maker-dmg": "^7.8.1",
-    "@electron/osx-sign": "^1.3.3",
     "@modelcontextprotocol/sdk": "^1.12.1",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.0.12",

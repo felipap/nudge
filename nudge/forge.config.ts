@@ -5,6 +5,8 @@ import { MakerZIP } from '@electron-forge/maker-zip'
 import { VitePlugin } from '@electron-forge/plugin-vite'
 import type { ForgeConfig } from '@electron-forge/shared-types'
 
+const IS_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS === 'true'
+
 const packagerConfig: ForgeConfig['packagerConfig'] = {
   appBundleId: 'engineering.pi.nudge',
   asar: true,
@@ -14,16 +16,9 @@ const packagerConfig: ForgeConfig['packagerConfig'] = {
   osxSign: {
     identity: process.env.CSC_IDENTITY || process.env.APPLE_IDENTITY,
   },
-  osxNotarize: process.env.APPLE_ID
-    ? {
-        appleId: process.env.APPLE_ID,
-        appleIdPassword: process.env.APPLE_ID_PASSWORD,
-        teamId: process.env.APPLE_TEAM_ID,
-      }
-    : undefined,
 }
 
-if (packagerConfig.osxNotarize) {
+if (IS_GITHUB_ACTIONS) {
   console.log('process.env.APPLE_TEAM_ID', process.env.APPLE_TEAM_ID)
 
   if (!process.env.APPLE_ID) {
@@ -49,7 +44,7 @@ const config: ForgeConfig = {
   makers: [
     // new MakerSquirrel({}),
     new MakerZIP({}, ['darwin']),
-    process.env.GITHUB_ACTIONS ? new MakerDMG({}, ['darwin']) : null,
+    IS_GITHUB_ACTIONS ? new MakerDMG({}, ['darwin']) : null,
     // new MakerRpm({}),
     // new MakerDeb({}),
   ].filter(Boolean),
