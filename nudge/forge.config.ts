@@ -8,9 +8,13 @@ import type { ForgeConfig } from '@electron-forge/shared-types'
 const IS_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS === 'true'
 
 const packagerConfig: ForgeConfig['packagerConfig'] = {
-  appBundleId: 'engineering.pi.nudge',
+  appBundleId:
+    'engineering.pi.nudge' +
+    (process.env.NODE_ENV === 'production' ? '' : '-dev'),
   asar: true,
-  icon: 'images/MyIcon.icns',
+  icon: IS_GITHUB_ACTIONS
+    ? 'images/Production.icns'
+    : 'images/Development.icns',
   extraResource: ['images'],
   // Code signing configuration
   osxSign: {

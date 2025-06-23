@@ -43,8 +43,11 @@ export function createMainWindow() {
     },
   })
 
-  app.dock.setIcon(getImagePath('icon.png'))
-  // app.dock.
+  // By default in development, the icon is the Electron icon. So we override
+  // it.
+  if (!app.isPackaged) {
+    app.dock.setIcon(getImagePath('icon-development.png'))
+  }
 
   let lastPinnedState = getState().isWindowPinned
   store.subscribe((state) => {
