@@ -39,7 +39,7 @@ I don't see the point of these...
 
 See the [releases page](https://github.com/felipap/nudge/releases/latest) to find the latest DMGs.
 
-## Frequently Asked Questions
+## FAQ
 
 ### How does it work?
 
