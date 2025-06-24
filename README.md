@@ -10,15 +10,23 @@ The AI companion that nudges you into flow.
   ·
   <a href="#download">Download</a>
   ·
+  <a href="#demo">Demo</a>
+  ·
   <a href="#faq">FAQ</a>
 </p>
 </p>
 
 ## About
 
-Nudge is an app for macOS that watches your screen and helps you stay in flow. Describe an activity and a duration ("I want to vibe code for an hour") and Nudge will notify you when it looks like you're doing something else. You will need an **OpenAI API key** to use Nudge today.
+Nudge is an app for macOS that watches your screen and helps you stay in flow. Describe an activity and a duration ("I want to vibe code for an hour") and Nudge will notify you when it looks like you're doing something else.
 
-See Nudge in action:
+<p>
+<img src="https://github.com/user-attachments/assets/3576fb54-8225-40eb-9bc5-01172c40474e" width="500" />
+</p>
+
+You will need an **OpenAI API key** to use Nudge today.
+
+## Demo
 
 https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 
@@ -46,7 +54,7 @@ See the [releases page](https://github.com/felipap/nudge/releases/latest) to fin
 </details>
 <details>
   <summary>
-    Can I use a different model instead?
+    Can I use a model instead of GPT-4o?
   </summary>
   <p>
     Not today but I will ship this if enough users ask for it. [File an issue.](https://github.com/felipap/nudge/issues/new)
