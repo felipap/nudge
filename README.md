@@ -3,7 +3,7 @@
 
 # Nudge
 
-AI that lives on your computer and complains when you're procrastinating.
+The AI companion that nudges you into flow.
 
 <p align="left">
   <a href="#about">About</a>
@@ -14,26 +14,13 @@ AI that lives on your computer and complains when you're procrastinating.
 </p>
 </p>
 
-
 ## About
 
-Nudge watches your computer screen to help you stay in flow. Feed it an activity ("I want to vibe code for an hour"), and Nudge will alert when it looks like you're doing something else.
+Nudge is an app for macOS that watches your screen and helps you stay in flow. Describe an activity and a duration ("I want to vibe code for an hour") and Nudge will notify you when it looks like you're doing something else. You will need an **OpenAI API key** to use Nudge today.
 
-<p>
-<img src="https://github.com/user-attachments/assets/3576fb54-8225-40eb-9bc5-01172c40474e" width="500" />
-</p>
+Here's a demo:
 
-
-> [!NOTE]
->
-> **OpenAI API key** required. Will add Gemini and Claude if [enough users ask for it](https://github.com/felipap/nudge/issues).
-
-<!--
-I don't see the point of these...
-
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/felipap/compass/build-nudge.yml)](https://github.com/felipap/compass/actions)
--->
+https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 
 ## Download
 
@@ -41,17 +28,36 @@ See the [releases page](https://github.com/felipap/nudge/releases/latest) to fin
 
 ## FAQ
 
-### How does it work?
+<details>
+  <summary>
+    How does it work?
+  </summary>
+  <p>
+    Nudge takes a picture of your screen every few seconds, then asks GPT-4o if it looks like you're engaged in the activity you chose for yourself. If not, Nudge sends you a notification.
+    The default frequency of capture is one minute, but you can modify this in the app settings.</p>
+</details>
+<details>
+  <summary>
+    What data does Nudge collect?
+  </summary>
+  <p>
+    Nudge has no external servers today. All the screenshots are exchanged directly between your computer and OpenAI's servers. Nudge does not retain screenshots inside of your computer either.
+  </p>
+</details>
 
-Nudge captures your screen on a schedule and asks AI (today GPT-4o) if you are doing the activity you set for yourself.
+<details>
+  <summary>
+    Can I use a different model instead?
+  </summary>
+  <p>
+    Not today, but I will ship this if enough users ask for it.
+  </p>
+</details>
 
-### Does Nudge track my computer data?
+## Development
 
-No. Nudge sends your screen captures directly to OpenAI and does not export any data. (There are no servers today.)
-
-### Can I use a different model instead?
-
-I will ship this if people ask for it.
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/felipap/compass/build-nudge.yml)](https://github.com/felipap/compass/actions)
 
 ## License
 
