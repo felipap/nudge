@@ -21,18 +21,18 @@ The AI companion that nudges you into flow.
 Nudge is an app for macOS that watches your screen and helps you stay in flow. Describe an activity and a duration ("I want to vibe code for an hour") and Nudge will notify you when it looks like you're doing something else.
 
 <p>
-<img src="https://github.com/user-attachments/assets/3576fb54-8225-40eb-9bc5-01172c40474e" width="500" />
+<img src="https://github.com/user-attachments/assets/ca091ed8-d4c7-4e53-9570-6db4f4b34f6a" width="500" />
 </p>
 
-You will need an **OpenAI API key** to use Nudge today.
-
-## Demo
-
-https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
+You will need an **OpenAI API key** to use Nudge.
 
 ## Download
 
 See the [releases page](https://github.com/felipap/nudge/releases/latest) to find the latest DMGs.
+
+## Demo
+
+https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 
 ## FAQ
 
