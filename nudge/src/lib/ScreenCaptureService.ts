@@ -157,7 +157,7 @@ async function captureScreenTaskInner() {
   }
 
   // Start checking goals 1 minute after start.
-  // if (dayjs().isBefore(dayjs(goal.startedAt).add(1, 'minute'))) {
+  // if (dayjs().isBefore(dayjs(goal.startedAt).add(20, 'seconds'))) {
   //   debug('[ScreenCaptureService] Skipping goal check because too soon')
   //   return
   // }

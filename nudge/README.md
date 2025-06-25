@@ -1,33 +1,27 @@
-# Nudge
+# Technical Notes
 
-AI that watches your computer screen and tells you when you're procrastinating.
+Nudge takes a screenshot of your screen every 60 seconds (configurable) and
+sends it to OpenAI to ask whether it looks like you're doing what you said you
+wanted to do.
 
 ## Stack
 
 - Electron
 - Vite
+- Framer Motion
 - Tailwind v4
 - OpenAI
 
-~~Screenshots are stored in `~/nudge-data/screenshots` and are captured every 5
-minutes by default.~~
-
-## Development
+## Getting started
 
 You know the drill:
 
 ```bash
 pnpm install
-pnpm run dev
+pnpm dev
 ```
 
-### Project Structure
-
-- `src/background/` - Screenshot capture service
-- `src/preferences/` - App configuration
-- `window/` - UI components
-
-### To generate the icon
+### Generating icons
 
 Use this:
 
@@ -70,6 +64,4 @@ sips -z 1024 1024 images/icon-development.png --out images/Development.iconset/i
 iconutil -c icns images/Development.iconset
 ```
 
-## License
-
-MIT
+Ø

@@ -43,11 +43,11 @@ function getTrayIconForStatus(status: IndicatorState) {
 
   // return path.join(base, `nudge-capturingTemplate.png`)
   if (status === 'capturing') {
-    return getImagePath(`nudge-capturing${suffix}.png`)
+    return getImagePath(`nudge-capturing.png`)
   } else if (status === 'assessing') {
-    return getImagePath(`nudge-assessing${suffix}.png`)
+    return getImagePath(`nudge-assessing.png`)
   } else if (status === 'inactive') {
-    return getImagePath(`nudge-inactive${suffix}.png`)
+    return getImagePath(`nudge-inactive.png`)
   } else {
     return getImagePath(`nudge-default.png`)
   }
@@ -93,18 +93,19 @@ export function createTray() {
       // If there's an active session, show button to capture now.
       const activeSession = getState().session
       if (activeSession) {
+        console.log('captureFromNow', captureFromNow)
         const captureStatus =
           captureFromNow === null
-            ? 'Not capturing'
-            : captureFromNow < 30_000
-            ? 'Captured (stuck?)'
-            : captureFromNow < 10_000
-            ? 'Captured just now'
+            ? 'Status: not capturing'
+            : captureFromNow < -30_000
+            ? 'Status: captured (stuck?)'
+            : captureFromNow < -10_000
+            ? 'Status: captured just now'
             : captureFromNow < 0
-            ? 'Capturing'
+            ? 'Status: capturing'
             : captureFromNow < 60_000
-            ? `Checking in ${Math.floor(captureFromNow / 1000)}s`
-            : 'Checking in ' + dayjs(nextCaptureAt).fromNow()
+            ? `Capturing in ${Math.floor(captureFromNow / 1000)}s`
+            : 'Capturing in ' + dayjs(nextCaptureAt).fromNow()
 
         template.push({
           label: captureStatus,
@@ -230,12 +231,14 @@ export function createTray() {
   // Update every 2 seconds.
   setInterval(() => {
     updateTrayMenu()
-  }, 2000)
+  }, 2_000)
 
   // Optional: Show window when clicking the tray icon
-  // tray.on("click", () => {
-  //   win.isVisible() ? win.hide() : win.show()
-  // })
+  tray.on('click', () => {
+    if (!mainWindow.isVisible()) {
+      mainWindow.show()
+    }
+  })
 
   // Refresh the menu every minute to show updated status
   // setInterval(updateTrayMenu, 60000)

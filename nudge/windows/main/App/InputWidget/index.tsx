@@ -14,6 +14,8 @@ import { GoalTextarea } from '../GoalTextarea'
 import { Nav } from '../Nav'
 import { GoalFeedback } from './GoalFeedback'
 
+const MIN_GOAL_LENGTH = 25
+
 function onStoppedTypingForMs(
   value: string,
   ms: number,
@@ -29,7 +31,7 @@ function onStoppedTypingForMs(
 }
 
 export function InputWidget() {
-  useWindowHeight(290)
+  useWindowHeight(250)
 
   // form state
   const [value, setValue] = useGoalInputStateWithBackendBackup()
@@ -37,7 +39,7 @@ export function InputWidget() {
   // loading feedback
   const { feedback, impliedDuration, isLoadingDuration } = useEvolvingFeedback(
     value,
-    value.trim().length < 30
+    value.trim().length < MIN_GOAL_LENGTH
   )
 
   //
@@ -52,7 +54,7 @@ export function InputWidget() {
   }
 
   const hasEmptyGoal = value.trim().length < 10
-  const hasLongEnoughGoal = value.trim().length > 30
+  const hasLongEnoughGoal = value.trim().length > MIN_GOAL_LENGTH
 
   return (
     <>
@@ -75,7 +77,7 @@ export function InputWidget() {
           disableReason={
             hasLongEnoughGoal ? undefined : hasEmptyGoal ? 'empty' : 'too-short'
           }
-          durationMinutes={impliedDuration || 30}
+          durationMinutes={impliedDuration}
           onClick={onClickStart}
         />
       </footer>

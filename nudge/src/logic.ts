@@ -45,6 +45,10 @@ export function onAppStart() {
 async function loop() {
   console.log('loop')
 
+  // setPartialState({
+  //   isCapturing: true,
+  // })
+
   const session = getState().session
   if (!session) {
     console.debug('[loop] no active goal')
@@ -60,6 +64,7 @@ async function loop() {
 }
 
 export function onAppClose() {
+  console.log('onAppClose')
   if (timeout) {
     clearTimeout(timeout)
   }

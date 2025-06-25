@@ -1,17 +1,24 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
+import { State } from '../../../../src/store'
 import { useBackendState } from '../../../shared/ipc'
 import { FaHandPeace, FaSkull } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 
 const ONE_MINUTE = 1 * 60 * 1_000
 
-// Would prefer to call it Feedback but don't want to conflict with the goal
-// feedback component.
-export const Feedback = withBoundary(() => {
-  const { state } = useBackendState()
-  useUpdateEvery(20_000)
+type Feedback =
+  | 'capturing'
+  | 'improve-goal'
+  | 'doing-great'
+  | 'try-concentrate'
+  | null
+
+function getFeedbackFromState(state: State): Feedback {
+  if (state?.isCapturing || state?.isAssessing) {
+    return 'capturing'
+  }
 
   const relevantCapture =
     state &&
@@ -32,17 +39,58 @@ export const Feedback = withBoundary(() => {
         new Date(state.activeCapture.at).getTime()) &&
     state.activeCapture
 
-  console.log('relevantCapture', relevantCapture)
-
   if (!relevantCapture) {
+    return null
+  }
+
+  if (relevantCapture.impossibleToAssess) {
+    return 'improve-goal'
+  }
+  if (relevantCapture.inFlow) {
+    return 'doing-great'
+  }
+
+  return 'try-concentrate'
+}
+
+function useFeedback(): Feedback {
+  useUpdateEvery(5_000)
+
+  const { stateRef } = useBackendState()
+  const [feedback, setFeedback] = useState<Feedback>(null)
+
+  useEffect(() => {
+    setFeedback(getFeedbackFromState(stateRef.current!))
+  }, [stateRef])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const feedback = getFeedbackFromState(stateRef.current!)
+      console.log('got feedback state', feedback)
+      setFeedback(feedback)
+    }, 1_000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return feedback
+}
+
+// Would prefer to call it Feedback but don't want to conflict with the goal
+// feedback component.
+export const Feedback = withBoundary(() => {
+  const feedback = useFeedback()
+
+  if (!feedback) {
     return <AnimatePresence></AnimatePresence>
   }
 
   let inner = null
   let className = 'text-gray-500'
-  if (relevantCapture.impossibleToAssess) {
+  if (feedback === 'capturing') {
+    inner = <>Capturing screen</>
+  } else if (feedback === 'improve-goal') {
     inner = <>Improve your goal</>
-  } else if (relevantCapture.inFlow) {
+  } else if (feedback === 'doing-great') {
     inner = (
       <>
         Doing great
@@ -61,23 +109,28 @@ export const Feedback = withBoundary(() => {
   }
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.4 }}
-      >
-        <div
-          className={twMerge(
-            'text-[14px] pr-3 font-medium text-gray-500 font-display-3p overflow-hidden text-ellipsis whitespace-nowrap flex flex-row gap-2 items-center',
-            className
-          )}
+    <div className="relative h-full">
+      <AnimatePresence>
+        <motion.div
+          // Force a re-render when the feedback changes.
+          key={feedback}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
+          className="absolute right-0 top-0 h-full flex items-center"
         >
-          {inner}
-        </div>
-      </motion.div>
-    </AnimatePresence>
+          <div
+            className={twMerge(
+              'text-[14px] pr-3 font-medium text-gray-500 font-display-3p overflow-hidden text-ellipsis whitespace-nowrap flex flex-row gap-2 items-center',
+              className
+            )}
+          >
+            {inner}
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
   )
 })
 
