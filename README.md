@@ -3,7 +3,7 @@
 
 # Nudge
 
-The AI companion that nudges you into flow.
+The AI that nudges you into flow.
 
 <p align="left">
   <a href="#about">About</a>
@@ -38,7 +38,7 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 
 <details>
   <summary>
-    How does it work?
+    How does Nudge work?
   </summary>
   <p>
     Nudge takes a picture of your screen every few seconds, then asks GPT-4o if it looks like you're engaged in the activity you chose for yourself. If not, Nudge sends you a notification.
@@ -61,14 +61,19 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
   </p>
 </details>
 
+[Ask a new question.](https://github.com/felipap/nudge/discussions/new/choose)
+
+<!--
+
 ## Development
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/felipap/compass/build-nudge.yml)](https://github.com/felipap/compass/actions)
+-->
 
 ## License
 
-Apache 2.0
+GPL-3.0
 
 <!-- Intelligent tools for productivity. -->
 
