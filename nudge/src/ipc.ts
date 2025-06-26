@@ -12,10 +12,11 @@ import {
 import { AvailableModel } from '../windows/shared/available-models'
 import { IpcMainMethods } from '../windows/shared/ipc-types'
 import { getGoalFeedback, validateModelKey } from './lib/ai'
-import { warn } from './lib/logger'
 import { screenCaptureService } from './lib/capture-service'
+import { warn } from './lib/logger'
 import { getState, setPartialState, store } from './store'
 import { State } from './store/types'
+import { prefWindow } from './windows'
 
 // Type up the ipcMain to complain when
 type TypedIpcMain<Key extends string> = Omit<IpcMain, 'handle' | 'on'> & {
@@ -131,6 +132,10 @@ export function setupIPC() {
     } catch (error) {
       return { success: false, error: error.message }
     }
+  })
+
+  ipcMainTyped.handle('openSettings', () => {
+    prefWindow.show()
   })
 
   ipcMainTyped.handle(

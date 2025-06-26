@@ -21,6 +21,10 @@ export async function getAutoLaunch() {
   return await window.electronAPI.getAutoLaunch()
 }
 
+export async function openSettings() {
+  return await window.electronAPI.openSettings()
+}
+
 export async function setWindowHeight(height: number, animate = false) {
   return await window.electronAPI.setWindowHeight(height, animate)
 }

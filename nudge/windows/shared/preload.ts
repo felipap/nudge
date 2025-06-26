@@ -127,4 +127,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setAutoLaunch: async (enable: boolean) => {
     return await typedIpcRenderer.invoke('setAutoLaunch', enable)
   },
+
+  openSettings: async () => {
+    return await typedIpcRenderer.invoke('openSettings')
+  },
 } satisfies ExposedElectronAPI)

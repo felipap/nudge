@@ -24,6 +24,7 @@ type SharedIpcMethods = {
   validateModelKey: (model: AvailableModel, key: string) => Promise<boolean>
   setAutoLaunch: (enable: boolean) => Promise<void>
   getAutoLaunch: () => Promise<boolean>
+  openSettings: () => Promise<void>
 }
 
 export type IpcMainMethods = SharedIpcMethods & {

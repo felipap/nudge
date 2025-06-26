@@ -1,10 +1,12 @@
-import { useBackendState } from '../../shared/ipc'
+import { useEffect } from 'react'
+import { openSettings, useBackendState } from '../../shared/ipc'
 import { ActiveGoalWidget } from './ActiveGoalWidget'
 import { ConfirmGoalWidget } from './ConfirmGoalWidget'
 import { InputWidget } from './InputWidget'
 
 export default function App() {
   const { state } = useBackendState()
+  useGlobalShortcuts()
 
   let inner
   if (!state) {
@@ -22,4 +24,20 @@ export default function App() {
       {inner}
     </div>
   )
+}
+
+function useGlobalShortcuts() {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.metaKey && event.key === ',') {
+        // Open settings
+        openSettings()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
 }
