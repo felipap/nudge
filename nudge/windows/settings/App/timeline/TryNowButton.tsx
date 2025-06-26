@@ -1,7 +1,7 @@
-import { Button } from '../../shared/ui/Button'
-import { withBoundary } from '../../shared/ui/withBoundary'
 import { useState } from 'react'
 import { Camera } from 'lucide-react'
+import { Button } from '../../../shared/ui/Button'
+import { withBoundary } from '../../../shared/ui/withBoundary'
 
 export const TryNowButton = withBoundary(() => {
   const [isLoading, setIsLoading] = useState(false)

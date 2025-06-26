@@ -7,7 +7,8 @@
     "start": "electron-forge start",
     "dev": "nodemon --exec \"npm run start\"",
     "package": "electron-forge package",
-    "ts-check": "tsc --noEmit",
+    "ts-check-main": "tsc --noEmit -p tsconfig.main.json",
+    "ts-check-windows": "tsc --noEmit -p tsconfig.windows.json",
     "make": "electron-forge make --arch=\"arm64\"",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."

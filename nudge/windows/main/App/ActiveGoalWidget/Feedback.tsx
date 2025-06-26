@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { State } from '../../../../src/store'
+import { State } from '../../../../src/store/types'
 import { useBackendState } from '../../../shared/ipc'
 import { FaHandPeace, FaSkull } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
@@ -16,7 +16,7 @@ type Feedback =
   | null
 
 function getFeedbackFromState(state: State): Feedback {
-  if (state?.isCapturing || state?.isAssessing) {
+  if (state?.captureStartedAt || state?.assessStartedAt) {
     return 'capturing'
   }
 

@@ -5,7 +5,7 @@
 // preload.ts
 
 import { contextBridge, IpcRenderer, ipcRenderer } from 'electron'
-import type { State } from '../../src/store'
+import type { State } from '../../src/store/types'
 import { AvailableModel } from './available-models'
 import { ExposedElectronAPI, IpcMainMethods } from './ipc-types'
 

@@ -1,4 +1,4 @@
-import { State } from '../../src/store'
+import { State } from '../../src/store/types'
 import { AvailableModel } from './available-models'
 
 // Methods shared between window.electronAPI and ipcRenderer/ipcMain. These

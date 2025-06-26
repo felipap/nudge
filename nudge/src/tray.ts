@@ -44,7 +44,7 @@ export function createTray() {
   const tray = new Tray(trayIcon)
 
   function buildTrayMenu() {
-    const hasOpenAiKey = !!getState().modelSelection.key
+    const hasOpenAiKey = getState().modelSelection.key
     const needsConfiguration = !hasOpenAiKey
 
     let template: (MenuItemConstructorOptions | MenuItem | false)[] = []

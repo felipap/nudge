@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ActiveSession, State } from '../../src/store'
+import { ActiveSession, State } from '../../src/store/types'
 import { AvailableModel } from './available-models'
 import { ExposedElectronAPI } from './ipc-types'
 

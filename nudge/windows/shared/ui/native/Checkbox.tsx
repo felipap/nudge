@@ -1,8 +1,9 @@
 import { cva } from 'class-variance-authority'
 import React, { ComponentProps } from 'react'
 
-interface Props extends Omit<ComponentProps<'input'>, 'type'> {
+interface Props extends Omit<ComponentProps<'input'>, 'type' | 'size'> {
   label?: string
+  size?: 'sm' | 'md' | 'lg'
   checked: boolean
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   disabled?: boolean

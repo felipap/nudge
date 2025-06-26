@@ -2,6 +2,7 @@ import assert from 'assert'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { OpenAI } from 'openai'
+// @ts-ignore
 import { zodResponseFormat } from 'openai/helpers/zod.mjs'
 import { ChatCompletionContentPart } from 'openai/resources'
 import { z } from 'zod'

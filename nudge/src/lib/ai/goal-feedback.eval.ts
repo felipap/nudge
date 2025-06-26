@@ -68,7 +68,7 @@ Judge if the AI's response matches these criteria and the expected result.`,
 
 AI Response:
 isGood: ${feedback.isGood}
-message: "${feedback.message}"
+message: "${feedback.feedback}"
 
 Expected:
 isGood: false

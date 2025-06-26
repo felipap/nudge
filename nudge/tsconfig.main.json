@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+  },
+  "include": [
+    "src/**/*",
+    "windows/shared/available-models.ts",
+    "windows/shared/ipc-types.ts",
+  ]
+}

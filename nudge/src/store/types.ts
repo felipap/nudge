@@ -49,7 +49,7 @@ export interface State {
   assessStartedAt: string | null // date
   lastClosedAt: string | null
   // settings
-  modelSelection: ModelSelection
+  modelSelection: ModelSelection | null
   captureEverySeconds: number
   isWindowPinned: boolean
   // ⬇️ This can't live in the state because it's a system setting.
