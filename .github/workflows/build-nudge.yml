@@ -59,7 +59,7 @@ jobs:
         working-directory: ./nudge
         run: pnpm run make
 
-      ## For debugging
+      # # For debugging
       # - name: List Electron output
       #   run: ls -R ./nudge/out/make
 
