@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
 import express, { Request, Response } from 'express'
 import { getServer } from './server'
