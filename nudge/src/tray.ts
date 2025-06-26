@@ -11,8 +11,8 @@ import {
   nativeImage,
   nativeTheme,
 } from 'electron'
-import path from 'path'
-import { screenCaptureService } from './lib/ScreenCaptureService'
+import { screenCaptureService } from './lib/capture-service'
+import { getImagePath, isTruthy } from './lib/utils'
 import {
   IndicatorState,
   getNextCaptureAt,
@@ -24,28 +24,6 @@ import {
 import { mainWindow, prefWindow } from './windows'
 
 dayjs.extend(relativeTime)
-
-export function getImagePath(name: string) {
-  const base = app.isPackaged
-    ? path.join(process.resourcesPath, 'images')
-    : path.join(__dirname, '../../images')
-  return path.join(base, name)
-}
-
-function getTrayIconForStatus(status: IndicatorState) {
-  // const suffix = nativeTheme.shouldUseDarkColors ? '-white' : ''
-  // return path.join(base, `nudge-capturingTemplate.png`)
-
-  if (status === 'capturing') {
-    return getImagePath(`nudge-capturing.png`)
-  } else if (status === 'assessing') {
-    return getImagePath(`nudge-assessing.png`)
-  } else if (status === 'inactive') {
-    return getImagePath(`nudge-inactive.png`)
-  } else {
-    return getImagePath(`nudge-default.png`)
-  }
-}
 
 export function createTray() {
   // For a real app, you'd use a proper icon file
@@ -233,5 +211,17 @@ export function createTray() {
   return tray
 }
 
-type Falsy = false | 0 | '' | null | undefined
-const isTruthy = <T>(x: T | Falsy): x is T => !!x
+function getTrayIconForStatus(status: IndicatorState) {
+  // const suffix = nativeTheme.shouldUseDarkColors ? '-white' : ''
+  // return path.join(base, `nudge-capturingTemplate.png`)
+
+  if (status === 'capturing') {
+    return getImagePath(`nudge-capturing.png`)
+  } else if (status === 'assessing') {
+    return getImagePath(`nudge-assessing.png`)
+  } else if (status === 'inactive') {
+    return getImagePath(`nudge-inactive.png`)
+  } else {
+    return getImagePath(`nudge-default.png`)
+  }
+}

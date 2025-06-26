@@ -13,7 +13,7 @@ import { AvailableModel } from '../windows/shared/available-models'
 import { IpcMainMethods } from '../windows/shared/ipc-types'
 import { getGoalFeedback, validateModelKey } from './lib/ai'
 import { warn } from './lib/logger'
-import { screenCaptureService } from './lib/ScreenCaptureService'
+import { screenCaptureService } from './lib/capture-service'
 import { getState, setPartialState, store } from './store'
 import { State } from './store/types'
 

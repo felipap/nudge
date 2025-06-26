@@ -27,6 +27,8 @@ export interface ActiveSession {
   elapsedBeforePausedMs: number
   //
   goalDurationMs: number
+  //
+  notifiedAboutOvertime?: boolean
 }
 
 export interface State {

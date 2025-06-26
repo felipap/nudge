@@ -6,7 +6,7 @@ import {
 } from '../../shared/ui/AutoExpandingTextarea'
 import { withBoundary } from '../../shared/ui/withBoundary'
 
-const PLACEHOLDERS = ['I want to write a blog post for 45 minutes.']
+const PLACEHOLDERS = ['I want to write a blog post for 40 minutes.']
 
 type Props = AutoExpandingTextareaProps
 

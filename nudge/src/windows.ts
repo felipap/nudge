@@ -1,7 +1,7 @@
 import { app, BrowserWindow, screen } from 'electron'
 import path from 'node:path'
+import { getImagePath } from './lib/utils'
 import { getState, store } from './store'
-import { getImagePath } from './tray'
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
 declare const MAIN_WINDOW_VITE_NAME: string
@@ -28,7 +28,7 @@ export function createMainWindow() {
     frame: false,
     transparent: true,
     vibrancy: 'fullscreen-ui',
-    show: false,
+    show: true,
     // alwaysOnTop: true,
     x:
       primaryDisplay.workArea.x +

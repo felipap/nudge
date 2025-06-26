@@ -42,10 +42,7 @@ class ScreenCaptureService {
       this.frequencyMs = (state.captureEverySeconds || 60) * 1000
     })
 
-    console.log(
-      '[ScreenCaptureService] getNextCaptureAt is',
-      getNextCaptureAt()
-    )
+    console.log('[capture-service] getNextCaptureAt is', getNextCaptureAt())
   }
 
   start(): void {
@@ -64,10 +61,10 @@ class ScreenCaptureService {
     // )
 
     if (this.isRunning) {
-      debug('[ScreenCaptureService] Service already running')
+      debug('[capture-service] Service already running')
       return
     }
-    log('[ScreenCaptureService] Starting service')
+    log('[capture-service] Starting service')
 
     this.isRunning = true
 
@@ -82,11 +79,11 @@ class ScreenCaptureService {
 
   stop(): void {
     if (!this.isRunning) {
-      debug('[ScreenCaptureService] Service already stopped')
+      debug('[capture-service] Service already stopped')
       return
     }
 
-    log('[ScreenCaptureService] Stopping service')
+    log('[capture-service] Stopping service')
     this.isRunning = false
 
     if (this.iid) {
@@ -106,7 +103,7 @@ class ScreenCaptureService {
         log('forced!')
         await captureScreenTaskInner()
       } catch (e) {
-        error('[ScreenCaptureService] Error capturing screen:', e)
+        error('[capture-service] Error capturing screen:', e)
       }
       this.isCapturing = false
 
@@ -120,7 +117,7 @@ class ScreenCaptureService {
 
     const nextCaptureAt = getNextCaptureAt()
     if (nextCaptureAt && dayjs(nextCaptureAt).isAfter(dayjs())) {
-      debug('[ScreenCaptureService] skipping')
+      debug('[capture-service] skipping')
       this.isCapturing = false
       return
     }
@@ -132,7 +129,7 @@ class ScreenCaptureService {
       // await new Promise((resolve) => setTimeout(resolve, 5000))
       console.log('skipping capture')
     } catch (e) {
-      log('[ScreenCaptureService] Error capturing screen:', e)
+      log('[capture-service] Error capturing screen:', e)
     }
 
     console.log('this.frequencyMs', this.frequencyMs)
@@ -143,37 +140,43 @@ class ScreenCaptureService {
 }
 
 async function captureScreenTaskInner() {
-  log('[ScreenCaptureService] Capturing screen at:', new Date().toISOString())
+  log('[capture-service] Capturing screen at:', new Date().toISOString())
 
   if (hasNoCurrentGoalOrPaused()) {
-    debug('[ScreenCaptureService] No goal or paused')
+    debug('[capture-service] No goal or paused')
     return
   }
 
   const goal = getActiveGoal()
   if (!goal) {
-    warn('[ScreenCaptureService] No goal found')
+    warn('[capture-service] No goal found')
     return
   }
 
   // Start checking goals 1 minute after start.
   // if (dayjs().isBefore(dayjs(goal.startedAt).add(20, 'seconds'))) {
-  //   debug('[ScreenCaptureService] Skipping goal check because too soon')
+  //   debug('[capture-service] Skipping goal check because too soon')
   //   return
   // }
 
   setPartialState({ captureStartedAt: new Date().toISOString() })
 
   const { error, data: dataUrl } = await captureActiveScreen()
+  setPartialState({
+    captureStartedAt: null,
+  })
+
   if (error) {
-    warn('[ScreenCaptureService] Failed to capture active screen')
+    warn('[capture-service] Failed to capture active screen')
     return
   }
-  setPartialState({ assessStartedAt: new Date().toISOString() })
+  setPartialState({
+    assessStartedAt: new Date().toISOString(),
+  })
 
   const openAiKey = getState().modelSelection.key
   if (!openAiKey) {
-    warn('[ScreenCaptureService] No OpenAI key found')
+    warn('[capture-service] No OpenAI key found')
     return
   }
 
@@ -181,7 +184,7 @@ async function captureScreenTaskInner() {
 
   let ret
   try {
-    log('[ScreenCaptureService] Sending to server...')
+    log('[capture-service] Sending to server...')
     ret = await assessFlowFromScreenshot(
       openai,
       dataUrl,
@@ -190,13 +193,13 @@ async function captureScreenTaskInner() {
       []
     )
   } catch (e) {
-    log('[ScreenCaptureService] sendToOpenAI failed', e)
+    log('[capture-service] sendToOpenAI failed', e)
     return {
       error: 'Failed to send to server',
     }
+  } finally {
+    setPartialState({ assessStartedAt: null })
   }
-
-  setPartialState({ assessStartedAt: null })
 
   const capture: Capture = {
     at: new Date().toISOString(),
@@ -217,7 +220,7 @@ async function captureScreenTaskInner() {
   if (should) {
     showNotification(ret.data.messageToUser)
   } else {
-    debug('[ScreenCaptureService] Skipping notification')
+    debug('[capture-service] Skipping notification')
   }
 }
 

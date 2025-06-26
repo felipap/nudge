@@ -109,3 +109,26 @@ export function getStateIndicator(): IndicatorState {
 }
 
 export type IndicatorState = 'active' | 'inactive' | 'capturing' | 'assessing'
+
+//
+//
+//
+// Session
+
+export function getMsLeftInSession() {
+  const session = store.getState().session
+  if (!session) {
+    return -1
+  }
+
+  let elapsedMs
+  if (session.pausedAt) {
+    elapsedMs = session.elapsedBeforePausedMs || 0
+  } else {
+    elapsedMs =
+      (session.elapsedBeforePausedMs || 0) +
+      (Date.now() - new Date(session.resumedAt || session.startedAt).getTime())
+  }
+
+  return session.goalDurationMs - elapsedMs
+}

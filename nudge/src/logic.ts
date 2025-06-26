@@ -1,13 +1,16 @@
-import { getState, setPartialState } from './store'
+import dayjs from 'dayjs'
+import { Notification } from 'electron'
+import { debug, log, logError } from './lib/logger'
+import { getMsLeftInSession, getState, setPartialState } from './store'
 
-const LOOP_INTERVAL = 10_000
+const LOOP_INTERVAL = 2_000
 
 let hasStartedLogic = false
-let timeout: NodeJS.Timeout | null = null
+let loopTimeoutId: NodeJS.Timeout | null = null
 
 export function onAppStart() {
   if (hasStartedLogic) {
-    throw new Error('Logic already started')
+    throw new Error('onAppStart already called')
   }
   hasStartedLogic = true
 
@@ -18,30 +21,45 @@ export function onAppStart() {
     assessStartedAt: null,
   })
 
-  // Main loop. We'll wait LOOP_INTERVAL AFTER each loop() finishes executing,
-  // to avoid race conditions.
-  setTimeout(async () => {
-    try {
-      await loop()
-    } catch (error) {
-      console.error(error)
-    }
-    timeout = setTimeout(loop, LOOP_INTERVAL)
-  }, LOOP_INTERVAL)
-
   // We're starting the app. If the app was closed in the middle of a session,
   // we have to decide whether to continue.
   const session = getState().session
-  if (session) {
-    console.log('[loop] activeCapture', getState().activeCapture)
-    // setPartialState({
-    //   session: {
-    //     ...session,
-    //     confirmContinue: true,
-    //     pausedAt: null,
-    //   },
-    // })
+
+  // If started >2h ago, restart it. Otherwise, pause it.
+  const startedOverTwoHoursAgo =
+    session?.startedAt &&
+    dayjs(session.startedAt).isBefore(dayjs().subtract(2, 'hours'))
+
+  if (session && startedOverTwoHoursAgo) {
+    log('[logic/onAppStart] active session started over 2 hours ago')
+    setPartialState({
+      session: null,
+    })
+  } else if (session) {
+    // Pause it.
+    setPartialState({
+      session: {
+        ...session,
+        // confirmContinue: true,
+        elapsedBeforePausedMs:
+          (new Date().getTime() -
+            new Date(getState().lastClosedAt || session.startedAt).getTime()) /
+          1000,
+        pausedAt: new Date().toISOString(),
+      },
+    })
   }
+
+  // Start a loop.
+  setTimeout(async function loopOuter() {
+    try {
+      await loop()
+    } catch (error) {
+      logError('[logic] loop error', error)
+    }
+    // We'll wait AFTER each loop() executes, to avoid race conditions.
+    loopTimeoutId = setTimeout(loopOuter, LOOP_INTERVAL)
+  }, LOOP_INTERVAL)
 
   // setPartialState({
   //   captureEverySeconds: 60,
@@ -50,30 +68,45 @@ export function onAppStart() {
 }
 
 async function loop() {
-  console.log('loop')
+  debug('[logic/loop] loop')
 
-  // setPartialState({
-  //   isCapturing: true,
-  // })
-
-  const session = getState().session
+  const { session } = getState()
   if (!session) {
-    console.debug('[loop] no active goal')
+    debug('[logic/loop] no active goal')
     return
   }
 
-  console.debug('[loop] active goal', session)
-  const deadline = session
-  if (!deadline) {
-    console.debug('[loop] no deadline')
+  // debug('[logic/loop] active goal', session)
+  const msLeft = getMsLeftInSession()
+  const isTimeUp = msLeft <= 0
+  const hasNotifiedAboutOvertime = session.notifiedAboutOvertime
+  if (isTimeUp && !hasNotifiedAboutOvertime) {
+    debug('[logic/loop] time is up')
+    setPartialState({
+      session: {
+        ...session,
+        notifiedAboutOvertime: true,
+      },
+    })
+    try {
+      onTimeOver()
+    } catch (error) {
+      logError('[logic/loop] error in onTimeOver', error)
+    }
     return
   }
+
+  // if (msLeft < 10_000) {
+  //   debug('[logic/loop] overtime')
+  // }
 }
 
 export function onAppClose() {
-  console.log('onAppClose')
-  if (timeout) {
-    clearTimeout(timeout)
+  debug('[logic/onAppClose] onAppClose')
+
+  if (loopTimeoutId) {
+    debug('[logic/onAppClose] clearing loopTimeoutId')
+    clearTimeout(loopTimeoutId)
   }
 
   setPartialState({
@@ -81,4 +114,17 @@ export function onAppClose() {
     captureStartedAt: null,
     assessStartedAt: null,
   })
+}
+
+async function onTimeOver() {
+  // Notify user.
+  const notif = new Notification({
+    title: 'Message from Nudge',
+    body: 'Time is up!',
+    silent: true,
+    sound: 'Blow.aiff',
+    timeoutType: 'default',
+  })
+
+  notif.show()
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Capture } from '../../../src/store'
+import { Capture } from '../../../../src/store/types'
 
 export function CaptureTimeline() {
   const [captures, setCaptures] = useState<Capture[]>([])
