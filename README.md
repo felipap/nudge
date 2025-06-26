@@ -1,5 +1,7 @@
 <img src="https://github.com/user-attachments/assets/1634d175-c6e7-41f7-89d9-ef0a979f0464" width="128" alt="Logo" />
 
+<!-- <h1><code style="text-shadow: 0px 3px 10px rgba(8, 0, 6, 0.35); font-size: 3rem; font-family: ui-monospace, Menlo, monospace; font-weight: 800; background: transparent; color: #4d3e56; padding: 0.2rem 0.2rem; border-radius: 6px">Nudge</code></h1> -->
+
 # Nudge
 
 The AI that nudges you into flow.
