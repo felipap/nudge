@@ -18,8 +18,8 @@
     "jsx": "react-jsx",
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     /* Paths */
     "baseUrl": ".",
@@ -28,13 +28,14 @@
         "./*"
       ]
     },
-    "rootDir": "..",
+    "rootDir": "../..",
     // "types": [
     //   "../shared/window.d.ts"
     // ]
   },
   "include": [
     ".",
+    "../../src/store/types.ts",
     "../postcss.config.js",
   ]
 }

@@ -14,4 +14,7 @@
     "resolveJsonModule": true,
     "composite": true
   },
+  "include": [
+    "src/lib/utils.ts"
+  ]
 }
