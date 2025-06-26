@@ -48,17 +48,24 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
     What data does Nudge collect?
   </summary>
   <p>
-    Nudge has no external servers today. All the screenshots are exchanged directly between your computer and OpenAI's servers. Nudge does not retain screenshots inside of your computer either. The data sent to 4o may be accessible by the owner of the API key you enter.
+    Nudge has no external servers today. All the screenshots are exchanged directly between your computer and OpenAI's servers. Nudge does not accumulate screenshots inside of your computer either. Once they're sent to OpenAI, they're discarded. The data sent to 4o may be accessible by the owner of the API key you enter.
   </p>
 </details>
 <details>
   <summary>
-    Can I use a model instead of GPT-4o?
+    Can I use a model different from GPT-4o?
   </summary>
   <p>
-    Not today but I will ship this if enough users ask for it. [File an issue.](https://github.com/felipap/nudge/issues/new)
+    Not today but I will ship if enough users ask for it. <a href="https://github.com/felipap/nudge/issues/new">File an issue.</a>
   </p>
 </details>
+<!-- <details>
+  <summary>
+    How many tokens does Nudge use?
+  </summary>
+  <p>
+  </p>
+</details> -->
 
 [Ask a new question.](https://github.com/felipap/nudge/discussions/new/choose)
 

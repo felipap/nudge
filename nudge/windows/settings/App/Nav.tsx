@@ -56,7 +56,7 @@ export function Nav({ tab, onTabChange }: Props) {
           isActive={tab === 'general'}
           onClick={() => onTabChange('general')}
         />
-        <TabButton
+        {/* <TabButton
           title="Timeline"
           icon={<LucideCalendarRange className="w-[23px]" />}
           isActive={tab === 'timeline'}
@@ -67,7 +67,7 @@ export function Nav({ tab, onTabChange }: Props) {
           icon={<KeyboardIcon className="w-[30px]" />}
           isActive={tab === 'shortcuts'}
           onClick={() => onTabChange('shortcuts')}
-        />
+        /> */}
         <TabButton
           title="Advanced"
           icon={<AtomIcon className="w-[23px]" />}

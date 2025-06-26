@@ -1,12 +1,5 @@
 import { AvailableModel } from '../../windows/shared/available-models'
 
-export const USER_TZ = 'America/Los_Angeles' // FIXME
-
-// export type IPCResponse<T> = {
-//   data: T
-//   error: string | null
-// }
-
 export interface Capture {
   summary: string
   at: string
@@ -18,13 +11,6 @@ export interface ModelSelection {
   name: AvailableModel
   key: string | null
   validatedAt: string | null
-}
-
-export interface Todo {
-  id: string
-  text: string
-  completed: boolean
-  createdAt: string
 }
 
 export interface ActiveSession {

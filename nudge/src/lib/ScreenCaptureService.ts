@@ -16,7 +16,7 @@ import {
 } from '../store'
 import { Capture } from '../store/types'
 
-const DOUBLE_NUDGE_THRESHOLD = 1 // 5 * 60 * 1000
+const DOUBLE_NUDGE_THRESHOLD = 5 * 60 * 1000
 
 let lastNotificationAt: Date | null = null
 
