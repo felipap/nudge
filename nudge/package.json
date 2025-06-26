@@ -1,7 +1,7 @@
 {
   "name": "nudge",
   "productName": "Nudge",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "An AI that nudges you to stay on track",
   "main": ".vite/build/main.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "dev": "nodemon --exec \"npm run start\"",
     "package": "electron-forge package",
     "ts-check": "tsc --noEmit",
-    "make": "electron-forge make",
+    "make": "electron-forge make --arch=\"x64,arm64\"",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },

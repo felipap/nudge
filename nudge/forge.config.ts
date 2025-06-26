@@ -8,6 +8,7 @@ import type { ForgeConfig } from '@electron-forge/shared-types'
 const IS_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS === 'true'
 
 const packagerConfig: ForgeConfig['packagerConfig'] = {
+  // appVersion: '0.6.0', // Uses package.json version by default.
   appBundleId:
     'engineering.pi.nudge' +
     (process.env.NODE_ENV === 'production' ? '' : '-dev'),

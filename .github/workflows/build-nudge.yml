@@ -63,12 +63,12 @@ jobs:
       # - name: List Electron output
       #   run: ls -R ./nudge/out/make
 
-      - name: Upload ZIP artifact (fallback)
-        uses: actions/upload-artifact@v4
-        with:
-          name: Nudge-macOS-arm64-zip
-          path: nudge/out/make/**/*.zip
-          if-no-files-found: ignore
+      # - name: Upload ZIP artifact (fallback)
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: Nudge-macOS-arm64-zip
+      #     path: nudge/out/make/zip/darwin/arm64/*.zip
+      #     if-no-files-found: ignore
 
       # Only create release on nudge-specific version tags
       - name: Create Release
