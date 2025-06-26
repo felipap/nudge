@@ -4,9 +4,21 @@ import { app, BrowserWindow } from 'electron'
 import started from 'electron-squirrel-startup'
 import { setupIPC } from './ipc'
 import { screenCaptureService } from './lib/capture-service'
+import { getImagePath } from './lib/utils'
 import { onAppClose, onAppStart } from './logic'
 import { createTray } from './tray'
 import { createMainWindow, createSettingsWindow, prefWindow } from './windows'
+
+app.setAboutPanelOptions({
+  applicationName: 'Nudge',
+  applicationVersion: null, // app.getVersion(),
+  copyright: 'Copyright © 2025 Nudge',
+  version: app.getVersion(),
+  // authors: ['Felipe Aragão <faragaop@gmail.com>'],
+  credits: 'Felipe Aragão @feliparagao',
+  website: 'https://github.com/faragao/nudge',
+  iconPath: getImagePath('original.png'),
+})
 
 async function onInit() {
   createMainWindow()

@@ -71,13 +71,10 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 
 [Ask a new question.](https://github.com/felipap/nudge/discussions/new/choose)
 
-<!--
+## Status
 
-## Development
-
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/felipap/compass/build-nudge.yml)](https://github.com/felipap/compass/actions)
--->
+[![Downloads Badge](https://img.shields.io/github/downloads/felipap/nudge/total.svg?color=green)](https://tooomm.github.io/github-release-stats/?username=felipap&repository=nudge)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/felipap/compass/build-nudge.yml)](https://github.com/felipap/nudge/actions)
 
 ## License
 
