@@ -29,9 +29,9 @@
       ]
     },
     "rootDir": "..",
-    "types": [
-      "../shared/window.d.ts"
-    ]
+    // "types": [
+    //   "../shared/window.d.ts"
+    // ]
   },
   "include": [
     ".",

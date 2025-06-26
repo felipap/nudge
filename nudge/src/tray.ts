@@ -35,13 +35,9 @@ export function getImagePath(name: string) {
 }
 
 function getTrayIconForStatus(status: IndicatorState) {
-  const suffix = nativeTheme.shouldUseDarkColors ? '-white' : ''
-  // console.log(
-  //   'nativeTheme.shouldUseDarkColors',
-  //   nativeTheme.shouldUseDarkColors
-  // )
-
+  // const suffix = nativeTheme.shouldUseDarkColors ? '-white' : ''
   // return path.join(base, `nudge-capturingTemplate.png`)
+
   if (status === 'capturing') {
     return getImagePath(`nudge-capturing.png`)
   } else if (status === 'assessing') {
@@ -203,22 +199,6 @@ export function createTray() {
   mainWindow.on('show', () => {
     updateTrayMenu()
   })
-
-  // tray.on('click', () => {})
-
-  const lastTrayIconBounds: Electron.Rectangle | null = null
-
-  // tray.on('right-click', (event, bounds) => {
-  //   const contextMenu = Menu.buildFromTemplate(getTrayMenu())
-  //   tray.popUpContextMenu(contextMenu)
-  //   lastTrayIconBounds = bounds
-
-  //   // contextMenu.popup()
-  // })
-
-  // onOpenAiKeyChange(() => {
-  //   updateTrayMenu()
-  // })
 
   onIndicatorStateChange(() => {
     updateTrayMenu()

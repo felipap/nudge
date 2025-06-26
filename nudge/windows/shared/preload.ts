@@ -4,23 +4,30 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 // preload.ts
 
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, IpcRenderer, ipcRenderer } from 'electron'
 import type { State } from '../../src/store'
 import { AvailableModel } from './available-models'
+import { ExposedElectronAPI, IpcMainMethods } from './ipc-types'
+
+type TypedIpcRenderer<Key extends string> = Omit<
+  IpcRenderer,
+  'invoke' | 'send'
+> & {
+  invoke: <K extends Key>(channel: K, ...args: any[]) => Promise<any>
+  send: <K extends Key>(channel: K, ...args: any[]) => void
+}
+
+const typedIpcRenderer: TypedIpcRenderer<keyof IpcMainMethods> =
+  ipcRenderer as any
 
 contextBridge.exposeInMainWorld('darkMode', {
-  toggle: () => ipcRenderer.invoke('dark-mode:toggle'),
-  system: () => ipcRenderer.invoke('dark-mode:system'),
+  toggle: () => typedIpcRenderer.invoke('dark-mode:toggle'),
+  system: () => typedIpcRenderer.invoke('dark-mode:system'),
 })
 
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld('electronAPI', {
-  // Trigger background action
-  triggerBackgroundAction: (actionName: string, ...args: any[]) => {
-    ipcRenderer.send('trigger-background-action', actionName, ...args)
-  },
-
   // Listen for background action completion
   onBackgroundActionCompleted: (callback: (actionName: string) => void) => {
     const listener = (_event: any, actionName: string) => callback(actionName)
@@ -41,15 +48,19 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
 
   setPartialState: async (state: Partial<State>) => {
-    return await ipcRenderer.invoke('setPartialState', state)
+    return await typedIpcRenderer.invoke('setPartialState', state)
+  },
+
+  getAutoLaunch: async () => {
+    return await typedIpcRenderer.invoke('getAutoLaunch')
   },
 
   getState: async () => {
-    return await ipcRenderer.invoke('getState')
+    return await typedIpcRenderer.invoke('getState')
   },
 
   setCaptureFrequency: (frequency: number) => {
-    ipcRenderer.send('setCaptureFrequency', frequency)
+    typedIpcRenderer.send('setCaptureFrequency', frequency)
   },
 
   listenToggleDarkMode: (callback: (isDarkMode: boolean) => void) => {
@@ -58,58 +69,62 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
 
   getSystemTheme: async () => {
-    return await ipcRenderer.invoke('getSystemTheme')
+    return await typedIpcRenderer.invoke('getSystemTheme')
   },
 
   setWindowHeight: async (height: number, animate = false) => {
-    return await ipcRenderer.invoke('setWindowHeight', height, animate)
+    return await typedIpcRenderer.invoke('setWindowHeight', height, animate)
   },
 
   getWindowHeight: async () => {
-    return await ipcRenderer.invoke('getWindowHeight')
+    return await typedIpcRenderer.invoke('getWindowHeight')
   },
 
   closeWindow: () => {
-    ipcRenderer.send('closeWindow')
+    typedIpcRenderer.send('closeWindow')
   },
 
   minimizeWindow: () => {
-    ipcRenderer.send('minimizeWindow')
+    typedIpcRenderer.send('minimizeWindow')
   },
 
   zoomWindow: () => {
-    ipcRenderer.send('zoomWindow')
+    typedIpcRenderer.send('zoomWindow')
   },
 
   openExternal: (url: string) => {
-    ipcRenderer.send('openExternal', url)
+    typedIpcRenderer.send('openExternal', url)
   },
 
-  clearActiveCapture: async (goal: string) => {
-    return await ipcRenderer.invoke('clearActiveCapture', goal)
+  clearActiveCapture: async () => {
+    return await typedIpcRenderer.invoke('clearActiveCapture')
   },
 
   getGoalFeedback: async (goal: string) => {
-    return await ipcRenderer.invoke('getGoalFeedback', goal)
+    return await typedIpcRenderer.invoke('getGoalFeedback', goal)
   },
 
   pauseSession: async () => {
-    return await ipcRenderer.invoke('pauseSession')
+    return await typedIpcRenderer.invoke('pauseSession')
   },
 
   resumeSession: async () => {
-    return await ipcRenderer.invoke('resumeSession')
+    return await typedIpcRenderer.invoke('resumeSession')
   },
 
   startSession: async (goal: string, durationMs: number) => {
-    return await ipcRenderer.invoke('startSession', goal, durationMs)
+    return await typedIpcRenderer.invoke('startSession', goal, durationMs)
   },
 
   captureNow: async () => {
-    return await ipcRenderer.invoke('captureNow')
+    return await typedIpcRenderer.invoke('captureNow')
   },
 
   validateModelKey: async (model: AvailableModel, key: string) => {
-    return await ipcRenderer.invoke('validateModelKey', model, key)
+    return await typedIpcRenderer.invoke('validateModelKey', model, key)
   },
-})
+
+  setAutoLaunch: async (enable: boolean) => {
+    return await typedIpcRenderer.invoke('setAutoLaunch', enable)
+  },
+} satisfies ExposedElectronAPI)

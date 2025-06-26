@@ -28,8 +28,8 @@
         "./*"
       ]
     },
-    "types": [
-      "./window.d.ts"
-    ]
+    // "types": [
+    //   "./window.d.ts"
+    // ]
   }
 }

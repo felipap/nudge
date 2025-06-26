@@ -1,14 +1,38 @@
-import { app, BrowserWindow, ipcMain, nativeTheme, shell } from 'electron'
+import assert from 'assert'
+import {
+  app,
+  BrowserWindow,
+  IpcMain,
+  ipcMain,
+  IpcMainEvent,
+  IpcMainInvokeEvent,
+  nativeTheme,
+  shell,
+} from 'electron'
 import { AvailableModel } from '../windows/shared/available-models'
+import { IpcMainMethods } from '../windows/shared/ipc-types'
 import { getGoalFeedback, validateModelKey } from './lib/ai'
+import { warn } from './lib/logger'
 import { screenCaptureService } from './lib/ScreenCaptureService'
 import { getState, setPartialState, store } from './store'
 import { State } from './store/types'
-import assert from 'assert'
-import { warn } from './lib/logger'
+
+// Type up the ipcMain to complain when
+type TypedIpcMain<Key extends string> = Omit<IpcMain, 'handle' | 'on'> & {
+  handle: (
+    channel: Key,
+    listener: (event: IpcMainInvokeEvent, ...args: any[]) => Promise<any> | any
+  ) => void
+  on: (
+    channel: Key,
+    listener: (event: IpcMainEvent, ...args: any[]) => void
+  ) => void
+}
+
+const ipcMainTyped: TypedIpcMain<keyof IpcMainMethods> = ipcMain as any
 
 export function setupIPC() {
-  ipcMain.handle('dark-mode:toggle', () => {
+  ipcMainTyped.handle('dark-mode:toggle', () => {
     if (nativeTheme.shouldUseDarkColors) {
       nativeTheme.themeSource = 'light'
     } else {
@@ -17,11 +41,11 @@ export function setupIPC() {
     return nativeTheme.shouldUseDarkColors
   })
 
-  ipcMain.handle('dark-mode:system', () => {
+  ipcMainTyped.handle('dark-mode:system', () => {
     nativeTheme.themeSource = 'system'
   })
 
-  ipcMain.handle(
+  ipcMainTyped.handle(
     'setWindowHeight',
     (_event, height: number, animate = false) => {
       const win = BrowserWindow.getFocusedWindow()
@@ -31,7 +55,7 @@ export function setupIPC() {
     }
   )
 
-  ipcMain.handle('getWindowHeight', () => {
+  ipcMainTyped.handle('getWindowHeight', () => {
     const win = BrowserWindow.getFocusedWindow()
     if (win) {
       return win.getBounds().height
@@ -39,21 +63,21 @@ export function setupIPC() {
     return 0
   })
 
-  ipcMain.on('closeWindow', (_event) => {
+  ipcMainTyped.on('closeWindow', () => {
     const win = BrowserWindow.getFocusedWindow()
     if (win) {
       win.close()
     }
   })
 
-  ipcMain.on('minimizeWindow', (_event) => {
+  ipcMainTyped.on('minimizeWindow', () => {
     const win = BrowserWindow.getFocusedWindow()
     if (win) {
       win.minimize()
     }
   })
 
-  ipcMain.on('zoomWindow', (_event) => {
+  ipcMainTyped.on('zoomWindow', () => {
     const win = BrowserWindow.getFocusedWindow()
     if (win) {
       if (win.isMaximized()) {
@@ -79,26 +103,29 @@ export function setupIPC() {
     })
   })
 
-  ipcMain.handle('getState', () => {
+  ipcMainTyped.handle('getState', () => {
     return store.getState()
   })
 
-  ipcMain.on('setCaptureFrequency', (_event, frequency: number) => {
+  ipcMainTyped.on('setCaptureFrequency', (_event, frequency: number) => {
     store.setState({
       ...store.getState(),
       captureEverySeconds: frequency,
     })
   })
 
-  ipcMain.handle('setAutoLaunch', (_event, enable: boolean) => {
+  ipcMainTyped.handle('getAutoLaunch', async () => {
+    const settings = app.getLoginItemSettings()
+    return settings.openAtLogin
+  })
+
+  ipcMainTyped.handle('setAutoLaunch', async (_event, enable: boolean) => {
     try {
       console.log('setting auto launch', enable)
       app.setLoginItemSettings({
         openAtLogin: enable,
-        openAsHidden: true, // Start the app minimized to tray
-      })
-      setPartialState({
-        autoLaunch: enable,
+        // Start the app minimized to tray
+        openAsHidden: true,
       })
       return { success: true }
     } catch (error) {
@@ -106,7 +133,7 @@ export function setupIPC() {
     }
   })
 
-  ipcMain.handle(
+  ipcMainTyped.handle(
     'getGoalFeedback',
     async (_: Electron.IpcMainInvokeEvent, goal: string) => {
       try {
@@ -125,14 +152,14 @@ export function setupIPC() {
     }
   )
 
-  ipcMain.handle('clearActiveCapture', () => {
+  ipcMainTyped.handle('clearActiveCapture', () => {
     store.setState({
       ...store.getState(),
       activeCapture: null,
     })
   })
 
-  ipcMain.handle(
+  ipcMainTyped.handle(
     'validateModelKey',
     async (_event, model: AvailableModel, key: string) => {
       const openAiKey = getState().modelSelection.key
@@ -144,14 +171,14 @@ export function setupIPC() {
     }
   )
 
-  ipcMain.handle('setPartialState', (_event, state: Partial<State>) => {
+  ipcMainTyped.handle('setPartialState', (_event, state: Partial<State>) => {
     store.setState({
       ...store.getState(),
       ...state,
     })
   })
 
-  ipcMain.handle('captureNow', (_event) => {
+  ipcMainTyped.handle('captureNow', (_event) => {
     console.log('captureNow', _event)
     screenCaptureService.captureNow()
 
@@ -161,7 +188,7 @@ export function setupIPC() {
     }
   })
 
-  ipcMain.handle('openExternal', (_event, url: string) => {
+  ipcMainTyped.handle('openExternal', (_event, url: string) => {
     shell.openExternal(url)
   })
 
@@ -175,7 +202,7 @@ export function setupIPC() {
   //
   // Session stuff
 
-  ipcMain.handle(
+  ipcMainTyped.handle(
     'startSession',
     async (_event, goal: string, durationMs: number) => {
       const state = getState()
@@ -199,7 +226,7 @@ export function setupIPC() {
     }
   )
 
-  ipcMain.handle('pauseSession', () => {
+  ipcMainTyped.handle('pauseSession', () => {
     const session = getState().session
     if (!session) {
       return
@@ -227,7 +254,7 @@ export function setupIPC() {
     })
   })
 
-  ipcMain.handle('resumeSession', () => {
+  ipcMainTyped.handle('resumeSession', () => {
     const session = getState().session
     if (!session) {
       return

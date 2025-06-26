@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 export function SectionWithHeader({
@@ -58,11 +59,11 @@ export function LabelStack({
 }: {
   children: React.ReactNode
   className?: string
-}) {
+} & ComponentProps<'label'>) {
   return (
-    <div className={twMerge('flex flex-col gap-0', className)} {...props}>
+    <label className={twMerge('flex flex-col gap-0', className)} {...props}>
       {children}
-    </div>
+    </label>
   )
 }
 
@@ -73,7 +74,7 @@ export function Fieldset({
 }: {
   children: React.ReactNode
   className?: string
-}) {
+} & ComponentProps<'fieldset'>) {
   return (
     <fieldset
       className={twMerge(

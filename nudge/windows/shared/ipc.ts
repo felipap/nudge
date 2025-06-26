@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { GoalSession, State } from '../../src/store'
+import { ActiveSession, State } from '../../src/store'
 import { AvailableModel } from './available-models'
+import { ExposedElectronAPI } from './ipc-types'
+
+declare global {
+  interface Window {
+    electronAPI: ExposedElectronAPI
+  }
+}
 
 export async function getState() {
   return await window.electronAPI.getState()
@@ -8,6 +15,10 @@ export async function getState() {
 
 export async function setAutoLaunch(enable: boolean) {
   return await window.electronAPI.setAutoLaunch(enable)
+}
+
+export async function getAutoLaunch() {
+  return await window.electronAPI.getAutoLaunch()
 }
 
 export async function setWindowHeight(height: number, animate = false) {
@@ -98,7 +109,7 @@ export function useBackendState() {
 // Goals stuff
 
 export function useGoalState() {
-  const [value, setValue] = useState<GoalSession | null>(null)
+  const [value, setValue] = useState<ActiveSession | null>(null)
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
 
@@ -112,7 +123,7 @@ export function useGoalState() {
     load()
   }, [])
 
-  const update = useCallback(async (newValue: GoalSession) => {
+  const update = useCallback(async (newValue: ActiveSession) => {
     setSaving(true)
     await window.electronAPI.setPartialState({ session: newValue })
     setValue(newValue)

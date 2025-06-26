@@ -50,7 +50,8 @@ export interface State {
   modelSelection: ModelSelection
   captureEverySeconds: number
   isWindowPinned: boolean
-  autoLaunch: boolean
+  // ⬇️ This can't live in the state because it's a system setting.
+  // autoLaunch: boolean
   // frontend things
   savedGoalInputValue: string | null
   // history of captures
@@ -76,7 +77,6 @@ export const DEFAULT_STATE: State = {
   captureEverySeconds: 60,
   isWindowPinned: false,
   customInstructions: null,
-  autoLaunch: false,
   // frontend things
   savedGoalInputValue: null,
 }

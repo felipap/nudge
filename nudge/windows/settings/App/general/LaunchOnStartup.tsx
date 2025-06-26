@@ -1,28 +1,36 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { getAutoLaunch, setAutoLaunch } from '../../../shared/ipc'
 import { Checkbox } from '../../../shared/ui/native/Checkbox'
 import { Description, Fieldset, Label, LabelStack } from '../ui'
 
 export function LaunchOnStartup() {
-  const [autoLaunch, setAutoLaunch] = useState<boolean>(true)
+  const [checked, setChecked] = useState<boolean>(true)
 
-  const handleAutoLaunchChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const isChecked = event.target.checked
-    setAutoLaunch(isChecked)
+  useEffect(() => {
+    async function load() {
+      const isEnabled = await getAutoLaunch()
+      console.log('isEnabled', isEnabled)
+      setChecked(isEnabled)
+    }
+    load()
+  }, [])
 
-    // Update system setting via IPC
-    window.electronAPI.setAutoLaunch(isChecked)
+  const handleAutoLaunchChange = () => {
+    setChecked(!checked)
+    setAutoLaunch(!checked)
   }
 
   return (
     <Fieldset className="justify-cesnter ml-6 flex">
-      <div className="flex flex-row gap-2 items-start justify-start">
+      <div
+        className="flex flex-row gap-2 items-start justify-start cursor-pointer"
+        onClick={handleAutoLaunchChange}
+      >
         <Checkbox
           id="auto-launch"
           className="mt-1"
           // label="Launch on startup"
-          checked={autoLaunch}
+          checked={checked}
           onChange={handleAutoLaunchChange}
         />
         <LabelStack htmlFor="auto-launch  ">

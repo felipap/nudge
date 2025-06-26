@@ -12,9 +12,10 @@ const packagerConfig: ForgeConfig['packagerConfig'] = {
     'engineering.pi.nudge' +
     (process.env.NODE_ENV === 'production' ? '' : '-dev'),
   asar: true,
-  icon: IS_GITHUB_ACTIONS
-    ? 'images/Production.icns'
-    : 'images/Development.icns',
+  icon:
+    IS_GITHUB_ACTIONS || process.env.NODE_ENV === 'production'
+      ? 'images/Production.icns'
+      : 'images/Development.icns',
   extraResource: ['images'],
   // Code signing configuration
   osxSign: {
