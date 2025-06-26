@@ -1,4 +1,5 @@
 import 'source-map-support/register'
+import * as Sentry from '@sentry/electron'
 
 import { app, BrowserWindow } from 'electron'
 import started from 'electron-squirrel-startup'
@@ -8,6 +9,13 @@ import { getImagePath } from './lib/utils'
 import { onAppClose, onAppStart } from './logic'
 import { createTray } from './tray'
 import { createMainWindow, createSettingsWindow, prefWindow } from './windows'
+
+if (app.isPackaged) {
+  // @ts-ignore // wtf Sentry!
+  Sentry.init({
+    dsn: 'https://df66516e528e1e116926f9631fca55f3@o175888.ingest.us.sentry.io/4509567206555648',
+  })
+}
 
 app.setAboutPanelOptions({
   applicationName: 'Nudge',
