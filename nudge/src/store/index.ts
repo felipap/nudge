@@ -69,8 +69,10 @@ export const addSavedCapture = (capture: Capture) => {
 
 export const getState = () => store.getState()
 
-export const hasNoCurrentGoalOrPaused = () =>
-  !store.getState().session || store.getState().session.pausedAt
+export const hasNoCurrentGoalOrPaused = () => {
+  const state = store.getState()
+  return !state.session || state.session.pausedAt
+}
 
 export const getActiveGoal = () => store.getState().session
 

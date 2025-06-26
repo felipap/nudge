@@ -135,14 +135,14 @@ export function setupIPC() {
   })
 
   ipcMainTyped.handle('openSettings', () => {
-    prefWindow.show()
+    prefWindow!.show()
   })
 
   ipcMainTyped.handle(
     'getGoalFeedback',
     async (_: Electron.IpcMainInvokeEvent, goal: string) => {
       try {
-        const openAiKey = getState().modelSelection.key
+        const openAiKey = getState().modelSelection?.key
         if (!openAiKey) {
           throw new Error('No OpenAI key')
         }
@@ -167,7 +167,7 @@ export function setupIPC() {
   ipcMainTyped.handle(
     'validateModelKey',
     async (_event, model: AvailableModel, key: string) => {
-      const openAiKey = getState().modelSelection.key
+      const openAiKey = getState().modelSelection?.key
       if (!openAiKey) {
         throw new Error('No OpenAI key')
       }

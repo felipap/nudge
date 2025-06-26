@@ -63,7 +63,7 @@ Instructions:
 
     const parsed = response.choices[0].message.parsed
     console.log('[ai/goal-feedback] parsed', parsed)
-    return parsed
+    return parsed!
   } catch (error) {
     console.error('Error getting goal feedback:', error)
     throw error

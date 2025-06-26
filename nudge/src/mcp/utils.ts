@@ -19,6 +19,8 @@ export const tryCatchCallback = <Args extends ZodRawShape | undefined>(
   ) => {
     try {
       console.log('[mcp] calling handler', args, extra)
+      // TODO figure out this. i'm tired.
+      // @ts-ignore
       return await handler(args, extra)
     } catch (error) {
       console.error('[mcp] error', error)

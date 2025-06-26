@@ -1,3 +1,4 @@
+import assert from 'assert'
 import dayjs from 'dayjs'
 import { Notification } from 'electron'
 import { assessFlowFromScreenshot, getOpenAiClient } from '../lib/ai'
@@ -170,11 +171,13 @@ async function captureScreenTaskInner() {
     warn('[capture-service] Failed to capture active screen')
     return
   }
+  assert(dataUrl)
+
   setPartialState({
     assessStartedAt: new Date().toISOString(),
   })
 
-  const openAiKey = getState().modelSelection.key
+  const openAiKey = getState().modelSelection?.key
   if (!openAiKey) {
     warn('[capture-service] No OpenAI key found')
     return

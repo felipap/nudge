@@ -1,5 +1,6 @@
 // This file is a huge mess, please help.
 
+import assert from 'assert'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import {
@@ -26,6 +27,9 @@ import { mainWindow, prefWindow } from './windows'
 dayjs.extend(relativeTime)
 
 export function createTray() {
+  assert(mainWindow)
+  assert(prefWindow)
+
   // For a real app, you'd use a proper icon file
   // tray = new Tray(path.join(__dirname, "../../icon.png"))
 
@@ -44,7 +48,7 @@ export function createTray() {
   const tray = new Tray(trayIcon)
 
   function buildTrayMenu() {
-    const hasOpenAiKey = getState().modelSelection.key
+    const hasOpenAiKey = !!getState().modelSelection?.key
     const needsConfiguration = !hasOpenAiKey
 
     let template: (MenuItemConstructorOptions | MenuItem | false)[] = []
@@ -52,7 +56,7 @@ export function createTray() {
       template.push({
         label: 'Enter your OpenAI key',
         click: () => {
-          prefWindow.show()
+          prefWindow!.show()
         },
       })
     } else {
@@ -91,12 +95,12 @@ export function createTray() {
 
       template = template.concat([
         {
-          label: `${mainWindow.isVisible() ? 'Hide' : 'Show'} window`,
+          label: `${mainWindow!.isVisible() ? 'Hide' : 'Show'} window`,
           click: () => {
-            if (mainWindow.isVisible()) {
-              mainWindow.hide()
+            if (mainWindow!.isVisible()) {
+              mainWindow!.hide()
             } else {
-              mainWindow.show()
+              mainWindow!.show()
             }
             updateTrayMenu()
           },
@@ -109,8 +113,8 @@ export function createTray() {
           click: () => {
             // If window isn't visible, show it.
             const isPinned = getState().isWindowPinned
-            if (!isPinned && !mainWindow.isVisible()) {
-              mainWindow.show()
+            if (!isPinned && !mainWindow!.isVisible()) {
+              mainWindow!.show()
             }
 
             store.setState({
@@ -126,7 +130,7 @@ export function createTray() {
             ? 'Enter your OpenAI key...'
             : 'Preferences...',
           click: () => {
-            prefWindow.show()
+            prefWindow!.show()
           },
         },
       ])
@@ -191,8 +195,8 @@ export function createTray() {
 
   // Optional: Show window when clicking the tray icon
   tray.on('click', () => {
-    if (!mainWindow.isVisible()) {
-      mainWindow.show()
+    if (!mainWindow!.isVisible()) {
+      mainWindow!.show()
     }
   })
 

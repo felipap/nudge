@@ -6,10 +6,12 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "noImplicitAny": true,
+    "strict": true,
+    "useUnknownInCatchVariables": false,
     "sourceMap": true,
     "noEmit": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "composite": true
-  }
+  },
 }

@@ -121,7 +121,7 @@ async function runEvals() {
             testCase.goal
           )
           console.log('Judgment:', judgment)
-          console.log('Result:', judgment.matches ? '✅ PASS' : '❌ FAIL')
+          console.log('Result:', judgment?.matches ? '✅ PASS' : '❌ FAIL')
         }
       }
       console.log('\n---\n')

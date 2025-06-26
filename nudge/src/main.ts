@@ -19,7 +19,7 @@ if (app.isPackaged) {
 
 app.setAboutPanelOptions({
   applicationName: 'Nudge',
-  applicationVersion: null, // app.getVersion(),
+  // applicationVersion: undefined, // app.getVersion(),
   copyright: 'Copyright © 2025 Nudge',
   version: app.getVersion(),
   // authors: ['Felipe Aragão <faragaop@gmail.com>'],

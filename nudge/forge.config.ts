@@ -45,6 +45,9 @@ if (IS_GITHUB_ACTIONS) {
   }
 }
 
+type Falsy = false | 0 | '' | null | undefined
+export const isTruthy = <T>(x: T | Falsy): x is T => !!x
+
 const config: ForgeConfig = {
   packagerConfig,
   rebuildConfig: {},
@@ -54,7 +57,7 @@ const config: ForgeConfig = {
     IS_GITHUB_ACTIONS ? new MakerDMG({}, ['darwin']) : null,
     // new MakerRpm({}),
     // new MakerDeb({}),
-  ].filter(Boolean),
+  ].filter(isTruthy),
   plugins: [
     new VitePlugin({
       // `build` can specify multiple entry builds, which can be Main process,

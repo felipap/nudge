@@ -7,7 +7,7 @@ export interface Capture {
   impossibleToAssess: boolean
 }
 
-export interface ModelSelection {
+export type ModelSelection = {
   name: AvailableModel
   key: string | null
   validatedAt: string | null
@@ -31,7 +31,7 @@ export interface ActiveSession {
   notifiedAboutOvertime?: boolean
 }
 
-export interface State {
+export type State = {
   // The latest capture, which must be relevant for the current goal. Set to
   // null when the user makes updates to the active goal, or clears it entirely.
   activeCapture:
