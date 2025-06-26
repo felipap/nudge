@@ -162,14 +162,14 @@ async function captureScreenTaskInner() {
   //   return
   // }
 
-  setPartialState({ isCapturing: true, isAssessing: false })
+  setPartialState({ captureStartedAt: new Date().toISOString() })
 
   const { error, data: dataUrl } = await captureActiveScreen()
   if (error) {
     warn('[ScreenCaptureService] Failed to capture active screen')
     return
   }
-  setPartialState({ isCapturing: false, isAssessing: true })
+  setPartialState({ assessStartedAt: new Date().toISOString() })
 
   const openAiKey = getState().modelSelection.key
   if (!openAiKey) {
@@ -182,7 +182,13 @@ async function captureScreenTaskInner() {
   let ret
   try {
     log('[ScreenCaptureService] Sending to server...')
-    ret = await assessFlowFromScreenshot(openai, dataUrl, goal.content, [])
+    ret = await assessFlowFromScreenshot(
+      openai,
+      dataUrl,
+      goal.content,
+      getState().customInstructions,
+      []
+    )
   } catch (e) {
     log('[ScreenCaptureService] sendToOpenAI failed', e)
     return {
@@ -190,7 +196,7 @@ async function captureScreenTaskInner() {
     }
   }
 
-  setPartialState({ isCapturing: false, isAssessing: false })
+  setPartialState({ assessStartedAt: null })
 
   const capture: Capture = {
     at: new Date().toISOString(),

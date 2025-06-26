@@ -43,8 +43,8 @@ export interface State {
   nextCaptureAt: string | null
   session: ActiveSession | null
   // capture state
-  isCapturing: boolean
-  isAssessing: boolean
+  captureStartedAt: string | null // date
+  assessStartedAt: string | null // date
   lastClosedAt: string | null
   // settings
   modelSelection: ModelSelection
@@ -65,8 +65,8 @@ export const DEFAULT_STATE: State = {
   savedCaptures: [],
   activeCapture: null,
   // capture state
-  isCapturing: false,
-  isAssessing: false,
+  captureStartedAt: null,
+  assessStartedAt: null,
   lastClosedAt: null,
   // settings
   modelSelection: {

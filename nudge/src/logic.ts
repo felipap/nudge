@@ -11,6 +11,13 @@ export function onAppStart() {
   }
   hasStartedLogic = true
 
+  // Reset captureStartedAt and assessStartedAt, which might still be set if app
+  // quit in the middle of a capture.
+  setPartialState({
+    captureStartedAt: null,
+    assessStartedAt: null,
+  })
+
   // Main loop. We'll wait LOOP_INTERVAL AFTER each loop() finishes executing,
   // to avoid race conditions.
   setTimeout(async () => {
@@ -68,7 +75,10 @@ export function onAppClose() {
   if (timeout) {
     clearTimeout(timeout)
   }
+
   setPartialState({
     lastClosedAt: new Date().toISOString(),
+    captureStartedAt: null,
+    assessStartedAt: null,
   })
 }

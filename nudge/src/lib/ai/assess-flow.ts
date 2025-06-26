@@ -26,11 +26,12 @@ export async function assessFlowFromScreenshot(
   client: OpenAI,
   base64content: string,
   goal: string,
+  customInstructions: string | null,
   previousCaptures: string[]
 ): Promise<{ data: Assessment; model: string }> {
   assert(goal, 'goal is required')
 
-  const systemPrompt = makePrompt(goal, previousCaptures)
+  const systemPrompt = makePrompt(goal, customInstructions, previousCaptures)
   if (DEBUG) {
     log('[ai/assessment] systemPrompt', systemPrompt)
   }
@@ -76,7 +77,11 @@ export async function assessFlowFromScreenshot(
   }
 }
 
-function makePrompt(goal: string, previousCaptures: string[]) {
+function makePrompt(
+  goal: string,
+  customInstructions: string | null,
+  previousCaptures: string[]
+) {
   return `You're a productivity buddy that helps the user keep it's promises.
 
 (1) You'll be given a screenshot of the user's screen and you'll be asked to provide a summary of what you see.
@@ -86,6 +91,10 @@ function makePrompt(goal: string, previousCaptures: string[]) {
 <USER_GOALS>
 ${goal}
 </USER_GOALS>
+
+<USER_CUSTOM_INSTRUCTIONS>
+${customInstructions || 'none'}
+</USER_CUSTOM_INSTRUCTIONS>
 
 <PREVIOUS_CAPTURES>
 ${previousCaptures.map((capture) => `- ${capture}`).join('\n')}

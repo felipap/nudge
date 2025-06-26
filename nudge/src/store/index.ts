@@ -96,10 +96,10 @@ export function onIndicatorStateChange(
 
 export function getStateIndicator(): IndicatorState {
   const state = store.getState()
-  if (state.isCapturing) {
+  if (state.captureStartedAt) {
     return 'capturing'
   }
-  if (state.isAssessing) {
+  if (state.assessStartedAt) {
     return 'assessing'
   }
   if (state.session) {

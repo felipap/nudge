@@ -1,4 +1,4 @@
-// This file is a huge mess.
+// This file is a huge mess, please help.
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -22,8 +22,6 @@ import {
   store,
 } from './store'
 import { mainWindow, prefWindow } from './windows'
-
-//
 
 dayjs.extend(relativeTime)
 
