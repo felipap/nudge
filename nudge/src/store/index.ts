@@ -34,15 +34,6 @@ export const store = create<State>()(
 //
 //
 
-export const updateLastCapture = (capture: Capture) => {
-  store.setState({
-    activeCapture: {
-      ...capture,
-      expiresAt: new Date(Date.now() + 1000 * 60 * 2).toISOString(),
-    },
-  })
-}
-
 export const clearLastCapture = () => {
   store.setState({
     activeCapture: null,

@@ -7,15 +7,16 @@ import type { ForgeConfig } from '@electron-forge/shared-types'
 
 const IS_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS === 'true'
 
+// Only way I found to detect if we're running `electron-forge make`
+const IS_MAKE = !!process.env.IS_MAKE
+
 const packagerConfig: ForgeConfig['packagerConfig'] = {
   // appVersion: '0.6.0', // Uses package.json version by default.
-  name: 'Nudge' + (process.env.NODE_ENV === 'production' ? '' : '(dev)'),
-  appBundleId:
-    'engineering.pi.nudge' +
-    (process.env.NODE_ENV === 'production' ? '' : '-dev'),
+  name: 'Nudge' + (IS_MAKE ? '' : '(dev)'),
+  appBundleId: 'engineering.pi.nudge' + (IS_MAKE ? '' : '-dev'),
   asar: true,
   icon:
-    IS_GITHUB_ACTIONS || process.env.NODE_ENV === 'production'
+    IS_GITHUB_ACTIONS || IS_MAKE
       ? 'images/Production.icns'
       : 'images/Development.icns',
   extraResource: ['images'],

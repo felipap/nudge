@@ -24,3 +24,7 @@ async function checkOpenAIKey(apiKey: string) {
     return false
   }
 }
+
+// interface Model {
+//   name: AvailableModel
+// }

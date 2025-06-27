@@ -7,6 +7,18 @@ export interface Capture {
   impossibleToAssess: boolean
 }
 
+export interface LatestCapture extends Capture {
+  // Adding this here for the semantics. An `activeCapture` might be expired
+  // without being cleared.
+  expiresAt: string
+  impossibleToAssess: boolean
+}
+
+export interface CaptureError {
+  at: string
+  modelError: 'unknown' | 'api-key' | 'rate-limit'
+}
+
 export type ModelSelection = {
   name: AvailableModel
   key: string | null
@@ -32,16 +44,9 @@ export interface ActiveSession {
 }
 
 export type State = {
-  // The latest capture, which must be relevant for the current goal. Set to
+  // The active capture, which must be relevant for the current goal. Set to
   // null when the user makes updates to the active goal, or clears it entirely.
-  activeCapture:
-    | (Capture & {
-        // Adding this here for the semantics. An `activeCapture` might be
-        // expired without being cleared.
-        expiresAt: string
-        impossibleToAssess: boolean
-      })
-    | null
+  activeCapture: LatestCapture | CaptureError | null
   nextCaptureAt: string | null
   session: ActiveSession | null
   // capture state
@@ -71,11 +76,7 @@ export const DEFAULT_STATE: State = {
   assessStartedAt: null,
   lastClosedAt: null,
   // settings
-  modelSelection: {
-    name: 'openai-4o',
-    key: null,
-    validatedAt: null,
-  },
+  modelSelection: null,
   captureEverySeconds: 60,
   isWindowPinned: false,
   customInstructions: null,

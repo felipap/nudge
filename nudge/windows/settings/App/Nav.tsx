@@ -1,9 +1,4 @@
-import {
-  AtomIcon,
-  CogIcon,
-  KeyboardIcon,
-  LucideCalendarRange,
-} from 'lucide-react'
+import { AtomIcon, CogIcon } from 'lucide-react'
 import { ReactNode, useEffect } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { closeWindow, minimizeWindow, zoomWindow } from '../../shared/ipc'
@@ -115,9 +110,9 @@ function useTabStateWithCmdShortcuts(
       if (e.metaKey && e.key >= '1' && e.key <= '4') {
         const tabMap: Record<string, Tab> = {
           '1': 'general',
-          '2': 'timeline',
-          '3': 'shortcuts',
-          '4': 'advanced',
+          // '2': 'timeline',
+          // '3': 'shortcuts',
+          '2': 'advanced',
         }
         const newTab = tabMap[e.key]
         if (newTab && newTab !== tab) {

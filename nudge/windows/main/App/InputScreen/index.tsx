@@ -10,6 +10,7 @@ import {
 import { useWindowHeight } from '../../../shared/lib'
 import { Button } from '../../../shared/ui/Button'
 import { Spinner } from '../../../shared/ui/icons'
+import { withBoundary } from '../../../shared/ui/withBoundary'
 import { GoalTextarea } from '../GoalTextarea'
 import { Nav } from '../Nav'
 import { GoalFeedback } from './GoalFeedback'
@@ -30,7 +31,7 @@ function onStoppedTypingForMs(
   }, [value])
 }
 
-export function InputWidget() {
+export const InputScreen = withBoundary(() => {
   useWindowHeight(250)
 
   // form state
@@ -83,7 +84,7 @@ export function InputWidget() {
       </footer>
     </>
   )
-}
+})
 
 interface StartSessionButtonProps {
   durationMinutes?: number | null

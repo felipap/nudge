@@ -1,8 +1,13 @@
+import * as Sentry from '@sentry/electron'
 import assert from 'assert'
 import dayjs from 'dayjs'
 import { Notification } from 'electron'
-import { assessFlowFromScreenshot, getOpenAiClient } from '../lib/ai'
-import { debug, error, log, warn } from '../lib/logger'
+import {
+  assessFlowFromScreenshot,
+  AssessmentResult,
+  getModelClient,
+} from '../lib/ai'
+import { debug, error, log, logError, warn } from '../lib/logger'
 import { captureActiveScreen } from '../lib/screen'
 import {
   addSavedCapture,
@@ -13,7 +18,6 @@ import {
   setNextCaptureAt,
   setPartialState,
   store,
-  updateLastCapture,
 } from '../store'
 import { Capture } from '../store/types'
 
@@ -133,8 +137,14 @@ class ScreenCaptureService {
       log('[capture-service] Error capturing screen:', e)
     }
 
-    console.log('this.frequencyMs', this.frequencyMs)
-    setNextCaptureAt(new Date(Date.now() + this.frequencyMs).toISOString())
+    const newNextCaptureAt = new Date(
+      Date.now() + this.frequencyMs
+    ).toISOString()
+    setNextCaptureAt(newNextCaptureAt)
+    debug(
+      '[capture-service] setNextCaptureAt',
+      dayjs(newNextCaptureAt).fromNow()
+    )
 
     this.isCapturing = false
   }
@@ -177,15 +187,15 @@ async function captureScreenTaskInner() {
     assessStartedAt: new Date().toISOString(),
   })
 
-  const openAiKey = getState().modelSelection?.key
-  if (!openAiKey) {
+  const modelSelection = getState().modelSelection
+  if (!modelSelection) {
     warn('[capture-service] No OpenAI key found')
     return
   }
 
-  const openai = getOpenAiClient(openAiKey)
+  const openai = getModelClient(modelSelection)
 
-  let ret
+  let ret: AssessmentResult
   try {
     log('[capture-service] Sending to server...')
     ret = await assessFlowFromScreenshot(
@@ -196,12 +206,33 @@ async function captureScreenTaskInner() {
       []
     )
   } catch (e) {
-    log('[capture-service] sendToOpenAI failed', e)
+    logError(
+      '[capture-service] assessFlowFromScreenshot failed unexpectedly',
+      e
+    )
+    // @ts-ignore fuck
+    Sentry.captureException(e)
     return {
-      error: 'Failed to send to server',
+      error: 'unknown',
     }
   } finally {
     setPartialState({ assessStartedAt: null })
+  }
+
+  if ('error' in ret) {
+    warn('[capture-service] assessment failed', ret)
+
+    // Update the active capture.
+    store.setState({
+      activeCapture: {
+        at: new Date().toISOString(),
+        modelError: ret.error,
+      },
+    })
+
+    return {
+      error: ret.error,
+    }
   }
 
   const capture: Capture = {
@@ -211,7 +242,13 @@ async function captureScreenTaskInner() {
     impossibleToAssess: ret.data.goalUnclear,
   }
 
-  updateLastCapture(capture)
+  // Update the active capture.
+  store.setState({
+    activeCapture: {
+      ...capture,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 2).toISOString(),
+    },
+  })
 
   addSavedCapture(capture)
 

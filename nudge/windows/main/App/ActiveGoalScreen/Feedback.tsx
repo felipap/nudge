@@ -5,12 +5,16 @@ import { State } from '../../../../src/store/types'
 import { useBackendState } from '../../../shared/ipc'
 import { FaHandPeace, FaSkull } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
+import { GhostIcon } from 'lucide-react'
 
 const ONE_MINUTE = 1 * 60 * 1_000
 
 type Feedback =
   | 'capturing'
   | 'improve-goal'
+  | 'credential-error'
+  | 'rate-limit'
+  | 'unknown-error'
   | 'doing-great'
   | 'try-concentrate'
   | null
@@ -41,6 +45,16 @@ function getFeedbackFromState(state: State): Feedback {
 
   if (!relevantCapture) {
     return null
+  }
+
+  if ('modelError' in relevantCapture) {
+    if (relevantCapture.modelError === 'rate-limit') {
+      return 'rate-limit'
+    }
+    if (relevantCapture.modelError === 'api-key') {
+      return 'credential-error'
+    }
+    return 'unknown-error'
   }
 
   if (relevantCapture.impossibleToAssess) {
@@ -98,14 +112,21 @@ export const Feedback = withBoundary(() => {
       </>
     )
     className = 'text-green-800 dark:text-green-300'
-  } else {
-    inner = (
-      <>
-        Try to concentrate{' '}
-        <FaSkull className="h-3 w-3 text-red-800 dark:text-red-300" />
-      </>
-    )
+  } else if (feedback === 'try-concentrate') {
+    inner = <>Try to concentrate {genErrorIcon()}</>
     className = 'text-red-800 dark:text-red-300'
+  } else if (feedback === 'credential-error') {
+    inner = <>Problem with your OpenAI key</>
+    className = 'text-red-800 dark:text-red-300'
+  } else if (feedback === 'rate-limit') {
+    inner = <>OpenAI rate-limited us</>
+    className = 'text-red-800 dark:text-red-300'
+  } else if (feedback === 'unknown-error') {
+    inner = <>AI failed with unknown error</>
+    className = 'text-red-800 dark:text-red-300'
+  } else {
+    feedback satisfies never
+    inner = <>Unknown error</>
   }
 
   return (
@@ -143,4 +164,14 @@ function useUpdateEvery(ms: number) {
     }, ms)
     return () => clearInterval(interval)
   }, [ms])
+}
+
+function genErrorIcon(key?: string) {
+  // return <GhostIcon className="h-4 w-4 text-red-800 dark:text-red-300" />
+  return <FaSkull className="h-3 w-3 text-red-800 dark:text-red-300" />
+  // const hash = key
+  //   ? key.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  //   : 0
+  // if (key) {
+  // }
 }

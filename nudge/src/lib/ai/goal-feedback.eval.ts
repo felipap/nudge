@@ -1,7 +1,7 @@
-import { getGoalFeedback, type GoalFeedback } from './goal-feedback'
-import { z } from 'zod'
-import { getOpenAiClient } from './index'
 import { zodResponseFormat } from 'openai/helpers/zod'
+import { z } from 'zod'
+import { getGoalFeedback, type GoalFeedback } from './goal-feedback'
+import { getModelClient } from './index'
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || ''
 if (!OPENAI_API_KEY) {
@@ -48,7 +48,11 @@ async function judgeResponse(
   testCase: TestCase,
   goal: string
 ) {
-  const client = getOpenAiClient(OPENAI_API_KEY)
+  const client = getModelClient({
+    name: 'openai-4o',
+    key: OPENAI_API_KEY!,
+    validatedAt: null,
+  })
 
   const response = await client.beta.chat.completions.parse({
     model: 'gpt-4.1-mini',

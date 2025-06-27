@@ -11,7 +11,7 @@ import { withBoundary } from '../../../shared/ui/withBoundary'
 import { GoalTextarea } from '../GoalTextarea'
 import { Nav } from '../Nav'
 
-export const ConfirmGoalWidget = withBoundary(() => {
+export const ConfirmGoalScreen = withBoundary(() => {
   useWindowHeight(250)
 
   const { state } = useBackendState()

@@ -6,7 +6,7 @@ import { OpenAI } from 'openai'
 import { zodResponseFormat } from 'openai/helpers/zod.mjs'
 import { ChatCompletionContentPart } from 'openai/resources'
 import { z } from 'zod'
-import { log } from '../logger'
+import { log, warn } from '../logger'
 
 const DEBUG = false
 
@@ -23,13 +23,22 @@ const AssessmentStruct = z.object({
 
 export type Assessment = z.infer<typeof AssessmentStruct>
 
+export type AssessmentResult =
+  | {
+      data: Assessment
+    }
+  | {
+      error: 'unknown' | 'api-key' | 'rate-limit'
+      message?: string
+    }
+
 export async function assessFlowFromScreenshot(
   client: OpenAI,
   base64content: string,
   goal: string,
   customInstructions: string | null,
   previousCaptures: string[]
-): Promise<{ data: Assessment; model: string }> {
+): Promise<AssessmentResult> {
   assert(goal, 'goal is required')
 
   const systemPrompt = makePrompt(goal, customInstructions, previousCaptures)
@@ -39,30 +48,57 @@ export async function assessFlowFromScreenshot(
 
   log('[ai/assessment] Calling OpenAI...')
   const start = Date.now()
-  const result = await client.beta.chat.completions.parse({
-    model: 'gpt-4o-mini',
-    messages: [
-      {
-        role: 'system',
-        content: systemPrompt,
-      },
-      {
-        role: 'user',
-        content: [
-          {
-            type: 'image_url',
-            image_url: {
-              // url: `data:image/jpeg;base64,${contents}`,
-              url: base64content,
+
+  let result
+  try {
+    result = await client.beta.chat.completions.parse({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content: systemPrompt,
+        },
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'image_url',
+              image_url: {
+                // url: `data:image/jpeg;base64,${contents}`,
+                url: base64content,
+              },
             },
-          },
-        ],
-      },
-    ],
-    response_format: zodResponseFormat(AssessmentStruct, 'suggestions'),
-    max_tokens: 300,
-    temperature: 0.3,
-  })
+          ],
+        },
+      ],
+      response_format: zodResponseFormat(AssessmentStruct, 'suggestions'),
+      max_tokens: 300,
+      temperature: 0.3,
+    })
+  } catch (e) {
+    warn('[ai/assessment] completion threw!', e)
+
+    console.log('is instance Auth', e instanceof OpenAI.AuthenticationError)
+    console.log('is instance RateLimit', e instanceof OpenAI.RateLimitError)
+    console.log('is instance APIError', e instanceof OpenAI.APIError)
+
+    if (e instanceof OpenAI.AuthenticationError) {
+      return {
+        error: 'api-key',
+      }
+    }
+    if (e instanceof OpenAI.RateLimitError) {
+      return {
+        error: 'rate-limit',
+      }
+    }
+
+    return {
+      error: 'unknown',
+      message: e.message,
+    }
+  }
+
   const elapsedMs = Date.now() - start
 
   log('[ai/assessment] elapsedMs', `${(elapsedMs / 1000).toFixed(2)}s`)
@@ -74,7 +110,6 @@ export async function assessFlowFromScreenshot(
 
   return {
     data: parsed,
-    model: 'gpt-4o-mini',
   }
 }
 

@@ -16,7 +16,7 @@ import { Nav } from '../Nav'
 import { Feedback } from './Feedback'
 import { SessionButton } from './SessionButton'
 
-export const ActiveGoalWidget = withBoundary(() => {
+export const ActiveGoalScreen = withBoundary(() => {
   useWindowHeight(250)
 
   const { state } = useBackendState()

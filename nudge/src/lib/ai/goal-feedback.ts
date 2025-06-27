@@ -1,6 +1,6 @@
-import { getOpenAiClient } from './index'
-import { z } from 'zod'
 import { zodResponseFormat } from 'openai/helpers/zod'
+import { z } from 'zod'
+import { getModelClient } from './index'
 
 const GoalFeedbackSchema = z.object({
   isGood: z.boolean(),
@@ -19,7 +19,11 @@ export async function getGoalFeedback(
   goal: string,
   openAiKey: string
 ): Promise<GoalFeedback> {
-  const client = getOpenAiClient(openAiKey)
+  const client = getModelClient({
+    name: 'openai-4o',
+    key: openAiKey,
+    validatedAt: null,
+  })
 
   const systemPrompt = `You are an AI that helps users stay focused by monitoring their screen.
 A good goal tells us:

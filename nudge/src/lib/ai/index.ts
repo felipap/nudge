@@ -1,19 +1,20 @@
+import assert from 'assert'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { OpenAI } from 'openai'
+import { ModelSelection } from '../../store'
 
 dayjs.extend(relativeTime)
 
-let saved: OpenAI | null = null
-export function getOpenAiClient(openAiKey: string) {
-  if (!saved) {
-    saved = new OpenAI({
-      apiKey: openAiKey,
-    })
-  }
-  return saved
+export function getModelClient(model: ModelSelection) {
+  assert(model.key, 'Model key is required')
+  assert(model.name === 'openai-4o')
+
+  return new OpenAI({
+    apiKey: model.key,
+  })
 }
 
-export * from './goal-feedback'
 export * from './assess-flow'
+export * from './goal-feedback'
 export * from './models'
