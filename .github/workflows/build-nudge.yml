@@ -71,8 +71,8 @@ jobs:
       #     path: nudge/out/make/zip/darwin/arm64/*.zip
       #     if-no-files-found: ignore
 
-      # Only create release on nudge-specific version tags
       - name: Create Release
+        # Only create release on nudge-specific version tags
         if: startsWith(github.ref, 'refs/tags/nudge-v')
         uses: softprops/action-gh-release@v1
         with:

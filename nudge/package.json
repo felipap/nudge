@@ -1,6 +1,6 @@
 {
   "name": "nudge",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "An AI that nudges you to stay on track",
   "main": ".vite/build/main.js",
   "scripts": {
@@ -14,6 +14,10 @@
     "lint": "eslint --ext .ts,.tsx ."
   },
   "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felipap/nudge"
+  },
   "author": {
     "name": "Felipe Aragão",
     "email": "faragaop@gmail.com"
@@ -32,6 +36,7 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.7.0",
     "@electron-forge/plugin-fuses": "^7.7.0",
     "@electron-forge/plugin-vite": "^7.7.0",
+    "@electron-forge/publisher-github": "^7.8.1",
     "@electron-forge/shared-types": "^7.7.0",
     "@electron/fuses": "^1.8.0",
     "@tailwindcss/vite": "^4.0.12",
@@ -87,6 +92,7 @@
     "source-map-support": "^0.5.21",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.0.12",
+    "update-electron-app": "^3.1.1",
     "zod": "^3.24.2",
     "zustand": "^5.0.3"
   },

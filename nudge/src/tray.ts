@@ -1,14 +1,17 @@
 // This file is a huge mess, please help.
 
+import { updateElectronApp } from 'update-electron-app'
 import assert from 'assert'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import {
+  BrowserWindow,
   Menu,
   MenuItem,
   MenuItemConstructorOptions,
   Tray,
   app,
+  dialog,
   nativeImage,
   nativeTheme,
 } from 'electron'
@@ -124,21 +127,31 @@ export function createTray() {
             updateTrayMenu()
           },
         },
-
-        {
-          label: needsConfiguration
-            ? 'Enter your OpenAI key...'
-            : 'Preferences...',
-          click: () => {
-            prefWindow!.show()
-          },
-        },
       ])
     }
     template = template.concat([
+      {
+        label: 'Settings...',
+        accelerator: 'CmdOrCtrl+,',
+        click: () => {
+          prefWindow!.show()
+        },
+      },
       { type: 'separator' },
       {
+        label: `Version ${app.getVersion()}`,
+        enabled: false,
+      },
+      {
+        label: `Check for updates...`,
+        click: () => {
+          onClickCheckForUpdates()
+        },
+      },
+      {
         label: 'Quit',
+        sublabel: '⌘Q',
+        accelerator: 'CmdOrCtrl+Q',
         click: () => {
           app.isQuitting = true
           app.quit()
@@ -228,4 +241,18 @@ function getTrayIconForStatus(status: IndicatorState) {
   } else {
     return getImagePath(`nudge-default.png`)
   }
+}
+
+function onClickCheckForUpdates() {
+  updateElectronApp() // additional configuration options available
+
+  // dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
+  //   type: 'info',
+  //   buttons: ['OK'],
+  //   defaultId: 0,
+  //   title: 'You’re up to date!',
+  //   message: 'You’re up to date!',
+  //   detail: 'superwhisper 1.47.0 is currently the newest version available.',
+  //   icon: getImagePath('original.png'),
+  // })
 }
