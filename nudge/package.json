@@ -1,6 +1,6 @@
 {
   "name": "nudge",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An AI that nudges you to stay on track",
   "main": ".vite/build/main.js",
   "scripts": {
