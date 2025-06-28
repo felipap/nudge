@@ -7,7 +7,7 @@ export const EnterKeyScreen = withBoundary(() => {
   useWindowHeight(250)
 
   return (
-    <div className="p-4 flex flex-col gap-1">
+    <div className="p-4 flex flex-col gap-1 [app-region:drag]">
       {/* <img src={'images/original.png'} alt="Nudge" className="w-10 h-10" /> */}
 
       <h2 className="text-[16px] font-display-3p font-medium">
