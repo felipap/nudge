@@ -1,4 +1,4 @@
-name: Build and Test
+name: Lint, type-check and build
 
 on:
   push:
@@ -25,13 +25,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+      - name: Run lint
+        run: pnpm run lint
 
-      - name: Install Xcode Command Line Tools
-        run: xcode-select --install || true
+      - name: Run TypeScript check for main
+        run: pnpm run ts-check-main
+
+      - name: Run TypeScript check for windows
+        run: pnpm run ts-check-windows
 
       - name: Rebuild native dependencies
         run: pnpm rebuild
