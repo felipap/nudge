@@ -6,9 +6,9 @@ import {
   assessFlowFromScreenshot,
   AssessmentResult,
   getModelClient,
-} from '../lib/ai'
-import { debug, error, log, logError, warn } from '../lib/logger'
-import { captureActiveScreen } from '../lib/screen'
+} from './ai'
+import { debug, error, log, logError, warn } from './logger'
+import { captureActiveScreen } from './screen'
 import {
   addSavedCapture,
   getActiveGoal,

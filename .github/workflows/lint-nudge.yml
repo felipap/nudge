@@ -6,13 +6,13 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'nudge/**'
+    # paths:
+    #   - 'nudge/**'
   pull_request:
     branches:
       - main
-    paths:
-      - 'nudge/**'
+    # paths:
+    #   - 'nudge/**'
 
 jobs:
   lint:
@@ -28,21 +28,21 @@ jobs:
           node-version: '20.11'
 
       - name: Enable Corepack
-        working-directory: ./nudge
+        # working-directory: ./nudge
         run: corepack enable
 
       - name: Install dependencies
-        working-directory: ./nudge
+        # working-directory: ./nudge
         run: pnpm install --frozen-lockfile
 
       - name: Run lint
-        working-directory: ./nudge
+        # working-directory: ./nudge
         run: pnpm run lint
 
       - name: Run TypeScript check for main
-        working-directory: ./nudge
+        # working-directory: ./nudge
         run: pnpm run ts-check-main
 
       - name: Run TypeScript check for windows
-        working-directory: ./nudge
+        # working-directory: ./nudge
         run: pnpm run ts-check-windows

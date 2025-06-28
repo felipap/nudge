@@ -59,18 +59,18 @@ const config: ForgeConfig = {
     // new MakerRpm({}),
     // new MakerDeb({}),
   ].filter(isTruthy),
-  // publishers: [
-  //   {
-  //     name: '@electron-forge/publisher-github',
-  //     config: {
-  //       repository: {
-  //         owner: 'felipap',
-  //         name: 'nudge',
-  //       },
-  //       prerelease: false,
-  //     },
-  //   },
-  // ],
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'felipap',
+          name: 'nudge',
+        },
+        prerelease: false,
+      },
+    },
+  ],
   plugins: [
     new VitePlugin({
       // `build` can specify multiple entry builds, which can be Main process,

@@ -6,10 +6,8 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - 'nudge/**'
     tags:
-      - 'nudge-v*.*.*' # Only trigger on version tags like nudge-v1.0.0
+      - '*.*.*' # Only trigger on version tags like 1.0.0
 
 jobs:
   build:
@@ -31,11 +29,11 @@ jobs:
           node-version: '20.11' # Match the exact version from package.json
 
       - name: Enable Corepack
-        working-directory: ./nudge
+        # working-directory: ./nudge
         run: corepack enable
 
       - name: Install dependencies
-        working-directory: ./nudge
+        # working-directory: ./nudge
         run: pnpm install --frozen-lockfile
 
       - name: Import code signing certificate
@@ -53,11 +51,11 @@ jobs:
         run: xcode-select --install || true
 
       - name: Rebuild native dependencies
-        working-directory: ./nudge
+        # working-directory: ./nudge
         run: pnpm rebuild
 
       - name: Build Electron app
-        working-directory: ./nudge
+        # working-directory: ./nudge
         run: pnpm run make
 
       # # For debugging
@@ -73,13 +71,13 @@ jobs:
 
       - name: Create Release
         # Only create release on nudge-specific version tags
-        if: startsWith(github.ref, 'refs/tags/nudge-v')
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
           name: 'Nudge ${{ github.ref_name }}'
           files: |
-            nudge/out/make/**/*.dmg
-            nudge/out/make/**/*.zip
+            out/make/**/*.dmg
+            out/make/**/*.zip
           draft: false
           prerelease: false
           generate_release_notes: true
