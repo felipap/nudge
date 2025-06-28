@@ -1,4 +1,4 @@
-name: Build and Release Nudge App
+name: Build and Release
 permissions:
   contents: write
 
