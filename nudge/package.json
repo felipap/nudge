@@ -14,10 +14,7 @@
     "lint": "eslint --ext .ts,.tsx ."
   },
   "keywords": [],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/felipap/nudge"
-  },
+  "repository": "https://github.com/felipap/nudge",
   "author": {
     "name": "Felipe Aragão",
     "email": "faragaop@gmail.com"
