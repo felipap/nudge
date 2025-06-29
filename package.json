@@ -1,6 +1,6 @@
 {
   "name": "nudge",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "An AI that nudges you to stay on track",
   "main": ".vite/build/main.js",
   "scripts": {
@@ -13,7 +13,8 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
     "app:dir": "electron-builder --dir",
-    "app:dist": "electron-builder"
+    "app:dist": "electron-builder",
+    "release": "standard-version"
   },
   "keywords": [],
   "repository": "https://github.com/felipap/nudge",
@@ -55,6 +56,7 @@
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.31.0",
     "nodemon": "^3.1.9",
+    "standard-version": "^9.5.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.8.3",
     "vite": "^5.4.14",
