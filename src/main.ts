@@ -1,6 +1,6 @@
 import 'source-map-support/register'
-import * as Sentry from '@sentry/electron'
 
+import * as Sentry from '@sentry/electron'
 import { app, BrowserWindow } from 'electron'
 import started from 'electron-squirrel-startup'
 import { setupIPC } from './ipc'
@@ -146,3 +146,5 @@ app.on('activate', () => {
 app.on('before-quit', () => {
   app.isQuitting = true
 })
+
+// if("darwin"!==process.platform)return;if(r.default.development)return;if(o.app.isInApplicationsFolder())return;console.log("Prompting to move to Applications Folder");const{response:e}=yield o.dialog.showMessageBox({type:"question",buttons:["Move to Applications Folder","Not Now"],defaultId:0,message:"Move to Applications Folder?",detail:"Moving Reflect to your Applications folder ensures proper functionality and makes it easier to find. This is recommended for most users.",cancelId:1});0===e&&(o.app.moveToApplicationsFolder()||o.dialog.showErrorBox("Error","Failed to move to Applications Folder"))

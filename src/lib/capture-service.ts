@@ -3,13 +3,6 @@ import assert from 'assert'
 import dayjs from 'dayjs'
 import { Notification } from 'electron'
 import {
-  assessFlowFromScreenshot,
-  AssessmentResult,
-  getModelClient,
-} from './ai'
-import { debug, error, log, logError, warn } from './logger'
-import { captureActiveScreen } from './screen'
-import {
   addSavedCapture,
   getActiveGoal,
   getNextCaptureAt,
@@ -20,6 +13,14 @@ import {
   store,
 } from '../store'
 import { Capture } from '../store/types'
+import {
+  assessFlowFromScreenshot,
+  AssessmentResult,
+  getModelClient,
+} from './ai'
+import { VERBOSE } from './config'
+import { debug, error, log, logError, warn } from './logger'
+import { captureActiveScreen } from './screen'
 
 const DOUBLE_NUDGE_THRESHOLD = 5 * 60 * 1000
 
@@ -122,7 +123,9 @@ class ScreenCaptureService {
 
     const nextCaptureAt = getNextCaptureAt()
     if (nextCaptureAt && dayjs(nextCaptureAt).isAfter(dayjs())) {
-      debug('[capture-service] skipping')
+      if (VERBOSE) {
+        debug('[capture-service] skipping')
+      }
       this.isCapturing = false
       return
     }
@@ -141,10 +144,12 @@ class ScreenCaptureService {
       Date.now() + this.frequencyMs
     ).toISOString()
     setNextCaptureAt(newNextCaptureAt)
-    debug(
-      '[capture-service] setNextCaptureAt',
-      dayjs(newNextCaptureAt).fromNow()
-    )
+    if (VERBOSE) {
+      debug(
+        '[capture-service] setNextCaptureAt',
+        dayjs(newNextCaptureAt).fromNow()
+      )
+    }
 
     this.isCapturing = false
   }

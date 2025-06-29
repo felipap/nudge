@@ -1,6 +1,6 @@
 {
   "name": "nudge",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "An AI that nudges you to stay on track",
   "main": ".vite/build/main.js",
   "scripts": {
@@ -11,7 +11,9 @@
     "ts-check-windows": "tsc --noEmit -p windows/settings/tsconfig.json && tsc --noEmit -p windows/main/tsconfig.json",
     "make": "IS_MAKE=true electron-forge make --arch=\"arm64\"",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint": "eslint --ext .ts,.tsx .",
+    "app:dir": "electron-builder --dir",
+    "app:dist": "electron-builder"
   },
   "keywords": [],
   "repository": "https://github.com/felipap/nudge",
@@ -47,6 +49,7 @@
     "@typescript-eslint/parser": "^5.62.0",
     "@vitejs/plugin-react": "^4.6.0",
     "electron": "35.0.0",
+    "electron-builder": "^26.0.12",
     "electron-osx-sign": "^0.6.0",
     "electron-squirrel-startup": "^1.0.1",
     "eslint": "^8.57.1",
@@ -74,7 +77,9 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",
     "electron-store": "^10.0.1",
+    "electron-updater": "^6.6.2",
     "express": "^5.1.0",
+    "find-process": "^1.4.10",
     "framer-motion": "^12.17.3",
     "lodash": "^4.17.21",
     "lucide-react": "^0.501.0",

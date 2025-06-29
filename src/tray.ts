@@ -1,20 +1,19 @@
 // This file is a huge mess, please help.
 
-import { updateElectronApp } from 'update-electron-app'
 import assert from 'assert'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import {
-  BrowserWindow,
   Menu,
   MenuItem,
   MenuItemConstructorOptions,
   Tray,
+  // autoUpdater
   app,
-  dialog,
   nativeImage,
   nativeTheme,
 } from 'electron'
+// import { updateElectronApp } from 'update-electron-app'
 import { screenCaptureService } from './lib/capture-service'
 import { getImagePath, isTruthy } from './lib/utils'
 import {
@@ -25,6 +24,7 @@ import {
   onIndicatorStateChange,
   store,
 } from './store'
+import { onClickCheckForUpdates } from './updater'
 import { mainWindow, prefWindow } from './windows'
 
 dayjs.extend(relativeTime)
@@ -144,8 +144,8 @@ export function createTray() {
       },
       {
         label: `Check for updates...`,
-        click: () => {
-          onClickCheckForUpdates()
+        click: async () => {
+          await onClickCheckForUpdates()
         },
       },
       {
@@ -241,18 +241,4 @@ function getTrayIconForStatus(status: IndicatorState) {
   } else {
     return getImagePath(`nudge-default.png`)
   }
-}
-
-function onClickCheckForUpdates() {
-  updateElectronApp() // additional configuration options available
-
-  // dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
-  //   type: 'info',
-  //   buttons: ['OK'],
-  //   defaultId: 0,
-  //   title: 'You’re up to date!',
-  //   message: 'You’re up to date!',
-  //   detail: 'superwhisper 1.47.0 is currently the newest version available.',
-  //   icon: getImagePath('original.png'),
-  // })
 }

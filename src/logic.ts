@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { Notification } from 'electron'
 import { debug, log, logError } from './lib/logger'
 import { getMsLeftInSession, getState, setPartialState } from './store'
+import { VERBOSE } from './lib/config'
 
 const LOOP_INTERVAL = 2_000
 
@@ -68,11 +69,15 @@ export function onAppStart() {
 }
 
 async function loop() {
-  debug('[logic/loop] loop')
+  if (VERBOSE) {
+    debug('[logic/loop] loop')
+  }
 
   const { session } = getState()
   if (!session) {
-    debug('[logic/loop] no active goal')
+    if (VERBOSE) {
+      debug('[logic/loop] no active goal')
+    }
     return
   }
 
