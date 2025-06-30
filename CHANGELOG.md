@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.19](https://github.com/felipap/nudge/compare/v0.0.18...v0.0.19) (2025-06-30)
+
+
+### Features
+
+* add first-open telemetry event ([d56f4aa](https://github.com/felipap/nudge/commit/d56f4aa356318c205ea7201648578993a234192d))
+
+
+### Bug Fixes
+
+* sentry import path ([d227f5e](https://github.com/felipap/nudge/commit/d227f5e8c30e7e9c4efbff8cbfb9d0f0179eeefa))
+
 ### [0.0.18](https://github.com/felipap/nudge/compare/v0.0.17...v0.0.18) (2025-06-30)
 
 
