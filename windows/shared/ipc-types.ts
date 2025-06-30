@@ -17,6 +17,7 @@ type SharedIpcMethods = {
   openExternal: (url: string) => Promise<void>
   clearActiveCapture: () => Promise<void>
   openGithubDiscussion: () => Promise<void>
+  openSystemSettings: () => Promise<void>
   getGoalFeedback: (goal: string) => Promise<any>
   pauseSession: () => Promise<void>
   resumeSession: () => Promise<void>

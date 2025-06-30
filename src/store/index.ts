@@ -1,5 +1,6 @@
 import { create, StoreApi } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { checkScreenPermissions } from '../lib/screenshot'
 import { fileStore } from './backend'
 import type { Capture, State } from './types'
 import { DEFAULT_STATE } from './types'
@@ -124,4 +125,13 @@ export function getMsLeftInSession() {
   }
 
   return session.goalDurationMs - elapsedMs
+}
+
+export function hasFinishedOnboardingSteps() {
+  const state = store.getState()
+
+  const hasOpenAiKey = !!state.modelSelection?.key
+  const hasScreenPermissions = checkScreenPermissions()
+
+  return hasOpenAiKey && hasScreenPermissions
 }

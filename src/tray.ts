@@ -10,22 +10,18 @@ import {
   Tray,
   // autoUpdater
   app,
-  dialog,
   nativeImage,
   nativeTheme,
 } from 'electron'
 // import { updateElectronApp } from 'update-electron-app'
 import { screenCaptureService } from './lib/capture-service'
-import {
-  checkScreenPermissions,
-  tryAskForScrenPermissions,
-} from './lib/screenshot'
 import { getImagePath, isTruthy } from './lib/utils'
 import {
   IndicatorState,
   getNextCaptureAt,
   getState,
   getStateIndicator,
+  hasFinishedOnboardingSteps,
   onIndicatorStateChange,
   store,
 } from './store'
@@ -56,39 +52,8 @@ export function createTray() {
   const tray = new Tray(trayIcon)
 
   async function buildTrayMenu() {
-    const hasOpenAiKey = !!getState().modelSelection?.key
-    const hasScreenPermissions = true // await checkScreenPermissions()
-
     let template: (MenuItemConstructorOptions | MenuItem | false)[] = []
-    if (!hasOpenAiKey || !hasScreenPermissions) {
-      if (!hasScreenPermissions) {
-        template.push({
-          label: 'Grant screen permissions',
-          click: async () => {
-            const { status } = await tryAskForScrenPermissions()
-            if (status === 'granted') {
-              updateTrayMenu()
-              return
-            }
-
-            // await dialog.showMessageBox({
-            //   type: 'info',
-            //   message: 'New version available',
-            //   detail: 'Will be installed when you quit.',
-            //   icon: getImagePath('nudge-default.png'),
-            // })
-          },
-        })
-      }
-      if (!hasOpenAiKey) {
-        template.push({
-          label: 'Enter your OpenAI key',
-          click: () => {
-            prefWindow!.show()
-          },
-        })
-      }
-      template.push({ type: 'separator' })
+    if (!hasFinishedOnboardingSteps()) {
     } else {
       const nextCaptureAt = getNextCaptureAt()
       const captureFromNow = nextCaptureAt

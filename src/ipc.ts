@@ -220,6 +220,18 @@ export function setupIPC() {
     return await shell.openExternal(GITHUB_DISCUSSIONS_URL)
   })
 
+  ipcMainTyped.handle('openSystemSettings', async () => {
+    // On macOS, we can open System Settings to the Screen Recording section
+    if (process.platform === 'darwin') {
+      return await shell.openExternal(
+        'x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture'
+      )
+    } else {
+      // For other platforms, just open the general settings
+      return await shell.openExternal('x-apple.systempreferences:')
+    }
+  })
+
   //
   //
   //

@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { twMerge } from 'tailwind-merge'
 import {
   openGithubDiscussion,
+  openSystemSettings,
   tryAskForScrenPermissions,
   useScreenPermissionState,
 } from '../../../shared/ipc'
@@ -85,12 +86,22 @@ export const ScreenPermissions = withBoundary(() => {
           </div>
         </div>
         {!hasPermission && (
-          <p className="text-secondary [&>strong]:text-contrast/80 [&>strong]:font-normal pr-10">
-            Go to <strong>System Settings</strong> &gt;{' '}
-            <strong>Privacy &amp; Security</strong> &gt;{' '}
-            <strong>Screen Recording</strong>, find Nudge in the list and turn
-            the switch on.
-          </p>
+          <div className="flex flex-col gap-2">
+            <p className="text-secondary [&>strong]:text-contrast/80 [&>strong]:font-normal pr-10">
+              Go to <strong>System Settings</strong> &gt;{' '}
+              <strong>Privacy &amp; Security</strong> &gt;{' '}
+              <strong>Screen Recording</strong>, find Nudge in the list and turn
+              the switch on.
+            </p>
+            <button
+              onClick={() => {
+                openSystemSettings()
+              }}
+              className="self-start text-link hover:underline text-[13px]"
+            >
+              Open System Settings
+            </button>
+          </div>
         )}
       </section>
 

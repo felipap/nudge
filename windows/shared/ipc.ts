@@ -57,6 +57,10 @@ export async function openGithubDiscussion() {
   return await window.electronAPI.openGithubDiscussion()
 }
 
+export async function openSystemSettings() {
+  return await window.electronAPI.openSystemSettings()
+}
+
 //
 
 export function closeWindow() {

@@ -75,7 +75,7 @@ export async function tryAskForScrenPermissions(): Promise<{
   }
 }
 
-export async function checkScreenPermissions(): Promise<boolean> {
+export function checkScreenPermissions(): boolean {
   if (process.platform !== 'darwin') {
     return true // On other platforms, assume granted
   }

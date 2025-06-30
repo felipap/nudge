@@ -1,7 +1,7 @@
 import { app, BrowserWindow, screen } from 'electron'
 import path from 'node:path'
 import { getImagePath } from './lib/utils'
-import { getState, store } from './store'
+import { getState, hasFinishedOnboardingSteps, store } from './store'
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
 declare const MAIN_WINDOW_VITE_NAME: string
@@ -30,13 +30,13 @@ export function createMainWindow() {
     vibrancy: 'fullscreen-ui',
     show: true,
     // alwaysOnTop: true,
+
     x:
       primaryDisplay.workArea.x +
       primaryDisplay.workArea.width -
       windowWidth -
       edgeOffset,
     y: primaryDisplay.workArea.y + edgeOffset,
-    alwaysOnTop: getState().isWindowPinned,
     webPreferences: {
       preload: path.join(__dirname, '../renderer/preload.js'),
       webSecurity: false,
@@ -49,13 +49,22 @@ export function createMainWindow() {
     app.dock.setIcon(getImagePath('icon-development.png'))
   }
 
+  // Pin widget?
+  function onChangePinnedState() {
+    // Only allow pinning if onboarding is complete. Otherwise giving the user
+    // the option might be confusing.
+    const pin = getState().isWindowPinned && hasFinishedOnboardingSteps()
+    win.setAlwaysOnTop(pin, 'floating')
+  }
   let lastPinnedState = getState().isWindowPinned
   store.subscribe((state) => {
     if (state.isWindowPinned !== lastPinnedState) {
-      win.setAlwaysOnTop(state.isWindowPinned, 'floating')
+      onChangePinnedState()
       lastPinnedState = state.isWindowPinned
     }
   })
+  onChangePinnedState()
+  // -----
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
