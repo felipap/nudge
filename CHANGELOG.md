@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/felipap/nudge/compare/v0.0.10...v0.0.11) (2025-06-30)
+
+
+### Features
+
+* allow users to open system settings to grant permissions ([70dab3b](https://github.com/felipap/nudge/commit/70dab3b95d1aa88580fd1e4f8449d62344066a4a))
+
 ### [0.0.10](https://github.com/felipap/nudge/compare/v0.0.9...v0.0.10) (2025-06-30)
 
 ### Features
