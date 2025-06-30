@@ -244,7 +244,7 @@ function getTrayIconForStatus(status: IndicatorState) {
     return getImagePath(`nudge-capturing.png`)
   } else if (status === 'assessing') {
     return getImagePath(`nudge-assessing.png`)
-  } else if (status === 'inactive') {
+  } else if (status === 'inactive' || status === 'paused') {
     return getImagePath(`nudge-inactive.png`)
   } else {
     return getImagePath(`nudge-default.png`)

@@ -90,6 +90,9 @@ export function onIndicatorStateChange(
 
 export function getStateIndicator(): IndicatorState {
   const state = store.getState()
+  if (state.session?.pausedAt) {
+    return 'paused'
+  }
   if (state.captureStartedAt) {
     return 'capturing'
   }
@@ -102,7 +105,12 @@ export function getStateIndicator(): IndicatorState {
   return 'inactive'
 }
 
-export type IndicatorState = 'active' | 'inactive' | 'capturing' | 'assessing'
+export type IndicatorState =
+  | 'active'
+  | 'inactive'
+  | 'capturing'
+  | 'assessing'
+  | 'paused'
 
 //
 //
