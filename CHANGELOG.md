@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.16](https://github.com/felipap/nudge/compare/v0.0.15...v0.0.16) (2025-06-30)
+
+
+### Features
+
+* hide from dock if all windows closed ([2c75a36](https://github.com/felipap/nudge/commit/2c75a365f1575af89fa58381399bb3026a697991))
+* new icon for paused ([5a8450b](https://github.com/felipap/nudge/commit/5a8450bd030f1d846c177be8e4dbcdfec89b7b07))
+* small clean up of tray menu ([dd94e33](https://github.com/felipap/nudge/commit/dd94e33381b4565376fdaedfd462b69c6d9fc13f))
+
 ### [0.0.15](https://github.com/felipap/nudge/compare/v0.0.14...v0.0.15) (2025-06-30)
 
 
