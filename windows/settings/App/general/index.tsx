@@ -1,4 +1,5 @@
 import { withBoundary } from '../../../shared/ui/withBoundary'
+import { NeedHelpFooter } from '../screen'
 import { Hr, SectionWithHeader } from '../ui'
 import { FrequencyInput } from './FrequencyInput'
 import { LaunchOnStartup } from './LaunchOnStartup'
@@ -6,22 +7,28 @@ import { ModelFieldGroup } from './ModelFieldGroup'
 
 export const General = withBoundary(() => {
   return (
-    <main className="p-4 pb-10 grid grid-cols-1 gap-5 text-[13px] w-full">
+    <main className="flex flex-col justify-between h-full p-4 text-[13px] w-full">
       {/* <About />z */}
-      <SectionWithHeader
-        title="Model Selection"
-        subtitle="Nudge works best with OpenAI's 4o model."
-      >
-        <ModelFieldGroup />
-      </SectionWithHeader>
-      <Hr />
-      <section>
-        <FrequencyInput />
-      </section>
-      <Hr />
-      <section>
-        <LaunchOnStartup />
-      </section>
+      <div className="flex flex-col gap-4">
+        <SectionWithHeader
+          title="Model Selection"
+          subtitle="Nudge only supports OpenAI's 4o model today."
+        >
+          <ModelFieldGroup />
+        </SectionWithHeader>
+        <Hr />
+        <section>
+          <FrequencyInput />
+        </section>
+        <Hr />
+        <section>
+          <LaunchOnStartup />
+        </section>
+      </div>
+      <div className="flex-1"></div>
+      <div>
+        <NeedHelpFooter />
+      </div>
     </main>
   )
 })
