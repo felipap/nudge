@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/electron'
+import * as Sentry from '@sentry/electron/main'
 import assert from 'assert'
 import dayjs from 'dayjs'
 import { Notification } from 'electron'
@@ -213,7 +213,7 @@ async function captureScreenTaskInner() {
       '[capture-service] assessFlowFromScreenshot failed unexpectedly',
       e
     )
-    // @ts-ignore fuck
+
     Sentry.captureException(e)
     return {
       error: 'unknown',

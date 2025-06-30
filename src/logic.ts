@@ -1,8 +1,9 @@
 import dayjs from 'dayjs'
 import { Notification } from 'electron'
-import { debug, log, logError } from './lib/logger'
-import { getMsLeftInSession, getState, setPartialState } from './store'
 import { VERBOSE } from './lib/config'
+import { debug, log, logError } from './lib/logger'
+import { tryMaybeRegisterFirstOpen } from './lib/telemetry'
+import { getMsLeftInSession, getState, setPartialState } from './store'
 
 const LOOP_INTERVAL = 2_000
 
@@ -14,6 +15,8 @@ export function onAppStart() {
     throw new Error('onAppStart already called')
   }
   hasStartedLogic = true
+
+  tryMaybeRegisterFirstOpen()
 
   // Reset captureStartedAt and assessStartedAt, which might still be set if app
   // quit in the middle of a capture.

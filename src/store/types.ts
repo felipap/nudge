@@ -64,6 +64,10 @@ export type State = {
   // history of captures
   savedCaptures: Capture[]
   customInstructions: string | null
+  events?: {
+    firstOpenedAt?: Date
+    finishedOnboardingAt?: Date
+  }
 }
 
 export const DEFAULT_STATE: State = {

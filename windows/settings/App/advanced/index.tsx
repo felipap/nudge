@@ -4,7 +4,7 @@ import { setPartialState, useBackendState } from '../../../shared/ipc'
 import { Textarea } from '../../../shared/ui/native/Textarea'
 import { SectionWithHeader } from '../ui'
 
-export function AdvancedTab() {
+export function ModelTab() {
   const [customInstructions, setCustomInstructions] =
     useCustomInstructionState()
 

@@ -2,7 +2,7 @@
 
 ## v0.0.x
 
-- [ ] Where can one get logs?
+- [ ] Where can users get stdout/stderr logs?
 - [ ] Support multiple screens.
 - [ ] Notify when fails to capture scren.
 - [x] Notify when API key stops working.

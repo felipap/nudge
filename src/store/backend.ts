@@ -1,4 +1,5 @@
 import 'dotenv/config'
+
 import Store from 'electron-store'
 import { DEFAULT_STATE, State } from './types'
 
