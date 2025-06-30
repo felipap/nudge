@@ -52,6 +52,9 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
   <p>
     Nudge has no external servers today. All the screenshots are exchanged directly between your computer and OpenAI's servers. Nudge does not accumulate screenshots inside of your computer either. Once they're sent to OpenAI, they're discarded. The data sent to 4o may be accessible by the owner of the API key you enter.
   </p>
+  <p>
+    We use <a href="https://sentry.io" target="_blank">Sentry</a> to track errors but <a href="https://docs.sentry.io/platforms/javascript/configuration/options/#sendDefaultPii" target="_blank">we don't collect PII as far as I know</a>.
+  </p>
 </details>
 <details>
   <summary>

@@ -65,7 +65,8 @@ export const ScreenPermissions = withBoundary(() => {
         </div>
         <p className="text-[14px] leading-[1.4] text-secondary">
           Nudge takes screenshots periodically and sends them directly to your
-          chosen model for analysis. Your data is not sent to any other servers.
+          chosen model for analysis. Your screenshots are not sent to any other
+          servers.
         </p>
       </section>
 
