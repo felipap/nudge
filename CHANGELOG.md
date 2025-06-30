@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.12](https://github.com/felipap/nudge/compare/v0.0.10...v0.0.12) (2025-06-30)
+
+
+### Features
+
+* roadmap file ([7bcf506](https://github.com/felipap/nudge/commit/7bcf506001f67ca560f660318848e73ae4d6066f))
+
 ### [0.0.11](https://github.com/felipap/nudge/compare/v0.0.10...v0.0.11) (2025-06-30)
 
 
