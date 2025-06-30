@@ -55,10 +55,10 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 </details>
 <details>
   <summary>
-    Can I use a model different from GPT-4o?
+    Can I use a model other than GPT-4o?
   </summary>
   <p>
-    Not today but I will ship if enough users ask for it. <a href="https://github.com/felipap/nudge/issues/new">File an issue.</a>
+    Not today but I will ship if enough users ask for it. <a href="https://github.com/felipap/nudge/discussions/new">Start a discussion.</a>
   </p>
 </details>
 <!-- <details>
