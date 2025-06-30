@@ -2,8 +2,9 @@
 
 ## v0.0.x
 
-- [ ] Notify when API key stops working.
 - [ ] Support multiple screens.
+- [ ] Notify when fails to capture scren.
+- [x] Notify when API key stops working.
 - [x] Onboarding: Ask for OpenAI key.
 - [x] Onboarding: Ask for screen permissions.
 - [x] Offer users a way to contact for feedback.
