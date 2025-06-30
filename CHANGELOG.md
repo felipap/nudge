@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.18](https://github.com/felipap/nudge/compare/v0.0.17...v0.0.18) (2025-06-30)
+
+
+### Features
+
+* add help footer to Settings ([1597a84](https://github.com/felipap/nudge/commit/1597a8458f1a372d74dca883362c0e8f8beb5b14))
+
 ### [0.0.17](https://github.com/felipap/nudge/compare/v0.0.16...v0.0.17) (2025-06-30)
 
 
