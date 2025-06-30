@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.14](https://github.com/felipap/nudge/compare/v0.0.13...v0.0.14) (2025-06-30)
+
+
+### Bug Fixes
+
+* dont show capture state in tray menu when paused ([201f9cd](https://github.com/felipap/nudge/commit/201f9cdb223e3a516950ab28ae54a3bdf778b95f))
+
 ### [0.0.13](https://github.com/felipap/nudge/compare/v0.0.12...v0.0.13) (2025-06-30)
 
 ### [0.0.12](https://github.com/felipap/nudge/compare/v0.0.10...v0.0.12) (2025-06-30)
