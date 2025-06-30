@@ -5,7 +5,6 @@ import { State } from '../../../../src/store/types'
 import { useBackendState } from '../../../shared/ipc'
 import { FaHandPeace, FaSkull } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
-import { GhostIcon } from 'lucide-react'
 
 const ONE_MINUTE = 1 * 60 * 1_000
 
@@ -19,7 +18,7 @@ type Feedback =
   | 'try-concentrate'
   | null
 
-function getFeedbackFromState(state: State): Feedback {
+function getFeedbackFromState(state: State | null): Feedback {
   if (state?.captureStartedAt || state?.assessStartedAt) {
     return 'capturing'
   }
@@ -37,11 +36,15 @@ function getFeedbackFromState(state: State): Feedback {
     (!state.session.contentUpdatedAt ||
       new Date(state.session.contentUpdatedAt).getTime() <
         new Date(state.activeCapture.at).getTime()) &&
-    // Goal was not paused since last capture
-    (!state.session.pausedAt ||
-      new Date(state.session.pausedAt).getTime() >
+    // Session is not paused.
+    // !state.session.pausedAt &&
+    // // If session was paused, it was resumed before the last capture.
+    (!state.session.resumedAt ||
+      new Date(state.session.resumedAt).getTime() <
         new Date(state.activeCapture.at).getTime()) &&
     state.activeCapture
+
+  console.log('activeCapture', relevantCapture)
 
   if (!relevantCapture) {
     return null

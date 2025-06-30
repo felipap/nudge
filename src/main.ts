@@ -14,12 +14,12 @@ if (app.isPackaged) {
   // @ts-ignore // wtf Sentry!
   Sentry.init({
     dsn: 'https://df66516e528e1e116926f9631fca55f3@o175888.ingest.us.sentry.io/4509567206555648',
+    release: app.getVersion(),
   })
 }
 
 app.setAboutPanelOptions({
   applicationName: 'Nudge',
-  // applicationVersion: undefined, // app.getVersion(),
   copyright: 'Copyright © 2025 Nudge',
   version: app.getVersion(),
   // authors: ['Felipe Aragão <faragaop@gmail.com>'],

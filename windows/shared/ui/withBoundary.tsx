@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/electron'
 import { ComponentType } from 'react'
 // eslint-disable-next-line import/no-unresolved
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
@@ -34,6 +35,9 @@ export function withBoundary<T>(
   const result = (props: any) => (
     <ReactErrorBoundary
       FallbackComponent={fallback}
+      onError={(error) => {
+        Sentry.captureException(error)
+      }}
       onReset={() => {
         // reset the state of your app so the error doesn't happen again
       }}

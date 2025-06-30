@@ -86,6 +86,7 @@ export function createTray() {
             updateTrayMenu()
           },
         })
+        template.push({ type: 'separator' })
       }
 
       template = template.concat([
