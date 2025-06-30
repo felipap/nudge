@@ -1,6 +1,6 @@
 import 'source-map-support/register'
 
-import * as Sentry from '@sentry/electron'
+import { init as SentryInit } from '@sentry/electron/main'
 import { app, BrowserWindow } from 'electron'
 import started from 'electron-squirrel-startup'
 import { setupIPC } from './ipc'
@@ -11,8 +11,7 @@ import { createTray } from './tray'
 import { createMainWindow, createSettingsWindow, prefWindow } from './windows'
 
 if (app.isPackaged) {
-  // @ts-ignore // wtf Sentry!
-  Sentry.init({
+  SentryInit({
     dsn: 'https://df66516e528e1e116926f9631fca55f3@o175888.ingest.us.sentry.io/4509567206555648',
     release: app.getVersion(),
   })
@@ -46,14 +45,6 @@ async function onInit() {
   // mcpApp.listen(3040, () => {
   //   console.log('MCP Stateless Streamable HTTP Server listening on port 3040')
   // })
-
-  // app.on('activate', () => {
-  //   if (BrowserWindow.getAllWindows().length === 0) {
-  //     createWindow()
-  //   }
-  // })
-
-  // setupAutoLaunch()
 }
 
 // Function to handle app quitting
