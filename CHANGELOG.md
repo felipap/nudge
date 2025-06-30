@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.10](https://github.com/felipap/nudge/compare/v0.0.9...v0.0.10) (2025-06-30)
+
+
+### Features
+
+* better onboarding screen ([85ea26a](https://github.com/felipap/nudge/commit/85ea26a06e942289f507f0d91dd61596dd2914b9))
+
 ### 0.0.9 (2025-06-30)
 
 
