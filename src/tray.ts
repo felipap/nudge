@@ -89,20 +89,20 @@ export function createTray() {
       }
 
       template = template.concat([
+        // {
+        //   label: `${mainWindow!.isVisible() ? 'Hide' : 'Show'} window`,
+        //   click: () => {
+        //     if (mainWindow!.isVisible()) {
+        //       mainWindow!.hide()
+        //     } else {
+        //       mainWindow!.show()
+        //     }
+        //     updateTrayMenu()
+        //   },
+        // },
+        // { type: 'separator' },
         {
-          label: `${mainWindow!.isVisible() ? 'Hide' : 'Show'} window`,
-          click: () => {
-            if (mainWindow!.isVisible()) {
-              mainWindow!.hide()
-            } else {
-              mainWindow!.show()
-            }
-            updateTrayMenu()
-          },
-        },
-        { type: 'separator' },
-        {
-          label: `Float on top`,
+          label: `Keep window on top`,
           type: 'checkbox',
           checked: getState().isWindowPinned,
           click: () => {
