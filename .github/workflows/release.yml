@@ -73,5 +73,6 @@ jobs:
             out/make/**/*.dmg
             out/make/**/*.zip
           draft: false
-          prerelease: false
+          # prerelease: false
           generate_release_notes: true
+          body_path: CHANGELOG.md
