@@ -15,6 +15,10 @@ import {
 } from 'electron'
 // import { updateElectronApp } from 'update-electron-app'
 import { screenCaptureService } from './lib/capture-service'
+import {
+  askForScreenPermissions,
+  checkScreenPermissions,
+} from './lib/screenshot'
 import { getImagePath, isTruthy } from './lib/utils'
 import {
   IndicatorState,
@@ -50,18 +54,28 @@ export function createTray() {
 
   const tray = new Tray(trayIcon)
 
-  function buildTrayMenu() {
+  async function buildTrayMenu() {
     const hasOpenAiKey = !!getState().modelSelection?.key
-    const needsConfiguration = !hasOpenAiKey
+    const hasScreenPermissions = await checkScreenPermissions()
 
     let template: (MenuItemConstructorOptions | MenuItem | false)[] = []
-    if (needsConfiguration) {
-      template.push({
-        label: 'Enter your OpenAI key',
-        click: () => {
-          prefWindow!.show()
-        },
-      })
+    if (!hasOpenAiKey || !hasScreenPermissions) {
+      if (!hasScreenPermissions) {
+        template.push({
+          label: 'Grant screen permissions',
+          click: () => {
+            askForScreenPermissions()
+          },
+        })
+      }
+      if (!hasOpenAiKey) {
+        template.push({
+          label: 'Enter your OpenAI key',
+          click: () => {
+            prefWindow!.show()
+          },
+        })
+      }
     } else {
       const nextCaptureAt = getNextCaptureAt()
       const captureFromNow = nextCaptureAt
@@ -162,8 +176,8 @@ export function createTray() {
     return template.filter(isTruthy)
   }
 
-  function updateTrayMenu() {
-    const contextMenu = Menu.buildFromTemplate(buildTrayMenu())
+  async function updateTrayMenu() {
+    const contextMenu = Menu.buildFromTemplate(await buildTrayMenu())
     tray.setContextMenu(contextMenu)
 
     const status = getStateIndicator()

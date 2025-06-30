@@ -2,10 +2,12 @@ import { Hr, SectionWithHeader } from '../ui'
 import { FrequencyInput } from './FrequencyInput'
 import { LaunchOnStartup } from './LaunchOnStartup'
 import { ModelFieldGroup } from './ModelFieldGroup'
+import { ScreenPermission } from './ScreenPermission'
 
 export function General() {
   return (
     <main className="p-4 pb-10 grid grid-cols-1 gap-5 text-[13px] w-full">
+      <ScreenPermission />
       {/* <About />z */}
       <SectionWithHeader
         title="Model Selection"

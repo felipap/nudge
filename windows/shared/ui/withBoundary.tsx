@@ -1,11 +1,9 @@
 import { ComponentType } from 'react'
+// import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
 
 export function withBoundary<T>(Comp: ComponentType<T>): ComponentType<T> {
   return Comp
 }
-
-// import { ComponentType } from 'react'
-// import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
 
 // interface ErrorFallbackProps {
 //   error: Error

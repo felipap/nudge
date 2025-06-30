@@ -131,4 +131,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   openSettings: async () => {
     return await typedIpcRenderer.invoke('openSettings')
   },
+
+  checkScreenPermissions: async () => {
+    return await typedIpcRenderer.invoke('checkScreenPermissions')
+  },
+
+  askForScreenPermissions: async () => {
+    return await typedIpcRenderer.invoke('askForScreenPermissions')
+  },
 } satisfies ExposedElectronAPI)

@@ -14,6 +14,10 @@ import { IpcMainMethods } from '../windows/shared/ipc-types'
 import { getGoalFeedback, validateModelKey } from './lib/ai'
 import { screenCaptureService } from './lib/capture-service'
 import { warn } from './lib/logger'
+import {
+  askForScreenPermissions,
+  checkScreenPermissions,
+} from './lib/screenshot'
 import { getState, setPartialState, store } from './store'
 import { State } from './store/types'
 import { prefWindow } from './windows'
@@ -191,6 +195,14 @@ export function setupIPC() {
     if (_event) {
       _event.sender.send('background-action-completed', 'captureNow')
     }
+  })
+
+  ipcMainTyped.handle('checkScreenPermissions', async () => {
+    return await checkScreenPermissions()
+  })
+
+  ipcMainTyped.handle('askForScreenPermissions', async () => {
+    return await askForScreenPermissions()
   })
 
   ipcMainTyped.handle('openExternal', (_event, url: string) => {

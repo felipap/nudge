@@ -18,11 +18,9 @@ import {
   AssessmentResult,
   getModelClient,
 } from './ai'
-import { VERBOSE } from './config'
+import { DOUBLE_NUDGE_THRESHOLD, VERBOSE } from './config'
 import { debug, error, log, logError, warn } from './logger'
-import { captureActiveScreen } from './screen'
-
-const DOUBLE_NUDGE_THRESHOLD = 5 * 60 * 1000
+import { captureActiveScreen } from './screenshot'
 
 let lastNotificationAt: Date | null = null
 
