@@ -15,13 +15,13 @@ export type Tab =
 interface Props {
   tab: Tab
   onTabChange: (tab: Tab) => void
-  showPermissions: boolean
+  showPermissionsTab: boolean
 }
 
-export function Nav({ tab, onTabChange, showPermissions }: Props) {
+export function Nav({ tab, onTabChange, showPermissionsTab }: Props) {
   const visibleTabs = useMemo(() => {
     return [
-      showPermissions ? 'permissions' : null,
+      showPermissionsTab ? 'permissions' : null,
       'general',
       'advanced',
     ].filter(Boolean) as Tab[]
@@ -61,10 +61,12 @@ export function Nav({ tab, onTabChange, showPermissions }: Props) {
         {tabTitle}
       </h1>
       <div className="flex flex-row gap-[6px] [app-region:no-drag]">
-        <ScreenPermissionIcon
-          active={tab === 'permissions'}
-          onClick={() => onTabChange('permissions')}
-        />
+        {showPermissionsTab && (
+          <ScreenPermissionIcon
+            active={tab === 'permissions'}
+            onClick={() => onTabChange('permissions')}
+          />
+        )}
         <TabButton
           title="General"
           icon={<CogIcon className="w-[23px]" />}

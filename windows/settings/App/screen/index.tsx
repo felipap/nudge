@@ -18,14 +18,14 @@ export function ScreenPermissionIcon({
   active: boolean
   onClick: () => void
 }) {
-  const { hasPermission } = useScreenPermissionState()
+  const { screenPermission } = useScreenPermissionState()
 
   return (
     <TabButton
       title="Screen"
       icon={
         <div className="flex items-center justify-center h-[21px] gap-1 relative">
-          {hasPermission ? (
+          {screenPermission === 'granted' ? (
             <Monitor className="w-[23px]" />
           ) : (
             <ScreenShareOff className="w-[23px]" />
@@ -35,7 +35,7 @@ export function ScreenPermissionIcon({
       onClick={onClick}
       isActive={active}
       className={
-        hasPermission
+        screenPermission === 'granted'
           ? 'text-green-600 dark:text-green-400'
           : 'text-red-500 dark:text-red-400'
       }
@@ -45,17 +45,17 @@ export function ScreenPermissionIcon({
 
 export const ScreenPermissions = withBoundary(() => {
   useWindowHeight(500)
-  const { hasPermission } = useScreenPermissionState()
+  const { screenPermission } = useScreenPermissionState()
 
   // By default, try to ask for permission when the user opens the settings.
   // There's no reasonable way to implement a "Grant" button, because the OS
   // only shows the dialog to the user once, and we can't even know when the
   // user chooses to deny it.
   useEffect(() => {
-    if (!hasPermission) {
+    if (screenPermission !== 'granted') {
       tryAskForScrenPermissions()
     }
-  }, [hasPermission])
+  }, [screenPermission])
 
   return (
     <main className="p-4 flex flex-col gap-5 font-display-3p text-[14px] leading-[1.4] h-full justify-between">
@@ -78,15 +78,15 @@ export const ScreenPermissions = withBoundary(() => {
           <div
             className={twMerge(
               'font-medium text-[15px]',
-              hasPermission
+              screenPermission === 'granted'
                 ? 'text-green-700 dark:text-green-300'
                 : 'text-red-500 dark:text-red-400'
             )}
           >
-            {hasPermission ? 'Granted' : 'Not granted'}
+            {screenPermission === 'granted' ? 'Granted' : 'Not granted'}
           </div>
         </div>
-        {!hasPermission && (
+        {screenPermission !== 'granted' && (
           <div className="flex flex-col gap-2">
             <p className="text-secondary [&>strong]:text-contrast/80 [&>strong]:font-normal pr-10">
               Go to <strong>System Settings</strong> &gt;{' '}
@@ -108,18 +108,24 @@ export const ScreenPermissions = withBoundary(() => {
 
       <div className="flex flex-col gap-1 flex-1"></div>
 
-      <div className="text-secondary">
-        Need help? Ask questions on{' '}
-        <button
-          onClick={() => {
-            openGithubDiscussion()
-          }}
-          className="text-link hover:underline"
-        >
-          GitHub
-        </button>
-        .
-      </div>
+      <NeedHelpFooter />
     </main>
   )
 })
+
+export function NeedHelpFooter() {
+  return (
+    <div className="text-secondary">
+      Need help? Ask questions on{' '}
+      <button
+        onClick={() => {
+          openGithubDiscussion()
+        }}
+        className="text-link hover:underline"
+      >
+        GitHub
+      </button>
+      .
+    </div>
+  )
+}

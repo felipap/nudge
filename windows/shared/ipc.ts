@@ -158,15 +158,15 @@ export function useGoalState() {
 }
 
 export function useScreenPermissionState() {
-  const [hasPermission, setHasPermission] = useState(false)
+  const [value, setValue] = useState<'granted' | 'denied' | null>(null)
 
   useEffect(() => {
     async function check() {
-      const hasPermission = await checkScreenPermissions()
-      setHasPermission(hasPermission)
+      const permission = await checkScreenPermissions()
+      setValue(permission ? 'granted' : 'denied')
     }
     check()
   }, [])
 
-  return { hasPermission }
+  return { screenPermission: value }
 }

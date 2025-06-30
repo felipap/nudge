@@ -11,7 +11,7 @@ import { OnboardingScreen } from './OnboardingScren'
 
 export default function App() {
   const { state } = useBackendState()
-  const { hasPermission } = useScreenPermissionState()
+  const { screenPermission } = useScreenPermissionState()
   useGlobalShortcuts()
 
   let inner
@@ -20,7 +20,8 @@ export default function App() {
   } else if (
     !state.modelSelection ||
     !state.modelSelection.key ||
-    !hasPermission
+    // This is going to cause flicker. UGH.
+    screenPermission !== 'granted'
   ) {
     inner = <OnboardingScreen />
   } else if (state.session && state.session.confirmContinue) {

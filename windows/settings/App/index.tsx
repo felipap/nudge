@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useScreenPermissionState } from '../../shared/ipc'
 import { Nav, Tab } from './Nav'
 import { AdvancedTab } from './advanced'
@@ -8,14 +8,20 @@ import { ScreenPermissions } from './screen'
 export default function App() {
   const [tab, setTab] = useState<Tab>('general')
 
-  const { hasPermission } = useScreenPermissionState()
-  // hasPermission = true
+  const { screenPermission } = useScreenPermissionState()
 
-  useEffect(() => {
-    if (!hasPermission) {
-      setTab('permissions')
+  // Don't change this until user reloads the settings window.
+  const showPermissionsTab = useMemo(() => {
+    // While we're checking permissions, don't show the tab.
+    if (!screenPermission || screenPermission === 'granted') {
+      return false
     }
-  }, [hasPermission])
+
+    // Not supposed to be here but whatever.
+    setTab('permissions')
+
+    return true
+  }, [screenPermission])
 
   useEffect(() => {
     const unsubscribe = window.electronAPI.onIpcEvent(
@@ -36,7 +42,11 @@ export default function App() {
 
   return (
     <div className="flex flex-col h-screen text-contrast">
-      <Nav tab={tab} onTabChange={setTab} showPermissions={!hasPermission} />
+      <Nav
+        tab={tab}
+        onTabChange={setTab}
+        showPermissionsTab={showPermissionsTab}
+      />
       <div className="overflow-scroll bg-background h-full flex w-full select-none">
         <div className="w-full">
           {tab === 'general' && <General />}

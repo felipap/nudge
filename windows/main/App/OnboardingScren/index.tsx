@@ -13,16 +13,16 @@ import { useWindowHeight } from '../../../shared/lib'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 
 function useOnboardingState() {
-  const { hasPermission } = useScreenPermissionState()
+  const { screenPermission } = useScreenPermissionState()
   const { state } = useBackendState()
 
   const hasOpenAIKey = !!state?.modelSelection?.key
 
-  return { hasPermission, hasOpenAIKey }
+  return { screenPermission, hasOpenAIKey }
 }
 
 export const OnboardingScreen = withBoundary(() => {
-  const { hasPermission, hasOpenAIKey } = useOnboardingState()
+  const { screenPermission, hasOpenAIKey } = useOnboardingState()
 
   useWindowHeight(250)
 
@@ -52,7 +52,7 @@ export const OnboardingScreen = withBoundary(() => {
             className="flex items-center gap-2 cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
             onClick={() => openSettings('permissions')}
           >
-            <StepIcon done={hasPermission} />
+            <StepIcon done={screenPermission === 'granted'} />
             <span className="">Grant permission to take screenshots</span>
           </div>
 
