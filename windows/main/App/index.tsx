@@ -1,19 +1,28 @@
 import { useEffect } from 'react'
-import { openSettings, useBackendState } from '../../shared/ipc'
+import {
+  openSettings,
+  useBackendState,
+  useScreenPermissionState,
+} from '../../shared/ipc'
 import { ActiveGoalScreen } from './ActiveGoalScreen'
 import { ConfirmGoalScreen } from './ConfirmGoalScreen'
-import { EnterKeyScreen } from './EnterKeyScreen'
 import { InputScreen } from './InputScreen'
+import { OnboardingScreen } from './OnboardingScren'
 
 export default function App() {
   const { state } = useBackendState()
+  const { hasPermission } = useScreenPermissionState()
   useGlobalShortcuts()
 
   let inner
   if (!state) {
     return <div className="flex flex-col bg-white h-screen">Loading</div>
-  } else if (!state.modelSelection || !state.modelSelection.key) {
-    inner = <EnterKeyScreen />
+  } else if (
+    !state.modelSelection ||
+    !state.modelSelection.key ||
+    !hasPermission
+  ) {
+    inner = <OnboardingScreen />
   } else if (state.session && state.session.confirmContinue) {
     inner = <ConfirmGoalScreen />
   } else if (state.session) {
@@ -23,7 +32,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-gray-900/50 text-[14px] text-contrast">
+    <div className="flex flex-col h-screen bg-white dark:bg-gray-900/50 text-[14px] font-display-3p text-contrast">
       {inner}
     </div>
   )

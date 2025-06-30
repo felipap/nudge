@@ -21,8 +21,8 @@ export async function getAutoLaunch() {
   return await window.electronAPI.getAutoLaunch()
 }
 
-export async function openSettings() {
-  return await window.electronAPI.openSettings()
+export async function openSettings(tab?: string) {
+  return await window.electronAPI.openSettings(tab)
 }
 
 export async function setWindowHeight(height: number, animate = false) {
@@ -47,6 +47,14 @@ export async function checkScreenPermissions() {
 
 export async function tryAskForScrenPermissions() {
   return await window.electronAPI.tryAskForScrenPermissions()
+}
+
+export async function openExternal(url: string) {
+  return await window.electronAPI.openExternal(url)
+}
+
+export async function openGithubDiscussion() {
+  return await window.electronAPI.openGithubDiscussion()
 }
 
 //
@@ -143,4 +151,18 @@ export function useGoalState() {
   }, [])
 
   return { value, loading, saving, update }
+}
+
+export function useScreenPermissionState() {
+  const [hasPermission, setHasPermission] = useState(false)
+
+  useEffect(() => {
+    async function check() {
+      const hasPermission = await checkScreenPermissions()
+      setHasPermission(hasPermission)
+    }
+    check()
+  }, [])
+
+  return { hasPermission }
 }

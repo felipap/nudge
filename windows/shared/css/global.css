@@ -41,6 +41,7 @@
   --background-three: #fff;
   --highlight-color: #3b82f6;
   --twitter-blue: #1da1f2;
+  --text-color-link: #007aff;
 
   /*  */
   --color-nav: #f0f0f0;
@@ -76,7 +77,8 @@
   :root {
     --text-color-contrast: #fff;
     --text-color-primary: #fff;
-    --text-color-secondary: #888;
+    --text-color-link: #6fb4ff;
+    --text-color-secondary: #aaa;
     --text-color-tertiary: #666;
     --text-color-inverted: #000;
     --background-one: #111;
@@ -119,6 +121,10 @@
   ::after {
     @apply dark:border-[#1e1c1e] border-[#ddd];
   }
+}
+
+.link {
+  color: var(--text-color-link);
 }
 
 /* Layout */

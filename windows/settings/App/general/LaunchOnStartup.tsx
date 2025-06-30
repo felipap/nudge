@@ -9,7 +9,6 @@ export function LaunchOnStartup() {
   useEffect(() => {
     async function load() {
       const isEnabled = await getAutoLaunch()
-      console.log('isEnabled', isEnabled)
       setChecked(isEnabled)
     }
     load()

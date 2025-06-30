@@ -14,8 +14,9 @@ type SharedIpcMethods = {
   closeWindow: () => void
   minimizeWindow: () => void
   zoomWindow: () => void
-  openExternal: (url: string) => void
+  openExternal: (url: string) => Promise<void>
   clearActiveCapture: () => Promise<void>
+  openGithubDiscussion: () => Promise<void>
   getGoalFeedback: (goal: string) => Promise<any>
   pauseSession: () => Promise<void>
   resumeSession: () => Promise<void>
@@ -24,7 +25,7 @@ type SharedIpcMethods = {
   validateModelKey: (model: AvailableModel, key: string) => Promise<boolean>
   setAutoLaunch: (enable: boolean) => Promise<void>
   getAutoLaunch: () => Promise<boolean>
-  openSettings: () => Promise<void>
+  openSettings: (tab?: string) => Promise<void>
   checkScreenPermissions: () => Promise<boolean>
   tryAskForScrenPermissions: () => Promise<{ granted: boolean; error?: string }>
 }
@@ -39,6 +40,9 @@ export type ExposedElectronAPI = SharedIpcMethods & {
   onBackgroundActionCompleted: (
     callback: (actionName: string) => void
   ) => () => void
-
+  onIpcEvent: (
+    channel: string,
+    callback: (...args: any[]) => void
+  ) => () => void
   onStateChange: (callback: (state: State) => void) => () => void
 }

@@ -39,6 +39,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
     }
   },
 
+  onIpcEvent: (channel: string, callback: (...args: any[]) => void) => {
+    const listener = (_event: any, ...args: any[]) => callback(...args)
+    ipcRenderer.on(channel, listener)
+    return () => {
+      ipcRenderer.removeListener(channel, listener)
+    }
+  },
+
   onStateChange: (callback: (state: State) => void) => {
     const listener = (_event: any, state: State) => callback(state)
     ipcRenderer.on('state-changed', listener)
@@ -92,8 +100,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     typedIpcRenderer.send('zoomWindow')
   },
 
-  openExternal: (url: string) => {
-    typedIpcRenderer.send('openExternal', url)
+  openExternal: async (url: string) => {
+    return await typedIpcRenderer.invoke('openExternal', url)
   },
 
   clearActiveCapture: async () => {
@@ -128,8 +136,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return await typedIpcRenderer.invoke('setAutoLaunch', enable)
   },
 
-  openSettings: async () => {
-    return await typedIpcRenderer.invoke('openSettings')
+  openSettings: async (tab?: string) => {
+    return await typedIpcRenderer.invoke('openSettings', tab)
   },
 
   checkScreenPermissions: async () => {
@@ -138,5 +146,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   tryAskForScrenPermissions: async () => {
     return await typedIpcRenderer.invoke('tryAskForScrenPermissions')
+  },
+
+  openGithubDiscussion: async () => {
+    return await typedIpcRenderer.invoke('openGithubDiscussion')
   },
 } satisfies ExposedElectronAPI)

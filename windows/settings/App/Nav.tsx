@@ -1,8 +1,9 @@
-import { AtomIcon, CogIcon, ScreenShareOff } from 'lucide-react'
+import { AtomIcon, CogIcon } from 'lucide-react'
 import { ReactNode, useEffect, useMemo } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { closeWindow, minimizeWindow, zoomWindow } from '../../shared/ipc'
 import { WindowControls } from '../../shared/ui/WindowControls'
+import { ScreenPermissionIcon } from './screen'
 
 export type Tab =
   | 'general'
@@ -33,7 +34,7 @@ export function Nav({ tab, onTabChange, showPermissions }: Props) {
     timeline: 'Timeline',
     shortcuts: 'Shortcuts',
     advanced: 'Advanced',
-    permissions: 'Permissions',
+    permissions: 'Screen permissions',
   }[tab]
 
   return (
@@ -60,20 +61,10 @@ export function Nav({ tab, onTabChange, showPermissions }: Props) {
         {tabTitle}
       </h1>
       <div className="flex flex-row gap-[6px] [app-region:no-drag]">
-        {showPermissions && (
-          <TabButton
-            title="Screen"
-            icon={
-              <div className="flex items-center justify-center h-[21px] gap-1 relative">
-                <ScreenShareOff className="w-[23px]" />
-                {/* <div className="w-[7px] h-[7px] bg-red-500 rounded-full absolute top-0 right-[-10px]" /> */}
-              </div>
-            }
-            isActive={tab === 'permissions'}
-            onClick={() => onTabChange('permissions')}
-            className="text-red-500"
-          />
-        )}
+        <ScreenPermissionIcon
+          active={tab === 'permissions'}
+          onClick={() => onTabChange('permissions')}
+        />
         <TabButton
           title="General"
           icon={<CogIcon className="w-[23px]" />}
@@ -111,7 +102,7 @@ interface TabButtonProps {
   className?: string
 }
 
-function TabButton({
+export function TabButton({
   title,
   icon,
   isActive,

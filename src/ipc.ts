@@ -13,10 +13,11 @@ import { AvailableModel } from '../windows/shared/available-models'
 import { IpcMainMethods } from '../windows/shared/ipc-types'
 import { getGoalFeedback, validateModelKey } from './lib/ai'
 import { screenCaptureService } from './lib/capture-service'
+import { GITHUB_DISCUSSIONS_URL } from './lib/config'
 import { warn } from './lib/logger'
 import {
-  tryAskForScrenPermissions,
   checkScreenPermissions,
+  tryAskForScrenPermissions,
 } from './lib/screenshot'
 import { getState, setPartialState, store } from './store'
 import { State } from './store/types'
@@ -52,38 +53,38 @@ export function setupIPC() {
 
   ipcMainTyped.handle(
     'setWindowHeight',
-    (_event, height: number, animate = false) => {
-      const win = BrowserWindow.getFocusedWindow()
+    (event, height: number, animate = false) => {
+      const win = BrowserWindow.fromWebContents(event.sender)
       if (win) {
         win.setSize(win.getBounds().width, height, animate)
       }
     }
   )
 
-  ipcMainTyped.handle('getWindowHeight', () => {
-    const win = BrowserWindow.getFocusedWindow()
+  ipcMainTyped.handle('getWindowHeight', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
     if (win) {
       return win.getBounds().height
     }
     return 0
   })
 
-  ipcMainTyped.on('closeWindow', () => {
-    const win = BrowserWindow.getFocusedWindow()
+  ipcMainTyped.on('closeWindow', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
     if (win) {
       win.close()
     }
   })
 
-  ipcMainTyped.on('minimizeWindow', () => {
-    const win = BrowserWindow.getFocusedWindow()
+  ipcMainTyped.on('minimizeWindow', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
     if (win) {
       win.minimize()
     }
   })
 
-  ipcMainTyped.on('zoomWindow', () => {
-    const win = BrowserWindow.getFocusedWindow()
+  ipcMainTyped.on('zoomWindow', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
     if (win) {
       if (win.isMaximized()) {
         win.unmaximize()
@@ -138,8 +139,14 @@ export function setupIPC() {
     }
   })
 
-  ipcMainTyped.handle('openSettings', () => {
+  ipcMainTyped.handle('openSettings', (_event, tab?: string) => {
+    console.log('openSettings')
+
     prefWindow!.show()
+    prefWindow!.focus()
+    if (tab) {
+      prefWindow!.webContents.send('open-settings-tab', tab)
+    }
   })
 
   ipcMainTyped.handle(
@@ -205,8 +212,12 @@ export function setupIPC() {
     return await tryAskForScrenPermissions()
   })
 
-  ipcMainTyped.handle('openExternal', (_event, url: string) => {
-    shell.openExternal(url)
+  ipcMainTyped.handle('openExternal', async (_, url: string) => {
+    return await shell.openExternal(url)
+  })
+
+  ipcMainTyped.handle('openGithubDiscussion', async () => {
+    return await shell.openExternal(GITHUB_DISCUSSIONS_URL)
   })
 
   //

@@ -1,9 +1,10 @@
+import { withBoundary } from '../../../shared/ui/withBoundary'
 import { Hr, SectionWithHeader } from '../ui'
 import { FrequencyInput } from './FrequencyInput'
 import { LaunchOnStartup } from './LaunchOnStartup'
 import { ModelFieldGroup } from './ModelFieldGroup'
 
-export function General() {
+export const General = withBoundary(() => {
   return (
     <main className="p-4 pb-10 grid grid-cols-1 gap-5 text-[13px] w-full">
       {/* <About />z */}
@@ -23,7 +24,7 @@ export function General() {
       </section>
     </main>
   )
-}
+})
 
 function About() {
   return (

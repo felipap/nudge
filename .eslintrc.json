@@ -15,6 +15,7 @@
   "parser": "@typescript-eslint/parser",
   "rules": {
     "@typescript-eslint/ban-ts-comment": "off",
-    "no-empty": "off"
+    "no-empty": "off",
+    "prefer-const": "warn"
   }
 }
