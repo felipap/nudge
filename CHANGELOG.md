@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.15](https://github.com/felipap/nudge/compare/v0.0.14...v0.0.15) (2025-06-30)
+
+
+### Features
+
+* hide tab once screen permission granted ([94703fa](https://github.com/felipap/nudge/commit/94703fadf3bbaec2e0d03217a8012e7c2892e8d9))
+
 ### [0.0.14](https://github.com/felipap/nudge/compare/v0.0.13...v0.0.14) (2025-06-30)
 
 
