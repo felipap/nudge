@@ -43,8 +43,15 @@ export function createMainWindow() {
     },
   })
 
-  // By default in development, the icon is the Electron icon. So we override
-  // it.
+  win.on('show', () => {
+    onChangeAnyWindowVisibility()
+  })
+
+  win.on('hide', () => {
+    onChangeAnyWindowVisibility()
+  })
+
+  // In development, the default icon is Electron's. So we override it.
   if (!app.isPackaged) {
     app.dock.setIcon(getImagePath('icon-development.png'))
   }
@@ -131,6 +138,14 @@ export function createSettingsWindow() {
     )
   }
 
+  win.on('show', () => {
+    onChangeAnyWindowVisibility()
+  })
+
+  win.on('hide', () => {
+    onChangeAnyWindowVisibility()
+  })
+
   // Hide window to tray on close instead of quitting
   win.on('close', (event) => {
     if (!app.isQuitting) {
@@ -153,4 +168,16 @@ export function createSettingsWindow() {
   prefWindow = win
 
   return win
+}
+
+function onChangeAnyWindowVisibility() {
+  const isAnyVisible = mainWindow?.isVisible() || prefWindow?.isVisible()
+
+  if (process.platform === 'darwin') {
+    if (isAnyVisible) {
+      app.dock.show()
+    } else {
+      app.dock.hide()
+    }
+  }
 }

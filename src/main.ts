@@ -36,6 +36,11 @@ async function onInit() {
   createTray()
   setupIPC()
 
+  // Hide dock icon on macOS initially (Settings window starts hidden)
+  if (process.platform === 'darwin') {
+    app.dock.hide()
+  }
+
   // MCP (later)
   // export const mcpApp = createMcpApp()
   // mcpApp.listen(3040, () => {

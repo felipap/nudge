@@ -141,7 +141,6 @@ export function createTray() {
         label: 'Quit & install update',
         accelerator: 'CmdOrCtrl+Q',
         click: () => {
-          app.isQuitting = true
           app.quit()
         },
       })
@@ -161,7 +160,7 @@ export function createTray() {
         sublabel: '⌘Q',
         accelerator: 'CmdOrCtrl+Q',
         click: () => {
-          app.isQuitting = true
+          // app.isQuitting = true // Do we need this?
           app.quit()
         },
       })
