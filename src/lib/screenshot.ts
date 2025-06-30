@@ -3,23 +3,23 @@
 import { desktopCapturer, screen, systemPreferences } from 'electron'
 import fs from 'fs'
 import path from 'path'
-import { log, debug } from './logger'
+import { debug, log, warn } from './logger'
 
-export async function askForScreenPermissions(): Promise<{
-  granted: boolean
+export async function tryAskForScrenPermissions(): Promise<{
+  status: 'granted' | 'denied' | ''
   error?: string
 }> {
   try {
     // Check if we're on macOS (screen recording permissions are macOS-specific)
     if (process.platform !== 'darwin') {
-      return { granted: true } // On other platforms, assume granted
+      return { status: 'granted' } // On other platforms, assume granted
     }
 
     const hasPermission = systemPreferences.getMediaAccessStatus('screen')
 
     if (hasPermission === 'granted') {
       log('[screen] Screen recording permission already granted')
-      return { granted: true }
+      return { status: 'granted' }
     }
 
     // If 'denied', Nudge may be listed under "Screen & System Audio Recording"
@@ -48,29 +48,28 @@ export async function askForScreenPermissions(): Promise<{
         types: ['screen'],
         thumbnailSize: { width: 1, height: 1 },
       })
-    } catch (permissionError) {
-      log('[screen] Error during permission request:', permissionError)
+    } catch (err) {
+      warn('[screen] Error during permission request:', err)
       return {
-        granted: false,
-        error: `Failed to request screen recording permission: ${permissionError.message}`,
+        status: 'denied',
       }
     }
 
     if (sources.length > 0) {
       log('[screen] Screen recording permission granted')
-      return { granted: true }
+      return { status: 'granted' }
     } else {
       log('[screen] No screen sources available after permission request')
       return {
-        granted: false,
+        status: 'denied',
         error:
           'No screen sources available. Please check your screen recording permissions.',
       }
     }
   } catch (error) {
-    log('[screen] Unexpected error in askForScreenPermissions:', error)
+    log('[screen] Unexpected error in tryAskForScrenPermissions:', error)
     return {
-      granted: false,
+      status: 'denied',
       error: `Unexpected error: ${error.message}`,
     }
   }
@@ -82,7 +81,7 @@ export async function checkScreenPermissions(): Promise<boolean> {
   }
 
   const hasPermission = systemPreferences.getMediaAccessStatus('screen')
-  console.log('hasPermission', hasPermission)
+  // console.log('hasPermission', hasPermission)
   return hasPermission === 'granted'
 }
 
@@ -101,12 +100,7 @@ export async function captureActiveScreen(): Promise<
   // Check permissions first
   const hasPermission = await checkScreenPermissions()
   if (!hasPermission) {
-    const permissionResult = await askForScreenPermissions()
-    if (!permissionResult.granted) {
-      return {
-        error: permissionResult.error || 'Screen recording permission required',
-      }
-    }
+    throw new Error('Screen recording permission required')
   }
 
   // https://www.electronjs.org/docs/latest/api/desktop-capturer

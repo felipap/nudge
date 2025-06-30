@@ -89,6 +89,9 @@ dependencies:
   react-dom:
     specifier: ^19.0.0
     version: 19.0.0(react@19.0.0)
+  react-error-boundary:
+    specifier: ^6.0.0
+    version: 6.0.0(react@19.0.0)
   scheduler:
     specifier: ^0.26.0
     version: 0.26.0
@@ -7888,6 +7891,15 @@ packages:
     dependencies:
       react: 19.0.0
       scheduler: 0.25.0
+    dev: false
+
+  /react-error-boundary@6.0.0(react@19.0.0):
+    resolution: {integrity: sha512-gdlJjD7NWr0IfkPlaREN2d9uUZUlksrfOx7SX62VRerwXbMY6ftGCIZua1VG1aXFNOimhISsTq+Owp725b9SiA==}
+    peerDependencies:
+      react: '>=16.13.1'
+    dependencies:
+      '@babel/runtime': 7.27.1
+      react: 19.0.0
     dev: false
 
   /react-is@16.13.1:

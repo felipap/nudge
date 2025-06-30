@@ -1,4 +1,5 @@
 import { app, autoUpdater, dialog } from 'electron'
+import { debug } from './lib/logger'
 import { getImagePath } from './lib/utils'
 
 // autoUpdater downloads the latest version of the app. Then I think it starts a
@@ -20,37 +21,18 @@ autoUpdater.setFeedURL({
   url: `https://update.electronjs.org/felipap/nudge/darwin-arm64/${app.getVersion()}`,
 })
 
-async function onUpdateFound() {
-  await dialog.showMessageBox({
-    type: 'info',
-    message: 'New version available',
-    detail: 'Will be installed when you quit.',
-    icon: getImagePath('nudge-default.png'),
-  })
-
-  try {
-    console.log('[updater] quitting and installing')
-    autoUpdater.quitAndInstall()
-    app.exit()
-  } catch (error) {
-    console.error('[updater] error', error)
-  }
-}
-
-// let hasFoundNewVersion = false
+export let updaterState: 'downloaded' | 'downloading' | null = null
 
 function listenForUpdates() {
-  autoUpdater.checkForUpdates()
-
-  autoUpdater.on('update-available', async () => {
-    console.log('[updater] available')
-    // hasFoundNewVersion = true
-  })
-
-  autoUpdater.on('update-downloaded', async (event) => {
-    console.log('[updater] downloaded', event)
-    await onUpdateFound()
-  })
+  // safeCheckForUpdates()
+  // autoUpdater.on('update-available', async () => {
+  //   console.log('[updater] available')
+  //   // hasFoundNewVersion = true
+  // })
+  // autoUpdater.on('update-downloaded', async (event) => {
+  //   console.log('[updater] downloaded', event)
+  //   await onUpdateFound()
+  // })
 }
 
 listenForUpdates()
@@ -61,5 +43,116 @@ export async function onClickCheckForUpdates() {
   //   return
   // }
 
-  autoUpdater.checkForUpdates()
+  updaterState = 'downloading'
+
+  const status = await asyncCheckForUpdatesAndDownload(async () => {
+    await dialog.showMessageBox({
+      type: 'info',
+      message: 'New version available',
+      detail: 'Being downloaded.',
+      icon: getImagePath('nudge-default.png'),
+    })
+  })
+
+  if (status === 'failed') {
+    // Maybe we do something here?
+    updaterState = null
+    return
+  }
+
+  if (status === 'not-available') {
+    await dialog.showMessageBox({
+      type: 'info',
+      message: 'No new version available',
+      icon: getImagePath('nudge-default.png'),
+    })
+    return
+  }
+
+  const result = await dialog.showMessageBox({
+    type: 'info',
+    message: 'New version downloaded',
+    detail: 'A new version has been downloaded and is ready to install.',
+    icon: getImagePath('nudge-default.png'),
+    buttons: ['Quit and update', 'Later'],
+    defaultId: 0,
+    cancelId: 1,
+  })
+
+  updaterState = 'downloaded'
+
+  if (result.response === 0) {
+    // User chose "Install Now"
+    try {
+      console.log('[updater] quitting and installing')
+      autoUpdater.quitAndInstall()
+      app.exit()
+    } catch (error) {
+      console.error('[updater] error', error)
+    }
+  }
+  // If user chose "Install Later", do nothing - they can continue using the app
+}
+
+let isCheckingForUpdatesOrDownloading = false
+
+/**
+ * Use this instead of calling autoUpdater.checkForUpdates() directly. If we
+ * call autoUpdater.checkForUpdates() while another check (and download!) is in
+ * progress, Electron throws an uncaught exception.
+ * https://github.com/electron/electron/issues/7792
+ */
+async function asyncCheckForUpdatesAndDownload(
+  onAvailableAndDownloading?: () => void
+): Promise<'failed' | 'not-available' | 'downloaded'> {
+  if (isCheckingForUpdatesOrDownloading) {
+    return 'failed'
+  }
+  isCheckingForUpdatesOrDownloading = true
+
+  const ret = await new Promise<'not-available' | 'downloaded'>((resolve) => {
+    function onUpdateNotAvailable() {
+      debug('[updater/checkForUpdates] not available')
+      autoUpdater.removeListener('update-available', onUpdateAvailable)
+      autoUpdater.removeListener('update-not-available', onUpdateNotAvailable)
+      resolve('not-available')
+    }
+
+    async function onUpdateAvailable() {
+      debug('[updater/checkForUpdates] available')
+      autoUpdater.removeListener('update-available', onUpdateAvailable)
+      autoUpdater.removeListener('update-not-available', onUpdateNotAvailable)
+
+      try {
+        onAvailableAndDownloading?.()
+      } catch {}
+      onDownload(() => {
+        resolve('downloaded')
+      })
+    }
+
+    autoUpdater.on('update-available', onUpdateAvailable)
+    autoUpdater.on('update-not-available', onUpdateNotAvailable)
+
+    autoUpdater.checkForUpdates()
+  })
+
+  console.log('[updater/checkForUpdates] ret', ret)
+  isCheckingForUpdatesOrDownloading = false
+  return ret
+}
+
+function onDownload(callback: () => void) {
+  // if (!app.isPackaged) {
+  //   console.log('Cannot wait for download in dev mode')
+  //   resolve('not-available')
+  //   return
+  // }
+
+  function onDownloaded() {
+    console.log('[updater] downloaded!?!?')
+    autoUpdater.removeListener('update-downloaded', onDownloaded)
+    callback()
+  }
+  autoUpdater.on('update-downloaded', onDownloaded)
 }

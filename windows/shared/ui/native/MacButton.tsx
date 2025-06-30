@@ -1,22 +1,22 @@
-import { ComponentProps } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { ComponentProps } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { Spinner } from './icons'
+import { Spinner } from '../icons'
 
 const buttonVariants = cva(
-  'border-none py-0 px-3.5 text-md font-medium antialiased cursor-pointer rounded-md inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:!cursor-default select-none transition-all duration-150',
+  'border-none py-0 h-[22px] px-3.5 text-md font-medium antialiased cursor-pointer rounded-md inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:!cursor-default select-none transition-all duration-150',
   {
     variants: {
       variant: {
-        default: [
+        primary: [
           'bg-gradient-to-b from-[#0071e3] to-[#0056b3]',
           'text-white',
           'hover:from-[#0077ed] hover:to-[#005cbd]',
           'active:from-[#0056b3] active:to-[#004999]',
           'shadow-sm',
         ].join(' '),
-        secondary: [
-          'bg-gradient-to-b from-gray-100 to-gray-200',
+        default: [
+          'bg-gradient-to-b from-gray-100 to-gray-200 border border-[#000]',
           'text-gray-700',
           'hover:from-gray-200 hover:to-gray-300',
           'active:from-gray-300 active:to-gray-400',

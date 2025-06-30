@@ -95,7 +95,7 @@ export function createSettingsWindow() {
   const windowHeight = 500
 
   const win = new BrowserWindow({
-    show: false,
+    show: true,
     // alwaysOnTop: true,
     width: windowWidth,
     height: windowHeight,

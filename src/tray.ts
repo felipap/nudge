@@ -10,14 +10,15 @@ import {
   Tray,
   // autoUpdater
   app,
+  dialog,
   nativeImage,
   nativeTheme,
 } from 'electron'
 // import { updateElectronApp } from 'update-electron-app'
 import { screenCaptureService } from './lib/capture-service'
 import {
-  askForScreenPermissions,
   checkScreenPermissions,
+  tryAskForScrenPermissions,
 } from './lib/screenshot'
 import { getImagePath, isTruthy } from './lib/utils'
 import {
@@ -28,7 +29,7 @@ import {
   onIndicatorStateChange,
   store,
 } from './store'
-import { onClickCheckForUpdates } from './updater'
+import { onClickCheckForUpdates, updaterState } from './updater'
 import { mainWindow, prefWindow } from './windows'
 
 dayjs.extend(relativeTime)
@@ -56,15 +57,26 @@ export function createTray() {
 
   async function buildTrayMenu() {
     const hasOpenAiKey = !!getState().modelSelection?.key
-    const hasScreenPermissions = await checkScreenPermissions()
+    const hasScreenPermissions = true // await checkScreenPermissions()
 
     let template: (MenuItemConstructorOptions | MenuItem | false)[] = []
     if (!hasOpenAiKey || !hasScreenPermissions) {
       if (!hasScreenPermissions) {
         template.push({
           label: 'Grant screen permissions',
-          click: () => {
-            askForScreenPermissions()
+          click: async () => {
+            const { status } = await tryAskForScrenPermissions()
+            if (status === 'granted') {
+              updateTrayMenu()
+              return
+            }
+
+            // await dialog.showMessageBox({
+            //   type: 'info',
+            //   message: 'New version available',
+            //   detail: 'Will be installed when you quit.',
+            //   icon: getImagePath('nudge-default.png'),
+            // })
           },
         })
       }
@@ -76,6 +88,7 @@ export function createTray() {
           },
         })
       }
+      template.push({ type: 'separator' })
     } else {
       const nextCaptureAt = getNextCaptureAt()
       const captureFromNow = nextCaptureAt
@@ -156,13 +169,29 @@ export function createTray() {
         label: `Version ${app.getVersion()}`,
         enabled: false,
       },
-      {
-        label: `Check for updates...`,
+    ])
+
+    if (updaterState === 'downloaded') {
+      template.push({
+        label: 'Quit & install update',
+        accelerator: 'CmdOrCtrl+Q',
+        click: () => {
+          app.isQuitting = true
+          app.quit()
+        },
+      })
+    } else {
+      template.push({
+        enabled: updaterState !== 'downloading',
+        label:
+          updaterState === 'downloading'
+            ? 'Downloading update...'
+            : 'Check for updates...',
         click: async () => {
           await onClickCheckForUpdates()
         },
-      },
-      {
+      })
+      template.push({
         label: 'Quit',
         sublabel: '⌘Q',
         accelerator: 'CmdOrCtrl+Q',
@@ -170,8 +199,8 @@ export function createTray() {
           app.isQuitting = true
           app.quit()
         },
-      },
-    ])
+      })
+    }
 
     return template.filter(isTruthy)
   }

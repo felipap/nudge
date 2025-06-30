@@ -41,6 +41,14 @@ export async function validateModelKey(model: AvailableModel, key: string) {
   return await window.electronAPI.validateModelKey(model, key)
 }
 
+export async function checkScreenPermissions() {
+  return await window.electronAPI.checkScreenPermissions()
+}
+
+export async function tryAskForScrenPermissions() {
+  return await window.electronAPI.tryAskForScrenPermissions()
+}
+
 //
 
 export function closeWindow() {

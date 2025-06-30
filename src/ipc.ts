@@ -15,7 +15,7 @@ import { getGoalFeedback, validateModelKey } from './lib/ai'
 import { screenCaptureService } from './lib/capture-service'
 import { warn } from './lib/logger'
 import {
-  askForScreenPermissions,
+  tryAskForScrenPermissions,
   checkScreenPermissions,
 } from './lib/screenshot'
 import { getState, setPartialState, store } from './store'
@@ -201,8 +201,8 @@ export function setupIPC() {
     return await checkScreenPermissions()
   })
 
-  ipcMainTyped.handle('askForScreenPermissions', async () => {
-    return await askForScreenPermissions()
+  ipcMainTyped.handle('tryAskForScrenPermissions', async () => {
+    return await tryAskForScrenPermissions()
   })
 
   ipcMainTyped.handle('openExternal', (_event, url: string) => {

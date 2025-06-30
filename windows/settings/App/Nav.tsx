@@ -1,24 +1,39 @@
-import { AtomIcon, CogIcon } from 'lucide-react'
-import { ReactNode, useEffect } from 'react'
+import { AtomIcon, CogIcon, ScreenShareOff } from 'lucide-react'
+import { ReactNode, useEffect, useMemo } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { closeWindow, minimizeWindow, zoomWindow } from '../../shared/ipc'
 import { WindowControls } from '../../shared/ui/WindowControls'
 
-export type Tab = 'general' | 'timeline' | 'shortcuts' | 'advanced'
+export type Tab =
+  | 'general'
+  | 'timeline'
+  | 'shortcuts'
+  | 'advanced'
+  | 'permissions'
 
 interface Props {
   tab: Tab
   onTabChange: (tab: Tab) => void
+  showPermissions: boolean
 }
 
-export function Nav({ tab, onTabChange }: Props) {
-  useTabStateWithCmdShortcuts(tab, onTabChange)
+export function Nav({ tab, onTabChange, showPermissions }: Props) {
+  const visibleTabs = useMemo(() => {
+    return [
+      showPermissions ? 'permissions' : null,
+      'general',
+      'advanced',
+    ].filter(Boolean) as Tab[]
+  }, [])
+
+  useTabStateWithCmdShortcuts(tab, visibleTabs, onTabChange)
 
   const tabTitle = {
     general: 'General',
     timeline: 'Timeline',
     shortcuts: 'Shortcuts',
     advanced: 'Advanced',
+    permissions: 'Permissions',
   }[tab]
 
   return (
@@ -45,6 +60,20 @@ export function Nav({ tab, onTabChange }: Props) {
         {tabTitle}
       </h1>
       <div className="flex flex-row gap-[6px] [app-region:no-drag]">
+        {showPermissions && (
+          <TabButton
+            title="Screen"
+            icon={
+              <div className="flex items-center justify-center h-[21px] gap-1 relative">
+                <ScreenShareOff className="w-[23px]" />
+                {/* <div className="w-[7px] h-[7px] bg-red-500 rounded-full absolute top-0 right-[-10px]" /> */}
+              </div>
+            }
+            isActive={tab === 'permissions'}
+            onClick={() => onTabChange('permissions')}
+            className="text-red-500"
+          />
+        )}
         <TabButton
           title="General"
           icon={<CogIcon className="w-[23px]" />}
@@ -79,16 +108,24 @@ interface TabButtonProps {
   icon: ReactNode
   isActive: boolean
   onClick: () => void
+  className?: string
 }
 
-function TabButton({ title, icon, isActive, onClick }: TabButtonProps) {
+function TabButton({
+  title,
+  icon,
+  isActive,
+  onClick,
+  className,
+}: TabButtonProps) {
   return (
     <button
       onClick={onClick}
       className={twMerge(
         'flex flex-col items-center gap-[3px] py-[6px] min-w-[65px] px-2 rounded-[5px] transition-colors cursor-pointer',
-        ' hover:bg-tab-active active:bg-apple-system-gray-2 text-secondary active:text-primary',
-        isActive && 'text-apple-highlight-color bg-tab-active '
+        ' hover:bg-tab-active active:bg-apple-system-gray-2 text-secondary active:text-primary border border-transparent',
+        isActive && 'text-apple-highlight-color bg-tab-active ',
+        className
       )}
     >
       <div className="flex items-center justify-center h-[21px]">{icon}</div>
@@ -103,18 +140,13 @@ function TabButton({ title, icon, isActive, onClick }: TabButtonProps) {
 
 function useTabStateWithCmdShortcuts(
   tab: Tab,
+  visibleTabs: Tab[],
   onTabChange: (tab: Tab) => void
 ) {
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.metaKey && e.key >= '1' && e.key <= '4') {
-        const tabMap: Record<string, Tab> = {
-          '1': 'general',
-          // '2': 'timeline',
-          // '3': 'shortcuts',
-          '2': 'advanced',
-        }
-        const newTab = tabMap[e.key]
+      if (e.metaKey && e.key >= '1' && e.key <= visibleTabs.length.toString()) {
+        const newTab = visibleTabs[Number(e.key) - 1]
         if (newTab && newTab !== tab) {
           onTabChange(newTab)
         }
@@ -123,5 +155,5 @@ function useTabStateWithCmdShortcuts(
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [tab, onTabChange])
+  }, [tab, onTabChange, visibleTabs])
 }

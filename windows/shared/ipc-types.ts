@@ -26,7 +26,7 @@ type SharedIpcMethods = {
   getAutoLaunch: () => Promise<boolean>
   openSettings: () => Promise<void>
   checkScreenPermissions: () => Promise<boolean>
-  askForScreenPermissions: () => Promise<{ granted: boolean; error?: string }>
+  tryAskForScrenPermissions: () => Promise<{ granted: boolean; error?: string }>
 }
 
 export type IpcMainMethods = SharedIpcMethods & {
