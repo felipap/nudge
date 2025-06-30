@@ -22,6 +22,7 @@ import {
   getState,
   getStateIndicator,
   hasFinishedOnboardingSteps,
+  hasNoCurrentGoalOrPaused,
   onIndicatorStateChange,
   store,
 } from './store'
@@ -62,8 +63,7 @@ export function createTray() {
 
       // 🟢
       // If there's an active session, show button to capture now.
-      const activeSession = getState().session
-      if (activeSession) {
+      if (!hasNoCurrentGoalOrPaused()) {
         console.log('captureFromNow', captureFromNow)
         const captureStatus =
           captureFromNow === null
