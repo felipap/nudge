@@ -28,7 +28,7 @@ export type AssessmentResult =
       data: Assessment
     }
   | {
-      error: 'unknown' | 'api-key' | 'rate-limit'
+      error: 'unknown' | 'api-key' | 'rate-limit' | 'no-internet'
       message?: string
     }
 
@@ -78,10 +78,19 @@ export async function assessFlowFromScreenshot(
   } catch (e) {
     warn('[ai/assessment] completion threw!', e)
 
+    console.log(
+      'is instance APIConnectionError',
+      e instanceof OpenAI.APIConnectionError
+    )
     console.log('is instance Auth', e instanceof OpenAI.AuthenticationError)
     console.log('is instance RateLimit', e instanceof OpenAI.RateLimitError)
     console.log('is instance APIError', e instanceof OpenAI.APIError)
 
+    if (e instanceof OpenAI.APIConnectionError) {
+      return {
+        error: 'no-internet',
+      }
+    }
     if (e instanceof OpenAI.AuthenticationError) {
       return {
         error: 'api-key',

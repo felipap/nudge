@@ -16,7 +16,7 @@ export interface LatestCapture extends Capture {
 
 export interface CaptureError {
   at: string
-  modelError: 'unknown' | 'api-key' | 'rate-limit'
+  modelError: 'unknown' | 'api-key' | 'rate-limit' | 'no-internet'
 }
 
 export type ModelSelection = {

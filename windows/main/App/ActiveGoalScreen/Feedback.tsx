@@ -15,6 +15,7 @@ type Feedback =
   | 'rate-limit'
   | 'unknown-error'
   | 'doing-great'
+  | 'internet-error'
   | 'try-concentrate'
   | null
 
@@ -56,6 +57,9 @@ function getFeedbackFromState(state: State | null): Feedback {
     }
     if (relevantCapture.modelError === 'api-key') {
       return 'credential-error'
+    }
+    if (relevantCapture.modelError === 'no-internet') {
+      return 'internet-error'
     }
     return 'unknown-error'
   }
@@ -123,6 +127,9 @@ export const Feedback = withBoundary(() => {
     className = 'text-red-800 dark:text-red-300'
   } else if (feedback === 'rate-limit') {
     inner = <>OpenAI rate-limited us</>
+    className = 'text-red-800 dark:text-red-300'
+  } else if (feedback === 'internet-error') {
+    inner = <>No internet</>
     className = 'text-red-800 dark:text-red-300'
   } else if (feedback === 'unknown-error') {
     inner = <>AI failed with unknown error</>
