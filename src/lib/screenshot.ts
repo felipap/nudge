@@ -1,8 +1,6 @@
 // Utils for capturing the screen.
 
 import { desktopCapturer, screen, systemPreferences } from 'electron'
-import fs from 'fs'
-import path from 'path'
 import { debug, log, warn } from './logger'
 
 export async function tryAskForScrenPermissions(): Promise<{
@@ -98,7 +96,7 @@ export async function captureActiveScreen(): Promise<
   log('[screen] Capturing screen at:', new Date().toISOString())
 
   // Check permissions first
-  const hasPermission = await checkScreenPermissions()
+  const hasPermission = checkScreenPermissions()
   if (!hasPermission) {
     throw new Error('Screen recording permission required')
   }
@@ -131,9 +129,18 @@ export async function captureActiveScreen(): Promise<
   // Grant access to the first screen found.
   log('[screen] Screen sources:', sources.length)
 
+  // if (!app.isPackaged) {
+  //   try {
+  //     const abspath = path.join(getScreenshotFolder(), `latest.jpg`)
+  //     fs.writeFileSync(abspath, sources[0].thumbnail.toJPEG(80))
+  //   } catch (e) {
+  //     warn('[screen] Error saving screenshot:', e)
+  //   }
+  // }
+
   // const jpg = sources[0].thumbnail.toJPEG(80)
-  const abspath = path.join(getScreenshotFolder(), `latest.jpg`)
-  fs.writeFileSync(abspath, sources[0].thumbnail.toJPEG(80))
+  // const abspath = path.join(getScreenshotFolder(), `latest.jpg`)
+  // fs.writeFileSync(abspath, sources[0].thumbnail.toJPEG(80))
 
   // encodeBase64Bytes
 
@@ -145,14 +152,14 @@ export async function captureActiveScreen(): Promise<
   return { data: dataUrl }
 }
 
-const USER_DATA_PATH = '/Users/felipe/'
+// const USER_DATA_PATH = `/Users/${process.env.USER}/`
 
-function getScreenshotFolder() {
-  return USER_DATA_PATH // + '/screenshots'
-}
+// function getScreenshotFolder() {
+//   return USER_DATA_PATH // + '/screenshots'
+// }
 
-function encodeBase64Bytes(bytes: Uint8Array): string {
-  return btoa(
-    bytes.reduce((acc, current) => acc + String.fromCharCode(current), '')
-  )
-}
+// function encodeBase64Bytes(bytes: Uint8Array): string {
+//   return btoa(
+//     bytes.reduce((acc, current) => acc + String.fromCharCode(current), '')
+//   )
+// }
