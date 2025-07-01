@@ -18,7 +18,7 @@ export const GoalTextarea = withBoundary(({ className, ...props }: Props) => {
 
   return (
     <main
-      className="flex flex-col gap-2 h-full select-none"
+      className="flex flex-col gap-2  select-none"
       onClick={(e) => {
         e.stopPropagation()
         ref.current?.focus()

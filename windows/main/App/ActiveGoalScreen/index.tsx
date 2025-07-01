@@ -73,7 +73,7 @@ export const ActiveGoalScreen = withBoundary(() => {
       />
       <main
         className={twMerge(
-          'h-full flex flex-col shadow-inset-bottom',
+          'flex-1 flex flex-col shadow-inset-bottom overflow-y-auto',
           editorFocus ? '' : ''
         )}
         onClick={(e) => {

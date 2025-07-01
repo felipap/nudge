@@ -32,7 +32,7 @@ function onStoppedTypingForMs(
 }
 
 export const InputScreen = withBoundary(() => {
-  useWindowHeight(250)
+  useWindowHeight(350)
 
   // form state
   const [value, setValue] = useGoalInputStateWithBackendBackup()
@@ -60,7 +60,7 @@ export const InputScreen = withBoundary(() => {
   return (
     <>
       <Nav title="What do you want to do next?" />
-      <main className="h-full flex flex-col shadow-inset-bottom bg-[#FAFAFA] dark:bg-[#333333AA] overflow-scroll">
+      <main className="flex-1 flex flex-col shadow-inset-bottom bg-[#FAFAFA] dark:bg-[#333333AA] overflow-scroll">
         <GoalTextarea
           value={value}
           onChange={setValue}
@@ -68,9 +68,8 @@ export const InputScreen = withBoundary(() => {
         />
 
         {/* Feedback from AI */}
-        <div className="p-2">
-          <GoalFeedback loading={isLoadingDuration} feedback={feedback} />
-        </div>
+
+        <GoalFeedback loading={isLoadingDuration} feedback={feedback} />
       </main>
       <footer className="p-[10px] flex flex-row items-center justify-between z-10 shrink-0">
         <StartSessionButton
@@ -158,7 +157,12 @@ function formatDuration(mins: number) {
   if (mins === 60) {
     return '1h'
   }
-  return `${Math.floor(mins / 60)}h ${mins % 60}min`
+  const hours = Math.floor(mins / 60)
+  const minutes = mins % 60
+  if (minutes === 0) {
+    return `${hours}h`
+  }
+  return `${hours}h ${minutes}min`
 }
 
 // Get continuous feedback from AI as the user types. We get whether the goal is
