@@ -63,8 +63,6 @@ function isFelipe(): boolean {
 
 // Don't capture local events.
 function shouldIgnoreEvent() {
-  return false
-
   if (!app.isPackaged) {
     return true
   }

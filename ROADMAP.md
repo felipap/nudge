@@ -5,6 +5,8 @@
 - [ ] Where can users get stdout/stderr logs?
 - [ ] Support multiple screens.
 - [ ] Notify when fails to capture scren.
+- [ ] Automatically check for updates.
+- [x] Feat: first open telemetry event.
 - [x] Notify when API key stops working.
 - [x] Onboarding: Ask for OpenAI key.
 - [x] Onboarding: Ask for screen permissions.

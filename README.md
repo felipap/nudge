@@ -64,13 +64,6 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
     Not today but I will ship if enough users ask for it. <a href="https://github.com/felipap/nudge/discussions/new">Start a discussion.</a>
   </p>
 </details>
-<!-- <details>
-  <summary>
-    How many tokens does Nudge use?
-  </summary>
-  <p>
-  </p>
-</details> -->
 
 [Ask a new question.](https://github.com/felipap/nudge/discussions/new/choose)
 

@@ -17,32 +17,53 @@ import { getImagePath } from './lib/utils'
 // autoUpdater by default. If the user opens the app and crashes ShipIt,
 // whatever. They'll update next time.
 
+// Do a check 2 minutes in.
+setTimeout(async () => {
+  if (!app.isPackaged) {
+    // Don't check for updates in dev mode.
+    return
+  }
+
+  const status = await asyncCheckForUpdatesAndDownload()
+  console.log('[updater] status', status)
+  if (status === 'downloaded') {
+    await showDownloadedDialog()
+  }
+}, 2 * 60_000)
+
 autoUpdater.setFeedURL({
   url: `https://update.electronjs.org/felipap/nudge/darwin-arm64/${app.getVersion()}`,
 })
 
-export let updaterState: 'downloaded' | 'downloading' | null = null
+async function showDownloadedDialog() {
+  const result = await dialog.showMessageBox({
+    type: 'info',
+    message: 'New version downloaded',
+    detail: 'A new version has been downloaded and is ready to install.',
+    icon: getImagePath('nudge-default.png'),
+    buttons: ['Quit and update', 'Later'],
+    defaultId: 0,
+    cancelId: 1,
+  })
 
-function listenForUpdates() {
-  // safeCheckForUpdates()
-  // autoUpdater.on('update-available', async () => {
-  //   console.log('[updater] available')
-  //   // hasFoundNewVersion = true
-  // })
-  // autoUpdater.on('update-downloaded', async (event) => {
-  //   console.log('[updater] downloaded', event)
-  //   await onUpdateFound()
-  // })
+  updaterState = 'downloaded'
+
+  if (result.response === 0) {
+    // User chose "Install Now"
+    try {
+      console.log('[updater] quitting and installing')
+      autoUpdater.quitAndInstall()
+      app.exit()
+    } catch (error) {
+      console.error('[updater] error', error)
+    }
+  }
+  // If user chose "Install Later", do nothing - they can continue using the app
 }
 
-listenForUpdates()
+export let updaterState: 'downloaded' | 'downloading' | null = null
 
 export async function onClickCheckForUpdates() {
-  // if (hasFoundNewVersion) {
-  //   // onUpdateFound()
-  //   return
-  // }
-
   updaterState = 'downloading'
 
   const status = await asyncCheckForUpdatesAndDownload(async () => {
@@ -69,29 +90,7 @@ export async function onClickCheckForUpdates() {
     return
   }
 
-  const result = await dialog.showMessageBox({
-    type: 'info',
-    message: 'New version downloaded',
-    detail: 'A new version has been downloaded and is ready to install.',
-    icon: getImagePath('nudge-default.png'),
-    buttons: ['Quit and update', 'Later'],
-    defaultId: 0,
-    cancelId: 1,
-  })
-
-  updaterState = 'downloaded'
-
-  if (result.response === 0) {
-    // User chose "Install Now"
-    try {
-      console.log('[updater] quitting and installing')
-      autoUpdater.quitAndInstall()
-      app.exit()
-    } catch (error) {
-      console.error('[updater] error', error)
-    }
-  }
-  // If user chose "Install Later", do nothing - they can continue using the app
+  await showDownloadedDialog()
 }
 
 let isCheckingForUpdatesOrDownloading = false
