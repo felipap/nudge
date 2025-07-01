@@ -7,39 +7,49 @@ import { getState, setPartialState } from '../store'
 import { VERBOSE } from './config'
 import { debug } from './logger'
 
-export async function tryMaybeRegisterFirstOpen() {
-  debug('[telemetry/tryMaybeRegisterFirstOpen]')
+export async function tryRegisterOpen() {
+  debug('[telemetry/tryRegisterOpen]')
   try {
-    await maybeRegisterFirstOpen()
+    await tryRegisterEvent('open')
   } catch (error) {
-    debug('[telemetry]Error sending first open event', error)
+    debug('[telemetry] Error sending open event', error)
   }
 }
 
-async function maybeRegisterFirstOpen() {
-  if (shouldIgnoreEvent()) {
-    debug('[telemetry] Ignoring event')
-    return
-  }
-
-  const hasAlreadySent = !!getState().events?.firstOpenedAt
-  if (hasAlreadySent) {
-    if (VERBOSE) {
-      debug('[telemetry] First open already sent')
-    }
-    return
-  }
-
-  setPartialState({
-    events: {
-      ...getState().events,
-      firstOpenedAt: new Date(),
-    },
-  })
-
+export async function tryMaybeRegisterFirstOpen() {
+  debug('[telemetry/tryMaybeRegisterFirstOpen]')
   try {
-    debug('[telemetry] Sending first open event')
-    Sentry.captureMessage('First open', {
+    const hasAlreadySent = !!getState().events?.firstOpenedAt
+    if (hasAlreadySent) {
+      if (VERBOSE) {
+        debug('[telemetry] First open already sent')
+      }
+      return
+    }
+
+    setPartialState({
+      events: {
+        ...getState().events,
+        firstOpenedAt: new Date(),
+      },
+    })
+
+    await tryRegisterEvent('first-event')
+  } catch (error) {
+    debug('[telemetry]Error sending first-open event', error)
+  }
+}
+
+async function tryRegisterEvent(event: string) {
+  try {
+    const ignoreReason = getIgnoreReason()
+    if (ignoreReason) {
+      debug(`[telemetry/tryRegisterEvent] not sending (${ignoreReason})`)
+      return
+    }
+
+    debug(`[telemetry/tryRegisterEvent] sending ${event}`)
+    Sentry.captureMessage(event, {
       level: 'info',
       contexts: {
         app: {
@@ -51,7 +61,7 @@ async function maybeRegisterFirstOpen() {
       },
     })
   } catch (error) {
-    debug('[telemetry]Error sending first open event', error)
+    debug(`[telemetry/tryRegisterEvent] Error sending ${event}`, error)
   }
 }
 
@@ -62,17 +72,17 @@ function isFelipe(): boolean {
 }
 
 // Don't capture local events.
-function shouldIgnoreEvent() {
+function getIgnoreReason() {
   if (!app.isPackaged) {
-    return true
+    return 'not-packaged'
   }
 
   if (process.env.NODE_ENV === 'development') {
-    return true
+    return 'is-development'
   }
 
-  if (!isFelipe()) {
-    return true
+  if (isFelipe()) {
+    return 'is-felipe'
   }
 
   return false
