@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.21](https://github.com/felipap/nudge/compare/v0.0.20...v0.0.21) (2025-07-01)
+
+
+### Features
+
+* show internet errors ([35f1044](https://github.com/felipap/nudge/commit/35f10444c76af84e8a2f2a64feae80bd83f8ca0c))
+
 ### [0.0.20](https://github.com/felipap/nudge/compare/v0.0.19...v0.0.20) (2025-07-01)
 
 
