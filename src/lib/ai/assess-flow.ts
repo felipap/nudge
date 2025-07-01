@@ -4,11 +4,9 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { OpenAI } from 'openai'
 // @ts-ignore
 import { zodResponseFormat } from 'openai/helpers/zod.mjs'
-import { ChatCompletionContentPart } from 'openai/resources'
 import { z } from 'zod'
+import { VERBOSE } from '../config'
 import { log, warn } from '../logger'
-
-const DEBUG = false
 
 dayjs.extend(relativeTime)
 
@@ -41,8 +39,12 @@ export async function assessFlowFromScreenshot(
 ): Promise<AssessmentResult> {
   assert(goal, 'goal is required')
 
-  const systemPrompt = makePrompt(goal, customInstructions, previousCaptures)
-  if (DEBUG) {
+  const systemPrompt = makeSytemPrompt(
+    goal,
+    customInstructions,
+    previousCaptures
+  )
+  if (VERBOSE) {
     log('[ai/assessment] systemPrompt', systemPrompt)
   }
 
@@ -122,7 +124,7 @@ export async function assessFlowFromScreenshot(
   }
 }
 
-function makePrompt(
+function makeSytemPrompt(
   goal: string,
   customInstructions: string | null,
   previousCaptures: string[]
@@ -159,83 +161,4 @@ For your screen summary, make sure to touch on:
 * Is the user breaking their goals? If so, how?
 * Any other relevant information?
 `
-}
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-type CaptureWithSummary = {
-  id: number
-  createdAt: Date
-  summary: string
-}
-
-export async function getRecommendation(
-  client: OpenAI,
-  captures: CaptureWithSummary[],
-  userContext: string | null
-) {
-  const start = Date.now()
-  const result = await client.chat.completions.create({
-    model: 'gpt-4o',
-    messages: [
-      {
-        role: 'system',
-        content: `
-You are a productivity buddy helping analyze a user's focus. I will give you the latest events from the user. Return a short recommendation to the user based on the events.
-
-User context:
-${userContext || 'none'}
-
-Answer in a short sentence talking directly to the user. It will be displayed in a small notification.
-        `,
-      },
-      {
-        role: 'user',
-        content: captures
-          .map((capture) => {
-            const ret: ChatCompletionContentPart[] = [
-              {
-                type: 'text',
-                text: `
-								From now: ${dayjs(capture.createdAt).fromNow()}
-								Summary of the user state: ${capture.summary}`,
-              },
-            ]
-
-            // if (event.screenshotSummary) {
-            // 	ret.push({
-            // 		type: 'text',
-            // 		text: `Summary of the users' screen: ${event.screenshotSummary}`,
-            // 	});
-            // }
-
-            return ret
-          })
-          .flat(),
-      },
-    ],
-    max_tokens: 50,
-    temperature: 0.2,
-  })
-  const elapsedMs = Date.now() - start
-
-  const content = result.choices[0].message.content
-
-  log('elapsedMs', `${(elapsedMs / 1000).toFixed(2)}s`)
-  assert(content, 'No content in result')
-
-  log('[ai/assessment] assessment', content)
-
-  return {
-    text: content,
-  }
 }
