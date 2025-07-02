@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.23](https://github.com/felipap/nudge/compare/v0.0.22...v0.0.23) (2025-07-02)
+
+
+### Bug Fixes
+
+* sentry not sending events ([ac42cf1](https://github.com/felipap/nudge/commit/ac42cf108cdd40b2aadab0b68c245a93f04c22e3))
+* window height flickering for input ([f748752](https://github.com/felipap/nudge/commit/f748752e5e41dc0058e8b0b3cabc815509b615ae))
+
 ### 0.0.22 (2025-07-01)
 
 
