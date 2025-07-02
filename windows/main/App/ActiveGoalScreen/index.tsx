@@ -23,7 +23,7 @@ export const ActiveGoalScreen = withBoundary(() => {
   const [editorFocus, setEditorFocus] = useState(false)
 
   const [goal, setGoal] = useActiveGoalContentWithSync()
-  const { timeElapsedLabel, timeLeftLabel, isOvertime, isNearlyOver } =
+  const { timeLeftLabel, isOvertime, isNearlyOver } =
     useEfficientSessionTimeLabels()
 
   const isPaused = state?.session?.pausedAt !== null
