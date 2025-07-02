@@ -4,6 +4,7 @@ import { MakerDMG } from '@electron-forge/maker-dmg'
 import { MakerZIP } from '@electron-forge/maker-zip'
 import { VitePlugin } from '@electron-forge/plugin-vite'
 import type { ForgeConfig } from '@electron-forge/shared-types'
+import path from 'path'
 
 const IS_RELEASE = !!process.env.IS_RELEASE
 
@@ -54,15 +55,18 @@ const config: ForgeConfig = {
   rebuildConfig: {},
   makers: [
     // new MakerSquirrel({}),
-    // new MakerZIP({}, ['darwin']),
-    // https://github.com/electron/forge/issues/3517#issuecomment-2480861387
-    new MakerDMG(
-      (arch) => ({
-        name: `Nudge Installer (${arch})`,
-        icon: 'images/Production.icns',
-      }),
-      ['darwin']
-    ),
+    new MakerZIP({}, ['darwin']),
+    IS_RELEASE
+      ? new MakerDMG(
+          (arch) => ({
+            // https://github.com/electron/forge/issues/3517#issuecomment-2480861387
+            name: `Nudge Installer (${arch})`,
+            icon: path.join(process.cwd(), 'images', 'Production.icns'),
+            format: 'ULFO',
+          }),
+          ['darwin']
+        )
+      : null,
     // new MakerRpm({}),
     // new MakerDeb({}),
   ].filter(isTruthy),
