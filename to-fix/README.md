@@ -14,3 +14,5 @@
 
 ^ My prompt had nothing to do with bags, but I was booking a flight and choosing
 whether to check bags.
+
+<img src="Screenshot 2025-07-02 at 11.39.51 AM.png" width="500" />
