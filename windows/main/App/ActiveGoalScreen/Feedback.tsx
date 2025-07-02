@@ -17,6 +17,7 @@ type Feedback =
   | 'doing-great'
   | 'internet-error'
   | 'try-concentrate'
+  | 'no-api-key'
   | null
 
 function getFeedbackFromState(state: State | null): Feedback {
@@ -55,8 +56,11 @@ function getFeedbackFromState(state: State | null): Feedback {
     if (relevantCapture.modelError === 'rate-limit') {
       return 'rate-limit'
     }
-    if (relevantCapture.modelError === 'api-key') {
+    if (relevantCapture.modelError === 'bad-api-key') {
       return 'credential-error'
+    }
+    if (relevantCapture.modelError === 'no-api-key') {
+      return 'no-api-key'
     }
     if (relevantCapture.modelError === 'no-internet') {
       return 'internet-error'
@@ -133,6 +137,9 @@ export const Feedback = withBoundary(() => {
     className = 'text-red-800 dark:text-red-300'
   } else if (feedback === 'unknown-error') {
     inner = <>AI failed with unknown error</>
+    className = 'text-red-800 dark:text-red-300'
+  } else if (feedback === 'no-api-key') {
+    inner = <>No model key</>
     className = 'text-red-800 dark:text-red-300'
   } else {
     feedback satisfies never

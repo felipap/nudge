@@ -8,12 +8,10 @@ import {
   MenuItem,
   MenuItemConstructorOptions,
   Tray,
-  // autoUpdater
   app,
   nativeImage,
   nativeTheme,
 } from 'electron'
-// import { updateElectronApp } from 'update-electron-app'
 import { screenCaptureService } from './lib/capture-service'
 import { getImagePath, isTruthy } from './lib/utils'
 import {

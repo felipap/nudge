@@ -1,35 +1,37 @@
 // eslint-disable-next-line import/no-unresolved
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
+export {}
 
-export function getServer() {
-  const server = new McpServer({
-    name: 'todo',
-    version: '1.0.0',
-    capabilities: {
-      resources: {},
-      tools: {},
-    },
-  })
+// import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 
-  // server.tool(
-  //   'add-todo',
-  //   'Add a new todo item to the list',
-  //   {
-  //     text: z.string().describe('The text content of the todo'),
-  //   },
-  //   tryCatchCallback(async ({ text }: { text: string }) => {
-  //     const todo = addTodo(text)
+// export function getServer() {
+//   const server = new McpServer({
+//     name: 'todo',
+//     version: '1.0.0',
+//     capabilities: {
+//       resources: {},
+//       tools: {},
+//     },
+//   })
 
-  //     return {
-  //       content: [
-  //         {
-  //           type: 'text',
-  //           text: `Added todo: ${todo.text}`,
-  //         },
-  //       ],
-  //     }
-  //   })
-  // )
+//   // server.tool(
+//   //   'add-todo',
+//   //   'Add a new todo item to the list',
+//   //   {
+//   //     text: z.string().describe('The text content of the todo'),
+//   //   },
+//   //   tryCatchCallback(async ({ text }: { text: string }) => {
+//   //     const todo = addTodo(text)
 
-  return server
-}
+//   //     return {
+//   //       content: [
+//   //         {
+//   //           type: 'text',
+//   //           text: `Added todo: ${todo.text}`,
+//   //         },
+//   //       ],
+//   //     }
+//   //   })
+//   // )
+
+//   return server
+// }
