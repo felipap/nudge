@@ -117,25 +117,19 @@ export function WindowControls({
         onClick={onClose}
         style={{ backgroundColor: '#ff5f56' }}
         label="Close"
-        icon={
-          <CloseSVG className="w-[9px] h-[9px] text-black/70 dark:text-white/80" />
-        }
+        icon={<CloseSVG className="w-[9px] h-[9px] text-black/60" />}
       />
       <WindowControlCircle
         onClick={onMinimize}
         style={{ backgroundColor: '#ffbd2e' }}
         label="Minimize"
-        icon={
-          <MinimizeSVG className="w-[9px] h-[9px] text-black/70 dark:text-white/80" />
-        }
+        icon={<MinimizeSVG className="w-[9px] h-[9px] text-black/60" />}
       />
       <WindowControlCircle
         onClick={onZoom}
         style={{ backgroundColor: '#27c93f' }}
         label="Zoom"
-        icon={
-          <ZoomSVG className="w-[9px] h-[9px] text-black/70 dark:text-white/80" />
-        }
+        icon={<ZoomSVG className="w-[9px] h-[9px] text-black/60" />}
       />
     </div>
   )
