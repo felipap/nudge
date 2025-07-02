@@ -62,7 +62,7 @@ const config: ForgeConfig = {
             // https://github.com/electron/forge/issues/3517#issuecomment-2480861387
             name: `Nudge Installer (${arch})`,
             icon: path.join(process.cwd(), 'images', 'Production.icns'),
-            format: 'ULFO',
+            // format: 'ULFO',
           }),
           ['darwin']
         )
