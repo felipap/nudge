@@ -1,30 +1,35 @@
 import { zodResponseFormat } from 'openai/helpers/zod'
 import { z } from 'zod'
-import { getModelClient } from './index'
+import { ModelClient, safeOpenAIStructuredCompletion } from '.'
+import { ModelError } from '../../../windows/shared/shared-types'
+import { warn } from '../logger'
 
 const GoalFeedbackSchema = z.object({
   isGood: z.boolean(),
-  feedback: z.string(),
   impliedDuration: z
     .number()
     .nullable()
     .describe(
       'The implied duration of the activity in minutes. If not specified, return null.'
     ),
+  feedbackType: z.enum(['lacking-duration', 'unclear-apps', 'none']).nullable(),
+  feedback: z.string(),
 })
 
 export type GoalFeedback = z.infer<typeof GoalFeedbackSchema>
 
 export async function getGoalFeedback(
-  goal: string,
-  openAiKey: string
-): Promise<GoalFeedback> {
-  const client = getModelClient({
-    name: 'openai-4o',
-    key: openAiKey,
-    validatedAt: null,
-  })
-
+  client: ModelClient,
+  goal: string
+): Promise<
+  | {
+      data: GoalFeedback
+    }
+  | {
+      error: ModelError
+      message?: string
+    }
+> {
   const systemPrompt = `You are an AI that helps users stay focused by monitoring their screen.
 A good goal tells us:
 1. What apps we'll see on screen or what activity they'll be doing (coding, writing, reading, messaging, etc)
@@ -48,28 +53,27 @@ Instructions:
 * Don't use "Please". You're giving the user a suggestion, not a request.
 `
 
-  try {
-    const response = await client.beta.chat.completions.parse({
-      model: 'gpt-4.1-mini',
-      messages: [
-        {
-          role: 'system',
-          content: systemPrompt,
-        },
-        {
-          role: 'user',
-          content: `Goal: "${goal}"`,
-        },
-      ],
-      temperature: 0.2,
-      response_format: zodResponseFormat(GoalFeedbackSchema, 'GoalFeedback'),
-    })
+  // FIXME make this generic
+  const res = await safeOpenAIStructuredCompletion<GoalFeedback>(client, {
+    model: 'gpt-4.1-mini',
+    messages: [
+      {
+        role: 'system',
+        content: systemPrompt,
+      },
+      {
+        role: 'user',
+        content: `Goal: "${goal}"`,
+      },
+    ],
+    temperature: 0.2,
+    response_format: zodResponseFormat(GoalFeedbackSchema, 'GoalFeedback'),
+  })
 
-    const parsed = response.choices[0].message.parsed
-    console.log('[ai/goal-feedback] parsed', parsed)
-    return parsed!
-  } catch (error) {
-    console.error('Error getting goal feedback:', error)
-    throw error
+  if ('error' in res) {
+    warn('[ai/goal-feedback] Error getting goal feedback', res)
+    return res
   }
+
+  return res
 }

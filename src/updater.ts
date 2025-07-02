@@ -1,4 +1,5 @@
 import { app, autoUpdater, dialog } from 'electron'
+import { UPDATE_CHECK_AFTER_STARTUP } from './lib/config'
 import { debug } from './lib/logger'
 import { getImagePath } from './lib/utils'
 
@@ -29,7 +30,7 @@ setTimeout(async () => {
   if (status === 'downloaded') {
     await showDownloadedDialog()
   }
-}, 2 * 60_000)
+}, UPDATE_CHECK_AFTER_STARTUP)
 
 autoUpdater.setFeedURL({
   url: `https://update.electronjs.org/felipap/nudge/darwin-arm64/${app.getVersion()}`,
@@ -38,10 +39,10 @@ autoUpdater.setFeedURL({
 async function showDownloadedDialog() {
   const result = await dialog.showMessageBox({
     type: 'info',
-    message: 'New version downloaded',
-    detail: 'A new version has been downloaded and is ready to install.',
+    message: 'Update Available',
+    detail: 'A new version of Nudge is ready to be installed.',
     icon: getImagePath('nudge-default.png'),
-    buttons: ['Quit and update', 'Later'],
+    buttons: ['Install now', 'Install on next launch'],
     defaultId: 0,
     cancelId: 1,
   })
@@ -67,12 +68,12 @@ export async function onClickCheckForUpdates() {
   updaterState = 'downloading'
 
   const status = await asyncCheckForUpdatesAndDownload(async () => {
-    await dialog.showMessageBox({
-      type: 'info',
-      message: 'New version available',
-      detail: 'Being downloaded.',
-      icon: getImagePath('nudge-default.png'),
-    })
+    // await dialog.showMessageBox({
+    //   type: 'info',
+    //   message: 'New version available',
+    //   detail: 'Being downloaded.',
+    //   icon: getImagePath('nudge-default.png'),
+    // })
   })
 
   if (status === 'failed') {

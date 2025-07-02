@@ -9,12 +9,15 @@ import {
   nativeTheme,
   shell,
 } from 'electron'
-import { AvailableModel } from '../windows/shared/available-models'
-import { IpcMainMethods } from '../windows/shared/ipc-types'
-import { getGoalFeedback, validateModelKey } from './lib/ai'
+import {
+  AvailableModel,
+  GetGoalFeedbackResult,
+  IpcMainMethods,
+} from '../windows/shared/shared-types'
+import { getGoalFeedback, getModelClient, validateModelKey } from './lib/ai'
 import { screenCaptureService } from './lib/capture-service'
 import { GITHUB_DISCUSSIONS_URL } from './lib/config'
-import { warn } from './lib/logger'
+import { debug, logError, warn } from './lib/logger'
 import {
   checkScreenPermissions,
   tryAskForScrenPermissions,
@@ -23,7 +26,7 @@ import { getState, setPartialState, store } from './store'
 import { State } from './store/types'
 import { prefWindow } from './windows'
 
-// Type up the ipcMain to complain when
+// Type up the ipcMain to complain when we listen for unknown events.
 type TypedIpcMain<Key extends string> = Omit<IpcMain, 'handle' | 'on'> & {
   handle: (
     channel: Key,
@@ -126,8 +129,8 @@ export function setupIPC() {
   })
 
   ipcMainTyped.handle('setAutoLaunch', async (_event, enable: boolean) => {
+    debug('[ipc] setAutoLaunch', enable)
     try {
-      console.log('setting auto launch', enable)
       app.setLoginItemSettings({
         openAtLogin: enable,
         // Start the app minimized to tray
@@ -140,7 +143,7 @@ export function setupIPC() {
   })
 
   ipcMainTyped.handle('openSettings', (_event, tab?: string) => {
-    console.log('openSettings')
+    debug('[ipc] openSettings')
 
     prefWindow!.show()
     prefWindow!.focus()
@@ -151,24 +154,42 @@ export function setupIPC() {
 
   ipcMainTyped.handle(
     'getGoalFeedback',
-    async (_: Electron.IpcMainInvokeEvent, goal: string) => {
+    async (
+      _: Electron.IpcMainInvokeEvent,
+      goal: string
+    ): Promise<GetGoalFeedbackResult> => {
       try {
-        const openAiKey = getState().modelSelection?.key
-        if (!openAiKey) {
-          throw new Error('No OpenAI key')
+        const modelSelection = getState().modelSelection
+        if (!modelSelection) {
+          warn('[capture-service] No OpenAI key found')
+          return { error: 'no-api-key' }
         }
-        const feedback = await getGoalFeedback(goal, openAiKey)
-        console.log('feedback', feedback, feedback.feedback)
-        return feedback
-        // return feedback.isGood ? null : feedback.feedback!
+
+        const client = getModelClient(modelSelection)
+        const res = await getGoalFeedback(client, goal)
+        if ('error' in res) {
+          return { error: res.error }
+        }
+
+        debug('[getGoalFeedback] returned', { data: res.data })
+
+        return {
+          data: {
+            feedback:
+              res.data.feedbackType === 'none' ? null : res.data.feedbackType,
+            impliedDuration: res.data.impliedDuration,
+          },
+        }
       } catch (error) {
-        console.error('Error in get-goal-feedback handler:', error)
-        throw error
+        logError('Error in get-goal-feedback handler:', error)
+        return { error: 'unknown' }
       }
     }
   )
 
   ipcMainTyped.handle('clearActiveCapture', () => {
+    debug('[ipc] clearActiveCapture')
+
     store.setState({
       ...store.getState(),
       activeCapture: null,
@@ -178,6 +199,9 @@ export function setupIPC() {
   ipcMainTyped.handle(
     'validateModelKey',
     async (_event, model: AvailableModel, key: string) => {
+      debug('[ipc] validateModelKey', model, key)
+
+      // FIXME make generic
       const openAiKey = getState().modelSelection?.key
       if (!openAiKey) {
         throw new Error('No OpenAI key')
@@ -195,10 +219,10 @@ export function setupIPC() {
   })
 
   ipcMainTyped.handle('captureNow', (_event) => {
-    console.log('captureNow', _event)
+    debug('captureNow', _event)
     screenCaptureService.captureNow()
 
-    console.log('_event', _event)
+    debug('_event', _event)
     if (_event) {
       _event.sender.send('background-action-completed', 'captureNow')
     }

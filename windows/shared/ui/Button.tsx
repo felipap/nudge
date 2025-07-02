@@ -53,8 +53,12 @@ export const Button = ({
       disabled={disabled}
       {...props}
     >
-      {loading && <Spinner />}
-      {!loading && icon}
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Spinner />
+        </div>
+      )}
+      {!loading && icon && <div className="shrink-0">{icon}</div>}
       {children}
     </button>
   )

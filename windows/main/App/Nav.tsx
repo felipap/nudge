@@ -30,10 +30,10 @@ export function Nav({ title, showPin = false }: Props) {
 
         <WindowControlCircle
           onClick={() => window.electronAPI.closeWindow()}
-          className="hover:bg-[#ff5f56] bg-[#EEE] dark:bg-gray-500 w-[14px] h-[14px]"
+          className="group hover:bg-[#ff5f56] bg-[#EEE] dark:bg-gray-500 w-[14px] h-[14px]"
           label="Close"
           icon={
-            <CloseSVG className="w-[9px] h-[9px] text-black/70 dark:text-white/80" />
+            <CloseSVG className="w-[30px] h-[30px] text-black/70 dark:text-white/80" />
           }
         />
       </div>

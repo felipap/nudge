@@ -5,6 +5,8 @@ import { OpenAI } from 'openai'
 // @ts-ignore
 import { zodResponseFormat } from 'openai/helpers/zod.mjs'
 import { z } from 'zod'
+import { ModelClient } from '.'
+import { ModelError } from '../../../windows/shared/shared-types'
 import { VERBOSE } from '../config'
 import { log, warn } from '../logger'
 
@@ -26,12 +28,12 @@ export type AssessmentResult =
       data: Assessment
     }
   | {
-      error: 'unknown' | 'api-key' | 'rate-limit' | 'no-internet'
+      error: ModelError
       message?: string
     }
 
 export async function assessFlowFromScreenshot(
-  client: OpenAI,
+  client: ModelClient,
   base64content: string,
   goal: string,
   customInstructions: string | null,
@@ -45,15 +47,17 @@ export async function assessFlowFromScreenshot(
     previousCaptures
   )
   if (VERBOSE) {
-    log('[ai/assessment] systemPrompt', systemPrompt)
+    log('[ai/assess-flow] systemPrompt', systemPrompt)
   }
 
-  log('[ai/assessment] Calling OpenAI...')
+  log('[ai/assess-flow] Calling OpenAI...')
+
   const start = Date.now()
 
+  // TODO make generic
   let result
   try {
-    result = await client.beta.chat.completions.parse({
+    result = await client.openAiClient.beta.chat.completions.parse({
       model: 'gpt-4o-mini',
       messages: [
         {
@@ -66,7 +70,6 @@ export async function assessFlowFromScreenshot(
             {
               type: 'image_url',
               image_url: {
-                // url: `data:image/jpeg;base64,${contents}`,
                 url: base64content,
               },
             },
@@ -78,15 +81,7 @@ export async function assessFlowFromScreenshot(
       temperature: 0.3,
     })
   } catch (e) {
-    warn('[ai/assessment] completion threw!', e)
-
-    console.log(
-      'is instance APIConnectionError',
-      e instanceof OpenAI.APIConnectionError
-    )
-    console.log('is instance Auth', e instanceof OpenAI.AuthenticationError)
-    console.log('is instance RateLimit', e instanceof OpenAI.RateLimitError)
-    console.log('is instance APIError', e instanceof OpenAI.APIError)
+    warn('[ai/assess-flow] completion threw!', e)
 
     if (e instanceof OpenAI.APIConnectionError) {
       return {
@@ -95,7 +90,7 @@ export async function assessFlowFromScreenshot(
     }
     if (e instanceof OpenAI.AuthenticationError) {
       return {
-        error: 'api-key',
+        error: 'bad-api-key',
       }
     }
     if (e instanceof OpenAI.RateLimitError) {
@@ -112,12 +107,12 @@ export async function assessFlowFromScreenshot(
 
   const elapsedMs = Date.now() - start
 
-  log('[ai/assessment] elapsedMs', `${(elapsedMs / 1000).toFixed(2)}s`)
+  log('[ai/assess-flow] elapsedMs', `${(elapsedMs / 1000).toFixed(2)}s`)
 
   const parsed = result.choices[0].message.parsed
   assert(parsed, 'No content in result')
 
-  log('[ai/assessment] assessment', parsed)
+  log('[ai/assess-flow] assessment', parsed)
 
   return {
     data: parsed,

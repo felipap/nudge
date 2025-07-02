@@ -1,5 +1,43 @@
+// To share between renderer and main process.
+
 import { State } from '../../src/store/types'
-import { AvailableModel } from './available-models'
+
+//
+//
+// Misc
+
+export type ModelError =
+  | 'unknown'
+  | 'no-api-key'
+  | 'bad-api-key'
+  | 'rate-limit'
+  | 'no-internet'
+
+export type GoalFeedbackType =
+  | 'lacking-duration'
+  | 'unclear-apps'
+  | 'good'
+  | null
+
+//
+//
+// Available models
+
+export type AvailableModel = 'openai-4o' | 'openai-4o-mini'
+
+export const AVAILABLE_MODELS: { name: string; value: AvailableModel }[] = [
+  { name: 'OpenAI 4o (06-2025)', value: 'openai-4o' },
+]
+
+//
+//
+// IPC types
+
+export type GetGoalFeedbackResult =
+  | {
+      data: { feedback: GoalFeedbackType; impliedDuration?: number | null }
+    }
+  | { error: ModelError }
 
 // Methods shared between window.electronAPI and ipcRenderer/ipcMain. These
 // methods are usually just wrappers around the ipcMain/ipcRenderer methods.
@@ -18,7 +56,7 @@ type SharedIpcMethods = {
   clearActiveCapture: () => Promise<void>
   openGithubDiscussion: () => Promise<void>
   openSystemSettings: () => Promise<void>
-  getGoalFeedback: (goal: string) => Promise<any>
+  getGoalFeedback: (goal: string) => Promise<GetGoalFeedbackResult>
   pauseSession: () => Promise<void>
   resumeSession: () => Promise<void>
   startSession: (goal: string, durationMs: number) => Promise<void>

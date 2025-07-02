@@ -82,7 +82,7 @@ export function WindowControlCircle({
     <span
       aria-label={label}
       className={twMerge(
-        'w-[13px] h-[13px] rounded-full inline-block border border-black/10 dark:border-white/10 relative cursor-pointer transition-colors',
+        'w-[13px] h-[13px] overflow-hidden rounded-full leading-[13px] inline-block border border-black/10 dark:border-white/10 relative cursor-pointer transition-colors',
         className
       )}
       onClick={onClick}
@@ -92,6 +92,24 @@ export function WindowControlCircle({
         {icon}
       </span>
     </span>
+  )
+}
+
+export function WindowCloseButton({
+  onClick,
+  className,
+}: {
+  onClick: () => void
+  className?: string
+}) {
+  return (
+    <WindowControlCircle
+      onClick={onClick}
+      className={className}
+      style={{ backgroundColor: '#ff5f56' }}
+      label="Close"
+      icon={<CloseSVG className="w-[1000px] h-[1000px] text-black/80" />}
+    />
   )
 }
 
@@ -113,12 +131,7 @@ export function WindowControls({
         className
       )}
     >
-      <WindowControlCircle
-        onClick={onClose}
-        style={{ backgroundColor: '#ff5f56' }}
-        label="Close"
-        icon={<CloseSVG className="w-[9px] h-[9px] text-black/60" />}
-      />
+      <WindowCloseButton onClick={onClose} />
       <WindowControlCircle
         onClick={onMinimize}
         style={{ backgroundColor: '#ffbd2e' }}

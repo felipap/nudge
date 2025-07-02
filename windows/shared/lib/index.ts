@@ -46,9 +46,9 @@ export function useWindowHeight(height: number) {
   useEffect(() => {
     async function load() {
       const currentHeight = await getWindowHeight()
-      console.log('currentHeight', currentHeight)
+      // console.log('[useWindowHeight] currentHeight', currentHeight)
       if (currentHeight !== height) {
-        console.log('setting window height', height)
+        // console.debug('[useWindowHeight] Setting window height', height)
         await setWindowHeight(height, true)
       }
     }

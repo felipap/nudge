@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ActiveSession, State } from '../../src/store/types'
-import { AvailableModel } from './available-models'
-import { ExposedElectronAPI } from './ipc-types'
+import { AvailableModel } from './shared-types'
+import { ExposedElectronAPI } from './shared-types'
 
 declare global {
   interface Window {

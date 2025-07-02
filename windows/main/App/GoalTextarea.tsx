@@ -12,13 +12,14 @@ type Props = AutoExpandingTextareaProps
 
 export const GoalTextarea = withBoundary(({ className, ...props }: Props) => {
   const ref = useRef<HTMLTextAreaElement>(null)
+
   const placeholder = useMemo(() => {
     return PLACEHOLDERS[Math.floor(Math.random() * PLACEHOLDERS.length)]
   }, [])
 
   return (
     <main
-      className="flex flex-col gap-2  select-none"
+      className="flex flex-col gap-2  select-none flex-1"
       onClick={(e) => {
         e.stopPropagation()
         ref.current?.focus()

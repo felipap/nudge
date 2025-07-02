@@ -6,8 +6,8 @@
 
 import { contextBridge, IpcRenderer, ipcRenderer } from 'electron'
 import type { State } from '../../src/store/types'
-import { AvailableModel } from './available-models'
-import { ExposedElectronAPI, IpcMainMethods } from './ipc-types'
+import { AvailableModel } from './shared-types'
+import { ExposedElectronAPI, IpcMainMethods } from './shared-types'
 import { tryAskForScrenPermissions } from './ipc'
 
 type TypedIpcRenderer<Key extends string> = Omit<

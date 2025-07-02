@@ -7,7 +7,7 @@
   "include": [
     "ipc.ts",
     "**/*.ts",
-    "../windows/shared/available-models.ts",
-    "../windows/shared/ipc-types.ts",
+    "../windows/shared/shared-types.ts",
+    "../windows/shared/shared-types.ts",
   ]
 }

@@ -5,7 +5,7 @@ import { ModelSelection } from '../../../../src/store/types'
 import {
   AVAILABLE_MODELS,
   type AvailableModel,
-} from '../../../shared/available-models'
+} from '../../../shared/shared-types'
 import { useBackendState, validateModelKey } from '../../../shared/ipc'
 import { Input } from '../../../shared/ui/native/Input'
 import { Select } from '../../../shared/ui/native/Select'

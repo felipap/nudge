@@ -1,4 +1,4 @@
-import { AvailableModel } from '../../windows/shared/available-models'
+import { AvailableModel } from '../../windows/shared/shared-types'
 
 export interface Capture {
   summary: string
