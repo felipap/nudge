@@ -54,8 +54,15 @@ const config: ForgeConfig = {
   rebuildConfig: {},
   makers: [
     // new MakerSquirrel({}),
-    new MakerZIP({}, ['darwin']),
-    IS_RELEASE ? new MakerDMG({}, ['darwin']) : null,
+    // new MakerZIP({}, ['darwin']),
+    // https://github.com/electron/forge/issues/3517#issuecomment-2480861387
+    new MakerDMG(
+      (arch) => ({
+        name: `Nudge Installer (${arch})`,
+        icon: 'images/Production.icns',
+      }),
+      ['darwin']
+    ),
     // new MakerRpm({}),
     // new MakerDeb({}),
   ].filter(isTruthy),
