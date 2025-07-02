@@ -37,6 +37,8 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 
 ## FAQ
 
+[Ask a new question.](https://github.com/felipap/nudge/discussions/new/choose)
+
 <details>
   <summary>
     How does Nudge work?
@@ -64,8 +66,20 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
     Not today but I will ship if enough users ask for it. <a href="https://github.com/felipap/nudge/discussions/new">Start a discussion.</a>
   </p>
 </details>
-
-[Ask a new question.](https://github.com/felipap/nudge/discussions/new/choose)
+<details>
+  <summary>
+    How much does Nudge cost in AI usage?
+  </summary>
+  <p>
+    Depends on the model you use, the size of your screen, and the frequency of captures.
+  </p>
+  <p>
+    During a test on July 2nd 2025, I found each image in my 1470x956 macOS translated into ~14k input tokens. In default settings (GPT-4o-mini, 1 minute capture frequency), this means $0.002 USD per minute that Nudge is active, or 12 cents per hour.
+  </p>
+  <p>
+    I'm interested in ways to make this cheaper. If you have ideas, <a href="https://github.com/felipap/nudge/discussions/new">start a discussion.</a>
+  </p>
+</details>
 
 ## Status
 
