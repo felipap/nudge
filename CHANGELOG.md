@@ -2,6 +2,57 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.24 (2025-07-02)
+
+
+### Features
+
+* add first-open telemetry event ([d56f4aa](https://github.com/felipap/nudge/commit/d56f4aa356318c205ea7201648578993a234192d))
+* add help footer to Settings ([1597a84](https://github.com/felipap/nudge/commit/1597a8458f1a372d74dca883362c0e8f8beb5b14))
+* add linting workflow ([779a3fb](https://github.com/felipap/nudge/commit/779a3fb0e96f4adc4f1d87fb548cfcfd50448f1b))
+* add Sentry ([533c401](https://github.com/felipap/nudge/commit/533c4019dbf422c713547b104190f5d92ac66057))
+* added (bad) icons ([9361696](https://github.com/felipap/nudge/commit/936169622730123a744d63d132ba8680ffbfc40e))
+* allow users to open system settings to grant permissions ([70dab3b](https://github.com/felipap/nudge/commit/70dab3b95d1aa88580fd1e4f8449d62344066a4a))
+* api errors showing in front end ([542aa6a](https://github.com/felipap/nudge/commit/542aa6a4a52a924477b3fdc1af8d1437e47f4d2c))
+* autoupdater ([3312e58](https://github.com/felipap/nudge/commit/3312e58e8e798d5cd6b452895b0062f521f24e7e))
+* better onboarding screen ([85ea26a](https://github.com/felipap/nudge/commit/85ea26a06e942289f507f0d91dd61596dd2914b9))
+* call autoupdater 2 minutes in ([6198218](https://github.com/felipap/nudge/commit/61982183bc45c3a7e3eb06de4b2dd13aaf26e86e))
+* development icon ([3934235](https://github.com/felipap/nudge/commit/3934235a951666416fa6bf6e3a0e3fdbe5bed856))
+* emit x64 too ([91a168d](https://github.com/felipap/nudge/commit/91a168de62c354a904a017964e7956d707f5d7eb))
+* hide from dock if all windows closed ([2c75a36](https://github.com/felipap/nudge/commit/2c75a365f1575af89fa58381399bb3026a697991))
+* hide tab once screen permission granted ([94703fa](https://github.com/felipap/nudge/commit/94703fadf3bbaec2e0d03217a8012e7c2892e8d9))
+* improved autoupdater ([713f9e2](https://github.com/felipap/nudge/commit/713f9e29184393d0a3423c3b3cb8d081a3b332a9))
+* merged tip and submit button + refactor ([e6e2181](https://github.com/felipap/nudge/commit/e6e21818e14b9df4fd9948377fdb3f2a46b3ef10))
+* new icon for paused ([5a8450b](https://github.com/felipap/nudge/commit/5a8450bd030f1d846c177be8e4dbcdfec89b7b07))
+* nudge: new icon ([86635d3](https://github.com/felipap/nudge/commit/86635d34d1089eb3b632a1b29e2da9c8fe12b0a6))
+* restart session on restart ([68df946](https://github.com/felipap/nudge/commit/68df9462cae4185a23e06342cf8b7753a9373b4a))
+* roadmap file ([7bcf506](https://github.com/felipap/nudge/commit/7bcf506001f67ca560f660318848e73ae4d6066f))
+* settings shortcut ([db48287](https://github.com/felipap/nudge/commit/db48287cfdeece21494606c7dc741c3ffd5aed74))
+* show internet errors ([35f1044](https://github.com/felipap/nudge/commit/35f10444c76af84e8a2f2a64feae80bd83f8ca0c))
+* small clean up of tray menu ([dd94e33](https://github.com/felipap/nudge/commit/dd94e33381b4565376fdaedfd462b69c6d9fc13f))
+
+
+### Bug Fixes
+
+* auto launch not working ([e896644](https://github.com/felipap/nudge/commit/e89664443156913f5df9d58e1188d5f8e96defbf))
+* couple changes ([add242b](https://github.com/felipap/nudge/commit/add242b08f20710c1907527374a5c6676420e38d))
+* dont show capture state in tray menu when paused ([201f9cd](https://github.com/felipap/nudge/commit/201f9cdb223e3a516950ab28ae54a3bdf778b95f))
+* example fix ([5958424](https://github.com/felipap/nudge/commit/595842481a728bd8585a2f38019d3fc7c8440f4e))
+* hide feedback after restart ([c9f9b2e](https://github.com/felipap/nudge/commit/c9f9b2e33d6ff0e985ca4e31a12a09148039c338))
+* isCapturing state left from quit app ([636cbd3](https://github.com/felipap/nudge/commit/636cbd305c8d9c3d2fd52d6d9617d2a6c842511c))
+* lint by ignoring mcp import issue ([e5d61c7](https://github.com/felipap/nudge/commit/e5d61c7ab6ff403bc7e6e55520c672da8b6b63ba))
+* made linting stricter ([3b46abd](https://github.com/felipap/nudge/commit/3b46abde98145cc57b49932ca59194932bb54a26))
+* made linting stricter ([e38d0c6](https://github.com/felipap/nudge/commit/e38d0c653b7f2dff3081813607e189944293d2db))
+* screenshots broken ([0255cb2](https://github.com/felipap/nudge/commit/0255cb2e53f6b8f94015210cba725b62a167ccf5))
+* scrollable textarea ([f28a90d](https://github.com/felipap/nudge/commit/f28a90d06b8d20d38a054ddb35c186c3a901bc61))
+* sentry import path ([d227f5e](https://github.com/felipap/nudge/commit/d227f5e8c30e7e9c4efbff8cbfb9d0f0179eeefa))
+* sentry not sending events ([ac42cf1](https://github.com/felipap/nudge/commit/ac42cf108cdd40b2aadab0b68c245a93f04c22e3))
+* some cleanups ([f92e47d](https://github.com/felipap/nudge/commit/f92e47d9dc578e283735434ed468fc344a85d3fb))
+* testing fix to CI ([f7353e5](https://github.com/felipap/nudge/commit/f7353e5154fbef77f4ae91e453f9328f1992b100))
+* todos: build ([36b0b54](https://github.com/felipap/nudge/commit/36b0b547f19e6dff0b728f60f70a02fdf1c6911b))
+* ts-check-mian ([bdc6aef](https://github.com/felipap/nudge/commit/bdc6aef83058128673115e1e49e23c3ef9020a71))
+* window height flickering for input ([f748752](https://github.com/felipap/nudge/commit/f748752e5e41dc0058e8b0b3cabc815509b615ae))
+
 ### [0.0.23](https://github.com/felipap/nudge/compare/v0.0.22...v0.0.23) (2025-07-02)
 
 
