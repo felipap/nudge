@@ -14,6 +14,8 @@ import { GoalTextarea } from '../GoalTextarea'
 import { Nav } from '../Nav'
 import { SubmitButton } from './SubmitButton'
 
+const GET_FEEDBACK_AFTER_MS = 2_000
+
 const MIN_GOAL_LENGTH = 25
 
 export const InputScreen = withBoundary(() => {
@@ -27,7 +29,11 @@ export const InputScreen = withBoundary(() => {
   )
 
   function submit() {
-    startSession(value, (impliedDuration || 30) * 60 * 1000)
+    startSession(
+      value,
+      // Added 10s to have the label say "20min left" before it turns to 19min.
+      (impliedDuration || 30) * 60 * 1000 + 10_000
+    )
 
     // Let's try to avoid a flash.
     setTimeout(() => {
@@ -94,7 +100,7 @@ function useEvolvingFeedback(value: string, skip = false) {
 
   onStoppedTypingForMs(
     value,
-    1_000,
+    GET_FEEDBACK_AFTER_MS,
     () => {
       if (skip) {
         setLoading(false)

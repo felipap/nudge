@@ -9,7 +9,7 @@
     "package": "electron-forge package",
     "ts-check-main": "tsc --noEmit -p src/tsconfig.json",
     "ts-check-windows": "tsc --noEmit -p windows/settings/tsconfig.json && tsc --noEmit -p windows/main/tsconfig.json",
-    "make": "IS_MAKE=true electron-forge make --arch=\"arm64\"",
+    "make": "IS_MAKE=true electron-forge make --arch=\"arm64,x64\"",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
     "app:dir": "electron-builder --dir",

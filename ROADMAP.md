@@ -6,6 +6,7 @@
 - [ ] Support multiple screens.
 - [ ] Notify when fails to capture scren.
 - [ ] Automatically check for updates.
+- [ ] Release for Intel Mac.
 - [x] Merge tip with submit button.
 - [x] Feat: first open telemetry event.
 - [x] Notify when API key stops working.
