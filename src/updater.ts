@@ -41,7 +41,7 @@ async function showDownloadedDialog() {
     type: 'info',
     message: 'Update Available',
     detail: 'A new version of Nudge is ready to be installed.',
-    icon: getImagePath('nudge-default.png'),
+    icon: getImagePath('original.png'),
     buttons: ['Install now', 'Install on next launch'],
     defaultId: 0,
     cancelId: 1,
@@ -72,7 +72,7 @@ export async function onClickCheckForUpdates() {
     //   type: 'info',
     //   message: 'New version available',
     //   detail: 'Being downloaded.',
-    //   icon: getImagePath('nudge-default.png'),
+    //   icon: getImagePath('original.png'),
     // })
   })
 
@@ -86,7 +86,7 @@ export async function onClickCheckForUpdates() {
     await dialog.showMessageBox({
       type: 'info',
       message: 'No new version available',
-      icon: getImagePath('nudge-default.png'),
+      icon: getImagePath('original.png'),
     })
     return
   }
