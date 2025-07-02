@@ -1,6 +1,6 @@
 import 'source-map-support/register'
 
-import { init as SentryInit } from '@sentry/electron/main'
+import { init as SentryInit, IPCMode } from '@sentry/electron/main'
 import { app, BrowserWindow } from 'electron'
 import started from 'electron-squirrel-startup'
 import { setupIPC } from './ipc'
@@ -14,6 +14,7 @@ if (app.isPackaged) {
   SentryInit({
     dsn: 'https://df66516e528e1e116926f9631fca55f3@o175888.ingest.us.sentry.io/4509567206555648',
     release: app.getVersion(),
+    ipcMode: IPCMode.Classic,
   })
 }
 

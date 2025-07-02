@@ -15,17 +15,21 @@ export default function App() {
   useGlobalShortcuts()
 
   let inner
-  if (!state) {
+  if (
+    !state ||
+    // Required so the screen doesn't flicker below.
+
+    screenPermission === null
+  ) {
     return <div className="flex flex-col bg-white h-screen">Loading</div>
   } else if (
     !state.modelSelection ||
     !state.modelSelection.key ||
-    // This is going to cause flicker. UGH.
     screenPermission !== 'granted'
   ) {
     inner = <OnboardingScreen />
-  } else if (state.session && state.session.confirmContinue) {
-    inner = <ConfirmGoalScreen />
+    // } else if (state.session && state.session.confirmContinue) {
+    //   inner = <ConfirmGoalScreen />
   } else if (state.session) {
     inner = <ActiveGoalScreen />
   } else {

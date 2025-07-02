@@ -32,7 +32,7 @@ function onStoppedTypingForMs(
 }
 
 export const InputScreen = withBoundary(() => {
-  useWindowHeight(350)
+  useWindowHeight(250)
 
   // form state
   const [value, setValue] = useGoalInputStateWithBackendBackup()
