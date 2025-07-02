@@ -114,7 +114,8 @@ export const Feedback = withBoundary(() => {
   if (feedback === 'capturing') {
     inner = <>Capturing screen</>
   } else if (feedback === 'improve-goal') {
-    inner = <>Improve your goal</>
+    className = 'text-yellow-800 dark:text-yellow-300'
+    inner = <>Your goal is unclear</>
   } else if (feedback === 'doing-great') {
     inner = (
       <>

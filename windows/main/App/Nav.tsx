@@ -14,7 +14,7 @@ export function Nav({ title, showPin = false }: Props) {
     <nav
       className={twMerge(
         'flex flex-row h-[40px] items-center shrink-0',
-        'border-b border-gray-100 dark:border-gray-800'
+        'border-b border-gray-100 dark:border-gray-700'
       )}
     >
       <div className="[app-region:drag] self-stretch flex-1 px-3 flex items-center flex-row select-none">

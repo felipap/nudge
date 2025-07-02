@@ -37,7 +37,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-gray-900/50 text-[14px] font-display-3p text-contrast">
+    <div className="flex flex-col h-screen bg-white dark:bg-gray-900/60 text-[14px] font-display-3p text-contrast">
       {inner}
     </div>
   )

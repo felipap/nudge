@@ -12,8 +12,8 @@ const GoalFeedbackSchema = z.object({
     .describe(
       'The implied duration of the activity in minutes. If not specified, return null.'
     ),
+  feedback: z.string().describe('The feedback to the user.'),
   feedbackType: z.enum(['lacking-duration', 'unclear-apps', 'none']).nullable(),
-  feedback: z.string(),
 })
 
 export type GoalFeedback = z.infer<typeof GoalFeedbackSchema>
@@ -42,6 +42,7 @@ Examples:
 - "Code project" -> Ask for a time block
 - "Code on Nudge for 2 hours" -> Return isGood=true with no explanation
 - "Text friends for 30 minutes" -> Return isGood=true with no explanation
+- "Write for 20 mins" -> Return isGood=false with feedbackType="unclear-apps"
 
 Communication activities (texting, messaging, emails) are valid screen activities when paired with a time block.
 If they mention an activity AND a time block, return isGood=true with no explanation.

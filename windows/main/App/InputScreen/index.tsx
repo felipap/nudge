@@ -1,7 +1,7 @@
 // I need to work on the design for Nudge until 4pm. This means mostly Figma,
 // maybe some Cursor. It's ok if I use Spotify and Youtube if it's for music.
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   getGoalFeedback,
   startSession,
@@ -14,7 +14,9 @@ import { GoalTextarea } from '../GoalTextarea'
 import { Nav } from '../Nav'
 import { SubmitButton } from './SubmitButton'
 
-const GET_FEEDBACK_AFTER_MS = 2_000
+// Wait this long for user to stop typing before we get feedback.
+const GET_FEEDBACK_AFTER_FAST_MS = 1_000
+const GET_FEEDBACK_AFTER_LONG_MS = 4_000
 
 const MIN_GOAL_LENGTH = 25
 
@@ -72,7 +74,6 @@ export const InputScreen = withBoundary(() => {
 // Save the input in the backend so it persists across restarts?
 function useGoalInputStateWithBackendBackup() {
   const { state, setPartialState } = useBackendState()
-
   const [localValue, setLocalValue] = useState<string | null>(null)
 
   useEffect(() => {
@@ -98,9 +99,27 @@ function useEvolvingFeedback(value: string, skip = false) {
   const [isLoading, setLoading] = useState(false)
   const [duration, setDuration] = useState<number | null>(null)
 
+  // Figure out how long to wait for user to stop typing before we call the AI
+  // for feedback. We want to minimize this delay for UX while not making
+  // useless calls to the AI while the user is still figuring out what to say.
+  // We use a simple heuristic: if the current goal ends with a period, it's
+  // more likely for the user to be done typing, so wait less. We also try to
+  // wait less in the first load, when we're getting feedback for goal text that
+  // was previously saved.
+  const firstValueLoaded = useMemo(() => value, [!!value])
+  const isFirstValueLoaded = useMemo(() => {
+    return value === firstValueLoaded
+  }, [value])
+  const feedbackDelay = useMemo(() => {
+    // If current goal ends with a period, wait less time for feedback.
+    return value.match(/\.\s*$/) || isFirstValueLoaded
+      ? GET_FEEDBACK_AFTER_FAST_MS
+      : GET_FEEDBACK_AFTER_LONG_MS
+  }, [value, isFirstValueLoaded])
+
   onStoppedTypingForMs(
     value,
-    GET_FEEDBACK_AFTER_MS,
+    feedbackDelay,
     () => {
       if (skip) {
         setLoading(false)
@@ -118,6 +137,7 @@ function useEvolvingFeedback(value: string, skip = false) {
       if ('error' in res) {
         console.warn('getGoalFeedback error', res)
         setResult(res)
+        setLoading(false)
         return
       }
       console.log('res', res)

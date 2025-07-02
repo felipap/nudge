@@ -5,9 +5,9 @@
 - [ ] Where can users get stdout/stderr logs?
 - [ ] Support multiple screens.
 - [ ] Notify when fails to capture scren.
-- [ ] Automatically check for updates.
-- [ ] Release for Intel Mac.
-- [ ] Add DMG icon.
+- [x] Automatically check for updates.
+- [x] Release for Intel Mac.
+- [x] Add DMG icon.
 - [x] Merge tip with submit button.
 - [x] Feat: first open telemetry event.
 - [x] Notify when API key stops working.

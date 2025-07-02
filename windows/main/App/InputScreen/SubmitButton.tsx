@@ -2,7 +2,12 @@ import { ClockAlertIcon } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 import { GetGoalFeedbackResult } from '../../../shared/shared-types'
 import { Button } from '../../../shared/ui/Button'
-import { FaPlay, FaQuestionCircle, Spinner } from '../../../shared/ui/icons'
+import {
+  FaExclamation,
+  FaPlay,
+  FaQuestionCircle,
+  Spinner,
+} from '../../../shared/ui/icons'
 
 export type DisableReason = 'empty' | 'too-short' | 'error'
 
@@ -49,8 +54,18 @@ export function SubmitButton({
     bgClassName = GREY_BG
   } else if ('error' in feedbackResult) {
     text = `Error: ${feedbackResult.error}`
+    if (feedbackResult.error === 'no-internet') {
+      text = 'Problem: No internet connection'
+    } else if (feedbackResult.error === 'bad-api-key') {
+      text = 'Check your OpenAI key'
+    } else if (feedbackResult.error === 'rate-limit') {
+      text = 'Rate limit exceeded'
+    } else {
+      text = 'Error'
+    }
     disabled = true
     bgClassName = RED_BG
+    icon = <FaExclamation className="w-4 h-4" />
   } else if (feedbackResult.data.feedback === 'lacking-duration') {
     icon = <ClockAlertIcon className="w-4 h-4" />
     text = 'Specify an activity duration'

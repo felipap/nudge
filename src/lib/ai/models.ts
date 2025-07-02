@@ -1,6 +1,5 @@
+import * as Sentry from '@sentry/electron/main'
 import assert from 'assert'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import OpenAI from 'openai'
 import { ChatCompletionParseParams } from 'openai/src/resources/beta/chat/completions'
 import {
@@ -8,7 +7,7 @@ import {
   ModelError,
 } from '../../../windows/shared/shared-types'
 import { ModelSelection } from '../../store'
-import { warn } from '../logger'
+import { logError, warn } from '../logger'
 
 export async function validateModelKey(
   model: AvailableModel,
@@ -33,12 +32,6 @@ async function checkOpenAIKey(apiKey: string) {
     return false
   }
 }
-
-// interface Model {
-//   name: AvailableModel
-// }
-
-dayjs.extend(relativeTime)
 
 export interface ModelClient {
   provider: 'openai'
@@ -71,6 +64,13 @@ export async function safeOpenAIStructuredCompletion<T>(
   } catch (e) {
     warn('[ai/assess-flow] completion threw!', e)
 
+    Sentry.captureException(e, {
+      extra: {
+        message: 'KNOWN OpenAI API error',
+        model: client.openAiClient.apiKey,
+      },
+    })
+
     if (e instanceof OpenAI.APIConnectionError) {
       return {
         error: 'no-internet',
@@ -86,6 +86,15 @@ export async function safeOpenAIStructuredCompletion<T>(
         error: 'rate-limit',
       }
     }
+
+    logError('Unknown OpenAI API error', { e })
+
+    Sentry.captureException(e, {
+      extra: {
+        message: 'UnknownOpenAI API error',
+        model: client.openAiClient.apiKey,
+      },
+    })
 
     return {
       error: 'unknown',
