@@ -54,7 +54,7 @@ async function judgeResponse(
     validatedAt: null,
   })
 
-  const response = await client.beta.chat.completions.parse({
+  const response = await client.openAiClient.beta.chat.completions.parse({
     model: 'gpt-4.1-mini',
     messages: [
       {
@@ -104,10 +104,21 @@ async function runEvals() {
     )
 
     try {
-      const feedback = await getGoalFeedback(testCase.goal, OPENAI_API_KEY)
-      console.log('Got feedback:', feedback)
+      const client = getModelClient({
+        name: 'openai-4o',
+        key: OPENAI_API_KEY!,
+        validatedAt: null,
+      })
+      const res = await getGoalFeedback(client, testCase.goal)
+      console.log('Got feedback:', res)
 
-      if (feedback.isGood) {
+      if ('error' in res) {
+        console.log('Result: ❌ FAIL (error)')
+        console.log('\n---\n')
+        continue
+      }
+
+      if (res.data.isGood) {
         if (testCase.expectedFeedback === null) {
           console.log('Result: ✅ PASS (both agree goal is good)')
         } else {
@@ -120,7 +131,7 @@ async function runEvals() {
         } else {
           // Both agree it's bad, check the explanation
           const judgment = await judgeResponse(
-            feedback,
+            res.data,
             testCase,
             testCase.goal
           )

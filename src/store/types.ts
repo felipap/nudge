@@ -1,4 +1,4 @@
-import { AvailableModel } from '../../windows/shared/shared-types'
+import { AvailableModel, ModelError } from '../../windows/shared/shared-types'
 
 export interface Capture {
   summary: string
@@ -16,7 +16,7 @@ export interface LatestCapture extends Capture {
 
 export interface CaptureError {
   at: string
-  modelError: 'unknown' | 'api-key' | 'rate-limit' | 'no-internet'
+  modelError: ModelError
 }
 
 export type ModelSelection = {
