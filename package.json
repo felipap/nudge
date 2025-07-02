@@ -30,6 +30,7 @@
   "devDependencies": {
     "@electron-forge/cli": "^7.7.0",
     "@electron-forge/maker-deb": "^7.7.0",
+    "@electron-forge/maker-dmg": "^7.8.1",
     "@electron-forge/maker-rpm": "^7.7.0",
     "@electron-forge/maker-squirrel": "^7.7.0",
     "@electron-forge/maker-zip": "^7.7.0",
@@ -48,6 +49,7 @@
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "@vitejs/plugin-react": "^4.6.0",
+    "conventional-changelog-cli": "^5.0.0",
     "electron": "35.0.0",
     "electron-builder": "^26.0.12",
     "electron-osx-sign": "^0.6.0",
@@ -59,7 +61,6 @@
     "ts-node": "^10.9.2",
     "typescript": "~5.8.3",
     "vite": "^5.4.14",
-    "@electron-forge/maker-dmg": "^7.8.1",
     "vite-plugin-electron": "^0.29.0"
   },
   "dependencies": {
