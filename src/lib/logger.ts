@@ -1,3 +1,5 @@
+// Goal is to grow a more robust logging system out of this.
+
 /* eslint-disable no-console */
 
 export function log(message: string, ...args: any[]) {

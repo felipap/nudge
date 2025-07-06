@@ -1,3 +1,5 @@
+// TODO clean up this mess.
+
 import * as Sentry from '@sentry/electron/main'
 import assert from 'assert'
 import dayjs from 'dayjs'
