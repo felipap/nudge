@@ -32,13 +32,13 @@ export function SubmitButton({
   let bgClassName = null
 
   const GREEN_BG =
-    'bg-[#B3EBAA] text-[#004D05] hover:bg-[#a9e39f] border-[#23B53A]'
+    'bg-[#B3EBAA] text-[#004D05] hover:bg-[#a9e39f] border-[#23B53A] dark:bg-[#1a3d1a] dark:text-[#4ade80] dark:hover:bg-[#1f4a1f] dark:border-[#22c55e]'
   const YELLOW_BG =
-    'bg-[#FFF0CE] text-[#A57100] hover:bg-[#FFF0CE] border-[#D29000]'
+    'bg-[#FFF0CE] text-[#A57100] hover:bg-[#FFF0CE] border-[#D29000] dark:bg-[#3d2e1a] dark:text-[#fbbf24] dark:hover:bg-[#4a381f] dark:border-[#f59e0b]'
   const RED_BG =
-    'bg-[#FFE3E3] text-[#990000] hover:bg-[#FFE3E3] border-[#990000]'
+    'bg-[#FFE3E3] text-[#990000] hover:bg-[#FFE3E3] border-[#990000] dark:bg-[#3d1a1a] dark:text-[#f87171] dark:hover:bg-[#4a1f1f] dark:border-[#ef4444]'
   const GREY_BG =
-    'bg-[#F0F0F0] text-[#666666] hover:bg-[#F0F0F0] border-[#666666]'
+    'bg-[#F0F0F0] text-[#666666] hover:bg-[#F0F0F0] border-[#666666] dark:bg-[#2a2a2a] dark:text-[#9ca3af] dark:hover:bg-[#2a2a2a] dark:border-[#6b7280]'
 
   if (disableReason) {
     if (disableReason === 'empty') {

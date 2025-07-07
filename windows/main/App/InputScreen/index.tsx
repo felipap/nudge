@@ -49,7 +49,7 @@ export const InputScreen = withBoundary(() => {
   return (
     <>
       <Nav title="What do you want to do next?" />
-      <main className="flex-1 overflow-scroll flex flex-col shadow-inset-bottom bg-[#FAFAFA] dark:bg-[#333333AA]">
+      <main className="flex-1 overflow-scroll flex flex-col shadow-inset-bottom bg-[#FAFAFA] dark:bg-neutral-900/50">
         <GoalTextarea
           value={value}
           onChange={setValue}
