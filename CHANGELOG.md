@@ -1,3 +1,20 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [0.0.27](https://github.com/felipap/nudge/compare/v0.0.25...v0.0.27) (2025-07-07)
+
+
+### Features
+
+* better dark colors for input buttons ([fdddcae](https://github.com/felipap/nudge/commit/fdddcae46801c1c96e1cc74edc62da0fbe3b1188))
+
+
+### Bug Fixes
+
+* package lock ([65947b6](https://github.com/felipap/nudge/commit/65947b61ef473f7bf9c63ce21e85b1ce93a6c1c3))
+* show model errors in the frontend when getting feedback fails ([3608da5](https://github.com/felipap/nudge/commit/3608da5ecb69370ea7f72d70ef189c259e2de431))
+
 ## [0.0.26](https://github.com/felipap/nudge/compare/v0.0.25...v0.0.26) (2025-07-02)
 
 
@@ -215,6 +232,3 @@
 * nudge: new icon ([86635d3](https://github.com/felipap/nudge/commit/86635d34d1089eb3b632a1b29e2da9c8fe12b0a6))
 * restart session on restart ([68df946](https://github.com/felipap/nudge/commit/68df9462cae4185a23e06342cf8b7753a9373b4a))
 * settings shortcut ([db48287](https://github.com/felipap/nudge/commit/db48287cfdeece21494606c7dc741c3ffd5aed74))
-
-
-
