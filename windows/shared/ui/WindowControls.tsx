@@ -70,17 +70,20 @@ export function WindowControlCircle({
   icon,
   onClick,
   className,
+  title,
   ...props
 }: {
   label: string
   icon: React.ReactNode
   onClick: () => void
   className?: string
+  title?: string
   style?: React.CSSProperties
 }) {
   return (
     <span
       aria-label={label}
+      title={title}
       className={twMerge(
         'w-[13px] h-[13px] overflow-hidden rounded-full leading-[13px] inline-block border border-black/10 dark:border-white/10 relative cursor-pointer transition-colors',
         className

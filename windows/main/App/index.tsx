@@ -18,8 +18,7 @@ export default function App() {
   let inner
   if (
     !state ||
-    // Required so the screen doesn't flicker below.
-
+    // Needed so the OnboardingScreen doesn't flicker below.
     screenPermission === null
   ) {
     return <div className="flex flex-col bg-white h-screen">Loading</div>
@@ -29,8 +28,6 @@ export default function App() {
     screenPermission !== 'granted'
   ) {
     inner = <OnboardingScreen />
-    // } else if (state.session && state.session.confirmContinue) {
-    //   inner = <ConfirmGoalScreen />
   } else if (state.session) {
     inner = <ActiveSessionScreen />
   } else {

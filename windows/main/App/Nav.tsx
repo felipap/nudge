@@ -7,6 +7,17 @@ import {
   WindowControlCircle,
 } from '../../shared/ui/WindowControls'
 
+export function NavLine({ className }: { className?: string }) {
+  return (
+    <div
+      className={twMerge(
+        'w-full border-b border-gray-100 dark:border-neutral-700/50',
+        className
+      )}
+    />
+  )
+}
+
 interface Props {
   title: string
   showPin?: boolean
@@ -14,12 +25,7 @@ interface Props {
 
 export function Nav({ title, showPin = false }: Props) {
   return (
-    <nav
-      className={twMerge(
-        'flex flex-row h-[40px] items-center shrink-0',
-        'border-b border-gray-100 dark:border-neutral-950/100'
-      )}
-    >
+    <nav className={twMerge('flex flex-row h-[40px] items-center shrink-0')}>
       <div className="[app-region:drag] self-stretch flex-1 px-3 flex items-center flex-row select-none">
         <div className="flex flex-row items-center gap-3">
           <LogoIconCompleted width={18} height={18} />
@@ -36,8 +42,9 @@ export function Nav({ title, showPin = false }: Props) {
           icon={
             <MinimizeSVG className="w-[30px] h-[30px] text-black/70 dark:text-black/80" />
           }
-          className="group hover:bg-[#ffbd2e] bg-[#EEE] dark:bg-gray-500 w-[14px] h-[14px]"
-          label="Close"
+          className="group hover:bg-[#ffbd2e] bg-[#EEE] dark:bg-neutral-600 w-[14px] h-[14px]"
+          title="Minimize"
+          label="Minimize"
         />
       </div>
     </nav>

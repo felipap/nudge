@@ -3,7 +3,7 @@ import { useBackendState } from '../../../shared/ipc'
 
 // Save the input in the backend so it persists across restarts. (Trying not to
 // pay any penalties here by using a local state as primary.)
-export function useActiveGoalContentWithSync() {
+export function useActiveGoalContentWithSync(onModifyGoal?: () => void) {
   const { state, stateRef, setPartialState } = useBackendState()
   const [value, setValue] = useState<string | null>(null)
 
@@ -24,9 +24,14 @@ export function useActiveGoalContentWithSync() {
             content: value,
           },
         })
+        onModifyGoal?.()
       }
     }
   }, [value])
 
-  return [value || '', setValue] as const
+  return {
+    value: value || '',
+    setValue,
+    hasChanged: value !== state?.session?.content,
+  }
 }

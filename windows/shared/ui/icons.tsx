@@ -168,3 +168,37 @@ export function FaExclamation({ className, ...props }: ComponentProps<'svg'>) {
     </svg>
   )
 }
+
+export function FaPause6({ className, ...props }: ComponentProps<'svg'>) {
+  return (
+    <svg
+      className={twMerge('', className)}
+      stroke="currentColor"
+      fill="currentColor"
+      strokeWidth="0"
+      viewBox="0 0 320 512"
+      height="30px"
+      width="30px"
+      {...props}
+    >
+      <path d="M48 64C21.5 64 0 85.5 0 112L0 400c0 26.5 21.5 48 48 48l32 0c26.5 0 48-21.5 48-48l0-288c0-26.5-21.5-48-48-48L48 64zm192 0c-26.5 0-48 21.5-48 48l0 288c0 26.5 21.5 48 48 48l32 0c26.5 0 48-21.5 48-48l0-288c0-26.5-21.5-48-48-48l-32 0z"></path>
+    </svg>
+  )
+}
+
+export function FaStop({ className, ...props }: ComponentProps<'svg'>) {
+  return (
+    <svg
+      className={twMerge('', className)}
+      stroke="currentColor"
+      fill="currentColor"
+      strokeWidth="0"
+      viewBox="0 0 512 512"
+      height="30px"
+      width="30px"
+      {...props}
+    >
+      <path d="M125.7 160l50.3 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L48 224c-17.7 0-32-14.3-32-32L16 64c0-17.7 14.3-32 32-32s32 14.3 32 32l0 51.2L97.6 97.6c87.5-87.5 229.3-87.5 316.8 0s87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3s-163.8-62.5-226.3 0L125.7 160z"></path>{' '}
+    </svg>
+  )
+}
