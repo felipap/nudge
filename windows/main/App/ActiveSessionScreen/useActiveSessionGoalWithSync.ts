@@ -24,7 +24,7 @@ export function useActiveGoalContentWithSync(onModifyGoal?: () => void) {
             content: value,
           },
         })
-        onModifyGoal?.()
+        // onModifyGoal?.()
       }
     }
   }, [value])
