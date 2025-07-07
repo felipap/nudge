@@ -31,7 +31,7 @@ export function CloseSVG({ className }: { className?: string }) {
   )
 }
 
-function MinimizeSVG({ className }: { className?: string }) {
+export function MinimizeSVG({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 12 12"
@@ -52,7 +52,7 @@ function MinimizeSVG({ className }: { className?: string }) {
   )
 }
 
-function ZoomSVG({ className }: { className?: string }) {
+export function ZoomSVG({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 12 12"

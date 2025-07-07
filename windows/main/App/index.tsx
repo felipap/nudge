@@ -4,9 +4,11 @@ import {
   useBackendState,
   useScreenPermissionState,
 } from '../../shared/ipc'
-import { ActiveGoalScreen } from './ActiveGoalScreen'
+import { ActiveSessionScreen } from './ActiveSessionScreen'
 import { InputScreen } from './InputScreen'
 import { OnboardingScreen } from './OnboardingScren'
+
+export const DEFAULT_BG_CLASS = 'bg-white dark:bg-neutral-900/90'
 
 export default function App() {
   const { state } = useBackendState()
@@ -30,13 +32,13 @@ export default function App() {
     // } else if (state.session && state.session.confirmContinue) {
     //   inner = <ConfirmGoalScreen />
   } else if (state.session) {
-    inner = <ActiveGoalScreen />
+    inner = <ActiveSessionScreen />
   } else {
     inner = <InputScreen />
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-neutral-900/90 text-[14px] font-display-3p text-contrast">
+    <div className="flex flex-col h-screen text-[14px] font-display-3p text-contrast">
       {inner}
     </div>
   )

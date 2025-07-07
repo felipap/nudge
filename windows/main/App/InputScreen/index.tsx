@@ -2,6 +2,8 @@
 // maybe some Cursor. It's ok if I use Spotify and Youtube if it's for music.
 
 import { useEffect, useMemo, useState } from 'react'
+import { twMerge } from 'tailwind-merge'
+import { DEFAULT_BG_CLASS } from '..'
 import {
   getGoalFeedback,
   startSession,
@@ -47,7 +49,7 @@ export const InputScreen = withBoundary(() => {
   const hasLongEnoughGoal = value.trim().length > MIN_GOAL_LENGTH
 
   return (
-    <>
+    <div className={twMerge('flex flex-col h-screen', DEFAULT_BG_CLASS)}>
       <Nav title="What do you want to do next?" />
       <main className="flex-1 overflow-scroll flex flex-col shadow-inset-bottom bg-[#FAFAFA] dark:bg-neutral-900/50">
         <GoalTextarea
@@ -67,7 +69,7 @@ export const InputScreen = withBoundary(() => {
           onClick={submit}
         />
       </footer>
-    </>
+    </div>
   )
 })
 

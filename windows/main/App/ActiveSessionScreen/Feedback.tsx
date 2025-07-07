@@ -5,6 +5,7 @@ import { State } from '../../../../src/store/types'
 import { useBackendState } from '../../../shared/ipc'
 import { FaHandPeace, FaSkull } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
+import { GhostIcon } from 'lucide-react'
 
 const ONE_MINUTE = 1 * 60 * 1_000
 
@@ -110,9 +111,9 @@ export const Feedback = withBoundary(() => {
   }
 
   let inner = null
-  let className = 'text-gray-500'
+  let className = 'text-gray-400'
   if (feedback === 'capturing') {
-    inner = <>Capturing screen</>
+    inner = <>Capturing screen...</>
   } else if (feedback === 'improve-goal') {
     className = 'text-yellow-800 dark:text-yellow-300'
     inner = <>Your goal is unclear</>
@@ -126,7 +127,7 @@ export const Feedback = withBoundary(() => {
     className = 'text-green-800 dark:text-green-300'
   } else if (feedback === 'try-concentrate') {
     inner = <>Try to concentrate {genErrorIcon()}</>
-    className = 'text-red-800 dark:text-red-300'
+    className = 'text-red-800 dark:text-red-400'
   } else if (feedback === 'credential-error') {
     inner = <>Problem with your OpenAI key</>
     className = 'text-red-800 dark:text-red-300'
@@ -185,7 +186,7 @@ function useUpdateEvery(ms: number) {
 }
 
 function genErrorIcon(key?: string) {
-  // return <GhostIcon className="h-4 w-4 text-red-800 dark:text-red-300" />
+  return <GhostIcon className="h-4 w-4 text-red-800 dark:text-red-400" />
   return <FaSkull className="h-3 w-3 text-red-800 dark:text-red-300" />
   // const hash = key
   //   ? key.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)

@@ -2,7 +2,10 @@ import { PinIcon } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 import { useBackendState } from '../../shared/ipc'
 import { LogoIconCompleted } from '../../shared/ui/logos'
-import { CloseSVG, WindowControlCircle } from '../../shared/ui/WindowControls'
+import {
+  MinimizeSVG,
+  WindowControlCircle,
+} from '../../shared/ui/WindowControls'
 
 interface Props {
   title: string
@@ -30,11 +33,11 @@ export function Nav({ title, showPin = false }: Props) {
 
         <WindowControlCircle
           onClick={() => window.electronAPI.closeWindow()}
-          className="group hover:bg-[#ff5f56] bg-[#EEE] dark:bg-gray-500 w-[14px] h-[14px]"
-          label="Close"
           icon={
-            <CloseSVG className="w-[30px] h-[30px] text-black/70 dark:text-white/80" />
+            <MinimizeSVG className="w-[30px] h-[30px] text-black/70 dark:text-black/80" />
           }
+          className="group hover:bg-[#ffbd2e] bg-[#EEE] dark:bg-gray-500 w-[14px] h-[14px]"
+          label="Close"
         />
       </div>
     </nav>

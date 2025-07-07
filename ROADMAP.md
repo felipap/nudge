@@ -5,6 +5,7 @@
 - [ ] Where can users get stdout/stderr logs?
 - [ ] Support multiple screens.
 - [ ] Notify when fails to capture scren.
+- [ ] Change close button for minimize button.
 - [x] Automatically check for updates.
 - [x] Release for Intel Mac.
 - [x] Add DMG icon.

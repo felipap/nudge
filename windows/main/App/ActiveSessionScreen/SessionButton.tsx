@@ -11,7 +11,7 @@ interface Props extends ComponentProps<'button'> {
   onClick?: () => void
 }
 
-export function SessionButton({
+function InnerButton({
   icon,
   className,
   hoverIcon,
@@ -42,5 +42,32 @@ export function SessionButton({
         <div className="text-[13px] font-display-3p font-medium">{text}</div>
       </div>
     </Button>
+  )
+}
+
+export function SessionButton({
+  isPaused,
+  isNearlyOver,
+  isOvertime,
+  ...props
+}: Props & {
+  isPaused: boolean
+  isNearlyOver: boolean
+  isOvertime: boolean
+}) {
+  return (
+    <InnerButton
+      className={twMerge(
+        'antialiased',
+        isPaused
+          ? 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-500 hover:text-[#004E0C] hover:bg-[#B3EBAA] hover:border-[#33AC46]'
+          : isNearlyOver
+          ? 'bg-[#fff4ef] border-[#e8a34e] text-red-700 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300'
+          : isOvertime
+          ? 'bg-[#ffefef] border-[#ff8989] text-red-700 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300'
+          : 'bg-[#B2E5FF] border-[#58B4FF] text-blue-700 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300 dark:bg-blue-800 dark:border-blue-700 dark:text-blue-100 dark:hover:bg-neutral-800 dark:hover:border-neutral-600 dark:hover:text-neutral-100'
+      )}
+      {...props}
+    />
   )
 }
