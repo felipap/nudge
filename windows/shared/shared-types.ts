@@ -26,7 +26,7 @@ export type GoalFeedbackType =
 export type AvailableModel = 'openai-4o' | 'openai-4o-mini'
 
 export const AVAILABLE_MODELS: { name: string; value: AvailableModel }[] = [
-  { name: 'OpenAI 4o (06-2025)', value: 'openai-4o' },
+  { name: 'OpenAI 4o mini', value: 'openai-4o' },
 ]
 
 //
@@ -67,6 +67,7 @@ type SharedIpcMethods = {
   openSettings: (tab?: string) => Promise<void>
   checkScreenPermissions: () => Promise<boolean>
   tryAskForScrenPermissions: () => Promise<{ granted: boolean; error?: string }>
+  isAppPackaged: () => Promise<boolean>
 }
 
 export type IpcMainMethods = SharedIpcMethods & {

@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion'
+import { GhostIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { State } from '../../../../src/store/types'
 import { useBackendState } from '../../../shared/ipc'
 import { FaHandPeace, FaSkull } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
-import { GhostIcon } from 'lucide-react'
 
 const ONE_MINUTE = 1 * 60 * 1_000
 
@@ -92,7 +92,6 @@ function useFeedback(): Feedback {
   useEffect(() => {
     const interval = setInterval(() => {
       const feedback = getFeedbackFromState(stateRef.current!)
-      console.log('got feedback state', feedback)
       setFeedback(feedback)
     }, 1_000)
     return () => clearInterval(interval)

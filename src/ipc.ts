@@ -236,6 +236,10 @@ export function setupIPC() {
     return await tryAskForScrenPermissions()
   })
 
+  ipcMainTyped.handle('isAppPackaged', () => {
+    return app.isPackaged
+  })
+
   ipcMainTyped.handle('openExternal', async (_, url: string) => {
     return await shell.openExternal(url)
   })

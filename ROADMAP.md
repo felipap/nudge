@@ -1,15 +1,41 @@
 # Nudge v0 Roadmap
 
-## v0.0.x
+## v0.1.x
 
+- [ ] Hosted version.
 - [ ] Where can users get stdout/stderr logs?
 - [ ] Support multiple screens.
 - [ ] Notify when fails to capture scren.
-- [ ] Change close button for minimize button.
+- [ ] Feat: option to show timer in the menu bar.
+- [ ] Fix: warn when outside /Applications folder. Don't try to auto-update.
+- [ ] Let users introspect captures and understand what's wrong.
+- [ ] Feat: let user choose annoy rate.
+- [x] Buy domain (nudge.fyi).
+
+### Later
+
+- [ ] Landing page.
+- [ ] Way to give feedback in the app.
+- [ ] Activate notifications for GitHub issues.
+- [ ] Fix: main window is still resizable.
+- [ ] MCP.
+- [ ] Show duration left in the indicator menu.
+- [ ] Investigate possibility of non-native Notifications (problem: fullscreen?).
+- [ ] iPhone app.
+
+## v0.0.x
+
+Finishde Jul 8.
+
+- [x] Walk user through giving screen recording permissions.
+- [x] Change close button for minimize button.
 - [x] Automatically check for updates.
 - [x] Release for Intel Mac.
+- [x] Put the tip INSIDE the submit button instead.
+- [x] Fix framer-motion causing 504 issues with Vite.
 - [x] Add DMG icon.
 - [x] Merge tip with submit button.
+- [x] Allow hide app icon from Dock.
 - [x] Feat: first open telemetry event.
 - [x] Notify when API key stops working.
 - [x] Onboarding: Ask for OpenAI key.
@@ -24,6 +50,7 @@
 - [x] Feat: Show notification when session ends.
 - [x] Fix: DMG is for M1 or Intel silicon? Publish both.
 - [x] When app has been closed for a long time, restart session.
+- [x] Fix broken CI for x64.
 - [x] Notify users when the time is up.
 - [x] Fix: custom instructions not used.
 - [x] Fix: auto launch is not working.
@@ -43,23 +70,4 @@
 - [x] Issue: can't close the window.
 - [x] Use natural language to set goal duration.
 - [x] Dark mode.
-
-### Later
-
-- [ ] Way to give feedback in the app.
-- [ ] Buy domain.
-- [ ] Landing page.
-- [ ] Activate notifications for GitHub issues.
-- [ ] Allow hide app icon from Dock.
-- [ ] Fix: main window is still resizable.
-- [ ] Switch to electron builder? (https://www.reddit.com/r/electronjs/comments/1lcykyp)
-- [ ] MCP.
-- [ ] Show duration left in the indicator menu.
-- [ ] Fix broken CI for x64.
-- [ ] Put the tip INSIDE the submit button instead.
-- [ ] Walk user through giving screen recording permissions.
-- [ ] Fix framer-motion causing 504 issues with Vite.
-- [ ] Investigate possibility of non-native Notifications (problem: fullscreen?).
-- [ ] Let users introspect captures and understand what's wrong.
-- [ ] After restart past session goal, ask user what they want to do.
-- [ ] iPhone app.
+- [x] ~Switch to electron builder? (https://www.reddit.com/r/electronjs/comments/1lcykyp)~

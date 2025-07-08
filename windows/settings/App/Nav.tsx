@@ -5,12 +5,7 @@ import { closeWindow, minimizeWindow, zoomWindow } from '../../shared/ipc'
 import { WindowControls } from '../../shared/ui/WindowControls'
 import { ScreenPermissionIcon } from './screen'
 
-export type Tab =
-  | 'general'
-  | 'timeline'
-  | 'shortcuts'
-  | 'advanced'
-  | 'permissions'
+export type Tab = 'general' | 'timeline' | 'shortcuts' | 'model' | 'permissions'
 
 interface Props {
   tab: Tab
@@ -23,7 +18,7 @@ export function Nav({ tab, onTabChange, showPermissionsTab }: Props) {
     return [
       showPermissionsTab ? 'permissions' : null,
       'general',
-      'advanced',
+      'model',
     ].filter(Boolean) as Tab[]
   }, [])
 
@@ -33,7 +28,7 @@ export function Nav({ tab, onTabChange, showPermissionsTab }: Props) {
     general: 'General',
     timeline: 'Timeline',
     shortcuts: 'Shortcuts',
-    advanced: 'Advanced',
+    model: 'Model',
     permissions: 'Screen permissions',
   }[tab]
 
@@ -86,10 +81,10 @@ export function Nav({ tab, onTabChange, showPermissionsTab }: Props) {
           onClick={() => onTabChange('shortcuts')}
         /> */}
         <TabButton
-          title="Advanced"
+          title="Model"
           icon={<AtomIcon className="w-[23px]" />}
-          isActive={tab === 'advanced'}
-          onClick={() => onTabChange('advanced')}
+          isActive={tab === 'model'}
+          onClick={() => onTabChange('model')}
         />
       </div>
     </div>
@@ -138,7 +133,14 @@ function useTabStateWithCmdShortcuts(
 ) {
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.metaKey && e.key >= '1' && e.key <= visibleTabs.length.toString()) {
+      const key = Number(e.key)
+      if (e.metaKey && key >= 1) {
+        // If user presses beyond the last tab, show last tab.
+        if (key > visibleTabs.length) {
+          onTabChange(visibleTabs[visibleTabs.length - 1])
+          return
+        }
+
         const newTab = visibleTabs[Number(e.key) - 1]
         if (newTab && newTab !== tab) {
           onTabChange(newTab)

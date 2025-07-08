@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useScreenPermissionState } from '../../shared/ipc'
 import { Nav, Tab } from './Nav'
-import { ModelTab } from './advanced'
+import { ModelTab } from './model'
 import { General } from './general'
 import { ScreenPermissions } from './screen'
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>('general')
+  const [tab, setTab] = useState<Tab>('model')
 
   const { screenPermission } = useScreenPermissionState()
 
@@ -29,7 +29,7 @@ export default function App() {
       (tabName: string) => {
         if (
           tabName === 'general' ||
-          tabName === 'advanced' ||
+          tabName === 'model' ||
           tabName === 'permissions'
         ) {
           setTab(tabName as Tab)
@@ -50,7 +50,7 @@ export default function App() {
       <div className="overflow-scroll bg-background h-full flex w-full select-none">
         <div className="w-full">
           {tab === 'general' && <General />}
-          {tab === 'advanced' && <ModelTab />}
+          {tab === 'model' && <ModelTab />}
           {tab === 'permissions' && <ScreenPermissions />}
         </div>
       </div>

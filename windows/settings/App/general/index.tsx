@@ -1,22 +1,15 @@
+import { openExternal } from '../../../shared/ipc'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { NeedHelpFooter } from '../screen'
-import { Hr, SectionWithHeader } from '../ui'
+import { Hr } from '../ui'
 import { FrequencyInput } from './FrequencyInput'
 import { LaunchOnStartup } from './LaunchOnStartup'
-import { ModelFieldGroup } from './ModelFieldGroup'
 
 export const General = withBoundary(() => {
   return (
     <main className="flex flex-col justify-between h-full p-4 text-[13px] w-full">
       {/* <About />z */}
       <div className="flex flex-col gap-4">
-        <SectionWithHeader
-          title="Model Selection"
-          subtitle="Nudge only supports OpenAI's 4o model today."
-        >
-          <ModelFieldGroup />
-        </SectionWithHeader>
-        <Hr />
         <section>
           <FrequencyInput />
         </section>
@@ -46,10 +39,8 @@ function About() {
         <p>
           By{' '}
           <button
-            onClick={() =>
-              window.electronAPI.openExternal('https://pi.engineering')
-            }
-            className="text-[#08c]"
+            onClick={() => openExternal('https://pi.engineering')}
+            className="text-link"
           >
             pi.engineering
           </button>
@@ -59,10 +50,8 @@ function About() {
       <div className="flex flex-row gap-2 items-center justify-between">
         <p>Version 1.0</p>
         <button
-          onClick={() =>
-            window.electronAPI.openExternal('https://github.com/fiberinc/nudge')
-          }
-          className="text-[#08c] "
+          onClick={() => openExternal('https://github.com/fiberinc/nudge')}
+          className="text-link "
         >
           GitHub repo
         </button>

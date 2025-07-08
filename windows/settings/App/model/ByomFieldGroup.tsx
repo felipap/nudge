@@ -3,16 +3,22 @@ import { ComponentProps, useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { ModelSelection } from '../../../../src/store/types'
 import {
+  getAutoLaunch,
+  setAutoLaunch,
+  useBackendState,
+  validateModelKey,
+} from '../../../shared/ipc'
+import {
   AVAILABLE_MODELS,
   type AvailableModel,
 } from '../../../shared/shared-types'
-import { useBackendState, validateModelKey } from '../../../shared/ipc'
 import { Input } from '../../../shared/ui/native/Input'
 import { Select } from '../../../shared/ui/native/Select'
 import { withBoundary } from '../../../shared/ui/withBoundary'
-import { Fieldset, Label } from '../ui'
+import { Description, Fieldset, Label, LabelStack } from '../ui'
+import { Switch } from '../../../shared/ui/native/Switch'
 
-export const ModelFieldGroup = withBoundary(() => {
+export const ByomFieldGroup = withBoundary(() => {
   const { model, setModel } = useModelChoiceWithBackend()
 
   return (

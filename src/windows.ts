@@ -54,8 +54,9 @@ export function createMainWindow() {
 
   // In development, the default icon is Electron's. So we override it.
   if (!app.isPackaged) {
+    app.dock.setIcon('/Users/felipe/pi/nudge/images/icon-development.png')
   }
-  app.dock.setIcon(getImagePath('icon-development.png'))
+  // app.dock.setIcon(getImagePath('icon-development.png'))
 
   // Pin widget?
   function onChangePinnedState() {

@@ -157,4 +157,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   openGithubDiscussion: async () => {
     return await typedIpcRenderer.invoke('openGithubDiscussion')
   },
+
+  isAppPackaged: async () => {
+    return await typedIpcRenderer.invoke('isAppPackaged')
+  },
 } satisfies ExposedElectronAPI)

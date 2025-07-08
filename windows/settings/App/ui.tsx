@@ -13,7 +13,7 @@ export function SectionWithHeader({
   return (
     <section className="flex flex-col gap-3">
       <header className="mb-1">
-        <h2 className="font-display-3p text-[16px] text-contrast font-medium antialiased max-w-[550px]">
+        <h2 className="font-display-3p text-[15px] text-contrast font-medium antialiased max-w-[550px]">
           {title}
         </h2>
         {subtitle && (
@@ -48,7 +48,9 @@ export function Label({
 
 export function Description({ children }: { children: React.ReactNode }) {
   return (
-    <p className="font-display-3p text-[14px] text-secondary">{children}</p>
+    <p className="font-display-3p text-[14px] text-secondary leading-[1.3]">
+      {children}
+    </p>
   )
 }
 
@@ -61,7 +63,7 @@ export function LabelStack({
   className?: string
 } & ComponentProps<'label'>) {
   return (
-    <label className={twMerge('flex flex-col gap-0', className)} {...props}>
+    <label className={twMerge('flex flex-col gap-0.5', className)} {...props}>
       {children}
     </label>
   )
