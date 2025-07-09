@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ActiveSession, State } from '../../src/store/types'
-import { AvailableModel } from './shared-types'
-import { ExposedElectronAPI } from './shared-types'
+import { AvailableModel, ExposedElectronAPI } from './shared-types'
 
 declare global {
   interface Window {
@@ -31,6 +30,10 @@ export async function setWindowHeight(height: number, animate = false) {
 
 export async function getWindowHeight() {
   return await window.electronAPI.getWindowHeight()
+}
+
+export async function captureNow() {
+  return await window.electronAPI.captureNow()
 }
 
 export async function getGoalFeedback(goal: string) {

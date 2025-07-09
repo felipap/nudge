@@ -14,7 +14,7 @@ const IS_MAKE = !!process.env.IS_MAKE
 const packagerConfig: ForgeConfig['packagerConfig'] = {
   // appVersion: '0.6.0', // Uses package.json version by default.
   name: 'Nudge' + (IS_MAKE ? '' : '(dev)'),
-  appBundleId: 'engineering.pi.nudge' + (IS_MAKE ? '' : '-dev'),
+  appBundleId: 'engineering.pi.example.nudge' + (IS_MAKE ? '' : '-dev'),
   asar: true,
   icon:
     IS_RELEASE || IS_MAKE

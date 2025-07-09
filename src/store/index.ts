@@ -1,5 +1,6 @@
 import { create, StoreApi } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { debug, logError } from '../lib/logger'
 import { checkScreenPermissions } from '../lib/screenshot'
 import { fileStore } from './backend'
 import type { Capture, State } from './types'
@@ -70,14 +71,15 @@ export const getActiveGoal = () => store.getState().session
 
 export const getNextCaptureAt = () => store.getState().nextCaptureAt
 
-export const setNextCaptureAt = (at: string | null) => {
+export function bumpNextCaptureAt(fromNow: number) {
+  const next = new Date(Date.now() + fromNow).toISOString()
   // Sanity check: it's more than 10 seconds from now.
-  if (at && new Date(at).getTime() < Date.now() + 10000) {
-    throw Error('nextCaptureAt is within 10 seconds. Probably a bug.')
+  if (new Date(next).getTime() < Date.now() + 10000) {
+    logError('[store] nextCaptureAt is within 10 seconds. Probably a bug.')
   }
-
-  console.log('setting nextCaptureAt', at)
-  store.setState({ nextCaptureAt: at })
+  debug('[store] setting nextCaptureAt', next)
+  store.setState({ nextCaptureAt: next })
+  return next
 }
 
 export function onIndicatorStateChange(

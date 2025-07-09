@@ -1,5 +1,6 @@
-import { useState } from 'react'
 import { Camera } from 'lucide-react'
+import { useState } from 'react'
+import { captureNow } from '../../../shared/ipc'
 import { Button } from '../../../shared/ui/Button'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 
@@ -10,7 +11,7 @@ export const TryNowButton = withBoundary(() => {
   const onClickTryNow = async () => {
     setIsLoading(true)
     try {
-      await window.electronAPI.captureNow()
+      await captureNow()
       setJustCaptured(true)
       setTimeout(() => {
         setJustCaptured(false)

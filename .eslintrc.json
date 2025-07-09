@@ -10,12 +10,13 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
     "plugin:import/electron",
-    "plugin:import/typescript"
+    "plugin:import/typescript",
   ],
   "parser": "@typescript-eslint/parser",
   "rules": {
     "@typescript-eslint/ban-ts-comment": "off",
     "no-empty": "off",
-    "prefer-const": "warn"
+    "prefer-const": "warn",
+    "@typescript-eslint/no-empty-function": "off"
   }
 }

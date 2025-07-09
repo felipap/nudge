@@ -1,16 +1,25 @@
-// TODO clean up this mess.
+// session.defaultSession.setDisplayMediaRequestHandler(
+//   (request, callback) => {
+//     desktopCapturer.getSources({ types: ["screen"] }).then((sources) => {
+//       // Grant access to the first screen found.
+//       callback({ video: sources[0], audio: "loopback" })
+//     })
+//     // If true, use the system picker if available.
+//     // Note: this is currently experimental. If the system picker
+//     // is available, it will be used and the media request handler
+//     // will not be invoked.
+//   },
+//   { useSystemPicker: true }
+// )
 
-import * as Sentry from '@sentry/electron/main'
 import assert from 'assert'
 import dayjs from 'dayjs'
 import { Notification } from 'electron'
 import {
   addSavedCapture,
-  getActiveGoal,
+  bumpNextCaptureAt,
   getNextCaptureAt,
   getState,
-  hasNoCurrentGoalOrPaused,
-  setNextCaptureAt,
   setPartialState,
   store,
 } from '../store'
@@ -20,181 +29,163 @@ import {
   AssessmentResult,
   getModelClient,
 } from './ai'
-import { DOUBLE_NUDGE_THRESHOLD, VERBOSE } from './config'
-import { debug, error, log, logError, warn } from './logger'
+import { DOUBLE_NUDGE_THRESHOLD, IGNORE_UNTIL_MS } from './config'
+import { captureException, debug, error, log, logError, warn } from './logger'
 import { captureActiveScreen } from './screenshot'
 
 let lastNotificationAt: Date | null = null
 
-class ScreenCaptureService {
-  isRunning = false
-  // Better for this to live here than in the state, to avoid it getting stuck
-  // in an invalid state. Putting it here ensures whatever issue will reset
-  // when we restart the program. Idk.
-  isCapturing = false
+let runningSince: Date | null = null
+// Better for this to live here than in the state, to avoid it getting stuck
+// in an invalid state. Putting it here ensures whatever issue will reset
+// when we restart the program. Idk.
+let isCapturing = false
+let loopTimeoutId: NodeJS.Timeout | null = null
 
-  private iid: NodeJS.Timeout | null = null
-  private frequencyMs: number
+export function start() {
+  log('[capture] Starting service')
 
-  constructor() {
-    // Convert minutes to milliseconds
-    this.frequencyMs = (store.getState().captureEverySeconds || 60) * 1000
-    if (this.frequencyMs < 5) {
-      throw new Error('Frequency is too low')
-    }
-
-    // Subscribe to frequency changes
-    store.subscribe((state) => {
-      this.frequencyMs = (state.captureEverySeconds || 60) * 1000
-    })
-
-    console.log('[capture-service] getNextCaptureAt is', getNextCaptureAt())
+  if (runningSince) {
+    warn('[capture] Service already running')
+    return
   }
+  runningSince = new Date()
 
-  start(): void {
-    // session.defaultSession.setDisplayMediaRequestHandler(
-    //   (request, callback) => {
-    //     desktopCapturer.getSources({ types: ["screen"] }).then((sources) => {
-    //       // Grant access to the first screen found.
-    //       callback({ video: sources[0], audio: "loopback" })
-    //     })
-    //     // If true, use the system picker if available.
-    //     // Note: this is currently experimental. If the system picker
-    //     // is available, it will be used and the media request handler
-    //     // will not be invoked.
-    //   },
-    //   { useSystemPicker: true }
-    // )
+  log('[capture] getNextCaptureAt is', getNextCaptureAt())
 
-    if (this.isRunning) {
-      debug('[capture-service] Service already running')
-      return
-    }
-    log('[capture-service] Starting service')
-
-    this.isRunning = true
-
-    // Start a periodic check (example functionality)
-    this.iid = setInterval(() => {
-      this.maybeCaptureScreen()
-    }, 1000)
-
-    // Perform initial task
-    this.maybeCaptureScreen()
-  }
-
-  stop(): void {
-    if (!this.isRunning) {
-      debug('[capture-service] Service already stopped')
-      return
-    }
-
-    log('[capture-service] Stopping service')
-    this.isRunning = false
-
-    if (this.iid) {
-      clearInterval(this.iid)
-      this.iid = null
-    }
-  }
-
-  captureNow() {
-    this.maybeCaptureScreen(true)
-  }
-
-  private async maybeCaptureScreen(force = false) {
-    if (force) {
-      this.isCapturing = true
-      try {
-        log('forced!')
-        await captureScreenTaskInner()
-      } catch (e) {
-        error('[capture-service] Error capturing screen:', e)
-      }
-      this.isCapturing = false
-
-      return
-    }
-
-    if (this.isCapturing) {
-      return
-    }
-    this.isCapturing = true
-
-    const nextCaptureAt = getNextCaptureAt()
-    if (nextCaptureAt && dayjs(nextCaptureAt).isAfter(dayjs())) {
-      if (VERBOSE) {
-        debug('[capture-service] skipping')
-      }
-      this.isCapturing = false
-      return
-    }
-
-    log(`capturing because nextCaptureAt=${nextCaptureAt}`)
-
+  loopTimeoutId = setTimeout(async function loop() {
     try {
-      await captureScreenTaskInner()
-      // await new Promise((resolve) => setTimeout(resolve, 5000))
-      console.log('skipping capture')
+      if (isCapturing) {
+        debug('[capture] skipping because already capturing')
+        return
+      }
+      isCapturing = true
+
+      const nextCaptureAt = getNextCaptureAt()
+      if (nextCaptureAt && dayjs(nextCaptureAt).isAfter(dayjs())) {
+        debug('[capture] skipping')
+        isCapturing = false
+        return
+      }
+
+      try {
+        debug('[capture] capture loop')
+        await captureAssessAndNudge()
+      } catch (e) {
+        warn('[capture] Error capturing screen:', e)
+      }
+      log('[capture] loop complete')
+
+      // If capture fails, don't we want to stop capturing entirely?
+
+      const newNextCaptureAt = bumpNextCaptureAt(getFrequencyMs())
+      debug('[capture] setNextCaptureAt', dayjs(newNextCaptureAt).fromNow())
+
+      isCapturing = false
     } catch (e) {
-      log('[capture-service] Error capturing screen:', e)
+      error('[capture] Error in loop', e)
     }
+    loopTimeoutId = setTimeout(loop, getFrequencyMs())
+  }, 1000)
+}
 
-    const newNextCaptureAt = new Date(
-      Date.now() + this.frequencyMs
-    ).toISOString()
-    setNextCaptureAt(newNextCaptureAt)
-    if (VERBOSE) {
-      debug(
-        '[capture-service] setNextCaptureAt',
-        dayjs(newNextCaptureAt).fromNow()
-      )
-    }
+export function stop(): void {
+  if (!runningSince) {
+    warn('[capture] Already stopped')
+    return
+  }
 
-    this.isCapturing = false
+  log('[capture] Stopping')
+  runningSince = null
+
+  if (loopTimeoutId) {
+    clearInterval(loopTimeoutId)
+    loopTimeoutId = null
   }
 }
 
-async function captureScreenTaskInner() {
-  log('[capture-service] Capturing screen at:', new Date().toISOString())
+/**
+ * Captures immediately
+ */
+export async function triggerCaptureAssessAndNudge() {
+  log('[capture] forceCaptureAssessAndNudge')
 
-  if (hasNoCurrentGoalOrPaused()) {
-    debug('[capture-service] No goal or paused')
+  // Cleanest way to do this would be to set the nextCaptureAt to now, but that
+  // wouldn't allow us to cleanly bypass the double-nudge prevention. I think.
+  // But we do want to push back the next capture time, so we modify `setNextCaptureAt`
+
+  isCapturing = true
+  try {
+    await captureAssessAndNudge(true)
+  } catch (e) {
+    error('[capture] Error capturing screen:', e)
+  }
+  isCapturing = false
+}
+
+/**
+ * @param force - if true, always notifies when the goal is not followed.
+ */
+async function captureAssessAndNudge(force = false) {
+  debug(`[capture] captureScreenAssessAndNotify`, { force })
+
+  const { session } = store.getState()
+  if (!session) {
+    debug('[capture] no session. skip.')
     return
   }
 
-  const goal = getActiveGoal()
-  if (!goal) {
-    warn('[capture-service] No goal found')
+  if (session.pausedAt) {
+    debug('[capture] session is paused. skip.')
     return
   }
 
-  // Start checking goals 1 minute after start.
-  // if (dayjs().isBefore(dayjs(goal.startedAt).add(20, 'seconds'))) {
-  //   debug('[capture-service] Skipping goal check because too soon')
-  //   return
-  // }
+  if (!force) {
+    // Start checking goals 1 minute after start.
+    if (dayjs().isBefore(dayjs(session.startedAt).add(IGNORE_UNTIL_MS, 'ms'))) {
+      debug('[capture] skipping because too soon')
+      return
+    }
+  }
+
+  // CAPTURE
+  // CAPTURE
+  // CAPTURE
+
+  log(`[capture] 📸 will capture! (${dayjs().format('HH:mm:ss')})`)
 
   setPartialState({ captureStartedAt: new Date().toISOString() })
 
-  const { error, data: dataUrl } = await captureActiveScreen()
-  setPartialState({
-    captureStartedAt: null,
-  })
+  let captureError
+  let captureDataUrl
+  try {
+    ;({ error: captureError, data: captureDataUrl } =
+      await captureActiveScreen())
+    assert(captureDataUrl, '!captureDataUrl')
+  } catch (e) {
+    logError('[capture] captureActiveScreen THREW', e)
+    captureException(e)
+    return
+  } finally {
+    setPartialState({ captureStartedAt: null })
+  }
 
-  if (error) {
-    warn('[capture-service] Failed to capture active screen')
+  if (captureError) {
+    warn('[capture] captureActiveScreen returned error', { captureError })
     return
   }
-  assert(dataUrl)
 
   setPartialState({
     assessStartedAt: new Date().toISOString(),
   })
 
+  // ASSESS
+  // ASSESS
+  // ASSESS
+
   const modelSelection = getState().modelSelection
   if (!modelSelection) {
-    warn('[capture-service] No OpenAI key found')
+    warn('[capture] No OpenAI key found')
     return
   }
 
@@ -202,21 +193,18 @@ async function captureScreenTaskInner() {
 
   let ret: AssessmentResult
   try {
-    log('[capture-service] Sending to server...')
+    log('[capture] Sending to server...')
     ret = await assessFlowFromScreenshot(
       openai,
-      dataUrl,
-      goal.content,
+      captureDataUrl,
+      session.content,
       getState().customInstructions,
       []
     )
   } catch (e) {
-    logError(
-      '[capture-service] assessFlowFromScreenshot failed unexpectedly',
-      e
-    )
+    logError('[capture] assessFlowFromScreenshot failed unexpectedly', e)
 
-    Sentry.captureException(e)
+    captureException(e)
     return {
       error: 'unknown',
     }
@@ -225,7 +213,7 @@ async function captureScreenTaskInner() {
   }
 
   if ('error' in ret) {
-    warn('[capture-service] assessment failed', ret)
+    warn('[capture] assessment failed', ret)
 
     // Update the active capture.
     store.setState({
@@ -261,11 +249,11 @@ async function captureScreenTaskInner() {
     return
   }
 
-  const should = shouldNotifyUser(capture)
-  if (should) {
+  const shouldNotify = force || shouldNotifyUser(capture)
+  if (shouldNotify) {
     showNotification(ret.data.messageToUser)
   } else {
-    debug('[capture-service] Skipping notification')
+    debug('[capture] Skipping notification')
   }
 }
 
@@ -299,4 +287,15 @@ function showNotification(body: string) {
   lastNotificationAt = new Date()
 }
 
-export const screenCaptureService = new ScreenCaptureService()
+function getFrequencyMs() {
+  const frequencyMs = (store.getState().captureEverySeconds || 60) * 1000
+  if (frequencyMs < 5) {
+    throw new Error('Frequency is too low')
+  }
+  return frequencyMs
+}
+
+// Subscribe to frequency changes
+// store.subscribe((state) => {
+//   frequencyMs = (state.captureEverySeconds || 60) * 1000
+// })

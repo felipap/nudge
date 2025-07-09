@@ -21,6 +21,12 @@ pnpm install
 pnpm dev
 ```
 
+## Resetting macOS permissions
+
+```
+sudo tccutil reset All engineering.pi.nudge
+```
+
 ### Generating icons
 
 Use this:

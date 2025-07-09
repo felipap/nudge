@@ -12,7 +12,7 @@ import {
   nativeImage,
   nativeTheme,
 } from 'electron'
-import { screenCaptureService } from './lib/capture-service'
+import * as screenCapture from './lib/capture-service'
 import { getImagePath, isTruthy } from './lib/utils'
 import {
   IndicatorState,
@@ -79,7 +79,7 @@ export function createTray() {
         template.push({
           label: captureStatus,
           click: () => {
-            screenCaptureService.captureNow()
+            screenCapture.triggerCaptureAssessAndNudge()
             // ipcMain.emit('captureNow', null)
             updateTrayMenu()
           },

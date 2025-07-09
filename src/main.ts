@@ -1,10 +1,10 @@
 import 'source-map-support/register'
 
-import { init as SentryInit, IPCMode } from '@sentry/electron/main'
+import { IPCMode, init as SentryInit } from '@sentry/electron/main'
 import { app, BrowserWindow } from 'electron'
 import started from 'electron-squirrel-startup'
 import { setupIPC } from './ipc'
-import { screenCaptureService } from './lib/capture-service'
+import * as screenCapture from './lib/capture-service'
 import { getImagePath } from './lib/utils'
 import { onAppClose, onAppStart } from './logic'
 import { createTray } from './tray'
@@ -31,7 +31,7 @@ app.setAboutPanelOptions({
 async function onInit() {
   createMainWindow()
   createSettingsWindow()
-  screenCaptureService.start()
+  screenCapture.start()
   onAppStart()
   createTray()
   setupIPC()
@@ -65,8 +65,8 @@ async function quitApp() {
   // }
 
   app.isQuitting = true
-  if (screenCaptureService) {
-    screenCaptureService.stop()
+  if (screenCapture) {
+    screenCapture.stop()
   }
   app.quit()
   process.exit(0)

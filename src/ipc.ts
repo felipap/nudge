@@ -15,7 +15,7 @@ import {
   IpcMainMethods,
 } from '../windows/shared/shared-types'
 import { getGoalFeedback, getModelClient, validateModelKey } from './lib/ai'
-import { screenCaptureService } from './lib/capture-service'
+import * as screenCapture from './lib/capture-service'
 import { GITHUB_DISCUSSIONS_URL } from './lib/config'
 import { debug, logError, warn } from './lib/logger'
 import {
@@ -220,7 +220,7 @@ export function setupIPC() {
 
   ipcMainTyped.handle('captureNow', (_event) => {
     debug('captureNow', _event)
-    screenCaptureService.captureNow()
+    screenCapture.triggerCaptureAssessAndNudge()
 
     debug('_event', _event)
     if (_event) {
