@@ -279,7 +279,7 @@ export function setupIPC() {
         return
       }
 
-      return await setPartialState({
+      setPartialState({
         session: {
           content: goal,
           contentUpdatedAt: null,

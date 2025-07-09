@@ -5,10 +5,10 @@ import { OpenAI } from 'openai'
 // @ts-ignore
 import { zodResponseFormat } from 'openai/helpers/zod.mjs'
 import { z } from 'zod'
-import { ModelClient } from '.'
 import { ModelError } from '../../../windows/shared/shared-types'
-import { VERBOSE } from '../config'
-import { log, warn } from '../logger'
+import { NUDGE_AI_BASE_URL } from '../config'
+import { debug, log, warn } from '../logger'
+import { BackendClient } from './models'
 
 dayjs.extend(relativeTime)
 
@@ -33,12 +33,21 @@ export type AssessmentResult =
     }
 
 export async function assessFlowFromScreenshot(
-  client: ModelClient,
+  client: BackendClient,
   base64content: string,
   goal: string,
   customInstructions: string | null,
   previousCaptures: string[]
 ): Promise<AssessmentResult> {
+  let openAIClient: OpenAI
+  if (client.provider === 'openai') {
+    openAIClient = client.openAiClient
+  } else {
+    openAIClient = new OpenAI({
+      baseURL: NUDGE_AI_BASE_URL,
+    })
+  }
+
   assert(goal, 'goal is required')
 
   const systemPrompt = makeSytemPrompt(
@@ -46,10 +55,7 @@ export async function assessFlowFromScreenshot(
     customInstructions,
     previousCaptures
   )
-  if (VERBOSE) {
-    log('[ai/assess-flow] systemPrompt', systemPrompt)
-  }
-
+  debug('[ai/assess-flow] systemPrompt', systemPrompt)
   log('[ai/assess-flow] Calling OpenAI...')
 
   const start = Date.now()
@@ -57,7 +63,7 @@ export async function assessFlowFromScreenshot(
   // TODO make generic
   let result
   try {
-    result = await client.openAiClient.beta.chat.completions.parse({
+    result = await openAIClient.beta.chat.completions.parse({
       model: 'gpt-4o-mini',
       messages: [
         {

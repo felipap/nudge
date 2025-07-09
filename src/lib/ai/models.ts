@@ -6,8 +6,8 @@ import {
   AvailableModel,
   ModelError,
 } from '../../../windows/shared/shared-types'
-import { ModelSelection } from '../../store'
-import { logError, warn } from '../logger'
+import { getState, ModelSelection } from '../../store'
+import { debug, logError, warn } from '../logger'
 
 export async function validateModelKey(
   model: AvailableModel,
@@ -15,7 +15,7 @@ export async function validateModelKey(
 ): Promise<boolean> {
   if (model === 'openai-4o' || model === 'openai-4o-mini') {
     const isValid = await checkOpenAIKey(key)
-    console.log('isValid', isValid)
+    debug('isValid', isValid)
     return isValid
   }
 
@@ -28,7 +28,7 @@ async function checkOpenAIKey(apiKey: string) {
     const models = await openai.models.list()
     return models.data.length > 0
   } catch (error) {
-    console.error('Error checking OpenAI key', error)
+    logError('Error checking OpenAI key', { error })
     return false
   }
 }
@@ -36,6 +36,24 @@ async function checkOpenAIKey(apiKey: string) {
 export interface ModelClient {
   provider: 'openai'
   openAiClient: OpenAI
+}
+
+export type BackendClient = ModelClient | { provider: 'nudge' }
+
+export function getAiBackendClient(): BackendClient | null {
+  const useNudgeBackend = getState().useNudgeBackend
+  if (!useNudgeBackend) {
+    return { provider: 'nudge' }
+  }
+
+  const modelSelection = getState().modelSelection
+  if (!modelSelection) {
+    warn('[capture] No OpenAI key found')
+    return null
+  }
+
+  const openai = getModelClient(modelSelection)
+  return openai
 }
 
 export function getModelClient(model: ModelSelection): ModelClient {

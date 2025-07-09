@@ -27,7 +27,7 @@ import { Capture } from '../store/types'
 import {
   assessFlowFromScreenshot,
   AssessmentResult,
-  getModelClient,
+  getAiBackendClient,
 } from './ai'
 import { DOUBLE_NUDGE_THRESHOLD, IGNORE_UNTIL_MS } from './config'
 import { captureException, debug, error, log, logError, warn } from './logger'
@@ -54,7 +54,8 @@ export function start() {
   log('[capture] getNextCaptureAt is', getNextCaptureAt())
 
   loopTimeoutId = setTimeout(async function loop() {
-    try {
+    // Triple-nested function? Gross.
+    async function innerLoop() {
       if (isCapturing) {
         debug('[capture] skipping because already capturing')
         return
@@ -82,6 +83,10 @@ export function start() {
       debug('[capture] setNextCaptureAt', dayjs(newNextCaptureAt).fromNow())
 
       isCapturing = false
+    }
+
+    try {
+      await innerLoop()
     } catch (e) {
       error('[capture] Error in loop', e)
     }
@@ -104,15 +109,12 @@ export function stop(): void {
   }
 }
 
-/**
- * Captures immediately
- */
+// Cleanest way to do this would be to set the nextCaptureAt to now, but that
+// wouldn't allow us to cleanly bypass the double-nudge prevention. I think. But
+// we do want to push back the next capture time, so we modify
+// `setNextCaptureAt`
 export async function triggerCaptureAssessAndNudge() {
   log('[capture] forceCaptureAssessAndNudge')
-
-  // Cleanest way to do this would be to set the nextCaptureAt to now, but that
-  // wouldn't allow us to cleanly bypass the double-nudge prevention. I think.
-  // But we do want to push back the next capture time, so we modify `setNextCaptureAt`
 
   isCapturing = true
   try {
@@ -129,6 +131,10 @@ export async function triggerCaptureAssessAndNudge() {
 async function captureAssessAndNudge(force = false) {
   debug(`[capture] captureScreenAssessAndNotify`, { force })
 
+  // CHECK 📋
+  // CHECK 📋
+  // CHECK 📋
+
   const { session } = store.getState()
   if (!session) {
     debug('[capture] no session. skip.')
@@ -140,6 +146,12 @@ async function captureAssessAndNudge(force = false) {
     return
   }
 
+  const aiClient = getAiBackendClient()
+  if (!aiClient) {
+    warn('[capture] no AI client')
+    return
+  }
+
   if (!force) {
     // Start checking goals 1 minute after start.
     if (dayjs().isBefore(dayjs(session.startedAt).add(IGNORE_UNTIL_MS, 'ms'))) {
@@ -148,9 +160,9 @@ async function captureAssessAndNudge(force = false) {
     }
   }
 
-  // CAPTURE
-  // CAPTURE
-  // CAPTURE
+  // CAPTURE 📸
+  // CAPTURE 📸
+  // CAPTURE 📸
 
   log(`[capture] 📸 will capture! (${dayjs().format('HH:mm:ss')})`)
 
@@ -179,23 +191,15 @@ async function captureAssessAndNudge(force = false) {
     assessStartedAt: new Date().toISOString(),
   })
 
-  // ASSESS
-  // ASSESS
-  // ASSESS
+  // ASSESS 🤔
+  // ASSESS 🤔
+  // ASSESS 🤔
 
-  const modelSelection = getState().modelSelection
-  if (!modelSelection) {
-    warn('[capture] No OpenAI key found')
-    return
-  }
-
-  const openai = getModelClient(modelSelection)
-
-  let ret: AssessmentResult
+  let assessment: AssessmentResult
   try {
     log('[capture] Sending to server...')
-    ret = await assessFlowFromScreenshot(
-      openai,
+    assessment = await assessFlowFromScreenshot(
+      aiClient,
       captureDataUrl,
       session.content,
       getState().customInstructions,
@@ -203,36 +207,35 @@ async function captureAssessAndNudge(force = false) {
     )
   } catch (e) {
     logError('[capture] assessFlowFromScreenshot failed unexpectedly', e)
-
     captureException(e)
-    return {
-      error: 'unknown',
-    }
+    return
   } finally {
     setPartialState({ assessStartedAt: null })
   }
 
-  if ('error' in ret) {
-    warn('[capture] assessment failed', ret)
+  if ('error' in assessment) {
+    warn('[capture] assessment failed', assessment)
 
     // Update the active capture.
     store.setState({
       activeCapture: {
         at: new Date().toISOString(),
-        modelError: ret.error,
+        modelError: assessment.error,
       },
     })
 
-    return {
-      error: ret.error,
-    }
+    return
   }
 
   const capture: Capture = {
     at: new Date().toISOString(),
-    inFlow: ret.data.goalUnclear ? true : ret.data.isFollowingGoals,
-    summary: ret.data.goalUnclear ? '' : ret.data.screenSummary || '',
-    impossibleToAssess: ret.data.goalUnclear,
+    inFlow: assessment.data.goalUnclear
+      ? true
+      : assessment.data.isFollowingGoals,
+    summary: assessment.data.goalUnclear
+      ? ''
+      : assessment.data.screenSummary || '',
+    impossibleToAssess: assessment.data.goalUnclear,
   }
 
   // Update the active capture.
@@ -245,13 +248,13 @@ async function captureAssessAndNudge(force = false) {
 
   addSavedCapture(capture)
 
-  if (ret.data.isFollowingGoals) {
+  if (assessment.data.isFollowingGoals) {
     return
   }
 
   const shouldNotify = force || shouldNotifyUser(capture)
   if (shouldNotify) {
-    showNotification(ret.data.messageToUser)
+    showNotification(assessment.data.messageToUser)
   } else {
     debug('[capture] Skipping notification')
   }
