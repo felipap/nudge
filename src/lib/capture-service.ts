@@ -1,17 +1,3 @@
-// session.defaultSession.setDisplayMediaRequestHandler(
-//   (request, callback) => {
-//     desktopCapturer.getSources({ types: ["screen"] }).then((sources) => {
-//       // Grant access to the first screen found.
-//       callback({ video: sources[0], audio: "loopback" })
-//     })
-//     // If true, use the system picker if available.
-//     // Note: this is currently experimental. If the system picker
-//     // is available, it will be used and the media request handler
-//     // will not be invoked.
-//   },
-//   { useSystemPicker: true }
-// )
-
 import assert from 'assert'
 import dayjs from 'dayjs'
 import { Notification } from 'electron'
@@ -43,7 +29,7 @@ let isCapturing = false
 let loopTimeoutId: NodeJS.Timeout | null = null
 
 export function start() {
-  log('[capture] Starting service')
+  log('[capture] starting')
 
   if (runningSince) {
     warn('[capture] Service already running')
@@ -51,26 +37,27 @@ export function start() {
   }
   runningSince = new Date()
 
-  log('[capture] getNextCaptureAt is', getNextCaptureAt())
+  log('[capture] next capture is', getNextCaptureAt())
 
   loopTimeoutId = setTimeout(async function loop() {
     // Triple-nested function? Gross.
     async function innerLoop() {
       if (isCapturing) {
-        debug('[capture] skipping because already capturing')
+        debug('[capture] skipping because capturing')
         return
       }
       isCapturing = true
 
       const nextCaptureAt = getNextCaptureAt()
       if (nextCaptureAt && dayjs(nextCaptureAt).isAfter(dayjs())) {
-        debug('[capture] skipping')
+        debug('[capture] skipping because too early')
         isCapturing = false
         return
       }
 
       try {
-        debug('[capture] capture loop')
+        debug('[capture] capturing')
+
         await captureAssessAndNudge()
       } catch (e) {
         warn('[capture] Error capturing screen:', e)
@@ -247,6 +234,10 @@ async function captureAssessAndNudge(force = false) {
   })
 
   addSavedCapture(capture)
+
+  // NUDGE? 💬
+  // NUDGE? 💬
+  // NUDGE? 💬
 
   if (assessment.data.isFollowingGoals) {
     return

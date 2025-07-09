@@ -4,6 +4,10 @@
 import * as Sentry from '@sentry/electron/main'
 import { VERBOSE } from './config'
 
+if (VERBOSE) {
+  console.log('VERBOSE ON')
+}
+
 export function log(message: string, ...args: any[]) {
   console.log(message, ...args)
 }

@@ -18,11 +18,10 @@ import {
 
 // Screen for the active focus session.
 export const ActiveSessionScreen = withBoundary(() => {
-  useWindowHeight(250)
-
   const [editorHasFocus, setEditorHasFocus] = useState(false)
 
   const { paused, pause, clear, resume } = useActiveSession()
+  useWindowHeight(paused ? 400 : 200)
 
   function onModifyGoal() {
     if (!paused) {

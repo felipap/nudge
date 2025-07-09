@@ -70,4 +70,14 @@ sips -z 1024 1024 images/icon-development.png --out images/Development.iconset/i
 iconutil -c icns images/Development.iconset
 ```
 
-Ø
+## Why we use a simple back-end API instead of proxying OpenAI calls
+
+For users that don't have an OpenAI API key, we provide a "hosted" version of
+Nudge that sends AI requests through our API server at nudge.fyi. The API has
+different endpoints like `/api/assess` and `/api/feedback`, one for each type of
+AI inference used in the app. Each endpoint expects a different set of inputs,
+making them very simple.
+
+The alternative would be to implement a proxy server that mimics the OpenAI API.
+But we decided against this due to the complexity. It'd be overkill, and
+potentially more dangerous too.

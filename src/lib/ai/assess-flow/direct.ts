@@ -1,38 +1,12 @@
-import assert from 'assert'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import { OpenAI } from 'openai'
 // @ts-ignore
 import { zodResponseFormat } from 'openai/helpers/zod.mjs'
-import { z } from 'zod'
-import { ModelError } from '../../../windows/shared/shared-types'
-import { NUDGE_AI_BASE_URL } from '../config'
-import { debug, log, warn } from '../logger'
-import { BackendClient } from './models'
+import { NUDGE_AI_BASE_URL } from '../../config'
+import { debug, log, warn } from '../../logger'
+import { BackendClient } from '../models'
+import { AssessmentStruct, AssessmentResult } from './index'
 
-dayjs.extend(relativeTime)
-
-const AssessmentStruct = z.object({
-  screenSummary: z.string(),
-  messageToUser: z.string(),
-  isFollowingGoals: z.boolean(),
-  goalUnclear: z
-    .boolean()
-    .describe(`Set to true when the goal is absolutely unclear.`),
-})
-
-export type Assessment = z.infer<typeof AssessmentStruct>
-
-export type AssessmentResult =
-  | {
-      data: Assessment
-    }
-  | {
-      error: ModelError
-      message?: string
-    }
-
-export async function assessFlowFromScreenshot(
+export async function assessFlowFromOpenAI(
   client: BackendClient,
   base64content: string,
   goal: string,
@@ -48,9 +22,7 @@ export async function assessFlowFromScreenshot(
     })
   }
 
-  assert(goal, 'goal is required')
-
-  const systemPrompt = makeSytemPrompt(
+  const systemPrompt = makeSystemPrompt(
     goal,
     customInstructions,
     previousCaptures
@@ -60,7 +32,6 @@ export async function assessFlowFromScreenshot(
 
   const start = Date.now()
 
-  // TODO make generic
   let result
   try {
     result = await openAIClient.beta.chat.completions.parse({
@@ -116,7 +87,12 @@ export async function assessFlowFromScreenshot(
   log('[ai/assess-flow] elapsedMs', `${(elapsedMs / 1000).toFixed(2)}s`)
 
   const parsed = result.choices[0].message.parsed
-  assert(parsed, 'No content in result')
+  if (!parsed) {
+    return {
+      error: 'unknown',
+      message: 'No content in result',
+    }
+  }
 
   log('[ai/assess-flow] assessment', parsed)
 
@@ -125,7 +101,7 @@ export async function assessFlowFromScreenshot(
   }
 }
 
-function makeSytemPrompt(
+function makeSystemPrompt(
   goal: string,
   customInstructions: string | null,
   previousCaptures: string[]

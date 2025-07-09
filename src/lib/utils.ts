@@ -14,3 +14,7 @@ export const isTruthy = <T>(x: T | Falsy): x is T => !!x
 // export function getUniqueComputerId() {
 //   return
 // }
+
+export function ellipsis(text: string, maxLength = 200) {
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text
+}

@@ -3,6 +3,22 @@
 import { desktopCapturer, screen, systemPreferences } from 'electron'
 import { debug, log, warn } from './logger'
 
+// ⬇️ wtf is this for?
+//
+// session.defaultSession.setDisplayMediaRequestHandler(
+//   (request, callback) => {
+//     desktopCapturer.getSources({ types: ["screen"] }).then((sources) => {
+//       // Grant access to the first screen found.
+//       callback({ video: sources[0], audio: "loopback" })
+//     })
+//     // If true, use the system picker if available.
+//     // Note: this is currently experimental. If the system picker
+//     // is available, it will be used and the media request handler
+//     // will not be invoked.
+//   },
+//   { useSystemPicker: true }
+// )
+
 export async function tryAskForScrenPermissions(): Promise<{
   status: 'granted' | 'denied' | ''
   error?: string

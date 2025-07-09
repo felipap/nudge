@@ -42,7 +42,8 @@ export type BackendClient = ModelClient | { provider: 'nudge' }
 
 export function getAiBackendClient(): BackendClient | null {
   const useNudgeBackend = getState().useNudgeBackend
-  if (!useNudgeBackend) {
+
+  if (useNudgeBackend) {
     return { provider: 'nudge' }
   }
 

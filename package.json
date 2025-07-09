@@ -76,6 +76,7 @@
     "framer-motion": "^12.17.3",
     "lodash": "^4.17.21",
     "lucide-react": "^0.501.0",
+    "node-machine-id": "^1.1.12",
     "openai": "^4.95.1",
     "postcss": "^8.5.3",
     "react": "^19.0.0",
