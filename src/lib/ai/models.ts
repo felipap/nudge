@@ -70,14 +70,14 @@ export function getModelClient(model: ModelSelection): ModelClient {
 }
 
 export async function safeOpenAIStructuredCompletion<T>(
-  client: ModelClient,
+  client: OpenAI,
   options: Omit<ChatCompletionParseParams, 'response_format'> &
     // There's probably a way to infer T from `response_format` but fuck it.
     Required<Pick<ChatCompletionParseParams, 'response_format'>>
 ): Promise<{ data: T } | { error: ModelError; message?: string }> {
   let result
   try {
-    result = await client.openAiClient.beta.chat.completions.parse({
+    result = await client.beta.chat.completions.parse({
       ...options,
     })
   } catch (e) {
@@ -86,7 +86,7 @@ export async function safeOpenAIStructuredCompletion<T>(
     Sentry.captureException(e, {
       extra: {
         message: 'KNOWN OpenAI API error',
-        model: client.openAiClient.apiKey,
+        model: client.apiKey,
       },
     })
 
@@ -111,7 +111,7 @@ export async function safeOpenAIStructuredCompletion<T>(
     Sentry.captureException(e, {
       extra: {
         message: 'UnknownOpenAI API error',
-        model: client.openAiClient.apiKey,
+        model: client.apiKey,
       },
     })
 

@@ -14,7 +14,12 @@ import {
   GetGoalFeedbackResult,
   IpcMainMethods,
 } from '../windows/shared/shared-types'
-import { getGoalFeedback, getModelClient, validateModelKey } from './lib/ai'
+import {
+  getAiBackendClient,
+  getGoalFeedback,
+  getModelClient,
+  validateModelKey,
+} from './lib/ai'
 import * as screenCapture from './lib/capture-service'
 import { GITHUB_DISCUSSIONS_URL } from './lib/config'
 import { debug, logError, warn } from './lib/logger'
@@ -159,14 +164,13 @@ export function setupIPC() {
       goal: string
     ): Promise<GetGoalFeedbackResult> => {
       try {
-        const modelSelection = getState().modelSelection
-        if (!modelSelection) {
-          warn('[capture-service] No OpenAI key found')
+        const aiClient = getAiBackendClient()
+        if (!aiClient) {
+          warn('[capture] no AI client')
           return { error: 'no-api-key' }
         }
 
-        const client = getModelClient(modelSelection)
-        const res = await getGoalFeedback(client, goal)
+        const res = await getGoalFeedback(aiClient, goal)
         if ('error' in res) {
           return { error: res.error }
         }

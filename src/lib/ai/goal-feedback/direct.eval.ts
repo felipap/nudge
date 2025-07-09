@@ -1,7 +1,7 @@
 import { zodResponseFormat } from 'openai/helpers/zod'
 import { z } from 'zod'
-import { getGoalFeedback, type GoalFeedback } from './goal-feedback'
-import { getModelClient } from './index'
+import { getGoalFeedback, type GoalFeedback } from './index'
+import { getModelClient } from '../models'
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || ''
 if (!OPENAI_API_KEY) {

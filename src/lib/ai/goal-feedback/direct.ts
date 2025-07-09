@@ -1,36 +1,11 @@
-import { zodResponseFormat } from 'openai/helpers/zod'
-import { z } from 'zod'
-import { ModelClient, safeOpenAIStructuredCompletion } from '.'
-import { ModelError } from '../../../windows/shared/shared-types'
-import { warn } from '../logger'
+import { OpenAI } from 'openai'
+// @ts-ignore
+import { zodResponseFormat } from 'openai/helpers/zod.mjs'
+import { warn } from '../../logger'
+import { safeOpenAIStructuredCompletion } from '../models'
+import { GoalFeedback, GoalFeedbackResult, GoalFeedbackStruct } from './index'
 
-const GoalFeedbackSchema = z.object({
-  isGood: z.boolean(),
-  impliedDuration: z
-    .number()
-    .nullable()
-    .describe(
-      'The implied duration of the activity in minutes. If not specified, return null.'
-    ),
-  feedback: z.string().describe('The feedback to the user.'),
-  feedbackType: z.enum(['lacking-duration', 'unclear-apps', 'none']).nullable(),
-})
-
-export type GoalFeedback = z.infer<typeof GoalFeedbackSchema>
-
-export async function getGoalFeedback(
-  client: ModelClient,
-  goal: string
-): Promise<
-  | {
-      data: GoalFeedback
-    }
-  | {
-      error: ModelError
-      message?: string
-    }
-> {
-  const systemPrompt = `You are an AI that helps users stay focused by monitoring their screen.
+const SYSTEM_PROMPT = `You are an AI that helps users stay focused by monitoring their screen.
 A good goal tells us:
 1. What apps we'll see on screen or what activity they'll be doing (coding, writing, reading, messaging, etc)
 2. A time block or clear deliverable
@@ -54,13 +29,16 @@ Instructions:
 * Don't use "Please". You're giving the user a suggestion, not a request.
 `
 
-  // FIXME make this generic
+export async function getGoalFeedbackFromOpenAI(
+  client: OpenAI,
+  goal: string
+): Promise<GoalFeedbackResult> {
   const res = await safeOpenAIStructuredCompletion<GoalFeedback>(client, {
     model: 'gpt-4.1-mini',
     messages: [
       {
         role: 'system',
-        content: systemPrompt,
+        content: SYSTEM_PROMPT,
       },
       {
         role: 'user',
@@ -68,7 +46,7 @@ Instructions:
       },
     ],
     temperature: 0.2,
-    response_format: zodResponseFormat(GoalFeedbackSchema, 'GoalFeedback'),
+    response_format: zodResponseFormat(GoalFeedbackStruct, 'GoalFeedback'),
   })
 
   if ('error' in res) {
