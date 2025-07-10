@@ -6,7 +6,7 @@ export function getComputerId(): string {
 
 export interface SignedFingerPrint {
   computerId: string
-  timestamp: number
+  // timestamp: number
   // signature: string
   // hardwareHash: string
   osInfo: {
@@ -21,7 +21,7 @@ export interface SignedFingerPrint {
  */
 export function genSignedFingerprint(): SignedFingerPrint {
   const computerId = machineIdSync()
-  const timestamp = Date.now()
+  // const timestamp = Date.now()
 
   // Create a hardware fingerprint from multiple sources
   // const hardwareHash = genHardwareHash()
@@ -31,7 +31,7 @@ export function genSignedFingerprint(): SignedFingerPrint {
 
   return {
     computerId,
-    timestamp,
+    // timestamp,
     // signature,
     // hardwareHash,
     osInfo: {

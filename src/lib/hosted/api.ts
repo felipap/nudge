@@ -4,6 +4,13 @@ import { warn } from '../logger'
 import { ellipsis } from '../utils'
 import { genSignedFingerprint } from './fingerprint'
 
+export interface SignatureHeaders {
+  'x-computer-id': string
+  'x-os-platform': string
+  'x-os-arch': string
+  'x-nudge-version': string
+}
+
 export type ApiError =
   | 'no-internet'
   | 'rate-limit'
@@ -97,10 +104,9 @@ function getFingerprintHeaders(): Record<string, string> {
     'x-nudge-version': app.getVersion(),
     'user-agent': `Nudge/${app.getVersion()}`,
     'x-computer-id': verifiees.computerId,
-    // 'x-hardware-fingerprint': verifiees.hardwareHash,
     'x-os-platform': verifiees.osInfo.platform,
     'x-os-arch': verifiees.osInfo.arch,
-    'x-verification-timestamp': verifiees.timestamp.toString(),
+    // 'x-verification-timestamp': verifiees.timestamp.toString(),
   }
 
   return headers
