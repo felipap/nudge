@@ -1,6 +1,6 @@
 import { app, autoUpdater, dialog } from 'electron'
 import { UPDATE_CHECK_AFTER_STARTUP } from './lib/config'
-import { debug } from './lib/logger'
+import { debug, logError } from './lib/logger'
 import { getImagePath } from './lib/utils'
 
 // autoUpdater downloads the latest version of the app. Then I think it starts a
@@ -26,7 +26,7 @@ setTimeout(async () => {
   }
 
   const status = await asyncCheckForUpdatesAndDownload()
-  console.log('[updater] status', status)
+  debug('[updater] status', status)
   if (status === 'downloaded') {
     await showDownloadedDialog()
   }
@@ -52,11 +52,11 @@ async function showDownloadedDialog() {
   if (result.response === 0) {
     // User chose "Install Now"
     try {
-      console.log('[updater] quitting and installing')
+      debug('[updater] quitting and installing')
       autoUpdater.quitAndInstall()
       app.exit()
     } catch (error) {
-      console.error('[updater] error', error)
+      logError('[updater] error', error)
     }
   }
   // If user chose "Install Later", do nothing - they can continue using the app
@@ -137,20 +137,20 @@ async function asyncCheckForUpdatesAndDownload(
     autoUpdater.checkForUpdates()
   })
 
-  console.log('[updater/checkForUpdates] ret', ret)
+  debug('[updater/checkForUpdates] ret', ret)
   isCheckingForUpdatesOrDownloading = false
   return ret
 }
 
 function onDownload(callback: () => void) {
   // if (!app.isPackaged) {
-  //   console.log('Cannot wait for download in dev mode')
+  //   debug('Cannot wait for download in dev mode')
   //   resolve('not-available')
   //   return
   // }
 
   function onDownloaded() {
-    console.log('[updater] downloaded!?!?')
+    debug('[updater] downloaded!?!?')
     autoUpdater.removeListener('update-downloaded', onDownloaded)
     callback()
   }

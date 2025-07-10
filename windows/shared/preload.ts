@@ -6,9 +6,12 @@
 
 import { contextBridge, IpcRenderer, ipcRenderer } from 'electron'
 import type { State } from '../../src/store/types'
-import { AvailableModel } from './shared-types'
-import { ExposedElectronAPI, IpcMainMethods } from './shared-types'
 import { tryAskForScrenPermissions } from './ipc'
+import {
+  AvailableModel,
+  ExposedElectronAPI,
+  IpcMainMethods,
+} from './shared-types'
 
 type TypedIpcRenderer<Key extends string> = Omit<
   IpcRenderer,
@@ -57,10 +60,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
 
   setPartialState: async (state: Partial<State>) => {
-    return (await typedIpcRenderer.invoke(
-      'setPartialState',
-      state
-    )) as Promise<{ success: boolean; error?: string; message?: string }>
+    return await typedIpcRenderer.invoke('setPartialState', state)
   },
 
   getAutoLaunch: async () => {

@@ -10,6 +10,7 @@
 - [ ] Fix: warn when outside /Applications folder. Don't try to auto-update.
 - [ ] Let users introspect captures and understand what's wrong.
 - [ ] Feat: let user choose annoy rate.
+- [ ] Write privacy page.
 - [ ] Can we check that the app is running from inside a Terminal?
 - [ ] Notification: test access by asking users to click on the notification.
 - [ ] Fix: permission errors still silent.

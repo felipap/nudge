@@ -79,7 +79,6 @@ async function quitApp() {
 
 // Declare `isQuitting`
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Electron {
     interface App {
       isQuitting?: boolean

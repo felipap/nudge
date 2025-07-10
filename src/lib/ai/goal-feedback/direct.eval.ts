@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { zodResponseFormat } from 'openai/helpers/zod'
 import { z } from 'zod'
 import { getGoalFeedback, type GoalFeedback } from './index'

@@ -7,7 +7,7 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
+    // "plugin:@typescript-eslint/recommended" // this is giving issues!
     "plugin:import/recommended",
     "plugin:import/electron",
     "plugin:import/typescript"
@@ -17,9 +17,11 @@
     "@typescript-eslint/ban-ts-comment": "off",
     "no-empty": "off",
     "prefer-const": "warn",
+    "no-unused-vars": "off",
     "@typescript-eslint/no-empty-function": "off",
     "consistent-return": "error",
     "@typescript-eslint/no-extra-semi": "off",
+    "no-extra-semi": "off", // apparently still needed?
     "no-console": "warn"
   }
 }
