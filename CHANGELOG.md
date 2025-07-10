@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/felipap/nudge/compare/v0.0.27...v0.1.2) (2025-07-10)
+
+
+### Features
+
+* better rate limit ([8c98d59](https://github.com/felipap/nudge/commit/8c98d598f73c78d0c9401a90d959d4116dbe1af3))
+* improved active screens buttons a little ([8aff3f3](https://github.com/felipap/nudge/commit/8aff3f383e04ffa7eca111b8b05c40dfd62f2b53))
+
+
+### Bug Fixes
+
+* lints ([8173af6](https://github.com/felipap/nudge/commit/8173af6763565f6c74805cf380c11e135808e3d4))
+* prompt was broken but im smart ([43101bf](https://github.com/felipap/nudge/commit/43101bf99f9e00c84c3d605a2df5dcddfa418fb9))
+* release env variables had broken it ([c507386](https://github.com/felipap/nudge/commit/c507386b5e0247118da8eb19b78166e75241a674))
+* revert broken onModifyGoal logic ([1c77614](https://github.com/felipap/nudge/commit/1c77614cf8b8fbd8e422337769f027d90a984c43))
+
 ### [0.1.1](https://github.com/felipap/nudge/compare/v0.0.27...v0.1.1) (2025-07-08)
 
 
