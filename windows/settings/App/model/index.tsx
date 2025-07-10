@@ -128,11 +128,40 @@ const useCustomInstructionState = makeUseStateWithBackendBackup<string | null>(
 
 export function ToggleBringYourOwnModel() {
   const { state, setPartialState } = useBackendState()
+  const [isRegistering, setIsRegistering] = useState(false)
+  const [registrationError, setRegistrationError] = useState<string | null>(
+    null
+  )
 
-  const onChange = () => {
-    setPartialState({
-      useNudgeBackend: !state?.useNudgeBackend,
-    })
+  const onChange = async () => {
+    const newValue = !state?.useNudgeBackend
+
+    // If turning on hosted mode, try to register
+    if (newValue) {
+      setIsRegistering(true)
+      setRegistrationError(null)
+
+      try {
+        const result = await setPartialState({
+          useNudgeBackend: newValue,
+        })
+
+        if (result?.success === false) {
+          setRegistrationError(result.message || 'Registration failed')
+          return
+        }
+      } catch (error) {
+        setRegistrationError('Failed to register with Nudge Cloud')
+        return
+      } finally {
+        setIsRegistering(false)
+      }
+    } else {
+      // Turning off hosted mode - no registration needed
+      setPartialState({
+        useNudgeBackend: newValue,
+      })
+    }
   }
 
   return (
@@ -146,8 +175,19 @@ export function ToggleBringYourOwnModel() {
           className="mt-1"
           checked={state?.useNudgeBackend || false}
           onChange={onChange}
+          disabled={isRegistering}
         />
+        {isRegistering && (
+          <div className="text-[12px] text-apple-system-gray-2 mt-1">
+            Registering...
+          </div>
+        )}
       </div>
+      {registrationError && (
+        <div className="text-[12px] text-red-500 mt-1 ml-6">
+          {registrationError}
+        </div>
+      )}
     </Fieldset>
   )
 }

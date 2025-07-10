@@ -71,7 +71,7 @@ Judge if the AI's response matches these criteria and the expected result.`,
         content: `Goal: "${goal}"
 
 AI Response:
-isGood: ${feedback.isGood}
+isGood: ${feedback.feedbackType === null || feedback.feedbackType === 'none'}
 message: "${feedback.feedback}"
 
 Expected:

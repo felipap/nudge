@@ -72,9 +72,11 @@ export function createTray() {
             ? 'Status: captured just now'
             : captureFromNow < 0
             ? 'Status: capturing'
-            : captureFromNow < 60_000
-            ? `Capturing in ${Math.floor(captureFromNow / 1000)}s`
-            : 'Capturing in ' + dayjs(nextCaptureAt).fromNow()
+            : // : captureFromNow < 0_000
+              // ? `Capturing in ${Math.floor(captureFromNow / 1000)}s`
+              'Capture now (otherwise in ' +
+              dayjs(nextCaptureAt).diff(dayjs(), 'seconds') +
+              's)'
 
         template.push({
           label: captureStatus,

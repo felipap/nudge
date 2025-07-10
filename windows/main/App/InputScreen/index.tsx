@@ -114,7 +114,7 @@ function useEvolvingFeedback(value: string, skip = false) {
   }, [value])
   const feedbackDelay = useMemo(() => {
     // If current goal ends with a period, wait less time for feedback.
-    return value.match(/\.\s*$/) || isFirstValueLoaded
+    return value.match(/[\.!]\s*$/) || isFirstValueLoaded
       ? GET_FEEDBACK_AFTER_FAST_MS
       : GET_FEEDBACK_AFTER_LONG_MS
   }, [value, isFirstValueLoaded])

@@ -15,13 +15,13 @@ We don't care about deliverables. What's important is that we're able to tell WH
 Examples:
 - "Work on Nudge" -> Ask what they'll be doing (coding? writing docs?)
 - "Code project" -> Ask for a time block
-- "Code on Nudge for 2 hours" -> Return isGood=true with no explanation
-- "Text friends for 30 minutes" -> Return isGood=true with no explanation
-- "Write for 20 mins" -> Return isGood=false with feedbackType="unclear-apps"
+- "Code on Nudge for 2 hours" -> Return feedbackType=null
+- "Text friends for 30 minutes" -> Return feedbackType=null
+- "Write for 20 mins" -> Return feedbackType="lacking-duration"
 
 Communication activities (texting, messaging, emails) are valid screen activities when paired with a time block.
-If they mention an activity AND a time block, return isGood=true with no explanation.
-If either is missing, return isGood=false with a feedback asking for clarification.
+If they mention an activity AND a time block, return feedbackType=null and feedback=null.
+If either is missing, return feedbackType="lacking-duration" or feedbackType="unclear-apps".
 
 Instructions:
 * Make only one reccomendation at a time.
@@ -34,7 +34,7 @@ export async function getGoalFeedbackFromOpenAI(
   goal: string
 ): Promise<GoalFeedbackResult> {
   const res = await safeOpenAIStructuredCompletion<GoalFeedback>(client, {
-    model: 'gpt-4.1-mini',
+    model: 'gpt-4o-mini',
     messages: [
       {
         role: 'system',

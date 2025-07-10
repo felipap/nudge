@@ -12,21 +12,3 @@ export const fileStore = new Store<State>({
   clearInvalidConfig: true,
   watch: true,
 }) as any
-
-// export const store = create<State>()(
-//   persist((set, get, store: StoreApi<State>) => DEFAULT_STATE, {
-//     name: 'nudge-store',
-//     storage: {
-//       getItem: (name) => {
-//         const value = electronStore.get(name)
-//         return value
-//       },
-//       setItem: (name, value) => {
-//         electronStore.set(name, value)
-//       },
-//       removeItem: (name) => {
-//         electronStore.delete(name)
-//       },
-//     },
-//   })
-// )

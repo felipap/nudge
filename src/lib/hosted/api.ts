@@ -2,7 +2,7 @@ import { app } from 'electron'
 import { NUDGE_AI_BASE_URL } from '../config'
 import { warn } from '../logger'
 import { ellipsis } from '../utils'
-import { generateVerificationData } from './verification'
+import { genSignedFingerprint } from './fingerprint'
 
 export type ApiError =
   | 'no-internet'
@@ -24,7 +24,7 @@ export async function callNudgeAPI<T>(
 
   let headers
   try {
-    headers = getHeaders()
+    headers = getFingerprintHeaders()
   } catch (e) {
     warn('[hosted/api] Error generating verification data', e)
     throw e
@@ -37,6 +37,7 @@ export async function callNudgeAPI<T>(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...init.headers,
         ...headers,
       },
       body: JSON.stringify(body),
@@ -88,24 +89,19 @@ export async function callNudgeAPI<T>(
   return { data: json.data }
 }
 
-export async function heartbeat(): Promise<
-  ApiResult<{ status: string; timestamp: string; version: string }>
-> {
-  return callNudgeAPI('/heartbeat', { method: 'GET' })
-}
-
-function getHeaders(): Record<string, string> {
+function getFingerprintHeaders(): Record<string, string> {
   // I think this can throw?
-  const verifiees = generateVerificationData()
+  const verifiees = genSignedFingerprint()
 
-  return {
-    'X-Nudge-Version': app.getVersion(),
-    'User-Agent': `Nudge/${app.getVersion()}`,
-    'X-Computer-ID': verifiees.computerId,
-    'X-Verification-Signature': verifiees.signature,
-    'X-Verification-Timestamp': verifiees.timestamp.toString(),
-    'X-Hardware-Fingerprint': verifiees.hardwareFingerprint,
-    'X-OS-Platform': verifiees.osInfo.platform,
-    'X-OS-Arch': verifiees.osInfo.arch,
+  const headers: Record<string, string> = {
+    'x-nudge-version': app.getVersion(),
+    'user-agent': `Nudge/${app.getVersion()}`,
+    'x-computer-id': verifiees.computerId,
+    // 'x-hardware-fingerprint': verifiees.hardwareHash,
+    'x-os-platform': verifiees.osInfo.platform,
+    'x-os-arch': verifiees.osInfo.arch,
+    'x-verification-timestamp': verifiees.timestamp.toString(),
   }
+
+  return headers
 }

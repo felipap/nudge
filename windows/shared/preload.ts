@@ -57,7 +57,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
 
   setPartialState: async (state: Partial<State>) => {
-    return await typedIpcRenderer.invoke('setPartialState', state)
+    return (await typedIpcRenderer.invoke(
+      'setPartialState',
+      state
+    )) as Promise<{ success: boolean; error?: string; message?: string }>
   },
 
   getAutoLaunch: async () => {

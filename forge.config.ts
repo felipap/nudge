@@ -6,7 +6,7 @@ import { VitePlugin } from '@electron-forge/plugin-vite'
 import type { ForgeConfig } from '@electron-forge/shared-types'
 import path from 'path'
 
-const IS_RELEASE = !!process.env.IS_RELEASE
+const IS_GITHUB_ACTIONS = !!process.env.GITHUB_ACTIONS
 
 // Only way I found to detect if we're running `electron-forge make`
 const IS_MAKE = !!process.env.IS_MAKE
@@ -14,10 +14,10 @@ const IS_MAKE = !!process.env.IS_MAKE
 const packagerConfig: ForgeConfig['packagerConfig'] = {
   // appVersion: '0.6.0', // Uses package.json version by default.
   name: 'Nudge' + (IS_MAKE ? '' : '(dev)'),
-  appBundleId: 'engineering.pi.example.nudge' + (IS_MAKE ? '' : '-dev'),
+  appBundleId: 'engineering.pi.nudge' + (IS_MAKE ? '' : '-dev'),
   asar: true,
   icon:
-    IS_RELEASE || IS_MAKE
+    IS_GITHUB_ACTIONS || IS_MAKE
       ? 'images/Production.icns'
       : 'images/Development.icns',
   extraResource: ['images'],
@@ -27,7 +27,7 @@ const packagerConfig: ForgeConfig['packagerConfig'] = {
   },
 }
 
-if (IS_RELEASE) {
+if (IS_GITHUB_ACTIONS) {
   console.log('process.env.APPLE_TEAM_ID', process.env.APPLE_TEAM_ID)
 
   if (!process.env.APPLE_ID) {
@@ -56,7 +56,7 @@ const config: ForgeConfig = {
   makers: [
     // new MakerSquirrel({}),
     new MakerZIP({}, ['darwin']),
-    IS_RELEASE
+    IS_GITHUB_ACTIONS
       ? new MakerDMG(
           (arch) => ({
             // https://github.com/electron/forge/issues/3517#issuecomment-2480861387

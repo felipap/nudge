@@ -81,3 +81,7 @@ making them very simple.
 The alternative would be to implement a proxy server that mimics the OpenAI API.
 But we decided against this due to the complexity. It'd be overkill, and
 potentially more dangerous too.
+
+## Why we send fingerprint headers
+
+We send fingerprint headers to the API to

@@ -7,14 +7,19 @@ import { getGoalFeedbackFromNudgeAPI } from './hosted'
 
 export const GoalFeedbackStruct = z.object({
   isGood: z.boolean(),
-  impliedDuration: z
-    .number()
-    .nullable()
-    .describe(
-      'The implied duration of the activity in minutes. If not specified, return null.'
-    ),
-  feedback: z.string().describe('The feedback to the user.'),
+  impliedDuration: z.number().nullable(),
+  feedback: z.string(),
   feedbackType: z.enum(['lacking-duration', 'unclear-apps', 'none']).nullable(),
+
+  // isPositive: z.boolean(),
+  // feedbackType: z.enum(['lacking-duration', 'unclear-apps', 'none']).nullable(),
+  // impliedDuration: z
+  //   .number()
+  //   .nullable()
+  //   .describe(
+  //     'The implied duration of the activity in minutes. If not specified, return null.'
+  //   ),
+  // feedback: z.string().describe('The feedback to the user.'),
 })
 
 export type GoalFeedback = z.infer<typeof GoalFeedbackStruct>
