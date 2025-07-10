@@ -12,17 +12,23 @@ import {
 import { useWindowHeight } from '../../../shared/lib'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 
-function useOnboardingState() {
+export function useOnboardingState() {
   const { screenPermission } = useScreenPermissionState()
   const { state } = useBackendState()
 
-  const hasOpenAIKey = !!state?.modelSelection?.key
+  const hasConfiguredBackend = !!(
+    state &&
+    (state.useNudgeCloud || state.modelSelection?.key)
+  )
 
-  return { screenPermission, hasOpenAIKey }
+  return {
+    hasScreenPermission: screenPermission === 'granted',
+    hasConfiguredBackend,
+  }
 }
 
 export const OnboardingScreen = withBoundary(() => {
-  const { screenPermission, hasOpenAIKey } = useOnboardingState()
+  const { hasScreenPermission, hasConfiguredBackend } = useOnboardingState()
 
   useWindowHeight(250)
 
@@ -52,7 +58,7 @@ export const OnboardingScreen = withBoundary(() => {
             className="flex items-center gap-2 cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
             onClick={() => openSettings('permissions')}
           >
-            <StepIcon done={screenPermission === 'granted'} />
+            <StepIcon done={hasScreenPermission} />
             <span className="">Grant permission to take screenshots</span>
           </div>
 
@@ -60,8 +66,8 @@ export const OnboardingScreen = withBoundary(() => {
             className="flex items-center gap-2 cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
             onClick={() => openSettings('general')}
           >
-            <StepIcon done={hasOpenAIKey} />
-            <span className="">Enter OpenAI API key</span>
+            <StepIcon done={hasConfiguredBackend} />
+            <span className="">Choose Nudge Cloud or enter OpenAI key</span>
           </div>
         </div>
 

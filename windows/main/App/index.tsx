@@ -1,32 +1,25 @@
 import { useEffect } from 'react'
-import {
-  openSettings,
-  useBackendState,
-  useScreenPermissionState,
-} from '../../shared/ipc'
+import { openSettings, useBackendState } from '../../shared/ipc'
 import { ActiveSessionScreen } from './ActiveSessionScreen'
 import { InputScreen } from './InputScreen'
-import { OnboardingScreen } from './OnboardingScren'
+import { OnboardingScreen, useOnboardingState } from './OnboardingScren'
 
 export const DEFAULT_BG_CLASS = 'bg-white dark:bg-neutral-900/90'
 
 export default function App() {
   const { state } = useBackendState()
-  const { screenPermission } = useScreenPermissionState()
+  const { hasScreenPermission, hasConfiguredBackend } = useOnboardingState()
+
   useGlobalShortcuts()
 
   let inner
   if (
     !state ||
     // Needed so the OnboardingScreen doesn't flicker below.
-    screenPermission === null
+    !hasScreenPermission
   ) {
     return <div className="flex flex-col bg-white h-screen">Loading</div>
-  } else if (
-    !state.modelSelection ||
-    !state.modelSelection.key ||
-    screenPermission !== 'granted'
-  ) {
+  } else if (!hasScreenPermission || !hasConfiguredBackend) {
     inner = <OnboardingScreen />
   } else if (state.session) {
     inner = <ActiveSessionScreen />

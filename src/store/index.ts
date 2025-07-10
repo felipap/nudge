@@ -141,7 +141,7 @@ export function hasFinishedOnboardingSteps() {
   const state = store.getState()
 
   const hasOpenAiKey = !!state.modelSelection?.key
-  const isUsingCloud = state.useNudgeBackend
+  const isUsingCloud = state.useNudgeCloud
   const hasScreenPermissions = checkScreenPermissions()
 
   return (hasOpenAiKey || isUsingCloud) && hasScreenPermissions

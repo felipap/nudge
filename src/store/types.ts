@@ -57,7 +57,7 @@ export type State = {
 
   // When true, we'll ignore `modelSelection` and send screenshots to Nudge
   // server.
-  useNudgeBackend: boolean
+  useNudgeCloud: boolean
   modelSelection: ModelSelection | null
   captureEverySeconds: number
   isWindowPinned: boolean
@@ -84,7 +84,7 @@ export const DEFAULT_STATE: State = {
   assessStartedAt: null,
   lastClosedAt: null,
   // settings
-  useNudgeBackend: false, // Important to start with false.
+  useNudgeCloud: false, // Important to start with false.
   modelSelection: null,
   captureEverySeconds: 60,
   isWindowPinned: false,

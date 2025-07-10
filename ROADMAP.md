@@ -16,15 +16,14 @@
 - [ ] Fix: permission errors still silent.
 - [ ] Fix: "Rate limit exceeded" error for OpenAI keys without billing setup.
 - [ ] Improve notification clarity - make it obvious when users should expect notifications.
-- [ ] Fix: double-nudge prevention blocking initial notifications in first few minutes.
+- [ ] Fix: double-nudge prevention is blocking initial notifications in first few minutes.
 - [ ] Add session reset functionality - make it clear how to restart/reset sessions.
-- [ ] Disable submit button when there are complaints about the current goal.
-- [ ] When "capture now", definitely send notification.
 - [ ] Somehow show notification skipped.
-- [ ] Show bigger dialog when editing or creating goal.
-- [ ] Enrich the AI prompt in the background for better context.
 - [ ] Consider chat-based interaction: "you said you wanted to look at camping plans but you're buying pants" with ability to reply.
-- [ ] Keep the "your goal is unclear" feedback - users liked this.
+- [ ] Feat: "0 of 20 hours used"
+- [x] Disable submit button when there are complaints about the current goal.
+- [x] When "capture now", definitely send notification.
+- [x] Show bigger dialog when editing or creating goal.
 - [x] Buy domain (nudge.fyi).
 
 ### Later

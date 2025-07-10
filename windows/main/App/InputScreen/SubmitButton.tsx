@@ -1,3 +1,5 @@
+// This file is a little too dirty.
+
 import { ClockAlertIcon } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 import { GetGoalFeedbackResult } from '../../../shared/shared-types'
@@ -74,6 +76,7 @@ export function SubmitButton({
   } else if (feedbackResult.data.feedback === 'unclear-apps') {
     icon = <FaQuestionCircle className="w-4 h-4" />
     text = "Mention which apps you'll be using"
+    disabled = true
     bgClassName = YELLOW_BG
   } else {
     bgClassName = GREEN_BG

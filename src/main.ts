@@ -1,7 +1,7 @@
 import 'source-map-support/register'
 
-import { IPCMode, init as SentryInit } from '@sentry/electron/main'
 import { app, BrowserWindow } from 'electron'
+import { IPCMode, init as SentryInit } from '@sentry/electron/main'
 import started from 'electron-squirrel-startup'
 import { setupIPC } from './ipc'
 import * as screenCapture from './lib/capture-service'
@@ -19,7 +19,7 @@ if (app.isPackaged) {
 }
 
 app.setAboutPanelOptions({
-  applicationName: 'Nudge',
+  applicationName: `Nudge ${app.isPackaged ? '' : '(dev)'}`,
   copyright: 'Copyright © 2025 Nudge',
   version: app.getVersion(),
   // authors: ['Felipe Aragão <faragaop@gmail.com>'],

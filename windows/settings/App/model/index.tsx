@@ -23,7 +23,7 @@ export function ModelTab() {
   const { state } = useBackendState()
 
   let modelSelector
-  if (state?.useNudgeBackend) {
+  if (state?.useNudgeCloud) {
     modelSelector = (
       <div className="font-display-3p text-[14px] px-1 leading-[1.3]">
         0 of 20 hours used
@@ -60,7 +60,7 @@ export function ModelTab() {
             .
           </Description>
         </LabelStack>
-        <ToggleBringYourOwnModel />
+        <ToggleNudgeCloud />
       </Fieldset>
 
       {modelSelector}
@@ -126,12 +126,12 @@ const useCustomInstructionState = makeUseStateWithBackendBackup<string | null>(
   }
 )
 
-export function ToggleBringYourOwnModel() {
+export function ToggleNudgeCloud() {
   const { state, setPartialState } = useBackendState()
 
   const onChange = () => {
     setPartialState({
-      useNudgeBackend: !state?.useNudgeBackend,
+      useNudgeCloud: !state?.useNudgeCloud,
     })
   }
 
@@ -144,7 +144,7 @@ export function ToggleBringYourOwnModel() {
         <Switch
           id="auto-launch"
           className="mt-1"
-          checked={state?.useNudgeBackend || false}
+          checked={state?.useNudgeCloud || false}
           onChange={onChange}
         />
       </div>

@@ -13,8 +13,6 @@ CertificateSigningRequest.certSigningRequest
 to-sign-nudge.p12
 Apple Developer Certificate.cer
 
-.DS_Store
-
 # removing todos for now
 todos
 
@@ -22,6 +20,8 @@ todos
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 .DS_Store
+
+data.json
 
 # Runtime data
 pids
