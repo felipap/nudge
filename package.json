@@ -4,7 +4,7 @@
   "description": "An AI that nudges you to stay on track",
   "main": ".vite/build/main.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "IS_DEV=true electron-forge start",
     "dev": "nodemon --exec \"npm run start\"",
     "package": "electron-forge package",
     "ts-check-main": "tsc --noEmit -p src/tsconfig.json",

@@ -51,7 +51,7 @@ jobs:
         run: pnpm rebuild
 
       - name: Build Electron app
-        run: pnpm run make
+        run: IS_RELEASE=true pnpm run make
 
       # # For debugging
       # - name: List Electron output
