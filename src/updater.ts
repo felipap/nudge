@@ -33,7 +33,9 @@ setTimeout(async () => {
 }, UPDATE_CHECK_AFTER_STARTUP)
 
 autoUpdater.setFeedURL({
-  url: `https://update.electronjs.org/felipap/nudge/darwin-arm64/${app.getVersion()}`,
+  url: `https://update.electronjs.org/felipap/nudge/darwin-${
+    process.arch
+  }/${app.getVersion()}`,
 })
 
 async function showDownloadedDialog() {

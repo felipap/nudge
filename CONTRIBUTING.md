@@ -84,4 +84,8 @@ potentially more dangerous too.
 
 ## Why we send fingerprint headers
 
-We send fingerprint headers to the API to
+As a measure to prevent abuse. (write more)
+
+## Debugging available versions
+
+https://update.electronjs.org/felipap/nudge/darwin-arm64/0.1.4 <-- version user is coming from.

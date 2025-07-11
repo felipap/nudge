@@ -2,7 +2,6 @@
 
 ## v0.1.x
 
-- [ ] Hosted version.
 - [ ] Where can users get stdout/stderr logs?
 - [ ] Support multiple screens.
 - [ ] Notify when fails to capture scren.
@@ -21,6 +20,7 @@
 - [ ] Somehow show notification skipped.
 - [ ] Consider chat-based interaction: "you said you wanted to look at camping plans but you're buying pants" with ability to reply.
 - [ ] Feat: "0 of 20 hours used"
+- [x] Hosted version.
 - [x] Disable submit button when there are complaints about the current goal.
 - [x] When "capture now", definitely send notification.
 - [x] Show bigger dialog when editing or creating goal.
