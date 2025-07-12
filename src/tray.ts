@@ -62,7 +62,6 @@ export function createTray() {
       // 🟢
       // If there's an active session, show button to capture now.
       if (!hasNoCurrentGoalOrPaused()) {
-        console.log('captureFromNow', captureFromNow)
         const captureStatus =
           captureFromNow === null
             ? 'Status: not capturing'
@@ -85,6 +84,7 @@ export function createTray() {
             // ipcMain.emit('captureNow', null)
             updateTrayMenu()
           },
+          enabled: !captureStatus?.startsWith('Status:'),
         })
         template.push({ type: 'separator' })
       }
