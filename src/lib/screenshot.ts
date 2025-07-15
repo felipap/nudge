@@ -1,6 +1,7 @@
 // Utils for capturing the screen.
 
 import { desktopCapturer, screen, systemPreferences } from 'electron'
+import { CAPTURE_RESIZE_FACTOR } from './config'
 import { debug, log, warn } from './logger'
 
 // ⬇️ wtf is this for?
@@ -126,8 +127,8 @@ export async function captureActiveScreen(): Promise<
     sources = await desktopCapturer.getSources({
       types: ['screen'],
       thumbnailSize: {
-        width: Math.floor(width * (2 / 5)),
-        height: Math.floor(height * (2 / 5)),
+        width: Math.floor(width * CAPTURE_RESIZE_FACTOR),
+        height: Math.floor(height * CAPTURE_RESIZE_FACTOR),
       },
     })
   } catch (e) {

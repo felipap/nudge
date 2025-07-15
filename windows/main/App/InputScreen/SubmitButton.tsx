@@ -57,9 +57,9 @@ export function SubmitButton({
   } else if ('error' in feedbackResult) {
     text = `Error: ${feedbackResult.error}`
     if (feedbackResult.error === 'no-internet') {
-      text = 'Problem: No internet connection'
+      text = 'Problem: no internet connection'
     } else if (feedbackResult.error === 'bad-api-key') {
-      text = 'Check your OpenAI key'
+      text = 'Problem with your OpenAI key'
     } else if (feedbackResult.error === 'rate-limit') {
       text = 'Rate limit exceeded'
     } else {
@@ -70,7 +70,7 @@ export function SubmitButton({
     icon = <FaExclamation className="w-4 h-4" />
   } else if (feedbackResult.data.feedback === 'lacking-duration') {
     icon = <ClockAlertIcon className="w-4 h-4" />
-    text = 'Specify an activity duration'
+    text = 'Specify a duration for your activity'
     disabled = true
     bgClassName = YELLOW_BG
   } else if (feedbackResult.data.feedback === 'unclear-apps') {

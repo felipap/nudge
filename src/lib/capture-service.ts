@@ -14,7 +14,7 @@ import {
   assessFlowFromScreenshot,
   AssessmentResult,
   getAiBackendClient,
-} from './ai'
+} from '../ai'
 import { DOUBLE_NUDGE_THRESHOLD, IGNORE_UNTIL_MS } from './config'
 import { captureException, debug, error, log, logError, warn } from './logger'
 import { captureActiveScreen } from './screenshot'

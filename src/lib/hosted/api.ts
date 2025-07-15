@@ -11,13 +11,9 @@ export interface SignatureHeaders {
   'x-nudge-version': string
 }
 
-export type ApiError =
-  | 'no-internet'
-  | 'rate-limit'
-  | 'unknown'
-  | 'verification-failed'
+export type ApiError = 'no-internet' | 'rate-limit' | 'unknown'
 
-export type ApiResult<T> = { data: T } | { error: string; message?: string }
+export type ApiResult<T> = { data: T } | { error: ApiError; message?: string }
 
 /**
  * Issues a POST by default.

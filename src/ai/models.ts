@@ -2,12 +2,9 @@ import * as Sentry from '@sentry/electron/main'
 import assert from 'assert'
 import OpenAI from 'openai'
 import { ChatCompletionParseParams } from 'openai/src/resources/beta/chat/completions'
-import {
-  AvailableModel,
-  ModelError,
-} from '../../../windows/shared/shared-types'
-import { getState, ModelSelection } from '../../store'
-import { debug, logError, warn } from '../logger'
+import { AvailableModel, ModelError } from '../../windows/shared/shared-types'
+import { getState, ModelSelection } from '../store'
+import { debug, logError, warn } from '../lib/logger'
 
 export async function validateModelKey(
   model: AvailableModel,

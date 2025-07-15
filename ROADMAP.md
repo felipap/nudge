@@ -9,16 +9,17 @@
 - [ ] Fix: warn when outside /Applications folder. Don't try to auto-update.
 - [ ] Let users introspect captures and understand what's wrong.
 - [ ] Feat: let user choose annoy rate.
+- [ ] Make video showing how to create an OpenAI key.
 - [ ] Write privacy page.
+- [ ] Find a way to scrape off most sensitive data locally?
 - [ ] Can we check that the app is running from inside a Terminal?
-- [ ] Notification: test access by asking users to click on the notification.
+- [ ] Notification: test access by asking users to click on the notification.23
 - [ ] Fix: permission errors still silent.
 - [ ] Fix: "Rate limit exceeded" error for OpenAI keys without billing setup.
 - [ ] Improve notification clarity - make it obvious when users should expect notifications.
 - [ ] Fix: double-nudge prevention is blocking initial notifications in first few minutes.
 - [ ] Add session reset functionality - make it clear how to restart/reset sessions.
-- [ ] Somehow show notification skipped.
-- [ ] Consider chat-based interaction: "you said you wanted to look at camping plans but you're buying pants" with ability to reply.
+- [ ] Somehow show notification skipped due to double-nudge.
 - [ ] Feat: "0 of 20 hours used"
 - [x] Hosted version.
 - [x] Disable submit button when there are complaints about the current goal.
@@ -28,9 +29,10 @@
 
 ### Later
 
-- [ ] Landing page.
+- [x] Landing page.
 - [ ] Feat: how do you get Nudge to learn?
 - [ ] Way to give feedback in the app.
+- [ ] Consider chat-based interaction: "you said you wanted to look at camping plans but you're buying pants" with ability to reply.
 - [ ] Activate notifications for GitHub issues.
 - [ ] Fix: main window is still resizable.
 - [ ] MCP.

@@ -1,6 +1,6 @@
-import { log } from '../../logger'
-import { callNudgeAPI } from '../../hosted/api'
-import { AssessmentResult } from './index'
+import { callNudgeAPI } from '../../lib/hosted/api'
+import { log } from '../../lib/logger'
+import { AssessmentResult } from '../assess-flow'
 
 export async function assessFlowFromNudgeAPI(
   base64content: string,
@@ -8,14 +8,14 @@ export async function assessFlowFromNudgeAPI(
   customInstructions: string | null,
   previousCaptures: string[]
 ): Promise<AssessmentResult> {
-  const result = await callNudgeAPI('/assess', {
+  const result = await callNudgeAPI('/assess-flow', {
     goal,
     customInstructions,
     base64Image: base64content,
     previousCaptures,
   })
 
-  log('[ai/assess-flow] result', result)
+  log('[ai/cloud/assess-flow] result', result)
 
   return result as AssessmentResult
 }

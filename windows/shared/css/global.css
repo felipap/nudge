@@ -20,7 +20,7 @@
     'Apple Color Emoji', 'Noto Color Emoji';
   --font-sans: 'SF Pro', ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Noto Color Emoji';
-  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+  --font-serif: '', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
 
@@ -170,7 +170,7 @@ textarea {
 
 .font-display-3p {
   font-family: var(--font-display);
-  letter-spacing: 3% !important;
+  letter-spacing: 0.02em !important;
 }
 
 /* Text sizes */

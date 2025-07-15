@@ -1,10 +1,10 @@
 import assert from 'assert'
 import { z } from 'zod'
-import { ModelError } from '../../../../windows/shared/shared-types'
-import { log } from '../../logger'
-import { BackendClient } from '../models'
-import { assessFlowFromOpenAI } from './direct'
-import { assessFlowFromNudgeAPI } from './hosted'
+import { ModelError } from '../../windows/shared/shared-types'
+import { debug } from '../lib/logger'
+import { assessFlowFromNudgeAPI } from './cloud/assess-flow'
+import { BackendClient } from './models'
+import { assessFlowWithOpenAI } from './openai/assess-flow'
 
 export const AssessmentStruct = z.object({
   screenSummary: z.string(),
@@ -33,7 +33,7 @@ export async function assessFlowFromScreenshot(
   customInstructions: string | null,
   previousCaptures: string[]
 ): Promise<AssessmentResult> {
-  log('client.provider', client.provider)
+  debug('client.provider', client.provider)
 
   assert(goal, 'goal is required')
 
@@ -46,8 +46,8 @@ export async function assessFlowFromScreenshot(
     )
   }
 
-  return await assessFlowFromOpenAI(
-    client,
+  return await assessFlowWithOpenAI(
+    client.openAiClient,
     base64content,
     goal,
     customInstructions,

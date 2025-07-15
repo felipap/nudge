@@ -14,7 +14,7 @@ import {
   GetGoalFeedbackResult,
   IpcMainMethods,
 } from '../windows/shared/shared-types'
-import { getAiBackendClient, getGoalFeedback, validateModelKey } from './lib/ai'
+import { getAiBackendClient, getGoalFeedback, validateModelKey } from './ai'
 import * as screenCapture from './lib/capture-service'
 import { GITHUB_DISCUSSIONS_URL } from './lib/config'
 import { debug, logError, warn } from './lib/logger'

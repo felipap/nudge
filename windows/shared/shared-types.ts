@@ -1,6 +1,6 @@
 // To share between renderer and main process.
 
-import { State } from '../../src/store/types'
+import type { State } from '../../src/store/types'
 
 //
 //

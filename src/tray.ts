@@ -132,7 +132,9 @@ export function createTray() {
       },
       { type: 'separator' },
       {
-        label: `Version ${app.getVersion()}`,
+        label: `Version ${app.getVersion()}${
+          process.env.NODE_ENV === 'development' ? ' (dev)' : ''
+        }`,
         enabled: false,
       },
     ])

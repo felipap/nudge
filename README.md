@@ -52,7 +52,15 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
     What data does Nudge collect?
   </summary>
   <p>
+    Nudge has two modes: local and cloud. Local means you run the app on your computer and talk to the OpenAI API directly, using a key you provide. In this mode, we don't see any of your data.
+  </p>
+  <p>
+    Nudge "Cloud" is for people who don't have an OpenAI API Key.
+
+    Cloud is currently free for up to 20 hours a month (we're eating the cost for the sake of this experiment).
+
     Nudge has no external servers today. All the screenshots are exchanged directly between your computer and OpenAI's servers. Nudge does not accumulate screenshots inside of your computer either. Once they're sent to OpenAI, they're discarded. The data sent to 4o may be accessible by the owner of the API key you enter.
+
   </p>
   <p>
     We use <a href="https://sentry.io" target="_blank">Sentry</a> for error tracking and telemetry but <a href="https://docs.sentry.io/platforms/javascript/configuration/options/#sendDefaultPii" target="_blank">we don't collect PII as far as I know</a>.

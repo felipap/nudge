@@ -1,9 +1,13 @@
 import { OpenAI } from 'openai'
 // @ts-ignore
 import { zodResponseFormat } from 'openai/helpers/zod.mjs'
-import { warn } from '../../logger'
-import { safeOpenAIStructuredCompletion } from '../models'
-import { GoalFeedback, GoalFeedbackResult, GoalFeedbackStruct } from './index'
+import { warn } from '../../../lib/logger'
+import {
+  GoalFeedback,
+  GoalFeedbackResult,
+  GoalFeedbackStruct,
+} from '../../goal-feedback'
+import { safeOpenAIStructuredCompletion } from '../../models'
 
 const SYSTEM_PROMPT = `You are an AI that helps users stay focused by monitoring their screen.
 A good goal tells us:
