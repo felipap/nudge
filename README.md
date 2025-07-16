@@ -1,7 +1,5 @@
 <img src="https://github.com/user-attachments/assets/1ae2fe14-c93f-4bfe-8d66-aa59046343ad" width="128" alt="Logo" />
 
-<!-- <h1><code style="text-shadow: 0px 3px 10px rgba(8, 0, 6, 0.35); font-size: 3rem; font-family: ui-monospace, Menlo, monospace; font-weight: 800; background: transparent; color: #4d3e56; padding: 0.2rem 0.2rem; border-radius: 6px">Nudge</code></h1> -->
-
 # Nudge
 
 The AI that nudges you into flow.
@@ -44,8 +42,11 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
     <strong>How does Nudge work?</strong>
   </summary>
   <p>
-    Nudge takes a picture of your screen every few seconds, then asks GPT-4o if it looks like you're engaged in the activity you chose for yourself. If not, Nudge sends you a notification.
-    The default frequency of capture is one minute, but you can modify this in the app settings.</p>
+    Nudge helps you stay in flow by sending you a notification when you look distracted. First you give it an activity you want to do, like "code for an hour". Then, Nudge starts taking screenshots of your screen every minute (or whatever frequency you choose) and asks an AI model to detect whether you're doing the activity you chose for yourself. If not, Nudge sends you a notification.
+  </p>
+  <p>
+    By default, Nudge sends your screenshots directly to OpenAI's GPT-4o-mini, and therefore requires an OpenAI API key to use. If you don't have one, you can use Nudge Cloud, which sends your screenshots to our servers.
+  </p>
 </details>
 <details>
   <summary>
@@ -82,7 +83,7 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 </details>
 <details>
   <summary>
-    Can I use a model other than GPT-4o?
+    <strong>Can I use a model other than GPT-4o?</strong>
   </summary>
   <p>
     Not today but I will ship if enough users ask for it. <a href="https://github.com/felipap/nudge/discussions/new">Start a discussion.</a>
@@ -90,9 +91,9 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 </details>
 <details>
   <summary>
-    How much does Nudge cost in AI usage?
+    <strong>How much does Nudge cost in AI usage?</strong>
   </summary>
-  <p>1
+  <p>
     Depends on the model you use, the size of your screen, and the frequency of captures.
   </p>
   <p>

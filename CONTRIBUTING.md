@@ -95,3 +95,12 @@ As a measure to prevent abuse. (write more)
 ## Debugging available versions
 
 https://update.electronjs.org/felipap/nudge/darwin-arm64/0.1.4 <-- version user is coming from.
+
+## Logs
+
+Nudge writes logs to the following files:
+
+- `~/Library/Logs/Nudge/main.log`
+- `~/Library/Logs/Nudge/error.log`
+
+In development, look inside the `~/Library/Logs/NudgeDev` folder.

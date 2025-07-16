@@ -2,7 +2,6 @@
 
 ## v0.1.x
 
-- [ ] Where can users get stdout/stderr logs?
 - [ ] Support multiple screens.
 - [ ] Feat: option to show timer in the menu bar.
 - [ ] Fix: warn when outside /Applications folder. Don't try to auto-update.
@@ -17,10 +16,11 @@
 - [ ] Fix: permission errors still silent.
 - [ ] Fix: "Rate limit exceeded" error for OpenAI keys without billing setup.
 - [ ] Improve notification clarity - make it obvious when users should expect notifications.
-- [x] Fix: double-nudge prevention is blocking initial notifications in first few minutes.
 - [ ] Add session reset functionality - make it clear how to restart/reset sessions.
 - [ ] Somehow show notification skipped due to double-nudge.
 - [ ] Feat: "0 of 20 hours used"
+- [x] Fix: double-nudge prevention is blocking initial notifications in first few minutes.
+- [x] Where can users get stdout/stderr logs?
 - [x] Notify when fails to capture scren.
 - [x] Fix evals. (Jul 15)
 - [x] Feat: let user choose annoy rate.

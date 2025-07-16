@@ -46,7 +46,7 @@ export const ActiveSessionScreen = withBoundary(() => {
       className={twMerge(
         'flex flex-col h-screen',
         paused
-          ? 'bg-gray-200 dark:bg-gray-800/90'
+          ? 'bg-gray-100 dark:bg-gray-800/90'
           : 'bg-white dark:bg-neutral-950/80'
       )}
     >
@@ -60,7 +60,7 @@ export const ActiveSessionScreen = withBoundary(() => {
         }
       />
       <NavLine
-        className={paused ? 'border-gray-200 dark:border-gray-900/70' : ''}
+        className={paused ? '' : 'border-gray-100 dark:border-gray-900/70'}
       />
 
       <main

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import {
-  openExternal,
   openGithubDiscussion,
   openSettings,
   useBackendState,
@@ -8,9 +7,8 @@ import {
 import { ActiveSessionScreen } from './ActiveSessionScreen'
 import { InputScreen } from './InputScreen'
 import { OnboardingScreen, useOnboardingState } from './OnboardingScren'
-import { Button } from '../../shared/ui/Button'
 
-export const DEFAULT_BG_CLASS = 'bg-white dark:bg-neutral-900/90'
+export const DEFAULT_BG_CLASS = 'bg-gray-100 dark:bg-gray-800/90'
 
 export default function App() {
   const { state } = useBackendState()

@@ -204,7 +204,8 @@ export function createTray() {
 
   // Optional: Show window when clicking the tray icon
   tray.on('click', () => {
-    if (!mainWindow!.isVisible()) {
+    // console.log('tray clicked', mainWindow!.isFocused())
+    if (!mainWindow!.isFocused()) {
       mainWindow!.show()
     }
   })

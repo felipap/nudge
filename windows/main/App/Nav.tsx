@@ -11,7 +11,7 @@ export function NavLine({ className }: { className?: string }) {
   return (
     <div
       className={twMerge(
-        'w-full border-b border-gray-100 dark:border-neutral-700/50',
+        'w-full border-b border-gray-200 dark:border-neutral-700/50',
         className
       )}
     />
