@@ -4,7 +4,6 @@
 
 - [ ] Where can users get stdout/stderr logs?
 - [ ] Support multiple screens.
-- [ ] Notify when fails to capture scren.
 - [ ] Feat: option to show timer in the menu bar.
 - [ ] Fix: warn when outside /Applications folder. Don't try to auto-update.
 - [ ] Let users introspect captures and understand what's wrong.
@@ -22,6 +21,7 @@
 - [ ] Add session reset functionality - make it clear how to restart/reset sessions.
 - [ ] Somehow show notification skipped due to double-nudge.
 - [ ] Feat: "0 of 20 hours used"
+- [x] Notify when fails to capture scren.
 - [x] Fix evals. (Jul 15)
 - [x] Feat: let user choose annoy rate.
 - [x] CI: add evals to CI.

@@ -11,8 +11,8 @@ import { app } from 'electron'
 //   console.warn('Failed to load electron library.')
 // }
 
-export const VERBOSE = !app.isPackaged
-// export const VERBOSE = process.env.VERBOSE === 'true'
+// export const VERBOSE = true //app.isPackaged
+export const VERBOSE = process.env.QUIET !== 'true'
 
 // If the user is nudged twice in this time, we won't show a notification.
 export const DOUBLE_NUDGE_THRESHOLD_MINS = 5
