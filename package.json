@@ -13,7 +13,7 @@
     "make-arm64": "IS_MAKE=true electron-forge make --arch=\"arm64\"",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
-    "evals": "ts-node src/ai/openai/assess-flow/index.eval.ts && ts-node src/ai/openai/goal-feedback/index.eval.ts",
+    "evals": "ts-node src/ai/openai/assess-capture/index.eval.ts && ts-node src/ai/openai/goal-feedback/index.eval.ts",
     "app:dir": "electron-builder --dir",
     "app:dist": "electron-builder",
     "release": "standard-version"

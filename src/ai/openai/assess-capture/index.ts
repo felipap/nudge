@@ -28,8 +28,8 @@ export async function assessFlowWithOpenAI(
     previousCaptures
   )
 
-  debug('[ai/openai/assess-flow] prompt', systemPrompt)
-  log('[ai/openai/assess-flow] calling')
+  debug('[ai/openai/assess-capture] prompt', systemPrompt)
+  log('[ai/openai/assess-capture] calling')
 
   const start = Date.now()
 
@@ -58,13 +58,16 @@ export async function assessFlowWithOpenAI(
   })
 
   if ('error' in result) {
-    warn('[ai/openai/assess-flow] error', result)
+    warn('[ai/openai/assess-capture] error', result)
     return result
   }
 
   const elapsedMs = Date.now() - start
 
-  log('[ai/openai/assess-flow] elapsedMs', `${(elapsedMs / 1000).toFixed(2)}s`)
+  log(
+    '[ai/openai/assess-capture] elapsedMs',
+    `${(elapsedMs / 1000).toFixed(2)}s`
+  )
 
   const parsed = result.data
   if (!parsed) {
@@ -74,7 +77,7 @@ export async function assessFlowWithOpenAI(
     }
   }
 
-  log('[ai/openai/assess-flow] result', parsed)
+  log('[ai/openai/assess-capture] result', parsed)
 
   return {
     data: parsed,

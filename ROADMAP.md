@@ -11,7 +11,6 @@
 - [ ] Fix: FAQ is outdated about data.
 - [ ] Feat: let user choose annoy rate.
 - [ ] Make video showing how to create an OpenAI key.
-- [ ] CI: evals.
 - [ ] Write privacy page.
 - [ ] Fix: "twitching" height?
 - [ ] CI: figure out how to make pre-release builds.
@@ -26,6 +25,8 @@
 - [ ] Add session reset functionality - make it clear how to restart/reset sessions.
 - [ ] Somehow show notification skipped due to double-nudge.
 - [ ] Feat: "0 of 20 hours used"
+- [ ] Fix evals. (Jul 15)
+- [x] CI: evals.
 - [x] Hosted version.
 - [x] Disable submit button when there are complaints about the current goal.
 - [x] When "capture now", definitely send notification.

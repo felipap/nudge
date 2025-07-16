@@ -1,9 +1,9 @@
 import { z } from 'zod'
 import { callNudgeAPI } from '../../lib/api'
 import { captureException, log, warn } from '../../lib/logger'
-import { CaptureAssessmentResult } from '../assess-flow'
+import { CaptureAssessmentResult } from '../assess-capture'
 
-// Keep in sync with nudge-web/app/api/assess-flow/route.ts
+// Keep in sync with nudge-web/app/api/assess-capture/route.ts
 const ResponseStruct = z.object({
   screenSummary: z.string(),
   messageToUser: z.string(),
@@ -17,7 +17,7 @@ export async function assessFlowFromNudgeAPI(
   customInstructions: string | null,
   previousCaptures: string[]
 ): Promise<CaptureAssessmentResult> {
-  const result = await callNudgeAPI('/assess-flow', {
+  const result = await callNudgeAPI('/assess-capture', {
     goal,
     customInstructions,
     imageBase64,
@@ -25,15 +25,15 @@ export async function assessFlowFromNudgeAPI(
   })
 
   if ('error' in result) {
-    warn('[ai/cloud/assess-flow] error from API', result)
+    warn('[ai/cloud/assess-capture] error from API', result)
     return result
   }
 
-  log('[ai/cloud/assess-flow] result', result)
+  log('[ai/cloud/assess-capture] result', result)
 
   const parsed = ResponseStruct.safeParse(result.data)
   if (!parsed.success) {
-    warn('[ai/cloud/assess-flow] failed to parse result', {
+    warn('[ai/cloud/assess-capture] failed to parse result', {
       result,
       error: parsed.error,
     })

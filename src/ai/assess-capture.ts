@@ -1,9 +1,9 @@
 import assert from 'assert'
 import { debug } from '../lib/logger'
-import { assessFlowFromNudgeAPI } from './cloud/assess-flow'
+import { assessFlowFromNudgeAPI } from './cloud/assess-capture'
 import { BackendClient } from './models'
 import { Result } from './openai/utils'
-import { assessFlowWithOpenAI } from './openai/assess-flow'
+import { assessFlowWithOpenAI } from './openai/assess-capture'
 
 export type CaptureAssessment = {
   screenSummary: string
