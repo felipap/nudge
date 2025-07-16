@@ -77,10 +77,6 @@ function getIgnoreReason() {
     return 'not-packaged'
   }
 
-  if (process.env.NODE_ENV === 'development') {
-    return 'is-development'
-  }
-
   if (isFelipe()) {
     return 'is-felipe'
   }

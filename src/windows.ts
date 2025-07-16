@@ -1,6 +1,5 @@
 import { app, BrowserWindow, screen } from 'electron'
 import path from 'node:path'
-import { getImagePath } from './lib/utils'
 import { getState, hasFinishedOnboardingSteps, store } from './store'
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
@@ -96,13 +95,6 @@ export function createMainWindow() {
 
   // win.setAlwaysOnTop(true, 'floating')
 
-  // Only show DevTools in development mode
-  if (process.env.NODE_ENV === 'development') {
-    // win.webContents.openDevTools({
-    //   mode: "bottom",
-    // });
-  }
-
   mainWindow = win
 
   return win
@@ -158,17 +150,7 @@ export function createSettingsWindow() {
     return true
   })
 
-  // win.setAlwaysOnTop(true, 'floating')
-
-  // Only show DevTools in development mode
-  if (process.env.NODE_ENV === 'development') {
-    // win.webContents.openDevTools({
-    //   mode: "bottom",
-    // });
-  }
-
   prefWindow = win
-
   return win
 }
 

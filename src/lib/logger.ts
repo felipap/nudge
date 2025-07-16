@@ -4,10 +4,6 @@ import * as Sentry from '@sentry/electron/main'
 import * as electronLog from 'electron-log/main'
 import { VERBOSE } from './config'
 
-if (VERBOSE) {
-  console.log('VERBOSE ON')
-}
-
 // Unless verbose, don't show debugs or silly logs.
 electronLog.transports.console.level = VERBOSE ? 'silly' : 'info'
 

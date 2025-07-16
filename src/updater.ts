@@ -1,5 +1,5 @@
 import { app, autoUpdater, dialog } from 'electron'
-import { UPDATE_CHECK_AFTER_STARTUP } from './lib/config'
+import { CHECK_UPDATE_AFTER_MS } from './lib/config'
 import { debug, logError } from './lib/logger'
 import { getImagePath, getIsOutsideApplicationsFolder } from './lib/utils'
 
@@ -34,7 +34,7 @@ setTimeout(async () => {
   } else if (status === 'outside-macos-apps') {
     // Only show this when the user actively clicks to update.
   }
-}, UPDATE_CHECK_AFTER_STARTUP)
+}, CHECK_UPDATE_AFTER_MS)
 
 autoUpdater.setFeedURL({
   url: `https://update.electronjs.org/felipap/nudge/darwin-${
