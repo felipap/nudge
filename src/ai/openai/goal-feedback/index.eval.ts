@@ -93,6 +93,8 @@ Does the AI's response match the expected result? Consider:
 async function runEvals() {
   console.log('Running goal feedback evaluations...\n')
 
+  let countFailed = 0
+
   for (const testCase of TEST_CASES) {
     console.log(`Goal: "${testCase.goal}"`)
     console.log(
@@ -103,43 +105,40 @@ async function runEvals() {
       }`
     )
 
-    try {
-      const res = await getGoalFeedbackFromOpenAI(client, testCase.goal)
-      console.log('Got feedback:', res)
+    const res = await getGoalFeedbackFromOpenAI(client, testCase.goal)
+    console.log('Got feedback:', res)
 
-      if ('error' in res) {
-        console.log('Result: ❌ FAIL (error)')
-        console.log('\n---\n')
-        continue
-      }
-
-      if (!res.data.feedbackType) {
-        if (testCase.expectedFeedback === null) {
-          console.log('Result: ✅ PASS (both agree goal is good)')
-        } else {
-          console.log('Result: ❌ FAIL (AI incorrectly accepted a bad goal)')
-        }
-      } else {
-        // feedback.isGood = false
-        if (testCase.expectedFeedback === null) {
-          console.log('Result: ❌ FAIL (AI incorrectly rejected a good goal)')
-        } else {
-          // Both agree it's bad, check the explanation
-          const judgment = await judgeResponse(
-            res.data,
-            testCase,
-            testCase.goal
-          )
-          console.log('Judgment:', judgment)
-          console.log('Result:', judgment?.matches ? '✅ PASS' : '❌ FAIL')
-        }
-      }
-      console.log('\n---\n')
-    } catch (error) {
-      console.error('Error:', error)
+    if ('error' in res) {
       console.log('Result: ❌ FAIL (error)')
       console.log('\n---\n')
+      countFailed++
+      continue
     }
+
+    if (!res.data.feedbackType) {
+      if (testCase.expectedFeedback === null) {
+        console.log('Result: ✅ PASS (both agree goal is good)')
+      } else {
+        console.log('Result: ❌ FAIL (AI incorrectly accepted a bad goal)')
+        countFailed++
+      }
+    } else {
+      // feedback.isGood = false
+      if (testCase.expectedFeedback === null) {
+        console.log('Result: ❌ FAIL (AI incorrectly rejected a good goal)')
+        countFailed++
+      } else {
+        // Both agree it's bad, check the explanation
+        const judgment = await judgeResponse(res.data, testCase, testCase.goal)
+        console.log('Judgment:', judgment)
+        console.log('Result:', judgment?.matches ? '✅ PASS' : '❌ FAIL')
+      }
+    }
+    console.log('\n---\n')
+  }
+
+  if (countFailed > 0) {
+    throw new Error('Failed tests')
   }
 }
 

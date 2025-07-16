@@ -231,6 +231,10 @@ export async function runDetailedEval(client: OpenAI): Promise<void> {
   console.log(`Total Tests: ${summary.totalTests}`)
   console.log(`Passed: ${summary.passedTests}`)
   console.log(`Failed: ${summary.failedTests}`)
+
+  if (summary.failedTests > 0) {
+    throw new Error('Failed tests')
+  }
 }
 
 const EVALS_OPENAI_API_KEY = process.env.EVALS_OPENAI_API_KEY || ''
