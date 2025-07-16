@@ -1,14 +1,14 @@
-// nudge/src/lib/ai/openai <> nudge-web/ai/openai
-//
 // README Try to make this whole folder independent of the rest of the codebase
 // so we can sync it between **nudge** and **nudge-web**.
+//
+// Ie. sync `nudge/src/lib/ai/openai` with `nudge-web/ai/openai`
 
 import * as Sentry from '@sentry/electron/main'
 import OpenAI from 'openai'
 import { ChatCompletionParseParams } from 'openai/resources/chat/completions'
 import { warn } from './oai-logger'
 
-export type ModelError =
+type CallError =
   | 'unknown'
   | 'no-api-key'
   | 'bad-api-key'
@@ -21,7 +21,7 @@ export type Result<D> =
       data: D
     }
   | {
-      error: ModelError
+      error: CallError
       message?: string
     }
 
@@ -30,7 +30,7 @@ export async function safeOpenAIStructuredCompletion<T>(
   options: Omit<ChatCompletionParseParams, 'response_format'> &
     // There's probably a way to infer T from `response_format` but fuck it.
     Required<Pick<ChatCompletionParseParams, 'response_format'>>
-): Promise<{ data: T } | { error: ModelError; message?: string }> {
+): Promise<{ data: T } | { error: CallError; message?: string }> {
   let result
   try {
     result = await client.chat.completions.parse({

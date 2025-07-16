@@ -6,11 +6,12 @@ import OpenAI from 'openai'
 import path from 'path'
 import { log, warn } from '../../../lib/logger'
 import examples, { TestCase } from './evals'
-import { assessFlowWithOpenAI, Result } from './index'
+import { assessFlowWithOpenAI, Output } from './index'
+import { Result } from '..'
 
 interface TestResult {
   testCase: TestCase
-  result: Result
+  result: Result<Output>
   passed: boolean
   error?: string
   metrics: {

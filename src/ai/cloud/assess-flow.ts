@@ -1,6 +1,6 @@
-import { callNudgeAPI } from '../../lib/hosted/api'
 import { log } from '../../lib/logger'
 import { AssessmentResult } from '../assess-flow'
+import { callNudgeAPI } from './api'
 
 export async function assessFlowFromNudgeAPI(
   base64content: string,

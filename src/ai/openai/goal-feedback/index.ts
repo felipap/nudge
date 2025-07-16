@@ -2,13 +2,22 @@ import { OpenAI } from 'openai'
 import { zodResponseFormat } from 'openai/helpers/zod'
 import { z } from 'zod'
 import { Result, safeOpenAIStructuredCompletion } from '..'
-import { warn } from '../oai-logger'
+import { log, warn } from '../oai-logger'
 
 const OutputStruct = z.object({
-  isGood: z.boolean(),
-  impliedDuration: z.number().nullable(),
-  feedback: z.string(),
-  feedbackType: z.enum(['lacking-duration', 'unclear-apps', 'none']).nullable(),
+  activityDurationMins: z
+    .number()
+    .describe('The duration the user wrote for the activity.')
+    .nullable(),
+  reasoning: z
+    .string()
+    .describe('The reasoning behind the positive or negative feedback.'),
+  feedbackType: z
+    .enum(['lacking-duration', 'unclear-apps', 'none'])
+    .describe(
+      "The type of feedback to give the user. Choose 'none' or null if the activity description is good."
+    )
+    .nullable(),
 })
 
 export type Output = z.infer<typeof OutputStruct>
@@ -37,6 +46,8 @@ export async function getGoalFeedbackFromOpenAI(
     warn('[ai/goal-feedback] Error getting goal feedback', res)
     return res
   }
+
+  log('[ai/goal-feedback] result', res)
 
   return res
 }

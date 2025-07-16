@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { callNudgeAPI } from '../../lib/hosted/api'
 import { captureException, debug, log, warn } from '../../lib/logger'
 import { GoalFeedbackResult } from '../goal-feedback'
+import { callNudgeAPI } from './api'
 
 // Keep in sync with nudge-web/app/api/goal-feedback/route.ts
 const NudgeCloudGoalFeedbackStruct = z.object({

@@ -1,15 +1,18 @@
 // FELIPE: I'm making this optional so Bun can run this file without supporting
 // Sentry (or Electron, which is the real problem of calling @sentry/electron).
 // Open to a better way of doing this.
-let app
-try {
-  app = require('electron').app
-} catch (e) {
-  console.warn('Failed to load electron library.')
-}
 
-// export const VERBOSE = true
-export const VERBOSE = process.env.VERBOSE === 'true'
+import { app } from 'electron'
+
+// let app
+// try {
+//   app = require('electron').app
+// } catch (e) {
+//   console.warn('Failed to load electron library.')
+// }
+
+export const VERBOSE = !app.isPackaged
+// export const VERBOSE = process.env.VERBOSE === 'true'
 
 // If the user is nudged twice in this time, we won't show a notification.
 export const DOUBLE_NUDGE_THRESHOLD = 5 * 60 * 1000

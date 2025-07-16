@@ -46,11 +46,24 @@ export async function assessFlowFromScreenshot(
     )
   }
 
-  return await assessFlowWithOpenAI(
+  const openaiResult = await assessFlowWithOpenAI(
     client.openAiClient,
     base64content,
     goal,
     customInstructions,
     previousCaptures
   )
+
+  if ('error' in openaiResult) {
+    return openaiResult
+  }
+
+  return {
+    data: {
+      screenSummary: openaiResult.data.screenSummary,
+      messageToUser: openaiResult.data.messageToUser,
+      isFollowingGoals: openaiResult.data.isFollowingGoals,
+      goalUnclear: openaiResult.data.goalUnclear,
+    },
+  }
 }
