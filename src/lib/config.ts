@@ -27,8 +27,8 @@ export const IGNORE_UNTIL_MS = 1 * 60 * 1000
 
 export const NUDGE_AI_BASE_URL = app.isPackaged
   ? 'https://nudge.fyi/api'
-  : 'https://nudge.fyi/api'
-// 'http://localhost:3000/api'
+  : // : 'https://nudge.fyi/api'
+    'http://localhost:3000/api'
 
 if (VERBOSE) {
   console.log('NUDGE_AI_BASE_URL', NUDGE_AI_BASE_URL)

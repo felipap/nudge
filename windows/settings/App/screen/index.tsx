@@ -70,40 +70,42 @@ export const ScreenPermissions = withBoundary(() => {
         </p>
       </section>
 
-      <section className="flex flex-col gap-1 bg-apple-system-gray-6 dark:bg-apple-system-gray-4 p-4 py-3 rounded-md shadow-sm pr-5">
-        <div className="flex items-center gap-1  justify-between">
-          <div className="text-contrast text-[15px] font-medium antialiased font-display-3p">
-            Permission to capture your screen
+      <section className="flex flex-row justify-between bg-apple-system-gray-6 dark:bg-apple-system-gray-4 p-4 py-3 rounded-md shadow-sm pr-5">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-1  justify-between">
+            <div className="text-contrast text-[15px] font-medium antialiased font-display-3p">
+              Permission to capture your screen
+            </div>
           </div>
-          <div
-            className={twMerge(
-              'font-medium text-[15px]',
-              screenPermission === 'granted'
-                ? 'text-green-700 dark:text-green-300'
-                : 'text-red-500 dark:text-red-400'
-            )}
-          >
-            {screenPermission === 'granted' ? 'Granted' : 'Not granted'}
-          </div>
+          {screenPermission !== 'granted' && (
+            <div className="flex flex-col gap-2">
+              <p className="text-secondary [&>strong]:text-contrast/80 [&>strong]:font-normal pr-10">
+                Go to <strong>System Settings</strong> &gt;{' '}
+                <strong>Privacy &amp; Security</strong> &gt;{' '}
+                <strong>Screen Recording</strong>, find Nudge in the list and
+                turn the switch on.
+              </p>
+              <button
+                onClick={() => {
+                  openSystemSettings()
+                }}
+                className="self-start text-link hover:underline text-[13px]"
+              >
+                Open System Settings
+              </button>
+            </div>
+          )}
+        </div>{' '}
+        <div
+          className={twMerge(
+            'font-medium text-[15px] text-nowrap',
+            screenPermission === 'granted'
+              ? 'text-green-700 dark:text-green-300'
+              : 'text-red-500 dark:text-red-400'
+          )}
+        >
+          {screenPermission === 'granted' ? 'Granted' : 'Not granted'}
         </div>
-        {screenPermission !== 'granted' && (
-          <div className="flex flex-col gap-2">
-            <p className="text-secondary [&>strong]:text-contrast/80 [&>strong]:font-normal pr-10">
-              Go to <strong>System Settings</strong> &gt;{' '}
-              <strong>Privacy &amp; Security</strong> &gt;{' '}
-              <strong>Screen Recording</strong>, find Nudge in the list and turn
-              the switch on.
-            </p>
-            <button
-              onClick={() => {
-                openSystemSettings()
-              }}
-              className="self-start text-link hover:underline text-[13px]"
-            >
-              Open System Settings
-            </button>
-          </div>
-        )}
       </section>
 
       <div className="flex flex-col gap-1 flex-1"></div>
