@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/felipap/nudge/compare/v0.1.6...v0.1.7) (2025-07-16)
+
+
+### Features
+
+* allow double-nudge within first 20 mins ([665a4e9](https://github.com/felipap/nudge/commit/665a4e951f27d837b37d5834faa0e38a358aa1fe))
+* complain about screen capture broken ([d5eda5b](https://github.com/felipap/nudge/commit/d5eda5b8ccfd49d4001f4147c5e7ccbfc11dc8aa))
+* customizable cooldown ([63f0b33](https://github.com/felipap/nudge/commit/63f0b33c6a1d304157c7ad5bbcbbe46aa6d48e57))
+* use electron-log to write log files too ([d465d76](https://github.com/felipap/nudge/commit/d465d7688afa4e6393787aed97f14cbba3c49754))
+
+
+### Bug Fixes
+
+* dont use NODE_ENV ([c413e35](https://github.com/felipap/nudge/commit/c413e35da95228cf659620ebf2df117614dff907))
+* misc things ([d9f5694](https://github.com/felipap/nudge/commit/d9f56941ff0b92a11ad045ccc9625e328354ee8c))
+
 ### [0.1.6](https://github.com/felipap/nudge/compare/v0.1.5...v0.1.6) (2025-07-16)
 
 
