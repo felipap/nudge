@@ -13,7 +13,7 @@
     "make-arm64": "IS_MAKE=true electron-forge make --arch=\"arm64\"",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
-    "evals": "ts-node src/ai/openai/assess-capture/index.eval.ts && ts-node src/ai/openai/goal-feedback/index.eval.ts",
+    "evals": "NODE_ENV=test ts-node src/ai/openai/assess-capture/index.eval.ts && NODE_ENV=test ts-node src/ai/openai/goal-feedback/index.eval.ts",
     "app:dir": "electron-builder --dir",
     "app:dist": "electron-builder",
     "release": "standard-version"
@@ -71,6 +71,7 @@
     "@sentry/electron": "^6.8.0",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.0.12",
+    "@types/lodash": "^4.17.20",
     "assert": "^2.1.0",
     "class-variance-authority": "^0.7.1",
     "dayjs": "^1.11.13",

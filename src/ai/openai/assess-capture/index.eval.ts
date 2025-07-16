@@ -97,18 +97,23 @@ export async function runSingleExample(
       error = `Expected isFollowingGoals to be ${testCase.expected.isFollowingGoals}, but got ${assessment.isFollowingGoals}`
     }
 
+    const coloring = passed ? chalk.green : chalk.red
+
     // Log the assessment details for debugging
     const status = passed ? '✅ PASS' : '❌ FAIL'
-    log(
-      `[eval] ${status} Assessment for ${path.basename(
-        testCase.imageFilepath
-      )}:`
+
+    console.log(
+      coloring(
+        `[eval] ${status} Assessment for ${path.basename(
+          testCase.imageFilepath
+        )}:`
+      )
     )
-    log(`  Goal: ${testCase.goal}`)
-    log(`  Screen Summary: ${chalk.red(assessment.screenSummary)}`)
-    log(`  Is Following Goals: ${assessment.isFollowingGoals}`)
-    log(`  Message to User: ${assessment.messageToUser}`)
-    log(`  Response Time: ${responseTime}ms`)
+    console.log(`- Input: ${testCase.goal}`)
+    console.log(`- Screen summary: ${coloring(assessment.screenSummary)}`)
+    console.log(`- Following Goal?: ${assessment.isFollowingGoals}`)
+    // log(`  Message to User: ${assessment.messageToUser}`)
+    // log(`  Response Time: ${responseTime}ms`)
 
     if (!passed) {
       console.log(
@@ -204,8 +209,6 @@ export async function runDetailedEval(client: OpenAI): Promise<void> {
       } else {
         console.log(`   Actual isFollowingGoals: ${actualValue}`)
       }
-      console.log(`   Screen Summary: ${result.result.data.screenSummary}`)
-      console.log(`   Message to User: ${result.result.data.messageToUser}`)
     } else {
       console.log(
         `   \x1b[31mError: ${result.result.error}${
@@ -241,5 +244,7 @@ const EVALS_OPENAI_API_KEY = process.env.EVALS_OPENAI_API_KEY || ''
 if (!EVALS_OPENAI_API_KEY) {
   throw new Error('EVALS_OPENAI_API_KEY is not set')
 }
+
 const client = new OpenAI({ apiKey: EVALS_OPENAI_API_KEY })
+
 void runDetailedEval(client)
