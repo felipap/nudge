@@ -1,43 +1,23 @@
 import { OpenAI } from 'openai'
-// @ts-ignore
-import { zodResponseFormat } from 'openai/helpers/zod.mjs'
-import { warn } from '../../../lib/logger'
-import {
-  GoalFeedback,
-  GoalFeedbackResult,
-  GoalFeedbackStruct,
-} from '../../goal-feedback'
-import { safeOpenAIStructuredCompletion } from '../../models'
+import { zodResponseFormat } from 'openai/helpers/zod'
+import { z } from 'zod'
+import { Result, safeOpenAIStructuredCompletion } from '..'
+import { warn } from '../oai-logger'
 
-const SYSTEM_PROMPT = `You are an AI that helps users stay focused by monitoring their screen.
-A good goal tells us:
-1. What apps we'll see on screen or what activity they'll be doing (coding, writing, reading, messaging, etc)
-2. A time block or clear deliverable
+const OutputStruct = z.object({
+  isGood: z.boolean(),
+  impliedDuration: z.number().nullable(),
+  feedback: z.string(),
+  feedbackType: z.enum(['lacking-duration', 'unclear-apps', 'none']).nullable(),
+})
 
-We don't care about deliverables. What's important is that we're able to tell WHEN the user is procrastinating or not.
-
-Examples:
-- "Work on Nudge" -> Ask what they'll be doing (coding? writing docs?)
-- "Code project" -> Ask for a time block
-- "Code on Nudge for 2 hours" -> Return feedbackType=null
-- "Text friends for 30 minutes" -> Return feedbackType=null
-- "Write for 20 mins" -> Return feedbackType="lacking-duration"
-
-Communication activities (texting, messaging, emails) are valid screen activities when paired with a time block.
-If they mention an activity AND a time block, return feedbackType=null and feedback=null.
-If either is missing, return feedbackType="lacking-duration" or feedbackType="unclear-apps".
-
-Instructions:
-* Make only one reccomendation at a time.
-* Be extremely succinct. Example: "Mention which apps are ok to use."
-* Don't use "Please". You're giving the user a suggestion, not a request.
-`
+export type Output = z.infer<typeof OutputStruct>
 
 export async function getGoalFeedbackFromOpenAI(
   client: OpenAI,
   goal: string
-): Promise<GoalFeedbackResult> {
-  const res = await safeOpenAIStructuredCompletion<GoalFeedback>(client, {
+): Promise<Result<Output>> {
+  const res = await safeOpenAIStructuredCompletion<Output>(client, {
     model: 'gpt-4o-mini',
     messages: [
       {
@@ -50,7 +30,7 @@ export async function getGoalFeedbackFromOpenAI(
       },
     ],
     temperature: 0.2,
-    response_format: zodResponseFormat(GoalFeedbackStruct, 'GoalFeedback'),
+    response_format: zodResponseFormat(OutputStruct, 'GoalFeedback'),
   })
 
   if ('error' in res) {
@@ -60,3 +40,78 @@ export async function getGoalFeedbackFromOpenAI(
 
   return res
 }
+
+// Keep in sync with nudge/src/lib/ai/goal-feedback/direct.ts
+const SYSTEM_PROMPT = `
+
+You're part of Nudge, a macOS app that helps users stay focused by monitoring their screen for distractions. Users describe an activity ("I want to work on a presentation for 30 minutes") and the app notifies them when they start doing something else.
+
+First, you will help users describe an activity well enough so that the app can reliably monitor for minimizing false positives (ie. the app THINKS the user is distracted but they're not).
+
+A good activity description:
+1. Helps us understand whether the user is distracted just by looking at their screen.
+2. Tells us HOW LONG the user will be doing the activity.
+
+Notice that we care about WHAT the user will be doing. We DON'T care whether they choose a reasonable acitvity; or the right amount of time; or a good deliverable to work on.
+
+<INSTRUCTIONS>
+* Don't use "Please". You're giving the user a suggestion, not a request.
+* If both activity and duration are missing, favor unclear-apps as the feedback.
+* Don't be difficult, don't be pedantic.
+</INSTRUCTIONS>
+
+<EXAMPLES>
+
+<GOOD_EXAMPLE>
+INPUT: "I want to write on Notion for 20 minutes."
+OUTPUT: feedbackType=null, reasoning="Check if user is using Notion.", activityDurationMins=20
+</GOOD_EXAMPLE>
+
+<GOOD_EXAMPLE>
+INPUT: "Help me stay focused on my Physics lectures on YouTube or taking notes. Let's do it for an hour."
+OUTPUT: feedbackType=null, reasoning="Check if user is on YouTube watching videos related to Physics.", activityDurationMins=60
+</GOOD_EXAMPLE>
+
+<GOOD_EXAMPLE>
+INPUT: "Can I code for another 15 mins?"
+OUTPUT: feedbackType=null, reasoning="Check if user is using a code editor, terminals, debugging tools, StackOverflow, asking AI about code etc.", activityDurationMins=15
+</GOOD_EXAMPLE>
+
+<GOOD_EXAMPLE>
+INPUT: "I gotta reply to emails for an hour"
+OUTPUT: feedbackType=null, reasoning="Check if user is using an email client.", activityDurationMins=60
+</GOOD_EXAMPLE>
+
+<GOOD_EXAMPLE>
+INPUT: "I want to finally text my friends for 5 minutes"
+OUTPUT: feedbackType=null, reasoning="Check that user is using a messaging app.", activityDurationMins=5
+</GOOD_EXAMPLE>
+
+<BAD_EXAMPLE>
+INPUT: "I want to write for an hour."
+OUTPUT: feedbackType="unclear-apps", reasoning="It's not clear where the user wants to write, which will make it hard to detect distractions."
+</BAD_EXAMPLE>
+
+<BAD_EXAMPLE>
+INPUT: "I want to take a nap for an hour."
+OUTPUT: feedbackType="unclear-apps", reasoning="We can't monitor if the user is napping."
+</BAD_EXAMPLE>
+
+<BAD_EXAMPLE>
+INPUT: "I want to read a PDF"
+OUTPUT: feedbackType="lacking-duration", reasoning="User didn't specify how long they want to read for."
+</BAD_EXAMPLE>
+
+<BAD_EXAMPLE>
+INPUT: "I want to code till midnight"
+OUTPUT: feedbackType="lacking-duration", reasoning="User needs to specify an exact duration for the activity."
+</BAD_EXAMPLE>
+
+<BAD_EXAMPLE>
+INPUT: "I want to read this book for as long as I can"
+OUTPUT: feedbackType="lacking-duration", reasoning="User needs to specify an exact duration for the activity."
+</BAD_EXAMPLE>
+
+</EXAMPLES>
+
+`.trim()

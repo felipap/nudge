@@ -6,11 +6,11 @@ import OpenAI from 'openai'
 import path from 'path'
 import { log, warn } from '../../../lib/logger'
 import examples, { TestCase } from './evals'
-import { assessFlowWithOpenAI, AssessmentResult } from './index'
+import { assessFlowWithOpenAI, Result } from './index'
 
 interface TestResult {
   testCase: TestCase
-  result: AssessmentResult
+  result: Result
   passed: boolean
   error?: string
   metrics: {
@@ -178,8 +178,6 @@ export async function runEval(client: OpenAI): Promise<EvalSummary> {
 
 export async function runDetailedEval(client: OpenAI): Promise<void> {
   const summary = await runEval(client)
-
-  return
 
   console.log('\n=== DETAILED EVALUATION RESULTS ===\n')
 

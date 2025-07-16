@@ -1,14 +1,18 @@
 /* eslint-disable no-console */
 
+import OpenAI from 'openai'
 import { zodResponseFormat } from 'openai/helpers/zod'
 import { z } from 'zod'
-import { getGoalFeedback, type GoalFeedback } from './index'
-import { getModelClient } from '../models'
+import { getGoalFeedbackFromOpenAI, Output } from './index'
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || ''
 if (!OPENAI_API_KEY) {
   throw new Error('OPENAI_API_KEY is not set')
 }
+
+const client = new OpenAI({
+  apiKey: OPENAI_API_KEY,
+})
 
 interface TestCase {
   goal: string
@@ -46,17 +50,11 @@ const JudgeSchema = z.object({
 })
 
 async function judgeResponse(
-  feedback: GoalFeedback,
+  feedback: Output,
   testCase: TestCase,
   goal: string
 ) {
-  const client = getModelClient({
-    name: 'openai-4o',
-    key: OPENAI_API_KEY!,
-    validatedAt: null,
-  })
-
-  const response = await client.openAiClient.beta.chat.completions.parse({
+  const response = await client.chat.completions.parse({
     model: 'gpt-4.1-mini',
     messages: [
       {
@@ -106,12 +104,7 @@ async function runEvals() {
     )
 
     try {
-      const client = getModelClient({
-        name: 'openai-4o',
-        key: OPENAI_API_KEY!,
-        validatedAt: null,
-      })
-      const res = await getGoalFeedback(client, testCase.goal)
+      const res = await getGoalFeedbackFromOpenAI(client, testCase.goal)
       console.log('Got feedback:', res)
 
       if ('error' in res) {

@@ -1,17 +1,10 @@
 import { OpenAI } from 'openai'
-// @ts-ignore
-import { zodResponseFormat } from 'openai/helpers/zod.mjs'
+import { zodResponseFormat } from 'openai/helpers/zod'
 import { z } from 'zod'
-import { debug, log, warn } from '../../../lib/logger'
+import { Result, safeOpenAIStructuredCompletion } from '..'
+import { debug, log, warn } from '../oai-logger'
 
-type ModelError =
-  | 'unknown'
-  | 'no-api-key'
-  | 'bad-api-key'
-  | 'rate-limit'
-  | 'no-internet'
-
-const AssessmentStruct = z.object({
+const OutputStruct = z.object({
   screenSummary: z.string(),
   messageToUser: z.string(),
   isFollowingGoals: z.boolean(),
@@ -20,89 +13,60 @@ const AssessmentStruct = z.object({
     .describe(`Set to true when the goal is absolutely unclear.`),
 })
 
-export type Assessment = z.infer<typeof AssessmentStruct>
-
-export type AssessmentResult =
-  | {
-      data: Assessment
-    }
-  | {
-      error: ModelError
-      message?: string
-    }
+export type Output = z.infer<typeof OutputStruct>
 
 export async function assessFlowWithOpenAI(
-  openAIClient: OpenAI,
-  base64content: string,
+  client: OpenAI,
+  imageBase64: string,
   goal: string,
   customInstructions: string | null,
   previousCaptures: string[]
-): Promise<AssessmentResult> {
+): Promise<Result<Output>> {
   const systemPrompt = makeSystemPrompt(
     goal,
     customInstructions,
     previousCaptures
   )
+
   debug('[ai/assess-flow] systemPrompt', systemPrompt)
   debug('[ai/assess-flow] Calling OpenAI...')
 
   const start = Date.now()
 
-  let result
-  try {
-    result = await openAIClient.beta.chat.completions.parse({
-      model: 'gpt-4o-mini',
-      messages: [
-        {
-          role: 'system',
-          content: systemPrompt,
-        },
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'image_url',
-              image_url: {
-                url: base64content,
-              },
+  const result = await safeOpenAIStructuredCompletion<Output>(client, {
+    model: 'gpt-4o-mini',
+    messages: [
+      {
+        role: 'system',
+        content: systemPrompt,
+      },
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'image_url',
+            image_url: {
+              url: imageBase64,
             },
-          ],
-        },
-      ],
-      response_format: zodResponseFormat(AssessmentStruct, 'suggestions'),
-      max_tokens: 300,
-      temperature: 0.6,
-    })
-  } catch (e) {
-    warn('[ai/assess-flow] completion threw!', e)
+          },
+        ],
+      },
+    ],
+    response_format: zodResponseFormat(OutputStruct, 'suggestions'),
+    max_tokens: 300,
+    temperature: 0.6,
+  })
 
-    if (e instanceof OpenAI.APIConnectionError) {
-      return {
-        error: 'no-internet',
-      }
-    }
-    if (e instanceof OpenAI.AuthenticationError) {
-      return {
-        error: 'bad-api-key',
-      }
-    }
-    if (e instanceof OpenAI.RateLimitError) {
-      return {
-        error: 'rate-limit',
-      }
-    }
-
-    return {
-      error: 'unknown',
-      message: e.message,
-    }
+  if ('error' in result) {
+    warn('[ai/assess-flow] Error', result)
+    return result
   }
 
   const elapsedMs = Date.now() - start
 
   log('[ai/assess-flow] elapsedMs', `${(elapsedMs / 1000).toFixed(2)}s`)
 
-  const parsed = result.choices[0].message.parsed
+  const parsed = result.data
   if (!parsed) {
     return {
       error: 'unknown',
@@ -110,7 +74,7 @@ export async function assessFlowWithOpenAI(
     }
   }
 
-  // log('[ai/assess-flow] assessment', parsed)
+  log('[ai/assess-flow] assessment', parsed)
 
   return {
     data: parsed,
