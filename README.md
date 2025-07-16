@@ -93,6 +93,7 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 
 [![Downloads Badge](https://img.shields.io/github/downloads/felipap/nudge/total.svg?color=green)](https://tooomm.github.io/github-release-stats/?username=felipap&repository=nudge)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/felipap/nudge/test.yml)](https://github.com/felipap/nudge/actions)
+[![Eval Status](https://img.shields.io/github/actions/workflow/status/felipap/nudge/evals.yml?color=orange&label=evals)](https://github.com/felipap/nudge/actions)
 
 ## License
 
