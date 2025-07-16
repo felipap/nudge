@@ -27,6 +27,8 @@ import {
 import { onClickCheckForUpdates, updaterState } from './updater'
 import { mainWindow, prefWindow } from './windows'
 
+const IS_DEV = process.env.NODE_ENV === 'development'
+
 dayjs.extend(relativeTime)
 
 export function createTray() {
@@ -132,9 +134,7 @@ export function createTray() {
       },
       { type: 'separator' },
       {
-        label: `Version ${app.getVersion()}${
-          process.env.NODE_ENV === 'development' ? ' (dev)' : ''
-        }`,
+        label: `Version ${app.getVersion()}${IS_DEV ? ' (dev)' : ''}`,
         enabled: false,
       },
     ])

@@ -7,7 +7,7 @@ import { assessFlowWithOpenAI } from './openai/assess-capture'
 
 export type CaptureAssessment = {
   screenSummary: string
-  messageToUser: string
+  notificationToUser: string
   isFollowingGoals: boolean
   goalUnclear: boolean
 }
@@ -49,7 +49,7 @@ export async function assessFlowFromScreenshot(
   return {
     data: {
       screenSummary: openaiResult.data.screenSummary,
-      messageToUser: openaiResult.data.messageToUser,
+      notificationToUser: openaiResult.data.notificationToUser,
       isFollowingGoals: openaiResult.data.isFollowingGoals,
       goalUnclear: openaiResult.data.goalUnclear,
     },

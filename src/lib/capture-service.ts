@@ -223,6 +223,7 @@ async function captureAssessAndNudge(force = false) {
       ? ''
       : assessment.data.screenSummary || '',
     impossibleToAssess: assessment.data.goalUnclear,
+    notificationToUser: assessment.data.notificationToUser,
   }
 
   // Update the active capture.
@@ -245,7 +246,7 @@ async function captureAssessAndNudge(force = false) {
 
   const shouldNotify = force || shouldNotifyUser(capture)
   if (shouldNotify) {
-    showNotification(assessment.data.messageToUser)
+    showNotification(assessment.data.notificationToUser)
   } else {
     debug('[capture] Skipping notification')
   }

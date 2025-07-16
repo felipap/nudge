@@ -2,26 +2,40 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { GhostIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { State } from '../../../../src/store/types'
-import { useBackendState } from '../../../shared/ipc'
-import { FaHandPeace, FaSkull } from '../../../shared/ui/icons'
-import { withBoundary } from '../../../shared/ui/withBoundary'
+import { State } from '../../../../../src/store/types'
+import { useBackendState } from '../../../../shared/ipc'
+import { FaHandPeace, FaSkull } from '../../../../shared/ui/icons'
+import { WidgetTooltip } from '../../../../shared/ui/WidgetTooltip'
+import { withBoundary } from '../../../../shared/ui/withBoundary'
 
 const ONE_MINUTE = 1 * 60 * 1_000
 
-function useFeedback(): Feedback {
+type Feedback = { type: FeedbackType; message: string | null }
+
+type FeedbackType =
+  | 'capturing'
+  | 'improve-goal'
+  | 'credential-error'
+  | 'rate-limit'
+  | 'unknown-error'
+  | 'doing-great'
+  | 'internet-error'
+  | 'distracted'
+  | 'no-api-key'
+
+function useCaptureAssessment(): Feedback | null {
   useRenderEvery(5_000)
 
   const { stateRef } = useBackendState()
-  const [feedback, setFeedback] = useState<Feedback>(null)
+  const [feedback, setFeedback] = useState<Feedback | null>(null)
 
   useEffect(() => {
-    setFeedback(getFeedbackFromState(stateRef.current!))
+    setFeedback(extractAssessmentFromState(stateRef.current!))
   }, [stateRef])
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const feedback = getFeedbackFromState(stateRef.current!)
+      const feedback = extractAssessmentFromState(stateRef.current!)
       setFeedback(feedback)
     }, 1_000)
     return () => clearInterval(interval)
@@ -32,10 +46,10 @@ function useFeedback(): Feedback {
 
 // Would prefer to call it Feedback but don't want to conflict with the goal
 // feedback component.
-export const Feedback = withBoundary(() => {
-  const feedback = useFeedback()
+export const Assessment = withBoundary(() => {
+  const assessment = useCaptureAssessment()
 
-  if (!feedback) {
+  if (!assessment) {
     return null
   }
 
@@ -43,47 +57,81 @@ export const Feedback = withBoundary(() => {
   let text = null
 
   let className = 'text-gray-400'
-  if (feedback === 'capturing') {
+  if (assessment.type === 'capturing') {
     text = 'Capturing screen...'
-  } else if (feedback === 'improve-goal') {
+  } else if (assessment.type === 'improve-goal') {
     className = 'text-yellow-800 dark:text-yellow-300'
     text = 'Your goal is unclear'
-  } else if (feedback === 'doing-great') {
+  } else if (assessment.type === 'doing-great') {
     text = 'Doing great'
     icon = (
       <FaHandPeace className="h-3 w-3 text-green-800 dark:text-green-300" />
     )
     className = 'text-green-800 dark:text-green-300'
-  } else if (feedback === 'distracted') {
+  } else if (assessment.type === 'distracted') {
     text = 'You look distracted'
     icon = genErrorIcon()
     className = 'text-red-800 dark:text-red-400'
-  } else if (feedback === 'credential-error') {
+  } else if (assessment.type === 'credential-error') {
     text = 'Problem with your OpenAI key'
     className = 'text-red-800 dark:text-red-300'
-  } else if (feedback === 'rate-limit') {
+  } else if (assessment.type === 'rate-limit') {
     text = 'OpenAI rate-limited us'
     className = 'text-red-800 dark:text-red-300'
-  } else if (feedback === 'internet-error') {
+  } else if (assessment.type === 'internet-error') {
     text = 'No internet'
     className = 'text-red-800 dark:text-red-300'
-  } else if (feedback === 'unknown-error') {
+  } else if (assessment.type === 'unknown-error') {
     text = 'AI failed with unknown error'
     className = 'text-red-800 dark:text-red-300'
-  } else if (feedback === 'no-api-key') {
+  } else if (assessment.type === 'no-api-key') {
     text = 'No model key'
     className = 'text-red-800 dark:text-red-300'
   } else {
-    feedback satisfies never
-    text = `Unknown error ${feedback}`
+    assessment.type satisfies never
+    text = `Unknown status ${assessment.type}`
   }
+
+  function getTooltipContent(
+    type: FeedbackType,
+    message: string | null
+  ): string | null {
+    if (message) {
+      return message
+    }
+
+    switch (type) {
+      // case 'capturing':
+      //   return 'Nudge is currently analyzing your screen to assess your progress'
+      case 'improve-goal':
+        return 'Your goal needs to be more specific for better assessment'
+      // case 'doing-great':
+      //   return "You're making good progress toward your goal!"
+      // case 'distracted':
+      //   return 'You appear to be off-task from your stated goal'
+      case 'credential-error':
+        return "There's an issue with your OpenAI API key configuration"
+      case 'rate-limit':
+        return 'OpenAI is rate-limiting requests. Please try again later'
+      case 'internet-error':
+        return 'No internet connection detected'
+      case 'unknown-error':
+        return 'An unexpected error occurred during assessment'
+      case 'no-api-key':
+        return 'No API key configured. Please set up your OpenAI API key in settings'
+      default:
+        return null
+    }
+  }
+
+  const tooltipContent = getTooltipContent(assessment.type, assessment.message)
 
   return (
     <div className="relative h-full w-full">
-      <AnimatePresence>
+      <WidgetTooltip content={tooltipContent} className="w-[200px]">
         <motion.div
           // Force a re-render when the feedback changes.
-          key={feedback}
+          key={assessment.type}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -92,7 +140,7 @@ export const Feedback = withBoundary(() => {
         >
           <div
             className={twMerge(
-              'w-full text-[14px] pr-3 font-medium text-gray-500  font-display-3p flex flex-row gap-2 items-center',
+              'w-full text-[14px] pr-3 font-medium text-gray-500  font-display-3p flex flex-row gap-2 items-center cursor-help',
               className
             )}
           >
@@ -102,7 +150,7 @@ export const Feedback = withBoundary(() => {
             <div className="shrink-0">{icon}</div>
           </div>
         </motion.div>
-      </AnimatePresence>
+      </WidgetTooltip>
     </div>
   )
 })
@@ -129,21 +177,12 @@ function genErrorIcon(key?: string) {
   // }
 }
 
-type Feedback =
-  | 'capturing'
-  | 'improve-goal'
-  | 'credential-error'
-  | 'rate-limit'
-  | 'unknown-error'
-  | 'doing-great'
-  | 'internet-error'
-  | 'distracted'
-  | 'no-api-key'
-  | null
-
-function getFeedbackFromState(state: State | null): Feedback {
+function extractAssessmentFromState(state: State | null): {
+  type: FeedbackType
+  message: string | null
+} | null {
   if (state?.captureStartedAt || state?.assessStartedAt) {
-    return 'capturing'
+    return { type: 'capturing', message: null }
   }
 
   const relevantCapture =
@@ -167,34 +206,32 @@ function getFeedbackFromState(state: State | null): Feedback {
         new Date(state.activeCapture.at).getTime()) &&
     state.activeCapture
 
-  console.log('activeCapture', relevantCapture)
-
   if (!relevantCapture) {
     return null
   }
 
   if ('modelError' in relevantCapture) {
     if (relevantCapture.modelError === 'rate-limit') {
-      return 'rate-limit'
+      return { type: 'rate-limit', message: null }
     }
     if (relevantCapture.modelError === 'bad-api-key') {
-      return 'credential-error'
+      return { type: 'credential-error', message: null }
     }
     if (relevantCapture.modelError === 'no-api-key') {
-      return 'no-api-key'
+      return { type: 'no-api-key', message: null }
     }
     if (relevantCapture.modelError === 'no-internet') {
-      return 'internet-error'
+      return { type: 'internet-error', message: null }
     }
-    return 'unknown-error'
+    return { type: 'unknown-error', message: null }
   }
 
   if (relevantCapture.impossibleToAssess) {
-    return 'improve-goal'
+    return { type: 'improve-goal', message: relevantCapture.notificationToUser }
   }
   if (relevantCapture.inFlow) {
-    return 'doing-great'
+    return { type: 'doing-great', message: relevantCapture.notificationToUser }
   }
 
-  return 'distracted'
+  return { type: 'distracted', message: relevantCapture.notificationToUser }
 }

@@ -6,7 +6,7 @@ import { CaptureAssessmentResult } from '../assess-capture'
 // Keep in sync with nudge-web/app/api/assess-capture/route.ts
 const ResponseStruct = z.object({
   screenSummary: z.string(),
-  messageToUser: z.string(),
+  notificationToUser: z.string(),
   isFollowingGoals: z.boolean(),
   goalUnclear: z.boolean(),
 })
@@ -46,7 +46,7 @@ export async function assessFlowFromNudgeAPI(
   return {
     data: {
       screenSummary: (result.data as any).screenSummary,
-      messageToUser: (result.data as any).messageToUser,
+      notificationToUser: (result.data as any).notificationToUser,
       isFollowingGoals: (result.data as any).isFollowingGoals,
       goalUnclear: (result.data as any).goalUnclear,
     },

@@ -10,7 +10,7 @@ export interface TestCase {
   expected: {
     isFollowingGoals: boolean
     screenSummary?: string
-    messageToUser?: string
+    notificationToUser?: string
   }
 }
 

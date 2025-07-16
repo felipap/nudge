@@ -5,6 +5,9 @@ export interface Capture {
   at: string
   inFlow: boolean
   impossibleToAssess: boolean
+  // Makes sense to put this here even though it's not exactly a property of the
+  // capture.
+  notificationToUser: string | null
 }
 
 export interface LatestCapture extends Capture {

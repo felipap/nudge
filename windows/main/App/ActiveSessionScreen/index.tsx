@@ -7,7 +7,7 @@ import { FaStop } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { GoalTextarea } from '../GoalTextarea'
 import { Nav, NavLine } from '../Nav'
-import { Feedback } from './Feedback'
+import { Assessment } from './Assessment'
 import { SessionButton } from './SessionButton'
 import { useActiveSession } from './useActiveSession'
 import { useActiveGoalContentWithSync } from './useActiveSessionGoalWithSync'
@@ -21,7 +21,7 @@ export const ActiveSessionScreen = withBoundary(() => {
   const [editorHasFocus, setEditorHasFocus] = useState(false)
 
   const { paused, pause, clear, resume } = useActiveSession()
-  useWindowHeight(paused ? 400 : 200)
+  useWindowHeight(paused ? 400 : 250)
 
   function onModifyGoal() {
     if (!paused) {
@@ -100,7 +100,7 @@ export const ActiveSessionScreen = withBoundary(() => {
             <NewGoalButton onClick={clear} />
           </motion.div>
         ) : (
-          <Feedback />
+          <Assessment />
         )}
       </footer>
     </div>

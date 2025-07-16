@@ -15,9 +15,7 @@
 - [ ] Fix: height of active session is bouncing on reload
 - [ ] CI: figure out how to make pre-release builds.
 - [ ] Figure out a way around breaking changes. (Force update?)
-- [ ] Find a way to scrape off most sensitive data locally?
-- [ ] Can we check that the app is running from inside a Terminal?
-- [ ] Notification: test access by asking users to click on the notification.23
+- [ ] Notification: test access by asking users to click on the notification.
 - [ ] Fix: permission errors still silent.
 - [ ] Fix: "Rate limit exceeded" error for OpenAI keys without billing setup.
 - [ ] Improve notification clarity - make it obvious when users should expect notifications.
@@ -37,6 +35,7 @@
 
 - [x] Landing page.
 - [ ] Feat: how do you get Nudge to learn?
+- [ ] Find a way to scrape off most sensitive data locally?
 - [ ] Way to give feedback in the app.
 - [ ] Consider chat-based interaction: "you said you wanted to look at camping plans but you're buying pants" with ability to reply.
 - [ ] Activate notifications for GitHub issues.

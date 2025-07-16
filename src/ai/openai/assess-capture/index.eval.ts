@@ -105,7 +105,7 @@ export async function runSingleExample(
     console.log(`- Input: ${testCase.goal}`)
     console.log(`- Screen summary: ${coloring(assessment.screenSummary)}`)
     console.log(`- Following goal?: ${assessment.isFollowingGoals}`)
-    // log(`  Message to User: ${assessment.messageToUser}`)
+    // log(`  Message to User: ${assessment.notificationToUser}`)
     // log(`  Response Time: ${responseTime}ms`)
 
     if (!passed) {

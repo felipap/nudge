@@ -7,7 +7,7 @@ import { Result, safeOpenAIStructuredCompletion } from '../utils'
 
 const OutputStruct = z.object({
   screenSummary: z.string(),
-  messageToUser: z.string(),
+  notificationToUser: z.string(),
   isFollowingGoals: z.boolean(),
   goalUnclear: z
     .boolean()
@@ -96,9 +96,10 @@ You're a productivity assistant that notifies the user when they look distracted
 Instructions:
 1. Given a screenshot of the user's screen, provide a summary of what you see, regardless of the user's intended activity.
 2. Read the user's desired activity and decide if they are doing what they said they'd do.
-3. If not, write a very short (<300 chars) message nudging the user back into flow. Be creative.
+3. If not, write a very short (<200 chars) message nudging the user back into flow. Be creative.
 4. DON'T be annoying, pedantic or split hairs.
 4.1. Consider that the user may be _starting_ the task at hand.
+5. Chill with the exclamation marks.
 
 <USER_INTENDED_ACTIVITY>
 ${goal}
@@ -124,7 +125,7 @@ Your response should follow this JSON structure:
 {
   "screenSummary": "The user is...",
   "isFollowingGoals": boolean,
-  "messageToUser": string,
+  "notificationToUser": string, // <120 chars
   "goalUnclear": boolean
 }
 
