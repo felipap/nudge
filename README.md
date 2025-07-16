@@ -41,7 +41,7 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 
 <details>
   <summary>
-    How does Nudge work?
+    <strong>How does Nudge work?</strong>
   </summary>
   <p>
     Nudge takes a picture of your screen every few seconds, then asks GPT-4o if it looks like you're engaged in the activity you chose for yourself. If not, Nudge sends you a notification.
@@ -49,7 +49,21 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 </details>
 <details>
   <summary>
-    What data does Nudge collect?
+    <strong>What is Nudge Cloud?</strong>
+  </summary>
+  <p>
+    It's a way to use Nudge without an OpenAI API key. Instead of sending screenshots to OpenAI, Nudge sends them to a server that we run, which then sends them to OpenAI. We do this to make Nudge accessible to everyone, even non-technical users.
+  </p>
+  <p>
+    Screenshots are very sensitive data. I don't retain them in any way, just pass them along to OpenAI and send back the result.
+  </p>
+  <p>
+    Believe me, I would rather not host any servers, but it's the only way I found to make Nudge accessible to non-technical people. You can contact me at felipe@portalform.com with any questions or concerns.
+  </p>
+</details>
+<details>
+  <summary>
+    <strong>What data does Nudge collect?</strong>
   </summary>
   <p>
     Nudge has two modes: local and cloud. Local means you run the app on your computer and talk to the OpenAI API directly, using a key you provide. In this mode, we don't see any of your data.
@@ -82,7 +96,7 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
     Depends on the model you use, the size of your screen, and the frequency of captures.
   </p>
   <p>
-    During a test on July 2nd 2025, I found each image in my 1470x956 macOS translated into ~14k input tokens. In default settings (GPT-4o-mini, 1 minute capture frequency), this means $0.002 USD per minute that Nudge is active, or 12 cents per hour.
+    During a test on July 2nd 2025, I found that each screenshot of my 1470x956 Mac translated into ~14k input tokens in GPT-4o-mini. In default settings (1 minute capture frequency), this means $0.002 USD per minute that Nudge is active, or 12 cents per hour.
   </p>
   <p>
     I'm interested in ways to make this cheaper. If you have ideas, <a href="https://github.com/felipap/nudge/discussions/new">start a discussion.</a>
