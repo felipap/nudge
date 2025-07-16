@@ -8,6 +8,24 @@ export function getImagePath(name: string) {
   return path.join(base, name)
 }
 
+export function getIsOutsideApplicationsFolder(): boolean {
+  if (process.platform !== 'darwin') {
+    // Only relevant on macOS
+    return false
+  }
+
+  if (!app.isPackaged) {
+    return true
+  }
+
+  const appPath = app.getPath('exe')
+  const normalizedPath = path.resolve(appPath)
+
+  // This is leaky but it's an easy way to accept both /Applications and
+  // ~/Applications.
+  return !normalizedPath.includes('/Applications/')
+}
+
 type Falsy = false | 0 | '' | null | undefined
 export const isTruthy = <T>(x: T | Falsy): x is T => !!x
 

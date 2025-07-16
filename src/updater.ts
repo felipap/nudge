@@ -1,7 +1,7 @@
 import { app, autoUpdater, dialog } from 'electron'
 import { UPDATE_CHECK_AFTER_STARTUP } from './lib/config'
 import { debug, logError } from './lib/logger'
-import { getImagePath } from './lib/utils'
+import { getImagePath, getIsOutsideApplicationsFolder } from './lib/utils'
 
 // autoUpdater downloads the latest version of the app. Then I think it starts a
 // new ShipIt process that waits until the app is closed (whenever that
@@ -18,6 +18,8 @@ import { getImagePath } from './lib/utils'
 // autoUpdater by default. If the user opens the app and crashes ShipIt,
 // whatever. They'll update next time.
 
+const isOutsideApplicationsFolder = getIsOutsideApplicationsFolder()
+
 // Do a check 2 minutes in.
 setTimeout(async () => {
   if (!app.isPackaged) {
@@ -29,6 +31,8 @@ setTimeout(async () => {
   debug('[updater] status', status)
   if (status === 'downloaded') {
     await showDownloadedDialog()
+  } else if (status === 'outside-macos-apps') {
+    // Only show this when the user actively clicks to update.
   }
 }, UPDATE_CHECK_AFTER_STARTUP)
 
@@ -37,6 +41,15 @@ autoUpdater.setFeedURL({
     process.arch
   }/${app.getVersion()}`,
 })
+
+async function showOutsideApplicationsFolderDialog() {
+  await dialog.showMessageBox({
+    type: 'info',
+    message: 'Move Nudge to the Applications folder',
+    detail: `Nudge can't be updated because it's outside the Applications folder. Move it there and try again.`,
+    icon: getImagePath('original.png'),
+  })
+}
 
 async function showDownloadedDialog() {
   const result = await dialog.showMessageBox({
@@ -93,6 +106,11 @@ export async function onClickCheckForUpdates() {
     return
   }
 
+  if (status === 'outside-macos-apps') {
+    await showOutsideApplicationsFolderDialog()
+    return
+  }
+
   await showDownloadedDialog()
 }
 
@@ -106,7 +124,15 @@ let isCheckingForUpdatesOrDownloading = false
  */
 async function asyncCheckForUpdatesAndDownload(
   onAvailableAndDownloading?: () => void
-): Promise<'failed' | 'not-available' | 'downloaded'> {
+): Promise<'failed' | 'not-available' | 'downloaded' | 'outside-macos-apps'> {
+  // Would be nice to only return this when the update is available, but AFAIK
+  // if the update is available ShipIt _will_ try to install it and then fail,
+  // and then complain. (Abhi reported this.) So we have to NOT check for the
+  // update.
+  if (isOutsideApplicationsFolder) {
+    return 'outside-macos-apps'
+  }
+
   if (isCheckingForUpdatesOrDownloading) {
     return 'failed'
   }
