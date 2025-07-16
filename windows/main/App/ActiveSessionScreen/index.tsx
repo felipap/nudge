@@ -21,7 +21,7 @@ export const ActiveSessionScreen = withBoundary(() => {
   const [editorHasFocus, setEditorHasFocus] = useState(false)
 
   const { paused, pause, clear, resume } = useActiveSession()
-  useWindowHeight(paused ? 400 : 250)
+  useWindowHeight(paused ? 250 : 250)
 
   function onModifyGoal() {
     if (!paused) {

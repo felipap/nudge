@@ -108,7 +108,9 @@ export async function captureActiveScreen(): Promise<
   // Check permissions first
   const hasPermission = checkScreenPermissions()
   if (!hasPermission) {
-    throw new Error('Screen recording permission required')
+    return {
+      error: 'No permission to capture',
+    }
   }
 
   // https://www.electronjs.org/docs/latest/api/desktop-capturer

@@ -15,7 +15,7 @@ import {
   store,
 } from '../store'
 import { Capture } from '../store/types'
-import { DOUBLE_NUDGE_THRESHOLD_MINS, IGNORE_UNTIL_MS } from './config'
+import { IGNORE_UNTIL_MS } from './config'
 import { captureException, debug, error, log, logError, warn } from './logger'
 import { captureActiveScreen } from './screenshot'
 
@@ -160,7 +160,6 @@ async function captureAssessAndNudge(force = false) {
   try {
     ;({ error: captureError, data: captureDataUrl } =
       await captureActiveScreen())
-    assert(captureDataUrl, '!captureDataUrl')
   } catch (e) {
     logError('[capture] captureActiveScreen THREW', e)
     captureException(e)
@@ -170,9 +169,12 @@ async function captureAssessAndNudge(force = false) {
   }
 
   if (captureError) {
+    maybeComplainAboutBrokenScreenCapture()
     warn('[capture] captureActiveScreen returned error', { captureError })
     return
   }
+
+  assert(captureDataUrl, '!captureDataUrl')
 
   setPartialState({
     assessStartedAt: new Date().toISOString(),
@@ -246,7 +248,7 @@ async function captureAssessAndNudge(force = false) {
 
   const shouldNotify = force || shouldNotifyUser(capture)
   if (shouldNotify) {
-    showNotification(assessment.data.notificationToUser)
+    showNudgeNotification(assessment.data.notificationToUser)
   } else {
     debug('[capture] Skipping notification')
   }
@@ -262,7 +264,7 @@ function shouldNotifyUser(capture: Capture) {
   return dayjs(lastNotificationAt).isBefore(threshold)
 }
 
-function showNotification(body: string) {
+function showNudgeNotification(body: string) {
   const notif = new Notification({
     title: 'Message from Nudge',
     body: body,
@@ -295,3 +297,34 @@ function getFrequencyMs() {
 // store.subscribe((state) => {
 //   frequencyMs = (state.captureEverySeconds || 60) * 1000
 // })
+
+// Every 5 minutes, we'll allow ourselves to send a notification when screen
+// capture fails.
+let lastComplainedAboutBrokenCaptureAt: Date | null = null
+
+function maybeComplainAboutBrokenScreenCapture() {
+  if (
+    lastComplainedAboutBrokenCaptureAt &&
+    dayjs(lastComplainedAboutBrokenCaptureAt).isAfter(
+      dayjs().subtract(5, 'minutes')
+    )
+  ) {
+    debug('[capture] already complained about broken capture')
+    return
+  }
+  lastComplainedAboutBrokenCaptureAt = new Date()
+
+  const notif = new Notification({
+    title: 'Issue with Nudge',
+    body: 'Screen capture is not working.',
+    silent: true,
+    sound: 'Blow.aiff',
+    timeoutType: 'default',
+  })
+
+  notif.show()
+
+  setTimeout(() => {
+    notif.close()
+  }, 20_000)
+}
