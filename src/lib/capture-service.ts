@@ -246,7 +246,7 @@ async function captureAssessAndNudge(force = false) {
     return
   }
 
-  const shouldNotify = force || shouldNotifyUser(capture)
+  const shouldNotify = force || canNotifyUserAgain()
   if (shouldNotify) {
     showNudgeNotification(assessment.data.notificationToUser)
   } else {
@@ -254,14 +254,30 @@ async function captureAssessAndNudge(force = false) {
   }
 }
 
-function shouldNotifyUser(capture: Capture) {
+// We don't want to nudge the user too often, because that can be very annoying.
+// The user can choose a "cooldown" period in the app settings.
+//
+// But I also found this cooldown is confusing when the user is first using the
+// app, because they expect to be notified immediately. So we only enable it
+// after 10 minutes.
+function canNotifyUserAgain() {
   if (!lastNotificationAt) {
     return true
   }
 
-  const doubleNudgeThresholdMins = store.getState().doubleNudgeThresholdMins
-  const threshold = dayjs().subtract(doubleNudgeThresholdMins, 'minutes')
-  return dayjs(lastNotificationAt).isBefore(threshold)
+  const firstOpenedAt = store.getState().firstOpenedAt
+  const firstOpenedPlus10Mins = dayjs(firstOpenedAt).add(10, 'minutes')
+  if (dayjs().isBefore(firstOpenedPlus10Mins)) {
+    debug('[capture] will notify because app was first opened recently')
+    return true
+  }
+
+  const doubleNudgeMins = store.getState().doubleNudgeThresholdMins
+  const dontNotifyBefore = dayjs(lastNotificationAt).add(
+    doubleNudgeMins,
+    'minutes'
+  )
+  return dayjs().isAfter(dontNotifyBefore)
 }
 
 function showNudgeNotification(body: string) {
@@ -274,10 +290,6 @@ function showNudgeNotification(body: string) {
   })
 
   notif.show()
-
-  // notif.on('click', () => {
-  //   mainWindow.show()
-  // })
 
   setTimeout(() => {
     notif.close()

@@ -9,7 +9,6 @@
 - [ ] Fix: warn when outside /Applications folder. Don't try to auto-update.
 - [ ] Let users introspect captures and understand what's wrong.
 - [ ] Fix: FAQ is outdated about data.
-- [ ] Feat: let user choose annoy rate.
 - [ ] Make video showing how to create an OpenAI key.
 - [ ] Write privacy page.
 - [ ] Fix: height of active session is bouncing on reload
@@ -19,11 +18,12 @@
 - [ ] Fix: permission errors still silent.
 - [ ] Fix: "Rate limit exceeded" error for OpenAI keys without billing setup.
 - [ ] Improve notification clarity - make it obvious when users should expect notifications.
-- [ ] Fix: double-nudge prevention is blocking initial notifications in first few minutes.
+- [x] Fix: double-nudge prevention is blocking initial notifications in first few minutes.
 - [ ] Add session reset functionality - make it clear how to restart/reset sessions.
 - [ ] Somehow show notification skipped due to double-nudge.
 - [ ] Feat: "0 of 20 hours used"
-- [ ] Fix evals. (Jul 15)
+- [x] Fix evals. (Jul 15)
+- [x] Feat: let user choose annoy rate.
 - [x] CI: add evals to CI.
 - [x] Hosted version.
 - [x] Disable submit button when there are complaints about the current goal.

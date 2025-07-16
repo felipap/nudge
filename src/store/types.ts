@@ -56,6 +56,7 @@ export type State = {
   // capture state
   captureStartedAt: string | null // date
   assessStartedAt: string | null // date
+  firstOpenedAt: string // date
   lastClosedAt: string | null
   // settings
 
@@ -88,6 +89,7 @@ export const DEFAULT_STATE: State = {
   captureStartedAt: null,
   doubleNudgeThresholdMins: DOUBLE_NUDGE_THRESHOLD_MINS,
   assessStartedAt: null,
+  firstOpenedAt: new Date().toISOString(),
   lastClosedAt: null,
   // settings
   useNudgeCloud: false, // Important to start with false.
