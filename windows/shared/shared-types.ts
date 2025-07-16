@@ -44,7 +44,6 @@ export type GetGoalFeedbackResult =
 type SharedIpcMethods = {
   getState: () => Promise<State>
   setPartialState: (state: Partial<State>) => Promise<void>
-  setCaptureFrequency: (frequency: number) => void
   listenToggleDarkMode: (callback: (isDarkMode: boolean) => void) => void
   getSystemTheme: () => Promise<string>
   setWindowHeight: (height: number, animate?: boolean) => Promise<void>

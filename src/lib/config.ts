@@ -15,7 +15,7 @@ export const VERBOSE = !app.isPackaged
 // export const VERBOSE = process.env.VERBOSE === 'true'
 
 // If the user is nudged twice in this time, we won't show a notification.
-export const DOUBLE_NUDGE_THRESHOLD = 5 * 60 * 1000
+export const DOUBLE_NUDGE_THRESHOLD_MINS = 5
 
 export const GITHUB_DISCUSSIONS_URL =
   'https://github.com/felipap/nudge/discussions'
@@ -27,8 +27,8 @@ export const IGNORE_UNTIL_MS = 1 * 60 * 1000
 
 export const NUDGE_AI_BASE_URL = app.isPackaged
   ? 'https://nudge.fyi/api'
-  : // : 'https://nudge.fyi/api'
-    'http://localhost:3000/api'
+  : 'https://nudge.fyi/api'
+// 'http://localhost:3000/api'
 
 if (VERBOSE) {
   console.log('NUDGE_AI_BASE_URL', NUDGE_AI_BASE_URL)

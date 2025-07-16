@@ -15,7 +15,7 @@ import {
   store,
 } from '../store'
 import { Capture } from '../store/types'
-import { DOUBLE_NUDGE_THRESHOLD, IGNORE_UNTIL_MS } from './config'
+import { DOUBLE_NUDGE_THRESHOLD_MINS, IGNORE_UNTIL_MS } from './config'
 import { captureException, debug, error, log, logError, warn } from './logger'
 import { captureActiveScreen } from './screenshot'
 
@@ -257,7 +257,8 @@ function shouldNotifyUser(capture: Capture) {
     return true
   }
 
-  const threshold = dayjs().subtract(DOUBLE_NUDGE_THRESHOLD, 'ms')
+  const doubleNudgeThresholdMins = store.getState().doubleNudgeThresholdMins
+  const threshold = dayjs().subtract(doubleNudgeThresholdMins, 'minutes')
   return dayjs(lastNotificationAt).isBefore(threshold)
 }
 

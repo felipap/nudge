@@ -2,6 +2,7 @@ import { openExternal } from '../../../shared/ipc'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { NeedHelpFooter } from '../screen'
 import { Hr } from '../ui'
+import { DoubleNudgeInput } from './DoubleNudgeInput'
 import { FrequencyInput } from './FrequencyInput'
 import { LaunchOnStartup } from './LaunchOnStartup'
 
@@ -12,6 +13,10 @@ export const General = withBoundary(() => {
       <div className="flex flex-col gap-4">
         <section>
           <FrequencyInput />
+        </section>
+        <Hr />
+        <section>
+          <DoubleNudgeInput />
         </section>
         <Hr />
         <section>

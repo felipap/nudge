@@ -92,7 +92,7 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
   <summary>
     How much does Nudge cost in AI usage?
   </summary>
-  <p>
+  <p>1
     Depends on the model you use, the size of your screen, and the frequency of captures.
   </p>
   <p>

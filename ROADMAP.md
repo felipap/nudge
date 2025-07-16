@@ -34,6 +34,7 @@
 ### Later
 
 - [x] Landing page.
+- [ ] Feat: confetti when goal is achieved.
 - [ ] Feat: how do you get Nudge to learn?
 - [ ] Find a way to scrape off most sensitive data locally?
 - [ ] Way to give feedback in the app.

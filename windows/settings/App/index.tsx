@@ -6,7 +6,7 @@ import { General } from './general'
 import { ScreenPermissions } from './screen'
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>('model')
+  const [tab, setTab] = useState<Tab>('general')
 
   const { screenPermission } = useScreenPermissionState()
 

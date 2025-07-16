@@ -1,4 +1,5 @@
 import { AvailableModel, ModelError } from '../../windows/shared/shared-types'
+import { DOUBLE_NUDGE_THRESHOLD_MINS } from '../lib/config'
 
 export interface Capture {
   summary: string
@@ -63,6 +64,7 @@ export type State = {
   useNudgeCloud: boolean
   modelSelection: ModelSelection | null
   captureEverySeconds: number
+  doubleNudgeThresholdMins: number
   isWindowPinned: boolean
   // ⬇️ This can't live in the state because it's a system setting.
   // autoLaunch: boolean
@@ -84,6 +86,7 @@ export const DEFAULT_STATE: State = {
   activeCapture: null,
   // capture state
   captureStartedAt: null,
+  doubleNudgeThresholdMins: DOUBLE_NUDGE_THRESHOLD_MINS,
   assessStartedAt: null,
   lastClosedAt: null,
   // settings

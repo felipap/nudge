@@ -71,10 +71,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return await typedIpcRenderer.invoke('getState')
   },
 
-  setCaptureFrequency: (frequency: number) => {
-    typedIpcRenderer.send('setCaptureFrequency', frequency)
-  },
-
   listenToggleDarkMode: (callback: (isDarkMode: boolean) => void) => {
     const listener = (_event: any, isDarkMode: boolean) => callback(isDarkMode)
     ipcRenderer.on('listenToggleDarkMode', listener)

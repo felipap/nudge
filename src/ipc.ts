@@ -116,13 +116,6 @@ export function setupIPC() {
     return store.getState()
   })
 
-  ipcMainTyped.on('setCaptureFrequency', (_event, frequency: number) => {
-    store.setState({
-      ...store.getState(),
-      captureEverySeconds: frequency,
-    })
-  })
-
   ipcMainTyped.handle('getAutoLaunch', async () => {
     const settings = app.getLoginItemSettings()
     return settings.openAtLogin
