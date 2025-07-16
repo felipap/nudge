@@ -42,10 +42,10 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
     <strong>How does Nudge work?</strong>
   </summary>
   <p>
-    Nudge helps you stay in flow by sending you a notification when you look distracted. First you give it an activity you want to do, like "code for an hour". Then, Nudge starts taking screenshots of your screen every minute (or whatever frequency you choose) and asks an AI model to detect whether you're doing the activity you chose for yourself. If not, Nudge sends you a notification.
+    During a focus session, Nudge takes screenshots every minute and asks a multimodal AI (e.g., GPT-4o-mini) whether you're doing the activity you chose for that session. When it detects you're distracted, Nudge sends you a notification.
   </p>
   <p>
-    By default, Nudge sends your screenshots directly to OpenAI's GPT-4o-mini, and therefore requires an OpenAI API key to use. If you don't have one, you can use Nudge Cloud, which sends your screenshots to our servers.
+    You can read the detection code at <a href="https://github.com/felipap/nudge/blob/main/src/ai/openai/assess-capture/index.ts">/main/src/ai/openai/assess-capture/index.ts</a>.
   </p>
 </details>
 <details>
@@ -53,13 +53,13 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
     <strong>What is Nudge Cloud?</strong>
   </summary>
   <p>
-    It's a way to use Nudge without an OpenAI API key. Instead of sending screenshots to OpenAI, Nudge sends them to a server that we run, which then sends them to OpenAI. We do this to make Nudge accessible to everyone, even non-technical users.
+    By default, Nudge sends screenshots directly to OpenAI using your API key. If you don't have an OpenAI key, you can use "Nudge Cloud," which proxies requests through **nudge.fyi**.
   </p>
   <p>
-    Screenshots are very sensitive data. I don't retain them in any way, just pass them along to OpenAI and send back the result.
+    Screenshots may contain sensitive data, but I don't retain or observe them. I only host this server to make Nudge accessible to non-technical users.
   </p>
   <p>
-    Believe me, I would rather not host any servers, but it's the only way I found to make Nudge accessible to non-technical people. You can contact me at felipe@portalform.com with any questions or concerns.
+    You can contact me at felipe AT portalform.com with any questions or concerns.
   </p>
 </details>
 <details>
@@ -67,26 +67,21 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
     <strong>What data does Nudge collect?</strong>
   </summary>
   <p>
-    Nudge has two modes: local and cloud. Local means you run the app on your computer and talk to the OpenAI API directly, using a key you provide. In this mode, we don't see any of your data.
+    <strong>With Nudge Cloud:</strong> Nudge Cloud acts as a proxy server and doesn't collect any screenshot or session activity data. We save request headers to prevent abuse, as the server is currently free up to 20 session-hours a month. (I'm eating the cost for the sake of this experiment.)
   </p>
   <p>
-    Nudge "Cloud" is for people who don't have an OpenAI API Key.
-
-    Cloud is currently free for up to 20 hours a month (we're eating the cost for the sake of this experiment).
-
-    Nudge has no external servers today. All the screenshots are exchanged directly between your computer and OpenAI's servers. Nudge does not accumulate screenshots inside of your computer either. Once they're sent to OpenAI, they're discarded. The data sent to 4o may be accessible by the owner of the API key you enter.
-
+    <strong>Without Nudge Cloud:</strong> Data is exchanged directly with OpenAI. The data sent to GPT-4o may be accessible by the owner of the API key you enter.
   </p>
   <p>
-    We use <a href="https://sentry.io" target="_blank">Sentry</a> for error tracking and telemetry but <a href="https://docs.sentry.io/platforms/javascript/configuration/options/#sendDefaultPii" target="_blank">we don't collect PII as far as I know</a>.
+    Error tracking: We use <a href="https://sentry.io" target="_blank">Sentry</a> for crashes and telemetry, but <a href="https://docs.sentry.io/platforms/javascript/configuration/options/#sendDefaultPii" target="_blank">we don't collect PII as far as I know</a>. I will consider making this optional in future versions.
   </p>
 </details>
 <details>
   <summary>
-    <strong>Can I use a model other than GPT-4o?</strong>
+    <strong>Can I use other AI backends?</strong>
   </summary>
   <p>
-    Not today but I will ship if enough users ask for it. <a href="https://github.com/felipap/nudge/discussions/new">Start a discussion.</a>
+    Not yet, but I'll add support if there's demand. <a href="https://github.com/felipap/nudge/discussions/new">Start a discussion to request specific providers.</a>
   </p>
 </details>
 <details>
@@ -94,13 +89,13 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
     <strong>How much does Nudge cost in AI usage?</strong>
   </summary>
   <p>
-    Depends on the model you use, the size of your screen, and the frequency of captures.
+    Costs depend on the model you use, your screen size, and capture frequency.
   </p>
   <p>
-    During a test on July 2nd 2025, I found that each screenshot of my 1470x956 Mac translated into ~14k input tokens in GPT-4o-mini. In default settings (1 minute capture frequency), this means $0.002 USD per minute that Nudge is active, or 12 cents per hour.
+    During testing on July 2nd, 2025: a 1470x956 Mac screenshot used ~14k input tokens in GPT-4o-mini. At default settings (1-minute capture frequency), this works out to $0.002 per minute that Nudge is active, or about $0.12 per hour.
   </p>
   <p>
-    I'm interested in ways to make this cheaper. If you have ideas, <a href="https://github.com/felipap/nudge/discussions/new">start a discussion.</a>
+    I'm looking for ways to reduce these costs. If you have ideas, <a href="https://github.com/felipap/nudge/discussions/new">start a discussion.</a>
   </p>
 </details>
 
