@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/felipap/nudge/compare/v0.1.4...v0.1.5) (2025-07-16)
+
+
+### Bug Fixes
+
+* cleaned up evals ([d9e5305](https://github.com/felipap/nudge/commit/d9e53057db3c4458c3100c8bcdd571d2559f42b9))
+* design nit ([319da74](https://github.com/felipap/nudge/commit/319da74c27a58352c690234fecf015a922e23f85))
+
 ### [0.1.4](https://github.com/felipap/nudge/compare/v0.1.3...v0.1.4) (2025-07-10)
 
 
