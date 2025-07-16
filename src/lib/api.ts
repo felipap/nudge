@@ -1,8 +1,16 @@
 import { app } from 'electron'
 import { machineIdSync } from 'node-machine-id'
-import { NUDGE_AI_BASE_URL } from '../../lib/config'
-import { warn } from '../../lib/logger'
-import { ellipsis } from '../../lib/utils'
+import { NUDGE_AI_BASE_URL } from './config'
+import { warn } from './logger'
+import { ellipsis } from './utils'
+
+export async function heartbeat(): Promise<
+  ApiResult<{ status: string; timestamp: string; version: string }>
+> {
+  return callNudgeAPI('/heartbeat', { method: 'GET' })
+}
+
+//
 
 export interface SignatureHeaders {
   'x-computer-id': string

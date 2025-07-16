@@ -174,9 +174,8 @@ export function setupIPC() {
 
         return {
           data: {
-            feedback:
-              res.data.feedbackType === 'none' ? null : res.data.feedbackType,
-            impliedDuration: res.data.impliedDuration,
+            feedback: res.data.feedbackType,
+            impliedDuration: res.data.activityDurationMins,
           },
         }
       } catch (error) {

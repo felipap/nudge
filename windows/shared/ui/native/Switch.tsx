@@ -15,7 +15,7 @@ const sizeMap = {
     translate: 16, // px
   },
   md: {
-    track: { width: 40, height: 20 }, // 40px x 20px
+    track: { width: 38, height: 20 }, // 40px x 20px
     thumb: { width: 16, height: 16 }, // 16px x 16px
     translate: 20, // px
   },

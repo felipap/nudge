@@ -8,9 +8,14 @@
 - [ ] Feat: option to show timer in the menu bar.
 - [ ] Fix: warn when outside /Applications folder. Don't try to auto-update.
 - [ ] Let users introspect captures and understand what's wrong.
+- [ ] Fix: FAQ is outdated about data.
 - [ ] Feat: let user choose annoy rate.
 - [ ] Make video showing how to create an OpenAI key.
+- [ ] CI: evals.
 - [ ] Write privacy page.
+- [ ] Fix: "twitching" height?
+- [ ] CI: figure out how to make pre-release builds.
+- [ ] Figure out a way around breaking changes. (Force update?)
 - [ ] Find a way to scrape off most sensitive data locally?
 - [ ] Can we check that the app is running from inside a Terminal?
 - [ ] Notification: test access by asking users to click on the notification.23

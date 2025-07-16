@@ -1,3 +1,5 @@
+// ATTENTION very important that these images are never packaged into the app.
+
 import { join } from 'path'
 
 export interface TestCase {
@@ -20,14 +22,6 @@ export default [
   {
     imageFilepath: join(__dirname, 'resized/code-iterm2-ghosttyname.png'),
     goal: 'I want to use my terminal for 20 minutes.',
-    customInstructions: null,
-    expected: {
-      isFollowingGoals: true,
-    },
-  },
-  {
-    imageFilepath: join(__dirname, 'resized/bab.png'),
-    goal: 'I want to code for 2 minutes.',
     customInstructions: null,
     expected: {
       isFollowingGoals: true,

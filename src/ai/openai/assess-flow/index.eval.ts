@@ -5,9 +5,9 @@ import fs from 'fs'
 import OpenAI from 'openai'
 import path from 'path'
 import { log, warn } from '../../../lib/logger'
+import { Result } from '../utils'
 import examples, { TestCase } from './evals'
 import { assessFlowWithOpenAI, Output } from './index'
-import { Result } from '..'
 
 interface TestResult {
   testCase: TestCase

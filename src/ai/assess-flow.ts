@@ -1,30 +1,18 @@
 import assert from 'assert'
-import { z } from 'zod'
-import { ModelError } from '../../windows/shared/shared-types'
 import { debug } from '../lib/logger'
 import { assessFlowFromNudgeAPI } from './cloud/assess-flow'
 import { BackendClient } from './models'
+import { Result } from './openai/utils'
 import { assessFlowWithOpenAI } from './openai/assess-flow'
 
-export const AssessmentStruct = z.object({
-  screenSummary: z.string(),
-  messageToUser: z.string(),
-  isFollowingGoals: z.boolean(),
-  goalUnclear: z
-    .boolean()
-    .describe(`Set to true when the goal is absolutely unclear.`),
-})
+export type CaptureAssessment = {
+  screenSummary: string
+  messageToUser: string
+  isFollowingGoals: boolean
+  goalUnclear: boolean
+}
 
-export type Assessment = z.infer<typeof AssessmentStruct>
-
-export type AssessmentResult =
-  | {
-      data: Assessment
-    }
-  | {
-      error: ModelError
-      message?: string
-    }
+export type CaptureAssessmentResult = Result<CaptureAssessment>
 
 export async function assessFlowFromScreenshot(
   client: BackendClient,
@@ -32,7 +20,7 @@ export async function assessFlowFromScreenshot(
   goal: string,
   customInstructions: string | null,
   previousCaptures: string[]
-): Promise<AssessmentResult> {
+): Promise<CaptureAssessmentResult> {
   debug('client.provider', client.provider)
 
   assert(goal, 'goal is required')

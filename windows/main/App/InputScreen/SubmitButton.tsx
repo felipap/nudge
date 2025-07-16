@@ -18,7 +18,7 @@ interface Props {
   loading: boolean
   feedbackResult: GetGoalFeedbackResult | null
   disableReason: DisableReason | null
-  impliedDurationMins?: number | null
+  impliedDurationMins: number | null
 }
 
 export function SubmitButton({
@@ -67,7 +67,7 @@ export function SubmitButton({
     }
     disabled = true
     bgClassName = RED_BG
-    icon = <FaExclamation className="w-4 h-4" />
+    // icon = <FaExclamation className="w-4 h-4" /> // too much.
   } else if (feedbackResult.data.feedback === 'lacking-duration') {
     icon = <ClockAlertIcon className="w-4 h-4" />
     text = 'Specify a duration for your activity'
@@ -95,7 +95,7 @@ export function SubmitButton({
   return (
     <Button
       className={twMerge(
-        'relative w-full h-[34px]  text-[15px] px-6 flex items-center transition-all justify-center rounded-md font-medium  font-display-3p disabled:!opacity-100 disabled:!cursor-not-allowed',
+        'relative w-full h-[34px]  text-[15px] px-6 flex items-center transition-all justify-center rounded-md font-display-3p disabled:!opacity-100 disabled:!cursor-not-allowed',
         bgClassName,
         isGoodFeedback ? 'cursor-pointer' : '',
         'select-none'

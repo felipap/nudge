@@ -1,7 +1,10 @@
 import fs from 'fs'
 import path from 'path'
 import sharp from 'sharp'
-import { CAPTURE_RESIZE_FACTOR } from '../../../../lib/config'
+
+// import { CAPTURE_RESIZE_FACTOR } from '../../../../lib/config'
+// Sync with nudge/src/lib/config.ts
+const CAPTURE_RESIZE_FACTOR = 0.4
 
 const INPUT_DIR = path.join(__dirname, 'images')
 const OUTPUT_DIR = path.join(__dirname, 'resized')

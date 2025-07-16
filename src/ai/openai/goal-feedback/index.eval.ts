@@ -71,8 +71,8 @@ Judge if the AI's response matches these criteria and the expected result.`,
         content: `Goal: "${goal}"
 
 AI Response:
-isGood: ${feedback.feedbackType === null || feedback.feedbackType === 'none'}
-message: "${feedback.feedback}"
+isGood: ${!feedback.feedbackType}
+message: "${feedback.reasoning}"
 
 Expected:
 isGood: false
@@ -113,7 +113,7 @@ async function runEvals() {
         continue
       }
 
-      if (res.data.isGood) {
+      if (!res.data.feedbackType) {
         if (testCase.expectedFeedback === null) {
           console.log('Result: ✅ PASS (both agree goal is good)')
         } else {

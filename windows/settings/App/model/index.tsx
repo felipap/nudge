@@ -49,8 +49,8 @@ export function ModelTab() {
         <LabelStack>
           <Label className="text-[15px]">Use Nudge Cloud</Label>
           <Description>
-            Don't have an OpenAI developer account? Use Nudge Cloud for up to 20
-            hours a month for free.{' '}
+            Don't have an OpenAI developer account? Use Nudge Cloud for up to
+            20&nbsp;hours a month for free.{' '}
             <button
               onClick={() => openExternal('https://nudge.fyi/faq')}
               className="text-link"

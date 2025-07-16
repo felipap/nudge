@@ -3,10 +3,11 @@
 //
 // Ie. sync `nudge/src/lib/ai/openai` with `nudge-web/ai/openai`
 
-import * as Sentry from '@sentry/electron/main'
 import OpenAI from 'openai'
 import { ChatCompletionParseParams } from 'openai/resources/chat/completions'
-import { warn } from './oai-logger'
+import { captureException, warn } from './oai-logger'
+
+// Utils below
 
 type CallError =
   | 'unknown'
@@ -39,7 +40,7 @@ export async function safeOpenAIStructuredCompletion<T>(
   } catch (e) {
     warn('[ai/openai] completion threw!', e)
 
-    Sentry.captureException(e, {
+    captureException(e, {
       extra: {
         message: 'KNOWN OpenAI API error',
         model: client.apiKey,
@@ -64,7 +65,7 @@ export async function safeOpenAIStructuredCompletion<T>(
 
     warn('Unknown OpenAI API error', { e })
 
-    Sentry.captureException(e, {
+    captureException(e, {
       extra: {
         message: 'UnknownOpenAI API error',
         model: client.apiKey,

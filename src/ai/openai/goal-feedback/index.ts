@@ -1,8 +1,8 @@
 import { OpenAI } from 'openai'
 import { zodResponseFormat } from 'openai/helpers/zod'
 import { z } from 'zod'
-import { Result, safeOpenAIStructuredCompletion } from '..'
 import { log, warn } from '../oai-logger'
+import { Result, safeOpenAIStructuredCompletion } from '../utils'
 
 const OutputStruct = z.object({
   activityDurationMins: z
@@ -13,9 +13,9 @@ const OutputStruct = z.object({
     .string()
     .describe('The reasoning behind the positive or negative feedback.'),
   feedbackType: z
-    .enum(['lacking-duration', 'unclear-apps', 'none'])
+    .enum(['lacking-duration', 'unclear-apps'])
     .describe(
-      "The type of feedback to give the user. Choose 'none' or null if the activity description is good."
+      'The type of feedback to give the user. Choose null if the activity description is good.'
     )
     .nullable(),
 })

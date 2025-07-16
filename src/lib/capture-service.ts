@@ -2,6 +2,11 @@ import assert from 'assert'
 import dayjs from 'dayjs'
 import { Notification } from 'electron'
 import {
+  assessFlowFromScreenshot,
+  CaptureAssessmentResult,
+  getAiBackendClient,
+} from '../ai'
+import {
   addSavedCapture,
   bumpNextCaptureAt,
   getNextCaptureAt,
@@ -10,11 +15,6 @@ import {
   store,
 } from '../store'
 import { Capture } from '../store/types'
-import {
-  assessFlowFromScreenshot,
-  AssessmentResult,
-  getAiBackendClient,
-} from '../ai'
 import { DOUBLE_NUDGE_THRESHOLD, IGNORE_UNTIL_MS } from './config'
 import { captureException, debug, error, log, logError, warn } from './logger'
 import { captureActiveScreen } from './screenshot'
@@ -182,7 +182,7 @@ async function captureAssessAndNudge(force = false) {
   // ASSESS 🤔
   // ASSESS 🤔
 
-  let assessment: AssessmentResult
+  let assessment: CaptureAssessmentResult
   try {
     log('[capture] Sending to server...')
     assessment = await assessFlowFromScreenshot(

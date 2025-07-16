@@ -1,8 +1,8 @@
 import { OpenAI } from 'openai'
 import { zodResponseFormat } from 'openai/helpers/zod'
 import { z } from 'zod'
-import { Result, safeOpenAIStructuredCompletion } from '..'
 import { debug, log, warn } from '../oai-logger'
+import { Result, safeOpenAIStructuredCompletion } from '../utils'
 
 const OutputStruct = z.object({
   screenSummary: z.string(),
@@ -29,7 +29,7 @@ export async function assessFlowWithOpenAI(
   )
 
   debug('[ai/assess-flow] systemPrompt', systemPrompt)
-  debug('[ai/assess-flow] Calling OpenAI...')
+  log('[ai/assess-flow] Calling OpenAI')
 
   const start = Date.now()
 
