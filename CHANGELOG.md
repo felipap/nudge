@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/felipap/nudge/compare/v0.1.5...v0.1.6) (2025-07-16)
+
+
+### Features
+
+* dont update outside apps folder ([6cb58b4](https://github.com/felipap/nudge/commit/6cb58b4ae2f2946e4331ebfe7a30b59164d4a5ec))
+* initial assessment tooltip ([b0db9cf](https://github.com/felipap/nudge/commit/b0db9cf650abf057f2bae164f6a1fa0d1e8a182b))
+
+
+### Bug Fixes
+
+* onboarding bug ([cff9e52](https://github.com/felipap/nudge/commit/cff9e52031a4ced74c8b2ae3fca4171d7f28748e))
+
 ### [0.1.5](https://github.com/felipap/nudge/compare/v0.1.4...v0.1.5) (2025-07-16)
 
 
