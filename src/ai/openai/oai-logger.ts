@@ -6,12 +6,16 @@
 
 import * as SentryType from '@sentry/node'
 
-// FELIPE: I hate this too.
+// FELIPE: I hate this.
 let Sentry: typeof SentryType
 try {
   Sentry = require('@sentry/electron/main')
 } catch (e) {
-  Sentry = require('@sentry/nextjs')
+  try {
+    Sentry = require('@sentry/nextjs')
+  } catch {
+    console.error('FAILED TO LOAD SENTRY')
+  }
 }
 
 const VERBOSE = true // where should this come from?
@@ -39,7 +43,7 @@ export function info(message: string, ...args: any[]) {
   console.info(message, ...args)
 }
 
-// FELIPE: I ALSO hate this too.
+// FELIPE: And I hate this too.
 export const captureException: typeof SentryType.captureException = (
   e,
   hint

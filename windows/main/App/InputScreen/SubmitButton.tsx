@@ -4,12 +4,7 @@ import { ClockAlertIcon } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 import { GetGoalFeedbackResult } from '../../../shared/shared-types'
 import { Button } from '../../../shared/ui/Button'
-import {
-  FaExclamation,
-  FaPlay,
-  FaQuestionCircle,
-  Spinner,
-} from '../../../shared/ui/icons'
+import { FaPlay, FaQuestionCircle, Spinner } from '../../../shared/ui/icons'
 
 export type DisableReason = 'empty' | 'too-short' | 'error'
 

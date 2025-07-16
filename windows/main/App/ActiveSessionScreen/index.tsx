@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useWindowHeight } from '../../../shared/lib'

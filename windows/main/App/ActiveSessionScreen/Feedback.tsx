@@ -9,78 +9,8 @@ import { withBoundary } from '../../../shared/ui/withBoundary'
 
 const ONE_MINUTE = 1 * 60 * 1_000
 
-type Feedback =
-  | 'capturing'
-  | 'improve-goal'
-  | 'credential-error'
-  | 'rate-limit'
-  | 'unknown-error'
-  | 'doing-great'
-  | 'internet-error'
-  | 'distracted'
-  | 'no-api-key'
-  | null
-
-function getFeedbackFromState(state: State | null): Feedback {
-  if (state?.captureStartedAt || state?.assessStartedAt) {
-    return 'capturing'
-  }
-
-  const relevantCapture =
-    state &&
-    state.activeCapture &&
-    // within the last 2 minutes
-    new Date(state.activeCapture.at).getTime() > Date.now() - ONE_MINUTE &&
-    state.session &&
-    // Goal started before last capture
-    new Date(state.activeCapture.at).getTime() >
-      new Date(state.session.startedAt).getTime() &&
-    // Goal was not updated or was updated before last capture
-    (!state.session.contentUpdatedAt ||
-      new Date(state.session.contentUpdatedAt).getTime() <
-        new Date(state.activeCapture.at).getTime()) &&
-    // Session is not paused.
-    // !state.session.pausedAt &&
-    // // If session was paused, it was resumed before the last capture.
-    (!state.session.resumedAt ||
-      new Date(state.session.resumedAt).getTime() <
-        new Date(state.activeCapture.at).getTime()) &&
-    state.activeCapture
-
-  console.log('activeCapture', relevantCapture)
-
-  if (!relevantCapture) {
-    return null
-  }
-
-  if ('modelError' in relevantCapture) {
-    if (relevantCapture.modelError === 'rate-limit') {
-      return 'rate-limit'
-    }
-    if (relevantCapture.modelError === 'bad-api-key') {
-      return 'credential-error'
-    }
-    if (relevantCapture.modelError === 'no-api-key') {
-      return 'no-api-key'
-    }
-    if (relevantCapture.modelError === 'no-internet') {
-      return 'internet-error'
-    }
-    return 'unknown-error'
-  }
-
-  if (relevantCapture.impossibleToAssess) {
-    return 'improve-goal'
-  }
-  if (relevantCapture.inFlow) {
-    return 'doing-great'
-  }
-
-  return 'distracted'
-}
-
 function useFeedback(): Feedback {
-  useUpdateEvery(5_000)
+  useRenderEvery(5_000)
 
   const { stateRef } = useBackendState()
   const [feedback, setFeedback] = useState<Feedback>(null)
@@ -177,7 +107,8 @@ export const Feedback = withBoundary(() => {
   )
 })
 
-function useUpdateEvery(ms: number) {
+// Renders every ms milliseconds.
+function useRenderEvery(ms: number) {
   const [counter, setCounter] = useState(0)
 
   useEffect(() => {
@@ -196,4 +127,74 @@ function genErrorIcon(key?: string) {
   //   : 0
   // if (key) {
   // }
+}
+
+type Feedback =
+  | 'capturing'
+  | 'improve-goal'
+  | 'credential-error'
+  | 'rate-limit'
+  | 'unknown-error'
+  | 'doing-great'
+  | 'internet-error'
+  | 'distracted'
+  | 'no-api-key'
+  | null
+
+function getFeedbackFromState(state: State | null): Feedback {
+  if (state?.captureStartedAt || state?.assessStartedAt) {
+    return 'capturing'
+  }
+
+  const relevantCapture =
+    state &&
+    state.activeCapture &&
+    // within the last 2 minutes
+    new Date(state.activeCapture.at).getTime() > Date.now() - ONE_MINUTE &&
+    state.session &&
+    // Goal started before last capture
+    new Date(state.activeCapture.at).getTime() >
+      new Date(state.session.startedAt).getTime() &&
+    // Goal was not updated or was updated before last capture
+    (!state.session.contentUpdatedAt ||
+      new Date(state.session.contentUpdatedAt).getTime() <
+        new Date(state.activeCapture.at).getTime()) &&
+    // Session is not paused.
+    // !state.session.pausedAt &&
+    // // If session was paused, it was resumed before the last capture.
+    (!state.session.resumedAt ||
+      new Date(state.session.resumedAt).getTime() <
+        new Date(state.activeCapture.at).getTime()) &&
+    state.activeCapture
+
+  console.log('activeCapture', relevantCapture)
+
+  if (!relevantCapture) {
+    return null
+  }
+
+  if ('modelError' in relevantCapture) {
+    if (relevantCapture.modelError === 'rate-limit') {
+      return 'rate-limit'
+    }
+    if (relevantCapture.modelError === 'bad-api-key') {
+      return 'credential-error'
+    }
+    if (relevantCapture.modelError === 'no-api-key') {
+      return 'no-api-key'
+    }
+    if (relevantCapture.modelError === 'no-internet') {
+      return 'internet-error'
+    }
+    return 'unknown-error'
+  }
+
+  if (relevantCapture.impossibleToAssess) {
+    return 'improve-goal'
+  }
+  if (relevantCapture.inFlow) {
+    return 'doing-great'
+  }
+
+  return 'distracted'
 }

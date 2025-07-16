@@ -25,11 +25,10 @@ export const UPDATE_CHECK_AFTER_STARTUP = 2 * 60 * 1000
 // Don't check within this time after starting the session.
 export const IGNORE_UNTIL_MS = 1 * 60 * 1000
 
-export const NUDGE_AI_BASE_URL =
-  app && app.isPackaged
-    ? 'https://nudge.fyi/api'
-    : // : 'https://nudge.fyi/api'
-      'http://localhost:3000/api'
+export const NUDGE_AI_BASE_URL = app.isPackaged
+  ? 'https://nudge.fyi/api'
+  : 'https://nudge.fyi/api'
+// 'http://localhost:3000/api'
 
 if (VERBOSE) {
   console.log('NUDGE_AI_BASE_URL', NUDGE_AI_BASE_URL)

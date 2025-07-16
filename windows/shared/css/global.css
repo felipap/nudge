@@ -170,7 +170,7 @@ textarea {
 
 .font-display-3p {
   font-family: var(--font-display);
-  letter-spacing: 0.015em !important;
+  /* letter-spacing: 0.015em !important; */
 }
 
 /* Text sizes */

@@ -233,9 +233,9 @@ export async function runDetailedEval(client: OpenAI): Promise<void> {
   console.log(`Failed: ${summary.failedTests}`)
 }
 
-const FELIPE_OPENAI_API_KEY = process.env.FELIPE_OPENAI_API_KEY || ''
-if (!FELIPE_OPENAI_API_KEY) {
-  throw new Error('FELIPE_OPENAI_API_KEY is not set')
+const EVALS_OPENAI_API_KEY = process.env.EVALS_OPENAI_API_KEY || ''
+if (!EVALS_OPENAI_API_KEY) {
+  throw new Error('EVALS_OPENAI_API_KEY is not set')
 }
-const client = new OpenAI({ apiKey: FELIPE_OPENAI_API_KEY })
+const client = new OpenAI({ apiKey: EVALS_OPENAI_API_KEY })
 void runDetailedEval(client)
