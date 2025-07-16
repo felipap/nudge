@@ -12,7 +12,7 @@
 - [ ] Feat: let user choose annoy rate.
 - [ ] Make video showing how to create an OpenAI key.
 - [ ] Write privacy page.
-- [ ] Fix: "twitching" height?
+- [ ] Fix: height of active session is bouncing on reload
 - [ ] CI: figure out how to make pre-release builds.
 - [ ] Figure out a way around breaking changes. (Force update?)
 - [ ] Find a way to scrape off most sensitive data locally?
@@ -26,7 +26,7 @@
 - [ ] Somehow show notification skipped due to double-nudge.
 - [ ] Feat: "0 of 20 hours used"
 - [ ] Fix evals. (Jul 15)
-- [x] CI: evals.
+- [x] CI: add evals to CI.
 - [x] Hosted version.
 - [x] Disable submit button when there are complaints about the current goal.
 - [x] When "capture now", definitely send notification.

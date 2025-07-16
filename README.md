@@ -97,15 +97,3 @@ https://github.com/user-attachments/assets/5d93bc18-efcc-44ca-a4dd-a859efee6d21
 ## License
 
 GPL-3.0
-
-<!-- Intelligent tools for productivity. -->
-
-<!--
-## todos
-
-A simple to-do app with MCP support. 📝
--->
-
-<!-- ## nudge
-
-An AI that watches your computer and prevents distractions. 👉 -->

@@ -35,15 +35,14 @@ export async function runSingleExample(
   client: OpenAI,
   testCase: TestCase
 ): Promise<TestResult> {
-  log(`[eval] Running test case: ${path.basename(testCase.imageFilepath)}`)
+  const imageName = path.basename(testCase.imageFilepath)
+  log(`[eval] Running test case: ${imageName}`)
 
   let imageBuffer: Buffer
   try {
     imageBuffer = fs.readFileSync(testCase.imageFilepath)
   } catch (e) {
-    const errorMsg = `Failed to read file ${path.basename(
-      testCase.imageFilepath
-    )}: ${e.message}`
+    const errorMsg = `Failed to read file ${imageName}: ${e.message}`
     warn('[eval]', errorMsg)
     throw e
   }
@@ -102,16 +101,10 @@ export async function runSingleExample(
     // Log the assessment details for debugging
     const status = passed ? '✅ PASS' : '❌ FAIL'
 
-    console.log(
-      coloring(
-        `[eval] ${status} Assessment for ${path.basename(
-          testCase.imageFilepath
-        )}:`
-      )
-    )
+    console.log(coloring(`[eval] ${status} Assessment for ${imageName}:`))
     console.log(`- Input: ${testCase.goal}`)
     console.log(`- Screen summary: ${coloring(assessment.screenSummary)}`)
-    console.log(`- Following Goal?: ${assessment.isFollowingGoals}`)
+    console.log(`- Following goal?: ${assessment.isFollowingGoals}`)
     // log(`  Message to User: ${assessment.messageToUser}`)
     // log(`  Response Time: ${responseTime}ms`)
 

@@ -22,6 +22,7 @@ export function useOnboardingState() {
   )
 
   return {
+    isLoading: !state || !screenPermission,
     hasScreenPermission: screenPermission === 'granted',
     hasConfiguredBackend,
   }

@@ -4,6 +4,12 @@ Nudge takes a screenshot of your screen every 60 seconds (configurable) and
 sends it to OpenAI to ask whether it looks like you're doing what you said you
 wanted to do.
 
+The "Cloud" version sends the screenshot to our API server at nudge.fyi, which
+then sends it to OpenAI. I don't retain any of your screenshot data. Trust me, I
+would rather not have to offer a hosted version at all, but it's currently the
+only way that users without OpenAI API keys can use Nudge. (Open to suggestions
+and PRs.)
+
 ## Stack
 
 - Electron

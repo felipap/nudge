@@ -18,6 +18,8 @@ if (app.isPackaged) {
   })
 }
 
+console.log('Logs go to:', app.getPath('logs'))
+
 app.setAboutPanelOptions({
   applicationName: `Nudge ${app.isPackaged ? '' : '(dev)'}`,
   copyright: 'Copyright © 2025 Nudge',
