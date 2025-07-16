@@ -17,7 +17,7 @@ type Feedback =
   | 'unknown-error'
   | 'doing-great'
   | 'internet-error'
-  | 'try-concentrate'
+  | 'distracted'
   | 'no-api-key'
   | null
 
@@ -76,7 +76,7 @@ function getFeedbackFromState(state: State | null): Feedback {
     return 'doing-great'
   }
 
-  return 'try-concentrate'
+  return 'distracted'
 }
 
 function useFeedback(): Feedback {
@@ -106,49 +106,50 @@ export const Feedback = withBoundary(() => {
   const feedback = useFeedback()
 
   if (!feedback) {
-    return <AnimatePresence></AnimatePresence>
+    return null
   }
 
-  let inner = null
+  let icon = null
+  let text = null
+
   let className = 'text-gray-400'
   if (feedback === 'capturing') {
-    inner = <>Capturing screen...</>
+    text = 'Capturing screen...'
   } else if (feedback === 'improve-goal') {
     className = 'text-yellow-800 dark:text-yellow-300'
-    inner = <>Your goal is unclear</>
+    text = 'Your goal is unclear'
   } else if (feedback === 'doing-great') {
-    inner = (
-      <>
-        Doing great
-        <FaHandPeace className="h-3 w-3 text-green-800 dark:text-green-300" />
-      </>
+    text = 'Doing great'
+    icon = (
+      <FaHandPeace className="h-3 w-3 text-green-800 dark:text-green-300" />
     )
     className = 'text-green-800 dark:text-green-300'
-  } else if (feedback === 'try-concentrate') {
-    inner = <>Try to concentrate {genErrorIcon()}</>
+  } else if (feedback === 'distracted') {
+    text = 'You look distracted'
+    icon = genErrorIcon()
     className = 'text-red-800 dark:text-red-400'
   } else if (feedback === 'credential-error') {
-    inner = <>Problem with your OpenAI key</>
+    text = 'Problem with your OpenAI key'
     className = 'text-red-800 dark:text-red-300'
   } else if (feedback === 'rate-limit') {
-    inner = <>OpenAI rate-limited us</>
+    text = 'OpenAI rate-limited us'
     className = 'text-red-800 dark:text-red-300'
   } else if (feedback === 'internet-error') {
-    inner = <>No internet</>
+    text = 'No internet'
     className = 'text-red-800 dark:text-red-300'
   } else if (feedback === 'unknown-error') {
-    inner = <>AI failed with unknown error</>
+    text = 'AI failed with unknown error'
     className = 'text-red-800 dark:text-red-300'
   } else if (feedback === 'no-api-key') {
-    inner = <>No model key</>
+    text = 'No model key'
     className = 'text-red-800 dark:text-red-300'
   } else {
     feedback satisfies never
-    inner = <>Unknown error</>
+    text = `Unknown error ${feedback}`
   }
 
   return (
-    <div className="relative h-full">
+    <div className="relative h-full w-full">
       <AnimatePresence>
         <motion.div
           // Force a re-render when the feedback changes.
@@ -157,15 +158,18 @@ export const Feedback = withBoundary(() => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4 }}
-          className="absolute right-0 top-0 h-full flex items-center"
+          className="absolute right-0 top-0 h-full flex items-center max-w-full"
         >
           <div
             className={twMerge(
-              'text-[14px] pr-3 font-medium text-gray-500 font-display-3p overflow-hidden text-ellipsis whitespace-nowrap flex flex-row gap-2 items-center',
+              'w-full text-[14px] pr-3 font-medium text-gray-500  font-display-3p flex flex-row gap-2 items-center',
               className
             )}
           >
-            {inner}
+            <span className="text-ellipsis whitespace-nowrap overflow-hidden">
+              {text}
+            </span>
+            <div className="shrink-0">{icon}</div>
           </div>
         </motion.div>
       </AnimatePresence>

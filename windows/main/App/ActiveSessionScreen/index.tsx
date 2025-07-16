@@ -90,20 +90,18 @@ export const ActiveSessionScreen = withBoundary(() => {
           onClick={onClickMainButton}
           timeLeftMs={timeLeftMs}
         />
-        <AnimatePresence>
-          {paused ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.1 }}
-            >
-              <NewGoalButton onClick={clear} />
-            </motion.div>
-          ) : (
-            <Feedback />
-          )}
-        </AnimatePresence>
+        {paused ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
+          >
+            <NewGoalButton onClick={clear} />
+          </motion.div>
+        ) : (
+          <Feedback />
+        )}
       </footer>
     </div>
   )
