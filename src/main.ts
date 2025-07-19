@@ -1,14 +1,19 @@
 import 'source-map-support/register'
 
-import { app, BrowserWindow } from 'electron'
 import { IPCMode, init as SentryInit } from '@sentry/electron/main'
+import { app, BrowserWindow } from 'electron'
 import started from 'electron-squirrel-startup'
 import { setupIPC } from './ipc'
 import * as screenCapture from './lib/capture-service'
 import { getImagePath } from './lib/utils'
 import { onAppClose, onAppStart } from './logic'
 import { createTray } from './tray'
-import { createMainWindow, createSettingsWindow, prefWindow } from './windows'
+import {
+  createMainWindow,
+  createOnboardingWindow,
+  createSettingsWindow,
+  prefWindow,
+} from './windows'
 
 if (app.isPackaged) {
   SentryInit({
@@ -17,8 +22,6 @@ if (app.isPackaged) {
     ipcMode: IPCMode.Classic,
   })
 }
-
-console.log('Logs go to:', app.getPath('logs'))
 
 app.setAboutPanelOptions({
   applicationName: `Nudge ${app.isPackaged ? '' : '(dev)'}`,
@@ -31,12 +34,13 @@ app.setAboutPanelOptions({
 })
 
 async function onInit() {
+  setupIPC()
   createMainWindow()
   createSettingsWindow()
+  // createOnboardingWindow()
   screenCapture.start()
   onAppStart()
   createTray()
-  setupIPC()
 
   // Hide dock icon on macOS initially (Settings window starts hidden)
   if (process.platform === 'darwin') {

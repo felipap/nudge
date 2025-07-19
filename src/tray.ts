@@ -110,6 +110,7 @@ export function createTray() {
         },
       ])
     }
+
     template = template.concat([
       {
         label: 'Settings...',

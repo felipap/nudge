@@ -1,7 +1,6 @@
 // ATTENTION very important that these images are never packaged into the app.
 
 import { join } from 'path'
-import * as lodash from 'lodash'
 
 export interface TestCase {
   imageFilepath: string

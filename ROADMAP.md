@@ -3,22 +3,17 @@
 ## v0.1.x
 
 - [ ] Support multiple screens.
-- [ ] Feat: option to show timer in the menu bar.
-- [ ] Fix: warn when outside /Applications folder. Don't try to auto-update.
-- [ ] Let users introspect captures and understand what's wrong.
-- [ ] Fix: FAQ is outdated about data.
 - [ ] Make video showing how to create an OpenAI key.
-- [ ] Write privacy page.
-- [ ] Fix: height of active session is bouncing on reload
 - [ ] CI: figure out how to make pre-release builds.
-- [ ] Figure out a way around breaking changes. (Force update?)
 - [ ] Notification: test access by asking users to click on the notification.
 - [ ] Fix: permission errors still silent.
 - [ ] Fix: "Rate limit exceeded" error for OpenAI keys without billing setup.
-- [ ] Improve notification clarity - make it obvious when users should expect notifications.
 - [ ] Add session reset functionality - make it clear how to restart/reset sessions.
-- [ ] Somehow show notification skipped due to double-nudge.
 - [ ] Feat: "0 of 20 hours used"
+- [x] Fix: warn when outside /Applications folder. Don't try to auto-update.
+- [x] Let users introspect captures and understand what's wrong.
+- [x] Somehow show notification skipped due to double-nudge.
+- [x] Fix: FAQ is outdated about data.
 - [x] Fix: double-nudge prevention is blocking initial notifications in first few minutes.
 - [x] Where can users get stdout/stderr logs?
 - [x] Notify when fails to capture scren.
@@ -33,7 +28,9 @@
 
 ### Later
 
+- [ ] Figure out a way around breaking changes. (Force update?)
 - [x] Landing page.
+- [ ] Feat: option to show timer in the menu bar.
 - [ ] Feat: confetti when goal is achieved.
 - [ ] Feat: how do you get Nudge to learn?
 - [ ] Find a way to scrape off most sensitive data locally?
@@ -46,6 +43,8 @@
 - [ ] Feat: post to calendar.
 - [ ] Investigate possibility of non-native Notifications (problem: fullscreen?).
 - [ ] iPhone app.
+- [ ] Try to make it smaller.
+- [ ] Write privacy page.
 
 ## v0.0.x
 

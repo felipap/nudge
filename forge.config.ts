@@ -109,6 +109,10 @@ const config: ForgeConfig = {
           name: 'pref_window',
           config: 'vite.prefWindow.config.ts',
         },
+        {
+          name: 'onboard_window',
+          config: 'vite.onboardWindow.config.ts',
+        },
       ],
     }),
     // Fuses are used to enable/disable various Electron functionality

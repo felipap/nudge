@@ -100,7 +100,7 @@ export async function onClickCheckForUpdates() {
   if (status === 'not-available') {
     await dialog.showMessageBox({
       type: 'info',
-      message: 'No new version available',
+      message: 'No updates available',
       icon: getImagePath('original.png'),
     })
     return
