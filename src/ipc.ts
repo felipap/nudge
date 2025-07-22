@@ -9,6 +9,7 @@ import {
   nativeTheme,
   shell,
 } from 'electron'
+import fs from 'fs'
 import {
   AvailableModel,
   GetGoalFeedbackResult,
@@ -22,6 +23,7 @@ import {
   checkScreenPermissions,
   tryAskForScrenPermissions,
 } from './lib/screenshot'
+import { getImagePath } from './lib/utils'
 import { getState, setPartialState, store } from './store'
 import { State } from './store/types'
 import { prefWindow } from './windows'
@@ -48,6 +50,22 @@ export function setupIPC() {
       nativeTheme.themeSource = 'dark'
     }
     return nativeTheme.shouldUseDarkColors
+  })
+
+  ipcMainTyped.handle('getImageFromFs', (_, fileName: string) => {
+    const path = getImagePath(fileName)
+
+    const exists = fs.existsSync(path)
+    if (!exists) {
+      return { error: 'File does not exist' }
+    }
+
+    try {
+      const base64 = fs.readFileSync(path, 'base64').toString()
+      return { base64 }
+    } catch (error) {
+      return { error: 'Failed to read image from fs' }
+    }
   })
 
   ipcMainTyped.handle('dark-mode:system', () => {

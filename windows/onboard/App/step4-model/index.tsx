@@ -17,7 +17,11 @@ import {
 } from '../ui'
 import { ByomFieldGroup } from './ByomFieldGroup'
 
-export function ModelTab() {
+interface Props {
+  next: () => void
+}
+
+export function ModelTab({ next }: Props) {
   const [customInstructions, setCustomInstructions] =
     useCustomInstructionState()
   const { state } = useBackendState()
@@ -25,7 +29,7 @@ export function ModelTab() {
   let modelSelector
   if (state?.useNudgeCloud) {
     modelSelector = (
-      <div className="font-display-3p text-[14px] px-1 leading-[1.3]">
+      <div className="track-15 text-[14px] px-1 leading-[1.3]">
         0 of 20 hours used
       </div>
     )

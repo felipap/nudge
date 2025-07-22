@@ -33,7 +33,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen text-[14px] font-display-3p text-contrast">
+    <div className="flex flex-col h-screen text-[14px] text-contrast">
       {inner}
     </div>
   )

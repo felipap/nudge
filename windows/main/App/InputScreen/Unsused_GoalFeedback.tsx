@@ -24,7 +24,7 @@ export const GoalFeedback = withBoundary(
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="p-[8px] py-1 rounded-[4px] bg-[#ceffe3] border border-[#D29000] text-[#A57100] font-display-3p text-[14px] leading-[19px]"
+            className="p-[8px] py-1 rounded-[4px] bg-[#ceffe3] border border-[#D29000] text-[#A57100] track-15 text-[14px] leading-[19px]"
           >
             <strong className="font-semibold">Good description!</strong>
           </motion.div>
@@ -43,7 +43,7 @@ export const GoalFeedback = withBoundary(
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="p-[8px] py-1 rounded-[4px] bg-[#FFF0CE] border border-[#D29000] text-[#A57100] font-display-3p text-[14px] leading-[19px]"
+            className="p-[8px] py-1 rounded-[4px] bg-[#FFF0CE] border border-[#D29000] text-[#A57100] track-15 text-[14px] leading-[19px]"
           >
             <strong className="font-semibold">Tip:</strong> {feedbackText}
           </motion.div>
@@ -57,7 +57,7 @@ export const GoalFeedback = withBoundary(
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="p-[8px] py-1 rounded-[4px] bg-[#FFF0CE] border border-[#D29000] text-[#A57100] font-display-3p text-[14px] leading-[19px]"
+            className="p-[8px] py-1 rounded-[4px] bg-[#FFF0CE] border border-[#D29000] text-[#A57100] track-15 text-[14px] leading-[19px]"
           >
             <div className="flex items-center justify-between gap-1">
               <span> Asking AI for feedback...</span>

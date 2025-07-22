@@ -67,6 +67,9 @@ type SharedIpcMethods = {
   checkScreenPermissions: () => Promise<boolean>
   tryAskForScrenPermissions: () => Promise<{ granted: boolean; error?: string }>
   isAppPackaged: () => Promise<boolean>
+  getImageFromFs: (
+    src: string
+  ) => Promise<{ base64: string } | { error: string }>
 }
 
 export type IpcMainMethods = SharedIpcMethods & {

@@ -29,7 +29,7 @@ export function Nav({ title, showPin = false }: Props) {
       <div className="[app-region:drag] self-stretch flex-1 px-3 flex items-center flex-row select-none">
         <div className="flex flex-row items-center gap-3">
           <LogoIconCompleted width={18} height={18} />
-          <div className="font-display-3p text-[15px] font-medium antialiased">
+          <div className="track-15 text-[15px] font-medium antialiased">
             {title}
           </div>
         </div>

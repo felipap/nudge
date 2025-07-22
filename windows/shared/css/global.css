@@ -33,7 +33,7 @@
   /* Colors */
   --text-color-contrast: #000;
   --text-color-primary: #000;
-  --text-color-secondary: #888;
+  --text-color-secondary: #666;
   --text-color-tertiary: #aaa;
   --text-color-inverted: #fff;
   --background-one: #f0f0f0;
@@ -162,25 +162,12 @@ textarea {
 
 /* LAYOUT CLASSES */
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-bottom: 10rem;
+.track-15 {
+  letter-spacing: 0.015rem !important;
 }
 
-.font-display-3p {
-  font-family: var(--font-display);
-  /* letter-spacing: 0.015em !important; */
-}
-
-/* Text sizes */
-
-.text-body {
-  font-size: var(--text-body);
-}
-
-.text-heading {
-  font-size: 1.5rem;
+.track-10 {
+  letter-spacing: 0.01rem !important;
 }
 
 /* Text colors */

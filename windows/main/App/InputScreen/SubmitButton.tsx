@@ -90,7 +90,7 @@ export function SubmitButton({
   return (
     <Button
       className={twMerge(
-        'relative w-full h-[34px]  text-[15px] px-6 flex items-center transition-all justify-center rounded-md font-display-3p disabled:!opacity-100 disabled:!cursor-not-allowed',
+        'relative w-full h-[34px]  text-[15px] px-6 flex items-center transition-all justify-center rounded-md track-15 disabled:!opacity-100 disabled:!cursor-not-allowed',
         bgClassName,
         isGoodFeedback ? 'cursor-pointer' : '',
         'select-none'

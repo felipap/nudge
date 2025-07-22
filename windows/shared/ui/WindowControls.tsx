@@ -130,7 +130,7 @@ export function WindowControls({
   return (
     <div
       className={twMerge(
-        'flex gap-2 items-center select-none group',
+        'flex gap-[7px] items-center select-none group',
         className
       )}
     >

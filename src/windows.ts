@@ -160,7 +160,7 @@ export function createSettingsWindow() {
 
 export function createOnboardingWindow() {
   const windowWidth = 600
-  const windowHeight = 400
+  const windowHeight = 450
 
   const win = new BrowserWindow({
     show: !app.isPackaged,

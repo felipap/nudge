@@ -71,6 +71,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return await typedIpcRenderer.invoke('getState')
   },
 
+  getImageFromFs: async (src: string) => {
+    return await typedIpcRenderer.invoke('getImageFromFs', src)
+  },
+
   listenToggleDarkMode: (callback: (isDarkMode: boolean) => void) => {
     const listener = (_event: any, isDarkMode: boolean) => callback(isDarkMode)
     ipcRenderer.on('listenToggleDarkMode', listener)

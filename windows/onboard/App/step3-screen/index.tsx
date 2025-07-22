@@ -43,7 +43,11 @@ export function ScreenPermissionIcon({
   )
 }
 
-export const ScreenPermissions = withBoundary(() => {
+interface Props {
+  next: () => void
+}
+
+export const ScreenPermissions = withBoundary(({ next }: Props) => {
   useWindowHeight(500)
   const { screenPermission } = useScreenPermissionState()
 
@@ -58,7 +62,7 @@ export const ScreenPermissions = withBoundary(() => {
   }, [screenPermission])
 
   return (
-    <main className="p-4 flex flex-col gap-5 font-display-3p text-[14px] leading-[1.4] h-full justify-between">
+    <main className="p-4 flex flex-col gap-5 track-15 text-[14px] leading-[1.4] h-full justify-between">
       <section className="flex items-start gap-3 pr-5">
         <div className="w-12 flex items-center justify-center">
           <CameraIcon className="w-5 h-5 text-gray-700 mt-1 dark:text-gray-300 shrink-0" />
@@ -73,7 +77,7 @@ export const ScreenPermissions = withBoundary(() => {
       <section className="flex flex-row justify-between bg-apple-system-gray-6 dark:bg-apple-system-gray-4 p-4 py-3 rounded-md shadow-sm pr-5">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1  justify-between">
-            <div className="text-contrast text-[15px] font-medium antialiased font-display-3p">
+            <div className="text-contrast text-[15px] font-medium antialiased track-15">
               Permission to capture your screen
             </div>
           </div>

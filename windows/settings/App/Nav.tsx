@@ -117,9 +117,7 @@ export function TabButton({
       )}
     >
       <div className="flex items-center justify-center h-[21px]">{icon}</div>
-      <span
-        className={twMerge('text-[12.5px] font-display-3p', isActive && '')}
-      >
+      <span className={twMerge('text-[12.5px] track-15', isActive && '')}>
         {title}
       </span>
     </button>
