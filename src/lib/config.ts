@@ -32,3 +32,5 @@ export const CAPTURE_RESIZE_FACTOR = 0.4
 console.log('NUDGE_AI_BASE_URL', NUDGE_AI_BASE_URL)
 console.log('VERBOSE', VERBOSE)
 console.log('app.isPackaged', app.isPackaged)
+
+export const EXPERIMENTAL = !app.isPackaged

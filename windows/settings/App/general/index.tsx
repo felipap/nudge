@@ -55,7 +55,7 @@ function About() {
       <div className="flex flex-row gap-2 items-center justify-between">
         <p>Version 1.0</p>
         <button
-          onClick={() => openExternal('https://github.com/fiberinc/nudge')}
+          onClick={() => openExternal('https://github.com/felipap/nudge')}
           className="text-link "
         >
           GitHub repo

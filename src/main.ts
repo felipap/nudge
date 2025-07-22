@@ -5,6 +5,7 @@ import { app, BrowserWindow } from 'electron'
 import started from 'electron-squirrel-startup'
 import { setupIPC } from './ipc'
 import * as screenCapture from './lib/capture-service'
+import { EXPERIMENTAL } from './lib/config'
 import { getImagePath } from './lib/utils'
 import { onAppClose, onAppStart } from './logic'
 import { createTray } from './tray'
@@ -37,7 +38,9 @@ async function onInit() {
   setupIPC()
   createMainWindow()
   createSettingsWindow()
-  // createOnboardingWindow()
+  if (EXPERIMENTAL) {
+    createOnboardingWindow()
+  }
   screenCapture.start()
   onAppStart()
   createTray()
