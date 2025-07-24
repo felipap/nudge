@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/felipap/nudge/compare/v0.1.8...v0.1.9) (2025-07-24)
+
+
+### Bug Fixes
+
+* dont show permission screen on first onboarding ([cca65bf](https://github.com/felipap/nudge/commit/cca65bff25d81720f855275adfeeaac852e25204))
+
 ### [0.1.8](https://github.com/felipap/nudge/compare/v0.1.7...v0.1.8) (2025-07-24)
 
 
