@@ -58,6 +58,7 @@ export type State = {
   assessStartedAt: string | null // date
   firstOpenedAt: string // date
   lastClosedAt: string | null
+  userHasClickedTestNotification: boolean
   // settings
 
   // When true, we'll ignore `modelSelection` and send screenshots to Nudge
@@ -91,6 +92,7 @@ export const DEFAULT_STATE: State = {
   assessStartedAt: null,
   firstOpenedAt: new Date().toISOString(),
   lastClosedAt: null,
+  userHasClickedTestNotification: false,
   // settings
   useNudgeCloud: false, // Important to start with false.
   modelSelection: null,

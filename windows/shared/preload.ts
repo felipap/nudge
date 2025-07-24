@@ -71,6 +71,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return await typedIpcRenderer.invoke('getState')
   },
 
+  sendTestNotificationAndWait: async () => {
+    return await typedIpcRenderer.invoke('sendTestNotificationAndWait')
+  },
+
   getImageFromFs: async (src: string) => {
     return await typedIpcRenderer.invoke('getImageFromFs', src)
   },

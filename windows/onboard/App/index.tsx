@@ -4,26 +4,18 @@ import { openGithubDiscussion } from '../../shared/ipc'
 import { Nav } from './Nav'
 import { NotificationScreen } from './step1-notifications'
 import { TestNotificationScreen } from './step2-test-notification'
-import { ScreenPermissions } from './step3-screen'
-import { ModelTab } from './step4-model'
+import { ScreenPermissionScreen } from './step3-screen'
+import { CameraIcon } from '../../shared/ui/icons'
 
 type Step = '1' | '2' | '3' | '4'
 
 export default function App() {
-  const [step, setStep] = useState<Step>('1')
-
-  function nextStep() {
-    setStep((step) => (step === '4' ? '1' : '2'))
-  }
-
-  function prevStep() {
-    setStep('1')
-  }
+  const [step, setStep] = useState<Step>('3')
 
   return (
     <div className="flex flex-col h-screen text-contrast bg-[#FAFAFA] dark:bg-[#333333AA] text-[14px] leading-[1.4]">
       <Nav />
-      <main className="overflow-scroll h-full flex flex-col w-full select-none gap-4 px-4 pt-5">
+      <main className="h-full flex flex-col w-full select-none gap-4 px-5 pt-5">
         {step === '1' && (
           <AnimatePresence>
             <motion.div
@@ -33,7 +25,7 @@ export default function App() {
               transition={{ duration: 2 }}
               className="gap-6 flex flex-col h-full"
             >
-              <NotificationScreen next={nextStep} />
+              <NotificationScreen next={() => setStep('2')} />
             </motion.div>
           </AnimatePresence>
         )}
@@ -46,17 +38,34 @@ export default function App() {
               transition={{ duration: 0.5, ease: 'easeIn' }}
               className="gap-6 flex flex-col h-full"
             >
-              <TestNotificationScreen goBack={prevStep} next={nextStep} />
+              <TestNotificationScreen
+                goBack={() => setStep('1')}
+                next={() => setStep('3')}
+              />
             </motion.div>
           </AnimatePresence>
         )}
-        {step === '3' && <ModelTab next={nextStep} />}
-        {step === '4' && <ScreenPermissions next={nextStep} />}
+        {step === '3' && (
+          <AnimatePresence>
+            <motion.div
+              initial={{ x: 0, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 10, opacity: 0 }}
+              transition={{ duration: 0.5, ease: 'easeIn' }}
+              className="gap-3 flex flex-col h-full"
+            >
+              <ScreenPermissionScreen
+                goBack={() => setStep('1')}
+                next={() => setStep('3')}
+              />
+            </motion.div>
+          </AnimatePresence>
+        )}
       </main>
 
       <footer className="h-[40px] mt-[30px]">
         <BottomNavIndicator step={step} />
-        <div className="absolute bottom-4 right-6">
+        <div className="absolute bottom-5 right-6">
           <NeedHelpFooter />
         </div>
       </footer>
@@ -66,10 +75,10 @@ export default function App() {
 
 function BottomNavIndicator({ step }: { step: Step }) {
   const ball = (
-    <div className="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-500" />
+    <div className="w-[7px] h-[7px] rounded-full bg-gray-300 dark:bg-gray-500" />
   )
   const activeBall = (
-    <div className="w-2 h-2 rounded-full bg-gray-500 dark:bg-gray-300" />
+    <div className="w-[7px] h-[7px] rounded-full bg-gray-500 dark:bg-gray-300" />
   )
 
   return (
@@ -85,16 +94,21 @@ function BottomNavIndicator({ step }: { step: Step }) {
 interface StepScreenHeaderProps {
   title: string | ReactNode
   description: string | ReactNode
+  icon?: ReactNode
 }
 
 export function StepScreenHeader({
   title,
   description,
+  icon,
 }: StepScreenHeaderProps) {
   return (
-    <div className="flex flex-col gap-1 [app-region:drag] relative">
-      <h2 className="text-[18px] font-medium antialiased">{title}</h2>
-      <p className="text-[15px] leading-[1.4] max-w-[95%] text-contrast/70 [&_strong]:text-contrast [&_strong]:font-normal">
+    <div className="flex flex-col gap-1 relative">
+      <div className="flex flex-row gap-2 items-center">
+        {icon}
+        <h2 className="text-[17px] font-medium antialiased">{title}</h2>
+      </div>
+      <p className="text-[14px] leading-[1.4] trac max-w-[95%] text-contrast/100 [&_strong]:text-contrast [&_strong]:font-medium">
         {description}
       </p>
     </div>

@@ -12,6 +12,10 @@ export async function getState() {
   return await window.electronAPI.getState()
 }
 
+export async function sendTestNotificationAndWait() {
+  return await window.electronAPI.sendTestNotificationAndWait()
+}
+
 export async function setAutoLaunch(enable: boolean) {
   return await window.electronAPI.setAutoLaunch(enable)
 }

@@ -1,6 +1,11 @@
 import { motion } from 'framer-motion'
+import { ReactNode, useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { StepScreenHeader } from '..'
+import {
+  sendTestNotificationAndWait,
+  useBackendState,
+} from '../../../shared/ipc'
 import { FsImage } from '../../../shared/ui/FsImage'
 import { MacOSPointer } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
@@ -13,6 +18,43 @@ interface Props {
 
 export const TestNotificationScreen = withBoundary(
   ({ goBack, next }: Props) => {
+    const { state } = useBackendState()
+    const [hasSent, setHasSent] = useState(false)
+    const [hasClicked, setHasClicked] = useState(false)
+
+    useEffect(() => {
+      if (state?.userHasClickedTestNotification) {
+        setHasClicked(true)
+      }
+    }, [state?.userHasClickedTestNotification])
+
+    async function sendTestNotification() {
+      setHasSent(true)
+      await sendTestNotificationAndWait()
+      setHasClicked(true)
+    }
+
+    let action: ReactNode
+    if (hasClicked) {
+      action = (
+        <SubmitButton onClick={next} color="green">
+          Click detected, continue &rarr;
+        </SubmitButton>
+      )
+    } else if (hasSent) {
+      action = (
+        <SubmitButton color="yellow" disabled>
+          Click the notification you received
+        </SubmitButton>
+      )
+    } else {
+      action = (
+        <SubmitButton onClick={sendTestNotification} color="yellow">
+          Send test notification
+        </SubmitButton>
+      )
+    }
+
     return (
       <>
         <StepScreenHeader
@@ -20,11 +62,20 @@ export const TestNotificationScreen = withBoundary(
           description={
             <>
               Let's make sure Nudge is working.{' '}
-              <strong>Click on the test notification we sent you.</strong>
+              {hasSent ? (
+                <strong>Now click on the notification we sent you.</strong>
+              ) : (
+                <strong
+                  onClick={sendTestNotification}
+                  className="cursor-pointer !text-yellow-800"
+                >
+                  Click to send a test notification.
+                </strong>
+              )}
             </>
           }
         />
-        <Illustration className="mt-[10px]" />
+        <Illustration className="mt-[10px]" hasSent={hasSent} />
         <div className="flex-1" />
         <div className="w-full flex justify-center gap-2 items-center">
           {goBack && (
@@ -32,30 +83,24 @@ export const TestNotificationScreen = withBoundary(
               Back
             </SubmitButton>
           )}
-          <SubmitButton
-            onClick={
-              // We have to trust the user's word for now.
-              next
-            }
-            color="blue"
-            disabled
-          >
-            Click on the test notification you received
-          </SubmitButton>
-          {/* <SubmitButton color="green">
-          Request notification permission
-        </SubmitButton> */}
+          {action}
         </div>
       </>
     )
   }
 )
 
-function Illustration({ className }: { className?: string }) {
+function Illustration({
+  className,
+  hasSent,
+}: {
+  className?: string
+  hasSent: boolean
+}) {
   return (
     <div
       className={twMerge(
-        'w-full flex justify-center items-center relative pt-[20px]',
+        'w-full flex justify-center items-center relative',
         className
       )}
     >
@@ -71,24 +116,26 @@ function Illustration({ className }: { className?: string }) {
       >
         <FsImage width={400} src="onboarding/screen-two-image.png" />
       </motion.div>
-      <motion.div
-        animate={{
-          opacity: [0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0],
-          x: [20, 0, 0, 0, 0, 0, 0, 0, 0],
-          y: [60, 0, 0, 0, 0, 0, 0, 0, 0],
-          scale: [2, 1.5, 1.3, 1.3, 1.0, 1.3, 1.3, 1.3, 1.0],
-        }}
-        transition={{
-          duration: 5,
-          // ease: 'easeIn',
-          delay: 1,
-          repeat: Infinity,
-          repeatDelay: 1,
-        }}
-        className="z-10 absolute bottom-[20px] left-[1/2] translate-x-[150px]"
-      >
-        <MacOSPointer className="w-[40px]" />
-      </motion.div>
+      {hasSent && (
+        <motion.div
+          animate={{
+            opacity: [0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0],
+            x: [20, 0, 0, 0, 0, 0, 0, 0, 0],
+            y: [60, 0, 0, 0, 0, 0, 0, 0, 0],
+            scale: [2, 1.5, 1.3, 1.3, 1.0, 1.3, 1.3, 1.3, 1.0],
+          }}
+          transition={{
+            duration: 5,
+            // ease: 'easeIn',
+            delay: 1,
+            repeat: Infinity,
+            repeatDelay: 1,
+          }}
+          className="z-10 absolute bottom-[20px] left-[1/2] translate-x-[150px]"
+        >
+          <MacOSPointer className="w-[40px]" />
+        </motion.div>
+      )}
     </div>
   )
 }

@@ -280,22 +280,7 @@ function canNotifyUserAgain() {
   return dayjs().isAfter(dontNotifyBefore)
 }
 
-function showNudgeNotification(body: string) {
-  const notif = new Notification({
-    title: 'Message from Nudge',
-    body: body,
-    silent: true,
-    sound: 'Blow.aiff',
-    timeoutType: 'default',
-  })
-
-  notif.show()
-
-  setTimeout(() => {
-    notif.close()
-  }, 20_000)
-  lastNotificationAt = new Date()
-}
+function showNudgeNotification(body: string) {}
 
 function getFrequencyMs() {
   const frequencyMs = (store.getState().captureEverySeconds || 60) * 1000

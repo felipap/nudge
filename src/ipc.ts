@@ -7,6 +7,7 @@ import {
   IpcMainEvent,
   IpcMainInvokeEvent,
   nativeTheme,
+  Notification,
   shell,
 } from 'electron'
 import fs from 'fs'
@@ -18,7 +19,7 @@ import {
 import { getAiBackendClient, getGoalFeedback, validateModelKey } from './ai'
 import * as screenCapture from './lib/capture-service'
 import { GITHUB_DISCUSSIONS_URL } from './lib/config'
-import { debug, logError, warn } from './lib/logger'
+import { debug, log, logError, warn } from './lib/logger'
 import {
   checkScreenPermissions,
   tryAskForScrenPermissions,
@@ -50,6 +51,33 @@ export function setupIPC() {
       nativeTheme.themeSource = 'dark'
     }
     return nativeTheme.shouldUseDarkColors
+  })
+
+  ipcMainTyped.handle('sendTestNotificationAndWait', async () => {
+    log('[sendTestNotificationAndWait] called')
+
+    const notif = new Notification({
+      title: 'TEST NOTIFICATION',
+      body: 'Click me to continue the onboarding.',
+      silent: false,
+      sound: 'Blow.aiff',
+      timeoutType: 'never',
+    })
+
+    return await new Promise((resolve) => {
+      notif.on('click', () => {
+        log('[sendTestNotificationAndWait] click!!')
+        setPartialState({
+          userHasClickedTestNotification: true,
+        })
+        resolve(true)
+      })
+      notif.on('close', () => {
+        log('[sendTestNotificationAndWait] close!!')
+        resolve(true)
+      })
+      notif.show()
+    })
   })
 
   ipcMainTyped.handle('getImageFromFs', (_, fileName: string) => {

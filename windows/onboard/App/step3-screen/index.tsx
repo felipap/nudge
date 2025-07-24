@@ -1,123 +1,82 @@
-import { CameraIcon, Monitor, ScreenShareOff } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { CameraIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { twMerge } from 'tailwind-merge'
+import { StepScreenHeader } from '..'
 import {
   openGithubDiscussion,
   openSystemSettings,
   tryAskForScrenPermissions,
   useScreenPermissionState,
 } from '../../../shared/ipc'
-import { useWindowHeight } from '../../../shared/lib'
+import { FsImage } from '../../../shared/ui/FsImage'
+import { MacOSPointer } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
-
-export function ScreenPermissionIcon({
-  active,
-  onClick,
-}: {
-  active: boolean
-  onClick: () => void
-}) {
-  const { screenPermission } = useScreenPermissionState()
-
-  return null
-  return (
-    <TabButton
-      title="Screen"
-      icon={
-        <div className="flex items-center justify-center h-[21px] gap-1 relative">
-          {screenPermission === 'granted' ? (
-            <Monitor className="w-[23px]" />
-          ) : (
-            <ScreenShareOff className="w-[23px]" />
-          )}
-        </div>
-      }
-      onClick={onClick}
-      isActive={active}
-      className={
-        screenPermission === 'granted'
-          ? 'text-green-600 dark:text-green-400'
-          : 'text-red-500 dark:text-red-400'
-      }
-    />
-  )
-}
+import { SubmitButton } from '../SubmitButton'
 
 interface Props {
   next: () => void
+  goBack?: () => void
 }
 
-export const ScreenPermissions = withBoundary(({ next }: Props) => {
-  useWindowHeight(500)
-  const { screenPermission } = useScreenPermissionState()
+export const ScreenPermissionScreen = withBoundary(
+  ({ next, goBack }: Props) => {
+    const { screenPermission } = useScreenPermissionState()
 
-  // By default, try to ask for permission when the user opens the settings.
-  // There's no reasonable way to implement a "Grant" button, because the OS
-  // only shows the dialog to the user once, and we can't even know when the
-  // user chooses to deny it.
-  useEffect(() => {
-    if (screenPermission !== 'granted') {
-      tryAskForScrenPermissions()
-    }
-  }, [screenPermission])
+    // By default, try to ask for permission when the user opens the settings.
+    // There's no reasonable way to implement a "Grant" button, because the OS
+    // only shows the dialog to the user once, and we can't even know when the
+    // user chooses to deny it.
+    useEffect(() => {
+      if (screenPermission !== 'granted') {
+        tryAskForScrenPermissions()
+      }
+    }, [screenPermission])
 
-  return (
-    <main className="p-4 flex flex-col gap-5 track-15 text-[14px] leading-[1.4] h-full justify-between">
-      <section className="flex items-start gap-3 pr-5">
-        <div className="w-12 flex items-center justify-center">
-          <CameraIcon className="w-5 h-5 text-gray-700 mt-1 dark:text-gray-300 shrink-0" />
-        </div>
-        <p className="text-[14px] leading-[1.4] text-secondary">
-          Nudge takes screenshots periodically and sends them directly to your
-          chosen model for analysis. Your screenshots are not sent to any other
-          servers.
-        </p>
-      </section>
+    return (
+      <>
+        <StepScreenHeader
+          // icon={
+          //   <CameraIcon className="w-5 h-5 text-gray-700 dark:text-gray-300 shrink-0" />
+          // }
+          title="Step 3: Allow Nudge to capture screen"
+          description={
+            <>
+              Nudge detects whether you&apos;re distracted by capturing your
+              screen from time to time.{' '}
+              {screenPermission === 'denied' && (
+                <strong>
+                  Go to System Settings &gt; Privacy & Security &gt; Screen
+                  Recording and turn on the switch for Nudge.
+                </strong>
+              )}
+            </>
+          }
+        />
 
-      <section className="flex flex-row justify-between bg-apple-system-gray-6 dark:bg-apple-system-gray-4 p-4 py-3 rounded-md shadow-sm pr-5">
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-1  justify-between">
-            <div className="text-contrast text-[15px] font-medium antialiased track-15">
-              Permission to capture your screen
-            </div>
-          </div>
-          {screenPermission !== 'granted' && (
-            <div className="flex flex-col gap-2">
-              <p className="text-secondary [&>strong]:text-contrast/80 [&>strong]:font-normal pr-10">
-                Go to <strong>System Settings</strong> &gt;{' '}
-                <strong>Privacy &amp; Security</strong> &gt;{' '}
-                <strong>Screen Recording</strong>, find Nudge in the list and
-                turn the switch on.
-              </p>
-              <button
-                onClick={() => {
-                  openSystemSettings()
-                }}
-                className="self-start text-link hover:underline text-[13px]"
-              >
-                Open System Settings
-              </button>
-            </div>
+        <Illustration className="" />
+
+        <div className="flex-1" />
+        <div className="w-full flex justify-center gap-2 items-center">
+          {goBack && (
+            <SubmitButton onClick={goBack} color="gray" className="text-[14px]">
+              Back
+            </SubmitButton>
           )}
-        </div>{' '}
-        <div
-          className={twMerge(
-            'font-medium text-[15px] text-nowrap',
-            screenPermission === 'granted'
-              ? 'text-green-700 dark:text-green-300'
-              : 'text-red-500 dark:text-red-400'
+          {screenPermission === 'granted' ? (
+            <SubmitButton onClick={next} color="green">
+              Permission granted, continue &rarr;
+            </SubmitButton>
+          ) : (
+            <SubmitButton onClick={openSystemSettings} color="yellow">
+              Open System Settings
+            </SubmitButton>
           )}
-        >
-          {screenPermission === 'granted' ? 'Granted' : 'Not granted'}
         </div>
-      </section>
-
-      <div className="flex flex-col gap-1 flex-1"></div>
-
-      <NeedHelpFooter />
-    </main>
-  )
-})
+      </>
+    )
+  }
+)
 
 export function NeedHelpFooter() {
   return (
@@ -132,6 +91,49 @@ export function NeedHelpFooter() {
         GitHub
       </button>
       .
+    </div>
+  )
+}
+
+function Illustration({ className }: { className?: string }) {
+  return (
+    <div
+      className={twMerge(
+        'w-full flex justify-center items-center relative select-none',
+        className
+      )}
+    >
+      {/* <div className="absolute top-0 right-1">
+        <span className="text-[12px] text-yellow-950/40">Illustration</span>
+      </div> */}
+
+      <motion.div
+        initial={{ x: 10, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: 10, opacity: 0 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+      >
+        <FsImage width={455} src="onboarding/screen-three-image.png" />
+      </motion.div>
+
+      <motion.div
+        animate={{
+          opacity: [0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0],
+          x: [20, 0, 0, 0, 0, 0, 0, 0, 0],
+          y: [60, 0, 0, 0, 0, 0, 0, 0, 0],
+          scale: [2, 1.5, 1.3, 1.3, 1.0, 1.3, 1.3, 1.3, 1.0],
+        }}
+        transition={{
+          duration: 5,
+          // ease: 'easeIn',
+          delay: 1,
+          repeat: Infinity,
+          repeatDelay: 1,
+        }}
+        className="z-10 absolute bottom-[20px] left-[1/2] translate-x-[150px]"
+      >
+        <MacOSPointer className="w-[40px]" />
+      </motion.div>
     </div>
   )
 }
