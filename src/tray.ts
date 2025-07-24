@@ -21,11 +21,12 @@ import {
   getStateIndicator,
   hasFinishedOnboardingSteps,
   hasNoCurrentGoalOrPaused,
+  isOnboardingFinished,
   onIndicatorStateChange,
   store,
 } from './store'
 import { onClickCheckForUpdates, updaterState } from './updater'
-import { mainWindow, prefWindow } from './windows'
+import { mainWindow, onboardWindow, prefWindow } from './windows'
 
 dayjs.extend(relativeTime)
 
@@ -89,8 +90,9 @@ export function createTray() {
         template.push({ type: 'separator' })
       }
 
-      template = template.concat([
-        {
+      // Keep on top only applies after onboarding.
+      if (isOnboardingFinished()) {
+        template.push({
           label: `Keep window on top`,
           type: 'checkbox',
           checked: getState().isWindowPinned,
@@ -107,18 +109,21 @@ export function createTray() {
             })
             updateTrayMenu()
           },
-        },
-      ])
+        })
+      }
     }
 
-    template = template.concat([
-      {
+    if (isOnboardingFinished()) {
+      template.push({
         label: 'Settings...',
         accelerator: 'CmdOrCtrl+,',
         click: () => {
           prefWindow!.show()
         },
-      },
+      })
+    }
+
+    template = template.concat([
       { type: 'separator' },
       {
         label: `Version ${app.getVersion()}${app.isPackaged ? '' : ' (dev)'}`,
@@ -169,17 +174,6 @@ export function createTray() {
     const resizedIcon = icon.resize({ width: 18, quality: 'best' })
     resizedIcon.setTemplateImage(true)
     tray.setImage(resizedIcon)
-
-    // tray.setContextMenu(contextMenu)
-    // tray.setTitle(
-    //   mood === 'happy'
-    //     ? ':D'
-    //     : mood === 'angry'
-    //     ? '>:('
-    //     : mood === 'thinking'
-    //     ? '?:/'
-    //     : ':|'
-    // )
   }
 
   mainWindow.on('hide', () => {
@@ -205,23 +199,11 @@ export function createTray() {
 
   // Optional: Show window when clicking the tray icon
   tray.on('click', () => {
-    // console.log('tray clicked', mainWindow!.isFocused())
-    if (!mainWindow!.isFocused()) {
-      mainWindow!.show()
+    const windowToShow = isOnboardingFinished() ? mainWindow : onboardWindow
+    if (!windowToShow!.isFocused()) {
+      windowToShow!.show()
     }
   })
-
-  // Refresh the menu every minute to show updated status
-  // setInterval(updateTrayMenu, 60000)
-
-  // Click event (show/hide window)
-  // tray.on("click", () => {
-  //   if (win?.isVisible()) {
-  //     win.hide()
-  //   } else {
-  //     win?.show()
-  //   }
-  // })
 
   return tray
 }

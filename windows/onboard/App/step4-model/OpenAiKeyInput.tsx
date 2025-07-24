@@ -45,17 +45,8 @@ export function OpenAiKeyInput({
   return (
     <Fieldset>
       <Label>OpenAI key</Label>
-
       <div className="relative">
         <Input
-          // model={'openai-4o-mini'}
-          // currentKey={value || null}
-
-          // value={value || ''}
-          // onChange={(e) => {
-          //   onChange(e.target.value)
-          // }}
-
           value={value}
           onChange={(e) => {
             onChange?.(e)

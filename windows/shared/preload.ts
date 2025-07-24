@@ -8,7 +8,7 @@ import { contextBridge, IpcRenderer, ipcRenderer } from 'electron'
 import type { State } from '../../src/store/types'
 import { tryAskForScrenPermissions } from './ipc'
 import {
-  AvailableModel,
+  AvailableProvider,
   ExposedElectronAPI,
   IpcMainMethods,
 } from './shared-types'
@@ -79,6 +79,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return await typedIpcRenderer.invoke('getImageFromFs', src)
   },
 
+  finishOnboarding: async () => {
+    return await typedIpcRenderer.invoke('finishOnboarding')
+  },
+
   listenToggleDarkMode: (callback: (isDarkMode: boolean) => void) => {
     const listener = (_event: any, isDarkMode: boolean) => callback(isDarkMode)
     ipcRenderer.on('listenToggleDarkMode', listener)
@@ -136,7 +140,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return await typedIpcRenderer.invoke('captureNow')
   },
 
-  validateModelKey: async (model: AvailableModel, key: string) => {
+  validateModelKey: async (model: AvailableProvider, key: string) => {
     return await typedIpcRenderer.invoke('validateModelKey', model, key)
   },
 

@@ -1,6 +1,11 @@
 import { app, BrowserWindow, screen } from 'electron'
 import path from 'node:path'
-import { getState, hasFinishedOnboardingSteps, store } from './store'
+import {
+  getState,
+  hasFinishedOnboardingSteps,
+  isOnboardingFinished,
+  store,
+} from './store'
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
 declare const MAIN_WINDOW_VITE_NAME: string
@@ -32,9 +37,8 @@ export function createMainWindow() {
     frame: false,
     transparent: true,
     vibrancy: 'fullscreen-ui',
-    show: true,
+    show: false,
     // alwaysOnTop: true,
-
     x:
       primaryDisplay.workArea.x +
       primaryDisplay.workArea.width -
@@ -98,6 +102,11 @@ export function createMainWindow() {
   })
 
   // win.setAlwaysOnTop(true, 'floating')
+
+  // Show window if onboarding is complete.
+  if (isOnboardingFinished()) {
+    win.show()
+  }
 
   mainWindow = win
 
@@ -207,7 +216,7 @@ export function createOnboardingWindow() {
     return true
   })
 
-  if (!getState().onboardingFinishedAt) {
+  if (!isOnboardingFinished()) {
     win.show()
   }
 

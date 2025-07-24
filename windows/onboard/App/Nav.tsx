@@ -21,7 +21,7 @@ export function Nav() {
         <div className="flex flex-row items-center gap-2">
           <LogoIconCompleted width={16} height={16} />
           <div className="text-[13px] font-normal mt-[1px]">
-            Nudge Onboarding
+            Welcome to Nudge
           </div>
         </div>
       </div>

@@ -1,4 +1,7 @@
-import { AvailableModel, ModelError } from '../../windows/shared/shared-types'
+import {
+  AvailableProvider,
+  ModelError,
+} from '../../windows/shared/shared-types'
 import { DOUBLE_NUDGE_THRESHOLD_MINS } from '../lib/config'
 
 export interface Capture {
@@ -23,8 +26,8 @@ export interface CaptureError {
   modelError: ModelError
 }
 
-export type ModelSelection = {
-  name: AvailableModel
+export type ProviderSelection = {
+  name: AvailableProvider
   key: string | null
   validatedAt: string | null
 }
@@ -65,7 +68,7 @@ export type State = {
   // When true, we'll ignore `modelSelection` and send screenshots to Nudge
   // server.
   useNudgeCloud: boolean
-  modelSelection: ModelSelection | null
+  modelSelection: ProviderSelection | null
   captureEverySeconds: number
   doubleNudgeThresholdMins: number
   isWindowPinned: boolean
@@ -74,7 +77,7 @@ export type State = {
   // frontend things
   savedGoalInputValue: string | null
   // history of captures
-  savedCaptures: Capture[]
+  // savedCaptures: Capture[]
   customInstructions: string | null
   events?: {
     firstOpenedAt?: Date
@@ -86,7 +89,7 @@ export const DEFAULT_STATE: State = {
   onboardingFinishedAt: null,
   nextCaptureAt: null,
   session: null,
-  savedCaptures: [],
+  // savedCaptures: [],
   activeCapture: null,
   // capture state
   captureStartedAt: null,

@@ -46,18 +46,15 @@ export const setPartialState = (partial: Partial<State>) => {
   store.setState(partial)
 }
 
-export const getSavedCaptures = () => store.getState().savedCaptures
-
 export const addSavedCapture = (capture: Capture) => {
-  let nextValue = [...store.getState().savedCaptures, capture]
-  if (nextValue.length > 10) {
-    // Get the last 10
-    nextValue = nextValue.slice(nextValue.length - 10)
-  }
-
-  store.setState({
-    savedCaptures: nextValue,
-  })
+  // let nextValue = [...store.getState().savedCaptures, capture]
+  // if (nextValue.length > 10) {
+  //   // Get the last 10
+  //   nextValue = nextValue.slice(nextValue.length - 10)
+  // }
+  // store.setState({
+  //   savedCaptures: nextValue,
+  // })
 }
 
 export const getState = () => store.getState()
@@ -145,4 +142,9 @@ export function hasFinishedOnboardingSteps() {
   const hasScreenPermissions = checkScreenPermissions()
 
   return (hasOpenAiKey || isUsingCloud) && hasScreenPermissions
+}
+
+export function isOnboardingFinished() {
+  const state = store.getState()
+  return !!state.onboardingFinishedAt
 }

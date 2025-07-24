@@ -23,10 +23,10 @@ export type GoalFeedbackType =
 //
 // Available models
 
-export type AvailableModel = 'openai-4o' | 'openai-4o-mini'
+export type AvailableProvider = 'openai' | 'openai-4o-mini'
 
-export const AVAILABLE_MODELS: { name: string; value: AvailableModel }[] = [
-  { name: 'OpenAI 4o mini', value: 'openai-4o' },
+export const AVAILABLE_MODELS: { name: string; value: AvailableProvider }[] = [
+  { name: 'OpenAI 4o mini', value: 'openai' },
 ]
 
 //
@@ -56,11 +56,12 @@ type SharedIpcMethods = {
   openGithubDiscussion: () => Promise<void>
   openSystemSettings: () => Promise<void>
   getGoalFeedback: (goal: string) => Promise<GetGoalFeedbackResult>
+  finishOnboarding: () => Promise<void>
   pauseSession: () => Promise<void>
   resumeSession: () => Promise<void>
   startSession: (goal: string, durationMs: number) => Promise<void>
   captureNow: () => Promise<void>
-  validateModelKey: (model: AvailableModel, key: string) => Promise<boolean>
+  validateModelKey: (model: AvailableProvider, key: string) => Promise<boolean>
   setAutoLaunch: (enable: boolean) => Promise<void>
   getAutoLaunch: () => Promise<boolean>
   openSettings: (tab?: string) => Promise<void>

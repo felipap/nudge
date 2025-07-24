@@ -60,6 +60,8 @@ export const DoneScreen = withBoundary(({ goBack }: Props) => {
         <Button onClick={closeWindow}>Close window</Button>
       </div>
 
+      {/* FELIPE: I feel this extra "Back" button is confusing. */}
+
       <div className="w-full flex justify-center gap-2 items-center">
         {goBack && (
           <SubmitButton onClick={goBack} color="gray" className="text-[14px]">

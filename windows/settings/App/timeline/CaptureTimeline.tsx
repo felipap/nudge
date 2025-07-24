@@ -7,7 +7,7 @@ export function CaptureTimeline() {
   useEffect(() => {
     const fetchCaptures = async () => {
       const state = await window.electronAPI.getState()
-      setCaptures(state.savedCaptures)
+      // setCaptures(state.savedCaptures)
     }
     fetchCaptures()
   }, [])

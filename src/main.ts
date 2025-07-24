@@ -5,7 +5,7 @@ import { app, BrowserWindow } from 'electron'
 import started from 'electron-squirrel-startup'
 import { setupIPC } from './ipc'
 import * as screenCapture from './lib/capture-service'
-import { EXPERIMENTAL } from './lib/config'
+import { log } from './lib/logger'
 import { getImagePath } from './lib/utils'
 import { onAppClose, onAppStart } from './logic'
 import { createTray } from './tray'
@@ -38,9 +38,8 @@ async function onInit() {
   setupIPC()
   createMainWindow()
   createSettingsWindow()
-  if (EXPERIMENTAL) {
-    createOnboardingWindow()
-  }
+  createOnboardingWindow()
+
   screenCapture.start()
   onAppStart()
   createTray()
@@ -53,13 +52,13 @@ async function onInit() {
   // MCP (later)
   // export const mcpApp = createMcpApp()
   // mcpApp.listen(3040, () => {
-  //   console.log('MCP Stateless Streamable HTTP Server listening on port 3040')
+  //   log('MCP Stateless Streamable HTTP Server listening on port 3040')
   // })
 }
 
 // Function to handle app quitting
 async function quitApp() {
-  console.log('Will quit.')
+  log('Will quit.')
   onAppClose()
 
   // if (!app.isPackaged) {
@@ -105,7 +104,7 @@ app.setAppUserModelId(app.getName())
 // Prevent multiple instances of the app
 const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
-  console.log('Did not get lock. Quitting.')
+  log('Did not get lock. Quitting.')
   quitApp()
 } else {
   app.on('second-instance', (event, commandLine) => {
@@ -152,4 +151,4 @@ app.on('before-quit', () => {
   app.isQuitting = true
 })
 
-// if("darwin"!==process.platform)return;if(r.default.development)return;if(o.app.isInApplicationsFolder())return;console.log("Prompting to move to Applications Folder");const{response:e}=yield o.dialog.showMessageBox({type:"question",buttons:["Move to Applications Folder","Not Now"],defaultId:0,message:"Move to Applications Folder?",detail:"Moving Reflect to your Applications folder ensures proper functionality and makes it easier to find. This is recommended for most users.",cancelId:1});0===e&&(o.app.moveToApplicationsFolder()||o.dialog.showErrorBox("Error","Failed to move to Applications Folder"))
+// if("darwin"!==process.platform)return;if(r.default.development)return;if(o.app.isInApplicationsFolder())return;log("Prompting to move to Applications Folder");const{response:e}=yield o.dialog.showMessageBox({type:"question",buttons:["Move to Applications Folder","Not Now"],defaultId:0,message:"Move to Applications Folder?",detail:"Moving Reflect to your Applications folder ensures proper functionality and makes it easier to find. This is recommended for most users.",cancelId:1});0===e&&(o.app.moveToApplicationsFolder()||o.dialog.showErrorBox("Error","Failed to move to Applications Folder"))

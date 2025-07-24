@@ -12,7 +12,7 @@ import {
 } from 'electron'
 import fs from 'fs'
 import {
-  AvailableModel,
+  AvailableProvider,
   GetGoalFeedbackResult,
   IpcMainMethods,
 } from '../windows/shared/shared-types'
@@ -235,18 +235,20 @@ export function setupIPC() {
 
   ipcMainTyped.handle(
     'validateModelKey',
-    async (_event, model: AvailableModel, key: string) => {
+    async (_event, model: AvailableProvider, key: string) => {
       debug('[ipc] validateModelKey', model, key)
-
-      // FIXME make generic
-      const openAiKey = getState().modelSelection?.key
-      if (!openAiKey) {
-        throw new Error('No OpenAI key')
-      }
-      const isValid = await validateModelKey(model, key)
-      return isValid
+      return await validateModelKey(model, key)
     }
   )
+
+  ipcMainTyped.handle('finishOnboarding', async (_event) => {
+    setPartialState({
+      onboardingFinishedAt: new Date().toISOString(),
+      // Should already be null for 99% of users but useful for developers to
+      // reset the state of everything.
+      session: null,
+    })
+  })
 
   ipcMainTyped.handle('setPartialState', (_event, state: Partial<State>) => {
     store.setState({

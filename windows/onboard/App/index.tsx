@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ReactNode, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import {
-  closeWindow,
+  finishOnboarding,
   openGithubDiscussion,
   setPartialState,
 } from '../../shared/ipc'
@@ -13,12 +13,17 @@ import { ScreenPermissionScreen } from './step3-screen'
 import { AISelectionScreen } from './step4-model'
 import { DoneScreen } from './step5-done'
 
-type Step = '1' | '2' | '3' | '4' | '5'
+type Step =
+  | '1-notifications'
+  | '2-test-nudge'
+  | '3-screen'
+  | '4-model'
+  | '5-done'
 
 export const BG_CLASS = 'bg-one'
 
 export default function App() {
-  const [step, setStep] = useState<Step>('5')
+  const [step, setStep] = useState<Step>('1-notifications')
 
   return (
     <div
@@ -29,7 +34,7 @@ export default function App() {
     >
       <Nav />
       <main className="h-full flex flex-col w-full select-none gap-4 px-5 pt-5 overflow-hidden pb-3">
-        {step === '1' && (
+        {step === '1-notifications' && (
           <AnimatePresence>
             <motion.div
               initial={{ x: 0, opacity: 1 }}
@@ -38,11 +43,11 @@ export default function App() {
               transition={{ duration: 2 }}
               className="gap-6 flex flex-col h-full"
             >
-              <NotificationScreen next={() => setStep('2')} />
+              <NotificationScreen next={() => setStep('2-test-nudge')} />
             </motion.div>
           </AnimatePresence>
         )}
-        {step === '2' && (
+        {step === '2-test-nudge' && (
           <AnimatePresence>
             <motion.div
               initial={{ x: 0, opacity: 0 }}
@@ -52,13 +57,13 @@ export default function App() {
               className="gap-6 flex flex-col h-full"
             >
               <TestNotificationScreen
-                goBack={() => setStep('1')}
-                next={() => setStep('3')}
+                goBack={() => setStep('1-notifications')}
+                next={() => setStep('3-screen')}
               />
             </motion.div>
           </AnimatePresence>
         )}
-        {step === '3' && (
+        {step === '3-screen' && (
           <AnimatePresence>
             <motion.div
               initial={{ x: 0, opacity: 0 }}
@@ -68,13 +73,13 @@ export default function App() {
               className="gap-6 flex flex-col h-full"
             >
               <ScreenPermissionScreen
-                goBack={() => setStep('1')}
-                next={() => setStep('4')}
+                goBack={() => setStep('1-notifications')}
+                next={() => setStep('4-model')}
               />
             </motion.div>
           </AnimatePresence>
         )}
-        {step === '4' && (
+        {step === '4-model' && (
           <AnimatePresence>
             <motion.div
               initial={{ x: 0, opacity: 0 }}
@@ -84,13 +89,16 @@ export default function App() {
               className="gap-6 flex flex-col h-full"
             >
               <AISelectionScreen
-                goBack={() => setStep('3')}
-                next={() => setStep('5')}
+                goBack={() => setStep('3-screen')}
+                next={() => {
+                  finishOnboarding()
+                  setStep('5-done')
+                }}
               />
             </motion.div>
           </AnimatePresence>
         )}
-        {step === '5' && (
+        {step === '5-done' && (
           <AnimatePresence>
             <motion.div
               initial={{ x: 0, opacity: 0 }}
@@ -101,10 +109,7 @@ export default function App() {
             >
               <DoneScreen
                 goBack={() => {
-                  setPartialState({
-                    onboardingFinishedAt: new Date().toISOString(),
-                  })
-                  setStep('4')
+                  setStep('4-model')
                 }}
               />
             </motion.div>
@@ -116,7 +121,7 @@ export default function App() {
           <BottomNavIndicator step={step} />
         </div>
         <div className="absolute bottom-4 right-5">
-          {step !== '5' && <NeedHelpFooter />}
+          {step !== '5-done' && <NeedHelpFooter />}
         </div>
       </footer>
     </div>
@@ -133,11 +138,11 @@ function BottomNavIndicator({ step }: { step: Step }) {
 
   return (
     <div className="flex flex-row gap-1.5 items-center justify-center">
-      {step === '1' ? activeBall : ball}
-      {step === '2' ? activeBall : ball}
-      {step === '3' ? activeBall : ball}
-      {step === '4' ? activeBall : ball}
-      {step === '5' ? activeBall : ball}
+      {step === '1-notifications' ? activeBall : ball}
+      {step === '2-test-nudge' ? activeBall : ball}
+      {step === '3-screen' ? activeBall : ball}
+      {step === '4-model' ? activeBall : ball}
+      {step === '5-done' ? activeBall : ball}
     </div>
   )
 }

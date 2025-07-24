@@ -1,14 +1,14 @@
 import assert from 'assert'
 import OpenAI from 'openai'
-import { AvailableModel } from '../../windows/shared/shared-types'
+import { AvailableProvider } from '../../windows/shared/shared-types'
 import { debug, logError, warn } from '../lib/logger'
-import { getState, ModelSelection } from '../store'
+import { getState, ProviderSelection } from '../store'
 
 export async function validateModelKey(
-  model: AvailableModel,
+  model: AvailableProvider,
   key: string
 ): Promise<boolean> {
-  if (model === 'openai-4o' || model === 'openai-4o-mini') {
+  if (model === 'openai' || model === 'openai-4o-mini') {
     const isValid = await checkOpenAIKey(key)
     debug('isValid', isValid)
     return isValid
@@ -52,9 +52,9 @@ export function getAiBackendClient(): BackendClient | null {
   return openai
 }
 
-export function getModelClient(model: ModelSelection): ModelClient {
+export function getModelClient(model: ProviderSelection): ModelClient {
   assert(model.key, 'Model key is required')
-  assert(model.name === 'openai-4o')
+  // assert(model.name === 'openai-4o')
 
   return {
     provider: 'openai',

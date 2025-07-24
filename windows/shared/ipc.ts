@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ActiveSession, State } from '../../src/store/types'
-import { AvailableModel, ExposedElectronAPI } from './shared-types'
+import { AvailableProvider, ExposedElectronAPI } from './shared-types'
 
 declare global {
   interface Window {
@@ -36,6 +36,10 @@ export async function getWindowHeight() {
   return await window.electronAPI.getWindowHeight()
 }
 
+export async function finishOnboarding() {
+  return await window.electronAPI.finishOnboarding()
+}
+
 export async function captureNow() {
   return await window.electronAPI.captureNow()
 }
@@ -44,7 +48,7 @@ export async function getGoalFeedback(goal: string) {
   return await window.electronAPI.getGoalFeedback(goal)
 }
 
-export async function validateModelKey(model: AvailableModel, key: string) {
+export async function validateModelKey(model: AvailableProvider, key: string) {
   return await window.electronAPI.validateModelKey(model, key)
 }
 
