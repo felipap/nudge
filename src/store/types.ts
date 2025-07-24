@@ -51,6 +51,9 @@ export interface ActiveSession {
 }
 
 export type State = {
+  // onboarding
+  onboardingFinishedAt: string | null // date
+  userHasClickedTestNotification: boolean
   // The active capture, which must be relevant for the current goal. Set to
   // null when the user makes updates to the active goal, or clears it entirely.
   activeCapture: LatestCapture | CaptureError | null
@@ -61,8 +64,6 @@ export type State = {
   assessStartedAt: string | null // date
   firstOpenedAt: string // date
   lastClosedAt: string | null
-  onboardingFinishedAt: string | null // date
-  userHasClickedTestNotification: boolean
   // settings
 
   // When true, we'll ignore `modelSelection` and send screenshots to Nudge
@@ -86,7 +87,10 @@ export type State = {
 }
 
 export const DEFAULT_STATE: State = {
+  // onboarding
   onboardingFinishedAt: null,
+  userHasClickedTestNotification: false,
+  //
   nextCaptureAt: null,
   session: null,
   // savedCaptures: [],
@@ -97,7 +101,6 @@ export const DEFAULT_STATE: State = {
   assessStartedAt: null,
   firstOpenedAt: new Date().toISOString(),
   lastClosedAt: null,
-  userHasClickedTestNotification: false,
   // settings
   useNudgeCloud: false, // Important to start with false.
   modelSelection: null,

@@ -6,7 +6,6 @@ import {
   isOnboardingFinished,
   store,
 } from './store'
-import { EXPERIMENTAL } from './lib/config'
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
 declare const MAIN_WINDOW_VITE_NAME: string
@@ -21,7 +20,16 @@ export let mainWindow: BrowserWindow | null = null
 export let prefWindow: BrowserWindow | null = null
 export let onboardWindow: BrowserWindow | null = null
 
-export function createMainWindow() {
+export function createWindows() {
+  createMainWindow()
+  createSettingsWindow()
+
+  if (!isOnboardingFinished()) {
+    createOnboardingWindow()
+  }
+}
+
+function createMainWindow() {
   const primaryDisplay = screen.getPrimaryDisplay()
 
   const windowWidth = 350
@@ -50,14 +58,6 @@ export function createMainWindow() {
       preload: path.join(__dirname, '../renderer/preload.js'),
       webSecurity: false,
     },
-  })
-
-  win.on('show', () => {
-    onChangeAnyWindowVisibility()
-  })
-
-  win.on('hide', () => {
-    onChangeAnyWindowVisibility()
   })
 
   // In development, the default icon is Electron's. So we override it.
@@ -104,17 +104,19 @@ export function createMainWindow() {
 
   // win.setAlwaysOnTop(true, 'floating')
 
-  // Show window if onboarding is complete.
+  // Show window when app is started but only if onboarding is complete.
   if (isOnboardingFinished()) {
     win.show()
   }
+
+  instrumentizeWindow(win)
 
   mainWindow = win
 
   return win
 }
 
-export function createSettingsWindow() {
+function createSettingsWindow() {
   const windowWidth = 600
   const windowHeight = 500
 
@@ -146,14 +148,6 @@ export function createSettingsWindow() {
     )
   }
 
-  win.on('show', () => {
-    onChangeAnyWindowVisibility()
-  })
-
-  win.on('hide', () => {
-    onChangeAnyWindowVisibility()
-  })
-
   // Hide window to tray on close instead of quitting
   win.on('close', (event) => {
     if (!app.isQuitting) {
@@ -164,11 +158,13 @@ export function createSettingsWindow() {
     return true
   })
 
+  instrumentizeWindow(win)
+
   prefWindow = win
   return win
 }
 
-export function createOnboardingWindow() {
+function createOnboardingWindow() {
   const windowWidth = 600
   const windowHeight = 500
 
@@ -199,13 +195,7 @@ export function createOnboardingWindow() {
     )
   }
 
-  win.on('show', () => {
-    onChangeAnyWindowVisibility()
-  })
-
-  win.on('hide', () => {
-    onChangeAnyWindowVisibility()
-  })
+  instrumentizeWindow(win)
 
   // Hide window to tray on close instead of quitting
   win.on('close', (event) => {
@@ -217,25 +207,34 @@ export function createOnboardingWindow() {
     return true
   })
 
-  if (!isOnboardingFinished()) {
-    win.show()
-  }
-
   onboardWindow = win
   return win
 }
 
-function onChangeAnyWindowVisibility() {
-  const isAnyVisible =
-    mainWindow?.isVisible() ||
-    prefWindow?.isVisible() ||
-    onboardWindow?.isVisible()
+function instrumentizeWindow(win: BrowserWindow) {
+  // Needed for `useOnViewed.ts`.
+  win.on('show', () => {
+    win.webContents.send('window-visibility-change', true)
+  })
+  win.on('hide', () => {
+    win.webContents.send('window-visibility-change', false)
+  })
 
-  if (process.platform === 'darwin') {
-    if (isAnyVisible) {
-      app.dock.show()
-    } else {
-      app.dock.hide()
+  function maybeToggleDockIcon() {
+    const isAnyVisible =
+      mainWindow?.isVisible() ||
+      prefWindow?.isVisible() ||
+      onboardWindow?.isVisible()
+
+    if (process.platform === 'darwin') {
+      if (isAnyVisible) {
+        app.dock.show()
+      } else {
+        app.dock.hide()
+      }
     }
   }
+
+  win.on('show', maybeToggleDockIcon)
+  win.on('hide', maybeToggleDockIcon)
 }

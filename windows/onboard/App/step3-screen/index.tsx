@@ -43,7 +43,8 @@ export const ScreenPermissionScreen = withBoundary(
               <strong>
                 Go to System Settings &gt; Privacy & Security &gt; Screen
                 Recording and turn on the switch for Nudge.
-              </strong>
+              </strong>{' '}
+              Then click to <strong>Quit &amp; Reopen</strong> the application.
             </>
           }
         />
@@ -109,9 +110,9 @@ function Illustration({ className }: { className?: string }) {
       </div> */}
 
       <motion.div
-        initial={{ x: 10, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: 10, opacity: 0 }}
+        initial={{ y: 10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 0, opacity: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
       >
         <FsImage width={455} src="onboarding/screen-three-image.png" />

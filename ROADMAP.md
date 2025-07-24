@@ -11,6 +11,7 @@
 - [ ] Add session reset functionality - make it clear how to restart/reset sessions.
 - [ ] Feat: "0 of 20 hours used"
 - [ ] Instrumentize more events.
+- [ ] Fix: test nudge showing up all the time.
 - [x] Fix: 429 for OpenAI should trigger a Slack message to Felipe.
 - [x] Fix: fix button colors.
 - [x] Fix: warn when outside /Applications folder. Don't try to auto-update.

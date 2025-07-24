@@ -81,9 +81,8 @@ export type IpcMainMethods = SharedIpcMethods & {
 }
 
 export type ExposedElectronAPI = SharedIpcMethods & {
-  // Listen for background action completion
-  onBackgroundActionCompleted: (
-    callback: (actionName: string) => void
+  onWindowVisibilityChange: (
+    callback: (isVisible: boolean) => void
   ) => () => void
   onIpcEvent: (
     channel: string,

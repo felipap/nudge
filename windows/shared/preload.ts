@@ -24,25 +24,9 @@ type TypedIpcRenderer<Key extends string> = Omit<
 const typedIpcRenderer: TypedIpcRenderer<keyof IpcMainMethods> =
   ipcRenderer as any
 
-contextBridge.exposeInMainWorld('darkMode', {
-  toggle: () => typedIpcRenderer.invoke('dark-mode:toggle'),
-  system: () => typedIpcRenderer.invoke('dark-mode:system'),
-})
-
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld('electronAPI', {
-  // Listen for background action completion
-  onBackgroundActionCompleted: (callback: (actionName: string) => void) => {
-    const listener = (_event: any, actionName: string) => callback(actionName)
-    ipcRenderer.on('background-action-completed', listener)
-
-    // Return a function to remove the listener
-    return () => {
-      ipcRenderer.removeListener('background-action-completed', listener)
-    }
-  },
-
   onIpcEvent: (channel: string, callback: (...args: any[]) => void) => {
     const listener = (_event: any, ...args: any[]) => callback(...args)
     ipcRenderer.on(channel, listener)
@@ -173,3 +157,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return await typedIpcRenderer.invoke('isAppPackaged')
   },
 } satisfies ExposedElectronAPI)
+
+contextBridge.exposeInMainWorld('darkMode', {
+  toggle: () => typedIpcRenderer.invoke('dark-mode:toggle'),
+  system: () => typedIpcRenderer.invoke('dark-mode:system'),
+})

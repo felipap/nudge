@@ -21,9 +21,7 @@ export const DoneScreen = withBoundary(({ goBack }: Props) => {
         description="You're ready to start using Nudge."
       />
 
-      <div className="h-[200px]"></div>
-
-      <div className="w-full flex justify-center gap-2 items-center">
+      <div className="">
         {/* FELIPE: this extra "Back" button is a bit confusing */}
         {goBack && (
           <SubmitButton onClick={goBack} color="gray" className="text-[14px]">

@@ -9,12 +9,7 @@ import { log } from './lib/logger'
 import { getImagePath } from './lib/utils'
 import { onAppClose, onAppStart } from './logic'
 import { createTray } from './tray'
-import {
-  createMainWindow,
-  createOnboardingWindow,
-  createSettingsWindow,
-  prefWindow,
-} from './windows'
+import { createWindows, prefWindow } from './windows'
 
 if (app.isPackaged) {
   SentryInit({
@@ -36,9 +31,8 @@ app.setAboutPanelOptions({
 
 async function onInit() {
   setupIPC()
-  createMainWindow()
-  createSettingsWindow()
-  createOnboardingWindow()
+
+  createWindows()
 
   screenCapture.start()
   onAppStart()
@@ -110,7 +104,9 @@ if (!gotTheLock) {
   app.on('second-instance', (event, commandLine) => {
     // Someone tried to run a second instance, focus our window instead
     if (prefWindow) {
-      if (prefWindow.isMinimized()) prefWindow.restore()
+      if (prefWindow.isMinimized()) {
+        prefWindow.restore()
+      }
       prefWindow.focus()
     }
 

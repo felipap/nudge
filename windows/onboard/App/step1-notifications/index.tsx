@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion'
-import { useEffect } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { sendTestNotification } from '../../../shared/ipc'
 import { FsImage } from '../../../shared/ui/FsImage'
 import { BiNotification, MacOSCursor } from '../../../shared/ui/icons'
+import { useOnViewed } from '../../../shared/ui/useOnViewed'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { SubmitButton } from '../SubmitButton'
 import { OnboardingScreenHeader } from '../ui'
+import { useEffect } from 'react'
 
 interface Props {
   goBack?: () => void
@@ -14,10 +15,17 @@ interface Props {
 }
 
 export const NotificationScreen = withBoundary(({ goBack, next }: Props) => {
-  useEffect(() => {
+  useOnViewed(() => {
+    console.log('viewed', new Date().toISOString())
     // Send a notification to prompt a permission dialog.
     sendTestNotification()
-  }, [])
+  })
+
+  // useEffect(() => {
+  //   console.log('use effect', new Date().toISOString())
+  //   // Send a notification to prompt a permission dialog.
+  //   sendTestNotification()
+  // },[ ])
 
   return (
     <>

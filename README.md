@@ -23,8 +23,6 @@ Nudge is an app for macOS that watches your screen and helps you stay in flow. D
 <img src="https://github.com/user-attachments/assets/ca091ed8-d4c7-4e53-9570-6db4f4b34f6a" width="500" />
 </p>
 
-You will need an **OpenAI API key** to use Nudge.
-
 ## Download
 
 See the [releases page](https://github.com/felipap/nudge/releases/latest) to find the latest DMGs.

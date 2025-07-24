@@ -27,6 +27,7 @@ import {
 } from './store'
 import { onClickCheckForUpdates, updaterState } from './updater'
 import { mainWindow, onboardWindow, prefWindow } from './windows'
+import { logError } from './lib/logger'
 
 dayjs.extend(relativeTime)
 
@@ -199,9 +200,20 @@ export function createTray() {
 
   // Optional: Show window when clicking the tray icon
   tray.on('click', () => {
-    const windowToShow = isOnboardingFinished() ? mainWindow : onboardWindow
-    if (!windowToShow!.isFocused()) {
-      windowToShow!.show()
+    if (isOnboardingFinished()) {
+      if (!mainWindow!.isFocused()) {
+        mainWindow!.show()
+      }
+      return
+    }
+
+    if (!onboardWindow) {
+      logError('onboardWindow should not be null')
+      return
+    }
+
+    if (!onboardWindow.isFocused()) {
+      onboardWindow.show()
     }
   })
 
