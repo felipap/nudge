@@ -160,7 +160,7 @@ export function createSettingsWindow() {
 
 export function createOnboardingWindow() {
   const windowWidth = 600
-  const windowHeight = 450
+  const windowHeight = 500
 
   const win = new BrowserWindow({
     show: false,

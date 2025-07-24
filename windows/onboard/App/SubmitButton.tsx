@@ -24,7 +24,7 @@ export function SubmitButton({
         color === 'blue' &&
           'bg-[#c6ecff] not-disabled:hover:bg-[#B2E5FF] border-[#0e2f4a44] text-[#142635] dark:bg-blue-700 dark:border-blue-600 dark:text-white dark:not-disabled:hover:bg-blue-600',
         (!color || color === 'gray') &&
-          'bg-[#fff] text-[#444] not-disabled:hover:bg-[#fafafa] border-[#DDD] dark:bg-neutral-700/80 dark:text-white  dark:not-disabled:hover:bg-neutral-700 dark:border-neutral-800',
+          'bg-[#fff] text-[#444] not-disabled:hover:bg-[#fafafa] border-[#DDD] dark:bg-neutral-700/80 dark:text-white  dark:not-disabled:hover:bg-neutral-700 dark:border-neutral-900',
         disabled && 'opacity-70 !cursor-not-allowed',
         className
       )}

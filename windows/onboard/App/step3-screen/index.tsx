@@ -9,7 +9,7 @@ import {
   useScreenPermissionState,
 } from '../../../shared/ipc'
 import { FsImage } from '../../../shared/ui/FsImage'
-import { MacOSPointer } from '../../../shared/ui/icons'
+import { CameraIcon, MacOSPointer } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { SubmitButton } from '../SubmitButton'
 
@@ -35,20 +35,16 @@ export const ScreenPermissionScreen = withBoundary(
     return (
       <>
         <StepScreenHeader
-          // icon={
-          //   <CameraIcon className="w-5 h-5 text-gray-700 dark:text-gray-300 shrink-0" />
-          // }
-          title="Step 3: Allow Nudge to capture screen"
+          icon={<CameraIcon className="w-5 h-5" />}
+          title="Step 3: Allow capture screen"
           description={
             <>
-              Nudge detects whether you&apos;re distracted by capturing your
-              screen from time to time.{' '}
-              {screenPermission === 'denied' && (
-                <strong>
-                  Go to System Settings &gt; Privacy & Security &gt; Screen
-                  Recording and turn on the switch for Nudge.
-                </strong>
-              )}
+              Nudge captures your screen from time to time to see if you're
+              distracted.{' '}
+              <strong>
+                Go to System Settings &gt; Privacy & Security &gt; Screen
+                Recording and turn on the switch for Nudge.
+              </strong>
             </>
           }
         />
@@ -65,7 +61,7 @@ export const ScreenPermissionScreen = withBoundary(
           )}
           {screenPermission === 'granted' ? (
             <SubmitButton onClick={next} color="green">
-              Permission granted, continue &rarr;
+              Done, continue &rarr;
             </SubmitButton>
           ) : (
             <SubmitButton onClick={openSystemSettings} color="yellow">

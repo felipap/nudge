@@ -36,9 +36,9 @@
   --text-color-secondary: #666;
   --text-color-tertiary: #aaa;
   --text-color-inverted: #fff;
-  --background-one: #f0f0f0;
-  --background-two: #f0f0f0;
-  --background-three: #fff;
+  --background-color-one: #f4f6f6;
+  --background-color-two: #eee;
+  --background-color-three: #fff;
   --highlight-color: #3b82f6;
   --twitter-blue: #1da1f2;
   --text-color-link: #007aff;
@@ -47,8 +47,8 @@
   --color-nav: #f0f0f0;
   --color-background: #eee;
   --color-tab-active: #eaeaeb;
-  --border-color-one: #dadada;
-  --border-color-two: #dadada;
+  --border-color-one: #eaeaea;
+  --border-color-two: #ddd;
   --color-btn: #fff;
   --color-input: #fff;
   --color-tertiary: #f0f0f0;
@@ -81,16 +81,17 @@
     --text-color-secondary: #aaa;
     --text-color-tertiary: #666;
     --text-color-inverted: #000;
-    --background-one: #111;
-    --background-two: #2a2a2a;
-    --background-three: #101010;
+    --background-color-one: #202020;
+    --background-color-two: #161616;
+    --background-color-three: #2a2a2a;
+
+    --border-color-one: #333;
+    --border-color-two: #0a0a0a;
 
     /* Apple colors */
     --color-nav: var(--apple-system-gray-4-dark);
     --color-background: var(--apple-system-gray-5-dark);
     --color-tab-active: var(--apple-system-gray-3-dark);
-    --border-color-one: var(--apple-system-gray-6-dark);
-    --border-color-two: var(--apple-system-gray-4-dark);
     --color-btn: var(--apple-system-gray-4-dark);
     --color-input: var(--apple-system-gray-4-dark);
     --color-tertiary: var(--apple-system-gray-3-dark);
@@ -136,7 +137,7 @@
 }
 
 body {
-  /* background-color: var(--background-one); */
+  /* background-color: var(--background-color-one); */
   color: var(--text-color-primary);
 }
 
@@ -190,4 +191,8 @@ textarea {
 
 .shadow-inset-bottom {
   box-shadow: inset 0 -10px 10px -10px rgba(0, 0, 0, 0.05);
+}
+
+strong {
+  @apply font-medium;
 }

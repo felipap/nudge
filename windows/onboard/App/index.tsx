@@ -15,7 +15,7 @@ import { DoneScreen } from './step5-done'
 
 type Step = '1' | '2' | '3' | '4' | '5'
 
-export const BG_CLASS = 'bg-[#FAFAFA] dark:bg-[#333333AA]'
+export const BG_CLASS = 'bg-one'
 
 export default function App() {
   const [step, setStep] = useState<Step>('5')
@@ -30,12 +30,12 @@ export default function App() {
   return (
     <div
       className={twMerge(
-        'flex flex-col h-screen text-contrast text-[14px] leading-[1.4]',
+        'flex flex-col h-screen text-contrast text-[14px] leading-[1.4] ',
         BG_CLASS
       )}
     >
       <Nav />
-      <main className="h-full flex flex-col w-full select-none gap-4 px-5 pt-5">
+      <main className="h-full flex flex-col w-full select-none gap-4 px-5 pt-5 overflow-hidden pb-3">
         {step === '1' && (
           <AnimatePresence>
             <motion.div
@@ -72,7 +72,7 @@ export default function App() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: 10, opacity: 0 }}
               transition={{ duration: 0.5, ease: 'easeIn' }}
-              className="gap-3 flex flex-col h-full"
+              className="gap-6 flex flex-col h-full"
             >
               <ScreenPermissionScreen
                 goBack={() => setStep('1')}
@@ -88,11 +88,11 @@ export default function App() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: 10, opacity: 0 }}
               transition={{ duration: 0.5, ease: 'easeIn' }}
-              className="gap-5 flex flex-col h-full"
+              className="gap-6 flex flex-col h-full"
             >
               <AISelectionScreen
                 goBack={() => setStep('3')}
-                next={() => setStep('4')}
+                next={() => setStep('5')}
               />
             </motion.div>
           </AnimatePresence>
@@ -111,10 +111,11 @@ export default function App() {
           </AnimatePresence>
         )}
       </main>
-
-      <footer className="h-[40px] mt-[30px]">
-        <BottomNavIndicator step={step} />
-        <div className="absolute bottom-5 right-6">
+      <footer className="h-[50px] bottom-0 left-0 right-0 relative">
+        <div className="absolute left-1/2 top-[15px] -translate-x-1/2">
+          <BottomNavIndicator step={step} />
+        </div>
+        <div className="absolute bottom-4 right-5">
           {step !== '5' && <NeedHelpFooter />}
         </div>
       </footer>
@@ -154,11 +155,13 @@ export function StepScreenHeader({
 }: StepScreenHeaderProps) {
   return (
     <div className="flex flex-col gap-1 relative">
-      <div className="flex flex-row gap-2 items-center">
-        {icon}
-        <h2 className="text-[17px] font-medium antialiased">{title}</h2>
-      </div>
-      <p className="text-[14px] leading-[1.4] trac max-w-[95%] text-contrast/100 [&_strong]:text-contrast [&_strong]:font-medium">
+      <h2 className="flex flex-row gap-2 items-center">
+        {icon && (
+          <div className="w-5 shrink-0 opacity-80 mt-[-1px]">{icon}</div>
+        )}
+        <span className="text-[17px] font-medium antialiased">{title}</span>
+      </h2>
+      <p className="text-[14px] leading-[1.4] track-10 max-w-[95%] text-contrast/100 [&_strong]:text-contrast [&_strong]:font-medium dark:antialiased">
         {description}
       </p>
     </div>

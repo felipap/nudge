@@ -7,7 +7,7 @@ import {
   useBackendState,
 } from '../../../shared/ipc'
 import { FsImage } from '../../../shared/ui/FsImage'
-import { MacOSPointer } from '../../../shared/ui/icons'
+import { BiNotification, MacOSPointer } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { SubmitButton } from '../SubmitButton'
 
@@ -20,6 +20,7 @@ export const TestNotificationScreen = withBoundary(
   ({ goBack, next }: Props) => {
     const { state } = useBackendState()
     const [hasSent, setHasSent] = useState(false)
+    const [hasJustSent, setHasJustSent] = useState(false)
     const [hasClicked, setHasClicked] = useState(false)
 
     useEffect(() => {
@@ -32,13 +33,17 @@ export const TestNotificationScreen = withBoundary(
       setHasSent(true)
       await sendTestNotificationAndWait()
       setHasClicked(true)
+      setHasJustSent(true)
+      setTimeout(() => {
+        setHasJustSent(false)
+      }, 3000)
     }
 
     let action: ReactNode
     if (hasClicked) {
       action = (
         <SubmitButton onClick={next} color="green">
-          Click detected, continue &rarr;
+          Done, continue &rarr;
         </SubmitButton>
       )
     } else if (hasSent) {
@@ -58,19 +63,30 @@ export const TestNotificationScreen = withBoundary(
     return (
       <>
         <StepScreenHeader
-          title="Step 2: Test notification"
+          icon={<BiNotification className="h-5" />}
+          title="Step 2: Test nudges"
           description={
             <>
-              Let's make sure Nudge is working.{' '}
-              {hasSent ? (
-                <strong>Now click on the notification we sent you.</strong>
-              ) : (
-                <strong
-                  onClick={sendTestNotification}
-                  className="cursor-pointer !text-yellow-800"
-                >
-                  Click to send a test notification.
+              Next, let's make sure nudges are working.{' '}
+              <strong onClick={sendTestNotification} className="cursor-pointer">
+                Click to send a test notification.
+              </strong>{' '}
+              {hasSent && (
+                <strong className="">
+                  Now click on the notification we just sent you.
                 </strong>
+              )}{' '}
+              {hasJustSent && (
+                <motion.div
+                  animate={{
+                    opacity: [0, 1, 1, 1, 1, 0],
+                    scale: [1, 2, 1, 1],
+                  }}
+                  transition={{ duration: 2 }}
+                  className="inline-block text-green-600 dark:text-green-400"
+                >
+                  Nice!
+                </motion.div>
               )}
             </>
           }

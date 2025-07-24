@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { twMerge } from 'tailwind-merge'
 import { StepScreenHeader } from '..'
 import { FsImage } from '../../../shared/ui/FsImage'
-import { MacOSCursor } from '../../../shared/ui/icons'
+import { BiNotification, MacOSCursor } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { SubmitButton } from '../SubmitButton'
 
@@ -15,10 +15,11 @@ export const NotificationScreen = withBoundary(({ goBack, next }: Props) => {
   return (
     <>
       <StepScreenHeader
+        icon={<BiNotification className="h-5" />}
         title="Step 1: Enable notifications"
         description={
           <>
-            Nudge sends you notifications when you drift off task.{' '}
+            Nudge sends you notifications when you start to look distracted.{' '}
             <strong>
               Look for a notification permission dialog for "Nudge" and click
               "Allow."

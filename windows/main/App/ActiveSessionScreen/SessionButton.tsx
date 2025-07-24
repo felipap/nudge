@@ -42,7 +42,6 @@ export function SessionButton({
         )
       }
       className={twMerge(
-        'antialiased',
         isPaused
           ? 'text-[#004E0C] bg-[#B3EBAA] border-[#33AC46] hover:bg-[#c6efbf]'
           : isNearlyOver

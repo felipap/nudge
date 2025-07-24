@@ -57,7 +57,7 @@ export function setupIPC() {
     log('[sendTestNotificationAndWait] called')
 
     const notif = new Notification({
-      title: 'TEST NOTIFICATION',
+      title: 'TEST NUDGE',
       body: 'Click me to continue the onboarding.',
       silent: false,
       sound: 'Blow.aiff',

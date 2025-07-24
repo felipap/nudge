@@ -12,7 +12,7 @@ interface Props {
 
 export const DoneScreen = withBoundary(({ goBack }: Props) => {
   function startConfetti() {
-    const end = Date.now() + 3 * 1000 // 3 seconds
+    const end = Date.now() + 1 * 1000 // 3 seconds
     const colors = ['#a786ff', '#fd8bbc', '#eca184', '#f8deb1', '#f8deb1']
 
     const frame = () => {
@@ -25,7 +25,7 @@ export const DoneScreen = withBoundary(({ goBack }: Props) => {
         angle: 60,
         spread: 55,
         startVelocity: 60,
-        origin: { x: 0, y: 0.8 },
+        origin: { x: 0, y: 1 },
         colors: colors,
         zIndex: 0,
       })
@@ -34,7 +34,7 @@ export const DoneScreen = withBoundary(({ goBack }: Props) => {
         angle: 120,
         spread: 55,
         startVelocity: 60,
-        origin: { x: 1, y: 0.8 },
+        origin: { x: 1, y: 1 },
         colors: colors,
         zIndex: 0,
       })
@@ -52,14 +52,12 @@ export const DoneScreen = withBoundary(({ goBack }: Props) => {
   return (
     <>
       <StepScreenHeader
-        title="Step 5: Onboarding done"
+        title="Onboarding done!"
         description="You're ready to start using Nudge."
       />
 
       <div className="h-[200px]">
-        <Button variant="secondary" onClick={closeWindow}>
-          Close window
-        </Button>
+        <Button onClick={closeWindow}>Close window</Button>
       </div>
 
       <div className="w-full flex justify-center gap-2 items-center">
