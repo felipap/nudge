@@ -56,9 +56,7 @@ export const DoneScreen = withBoundary(({ goBack }: Props) => {
         description="You're ready to start using Nudge."
       />
 
-      <div className="h-[200px]">
-        <Button onClick={closeWindow}>Close window</Button>
-      </div>
+      <div className="h-[200px]"></div>
 
       {/* FELIPE: I feel this extra "Back" button is confusing. */}
 
@@ -68,6 +66,13 @@ export const DoneScreen = withBoundary(({ goBack }: Props) => {
             Back
           </SubmitButton>
         )}
+        <SubmitButton
+          onClick={closeWindow}
+          color="gray"
+          className="text-[14px]"
+        >
+          Close window
+        </SubmitButton>
       </div>
     </>
   )

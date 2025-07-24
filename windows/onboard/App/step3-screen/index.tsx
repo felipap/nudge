@@ -5,7 +5,7 @@ import { StepScreenHeader } from '..'
 import {
   openGithubDiscussion,
   openSystemSettings,
-  tryAskForScrenPermissions,
+  tryAskForScreenPermission,
   useScreenPermissionState,
 } from '../../../shared/ipc'
 import { FsImage } from '../../../shared/ui/FsImage'
@@ -28,7 +28,7 @@ export const ScreenPermissionScreen = withBoundary(
     // user chooses to deny it.
     useEffect(() => {
       if (screenPermission !== 'granted') {
-        tryAskForScrenPermissions()
+        tryAskForScreenPermission()
       }
     }, [screenPermission])
 

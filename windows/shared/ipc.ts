@@ -56,8 +56,8 @@ export async function checkScreenPermissions() {
   return await window.electronAPI.checkScreenPermissions()
 }
 
-export async function tryAskForScrenPermissions() {
-  return await window.electronAPI.tryAskForScrenPermissions()
+export async function tryAskForScreenPermission() {
+  return await window.electronAPI.tryAskForScreenPermission()
 }
 
 export async function openExternal(url: string) {

@@ -29,7 +29,9 @@ export const AISelectionScreen = withBoundary(({ next, goBack }: Props) => {
     if (!selection) {
       return
     }
+    console.log('selection is', selection)
     if (selection === 'nudge-cloud') {
+      console.log('setting setPartialState')
       await setPartialState({
         useNudgeCloud: true,
       })

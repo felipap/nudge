@@ -1,22 +1,16 @@
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
 import { ComponentProps, useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { ModelSelection } from '../../../../src/store/types'
-import {
-  getAutoLaunch,
-  setAutoLaunch,
-  useBackendState,
-  validateModelKey,
-} from '../../../shared/ipc'
+import { ProviderSelection } from '../../../../src/store/types'
+import { useBackendState, validateModelKey } from '../../../shared/ipc'
 import {
   AVAILABLE_MODELS,
-  type AvailableModel,
+  type AvailableProvider,
 } from '../../../shared/shared-types'
 import { Input } from '../../../shared/ui/native/Input'
 import { Select } from '../../../shared/ui/native/Select'
 import { withBoundary } from '../../../shared/ui/withBoundary'
-import { Description, Fieldset, Label, LabelStack } from '../ui'
-import { Switch } from '../../../shared/ui/native/Switch'
+import { Fieldset, Label } from '../ui'
 
 export const ByomFieldGroup = withBoundary(() => {
   const { model, setModel } = useModelChoiceWithBackend()
@@ -68,8 +62,8 @@ function ModelSelect({
   value,
   onChange,
 }: {
-  value: AvailableModel | null
-  onChange: (value: AvailableModel) => void
+  value: AvailableProvider | null
+  onChange: (value: AvailableProvider) => void
 }) {
   return (
     <Select
@@ -79,7 +73,7 @@ function ModelSelect({
         value: model.value,
       }))}
       value={value || ''}
-      onChange={(e) => onChange(e.target.value as AvailableModel)}
+      onChange={(e) => onChange(e.target.value as AvailableProvider)}
     />
   )
 }
@@ -93,7 +87,7 @@ function InputWithAutoValidation({
   currentKey,
   ...props
 }: ComponentProps<'input'> & {
-  model: AvailableModel | null
+  model: AvailableProvider | null
   currentKey: string | null
 }) {
   const [lastCheckedKey, setLastCheckedKey] = useState<string | null>(null)
@@ -106,13 +100,12 @@ function InputWithAutoValidation({
   }, [currentKey, value])
 
   async function onClickCheckKey() {
-    if (!value || !currentKey || !model) return
+    if (!value || !currentKey || !model) {
+      return
+    }
 
     setState('loading')
     await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    console.log('model', model)
-    console.log('currentKey', currentKey)
     const isValid = await validateModelKey(model, currentKey)
     setLastCheckedKey(currentKey)
     setState(isValid ? 'valid' : 'invalid')
@@ -171,7 +164,7 @@ function KeyStatusIndicator({
 
 function useModelChoiceWithBackend() {
   const { state, setPartialState, stateRef } = useBackendState()
-  const [model, setLocalModel] = useState<ModelSelection | null>(null)
+  const [model, setLocalModel] = useState<ProviderSelection | null>(null)
 
   useEffect(() => {
     if (!state?.modelSelection) {
@@ -181,7 +174,7 @@ function useModelChoiceWithBackend() {
     setLocalModel(state.modelSelection)
   }, [!!state?.modelSelection])
 
-  async function setModel(value: ModelSelection) {
+  async function setModel(value: ProviderSelection) {
     if (!stateRef.current) {
       return
     }

@@ -20,10 +20,12 @@ import { debug, log, warn } from './logger'
 //   { useSystemPicker: true }
 // )
 
-export async function tryAskForScrenPermissions(): Promise<{
+export async function tryAskForScreenPermission(): Promise<{
   status: 'granted' | 'denied' | ''
   error?: string
 }> {
+  debug('[screen] tryAskForScreenPermissions')
+
   // Screen recording permissions are macOS-specific.
   if (process.platform !== 'darwin') {
     return { status: 'granted' }

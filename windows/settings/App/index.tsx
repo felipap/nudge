@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useScreenPermissionState } from '../../shared/ipc'
 import { Nav, Tab } from './Nav'
-import { ModelTab } from './model'
 import { General } from './general'
+import { ModelTab } from './model'
 import { ScreenPermissions } from './screen'
 
 export default function App() {

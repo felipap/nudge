@@ -67,7 +67,7 @@ type SharedIpcMethods = {
   getAutoLaunch: () => Promise<boolean>
   openSettings: (tab?: string) => Promise<void>
   checkScreenPermissions: () => Promise<boolean>
-  tryAskForScrenPermissions: () => Promise<{ granted: boolean; error?: string }>
+  tryAskForScreenPermission: () => Promise<{ granted: boolean; error?: string }>
   isAppPackaged: () => Promise<boolean>
   getImageFromFs: (
     src: string

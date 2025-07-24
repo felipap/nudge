@@ -22,7 +22,7 @@ import { GITHUB_DISCUSSIONS_URL } from './lib/config'
 import { debug, log, logError, warn } from './lib/logger'
 import {
   checkScreenPermissions,
-  tryAskForScrenPermissions,
+  tryAskForScreenPermission,
 } from './lib/screenshot'
 import { getImagePath } from './lib/utils'
 import { getState, setPartialState, store } from './store'
@@ -248,9 +248,6 @@ export function setupIPC() {
       // reset the state of everything.
       session: null,
       savedGoalInputValue: null,
-      // customInstructions: null,
-      modelSelection: null,
-      useNudgeCloud: false,
     })
   })
 
@@ -275,8 +272,8 @@ export function setupIPC() {
     return await checkScreenPermissions()
   })
 
-  ipcMainTyped.handle('tryAskForScrenPermissions', async () => {
-    return await tryAskForScrenPermissions()
+  ipcMainTyped.handle('tryAskForScreenPermission', async (e) => {
+    return await tryAskForScreenPermission()
   })
 
   ipcMainTyped.handle('isAppPackaged', () => {

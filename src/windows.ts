@@ -6,6 +6,7 @@ import {
   isOnboardingFinished,
   store,
 } from './store'
+import { EXPERIMENTAL } from './lib/config'
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
 declare const MAIN_WINDOW_VITE_NAME: string
@@ -173,7 +174,7 @@ export function createOnboardingWindow() {
 
   const win = new BrowserWindow({
     show: false,
-    alwaysOnTop: true,
+    // alwaysOnTop: EXPERIMENTAL,
     width: windowWidth,
     height: windowHeight,
     minHeight: windowHeight,
@@ -225,7 +226,10 @@ export function createOnboardingWindow() {
 }
 
 function onChangeAnyWindowVisibility() {
-  const isAnyVisible = mainWindow?.isVisible() || prefWindow?.isVisible()
+  const isAnyVisible =
+    mainWindow?.isVisible() ||
+    prefWindow?.isVisible() ||
+    onboardWindow?.isVisible()
 
   if (process.platform === 'darwin') {
     if (isAnyVisible) {

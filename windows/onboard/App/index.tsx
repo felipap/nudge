@@ -1,10 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import {
   finishOnboarding,
   openGithubDiscussion,
   setPartialState,
+  useBackendState,
 } from '../../shared/ipc'
 import { Nav } from './Nav'
 import { NotificationScreen } from './step1-notifications'
@@ -24,6 +25,13 @@ export const BG_CLASS = 'bg-one'
 
 export default function App() {
   const [step, setStep] = useState<Step>('1-notifications')
+  const { state } = useBackendState()
+
+  useEffect(() => {
+    if (state?.userHasClickedTestNotification) {
+      setStep('3-screen')
+    }
+  }, [state?.userHasClickedTestNotification])
 
   return (
     <div

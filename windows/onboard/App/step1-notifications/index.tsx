@@ -56,7 +56,7 @@ function Illustration({ className }: { className?: string }) {
   return (
     <div
       className={twMerge(
-        'w-full flex justify-center items-center relative',
+        'w-full flex justify-center items-center relative select-none',
         className
       )}
     >

@@ -2,9 +2,10 @@ import { CameraIcon, Monitor, ScreenShareOff } from 'lucide-react'
 import { useEffect } from 'react'
 import { twMerge } from 'tailwind-merge'
 import {
+  useBackendState,
   openGithubDiscussion,
   openSystemSettings,
-  tryAskForScrenPermissions,
+  tryAskForScreenPermission,
   useScreenPermissionState,
 } from '../../../shared/ipc'
 import { useWindowHeight } from '../../../shared/lib'
@@ -46,6 +47,7 @@ export function ScreenPermissionIcon({
 export const ScreenPermissions = withBoundary(() => {
   useWindowHeight(500)
   const { screenPermission } = useScreenPermissionState()
+  const { state } = useBackendState()
 
   // By default, try to ask for permission when the user opens the settings.
   // There's no reasonable way to implement a "Grant" button, because the OS
@@ -53,7 +55,14 @@ export const ScreenPermissions = withBoundary(() => {
   // user chooses to deny it.
   useEffect(() => {
     if (screenPermission !== 'granted') {
-      tryAskForScrenPermissions()
+      if (state?.onboardingFinishedAt) {
+        // Electron seems to preemptively render the Settings window, even if it
+        // isn't visible and the user hasn't yet finished onboarding. That
+        // causes the screen permission dialog to appear right as the user open
+        // the app for the first time, which is no what we want. So we add this
+        // guard here.
+        tryAskForScreenPermission()
+      }
     }
   }, [screenPermission])
 
