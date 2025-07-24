@@ -13,6 +13,7 @@ type CallError =
   | 'unknown'
   | 'no-api-key'
   | 'bad-api-key'
+  | 'rate-limit' // this only when Nudge Cloud
   | 'ai-rate-limit'
   | 'no-internet'
 

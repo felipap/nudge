@@ -247,6 +247,10 @@ export function setupIPC() {
       // Should already be null for 99% of users but useful for developers to
       // reset the state of everything.
       session: null,
+      savedGoalInputValue: null,
+      // customInstructions: null,
+      modelSelection: null,
+      useNudgeCloud: false,
     })
   })
 

@@ -11,6 +11,7 @@ export type ModelError =
   | 'no-api-key'
   | 'bad-api-key'
   | 'ai-rate-limit'
+  | 'rate-limit' // this only when Nudge Cloud
   | 'no-internet'
 
 export type GoalFeedbackType =
