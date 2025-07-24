@@ -20,7 +20,9 @@ export function Nav() {
       <div className="[app-region:drag] self-stretch flex-1 px-3 flex items-center flex-row select-none">
         <div className="flex flex-row items-center gap-2">
           <LogoIconCompleted width={16} height={16} />
-          <div className="text-[13px] font-normal mt-[1px]">Set up Nudge</div>
+          <div className="text-[13px] font-normal mt-[1px]">
+            Nudge Onboarding
+          </div>
         </div>
       </div>
     </nav>

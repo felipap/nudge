@@ -20,13 +20,6 @@ export const BG_CLASS = 'bg-one'
 export default function App() {
   const [step, setStep] = useState<Step>('5')
 
-  function finish() {
-    setPartialState({
-      onboardingFinishedAt: new Date().toISOString(),
-    })
-    closeWindow()
-  }
-
   return (
     <div
       className={twMerge(
@@ -106,7 +99,14 @@ export default function App() {
               transition={{ duration: 0.5, ease: 'easeIn' }}
               className="gap-5 flex flex-col h-full"
             >
-              <DoneScreen goBack={() => setStep('4')} />
+              <DoneScreen
+                goBack={() => {
+                  setPartialState({
+                    onboardingFinishedAt: new Date().toISOString(),
+                  })
+                  setStep('4')
+                }}
+              />
             </motion.div>
           </AnimatePresence>
         )}

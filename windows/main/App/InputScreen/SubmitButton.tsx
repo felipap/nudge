@@ -55,10 +55,10 @@ export function SubmitButton({
       text = 'Problem: no internet connection'
     } else if (feedbackResult.error === 'bad-api-key') {
       text = 'Problem with your OpenAI key'
-    } else if (feedbackResult.error === 'rate-limit') {
-      text = 'Rate limit exceeded'
+    } else if (feedbackResult.error === 'ai-rate-limit') {
+      text = 'OpenAI rate limit exceeded'
     } else {
-      text = 'Error'
+      text = 'Unknown Error'
     }
     disabled = true
     bgClassName = RED_BG

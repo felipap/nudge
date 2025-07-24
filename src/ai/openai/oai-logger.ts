@@ -2,6 +2,7 @@
 // share code with the backend project (nudge-web). THIS might be overkill
 // compared to just using console methods.
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable no-console */
 
 import * as SentryType from '@sentry/node'

@@ -5,7 +5,7 @@
 
 import OpenAI from 'openai'
 import { ChatCompletionParseParams } from 'openai/resources/chat/completions'
-import { captureException, warn } from './oai-logger'
+import { captureException, debug, warn } from './oai-logger'
 
 // Utils below
 
@@ -13,7 +13,7 @@ type CallError =
   | 'unknown'
   | 'no-api-key'
   | 'bad-api-key'
-  | 'rate-limit'
+  | 'ai-rate-limit'
   | 'no-internet'
 
 // Signature for the openai functions.
@@ -48,18 +48,21 @@ export async function safeOpenAIStructuredCompletion<T>(
     })
 
     if (e instanceof OpenAI.APIConnectionError) {
+      debug('no-internet')
       return {
         error: 'no-internet',
       }
     }
     if (e instanceof OpenAI.AuthenticationError) {
+      debug('bad-api-key')
       return {
         error: 'bad-api-key',
       }
     }
     if (e instanceof OpenAI.RateLimitError) {
+      debug('rate-limit')
       return {
-        error: 'rate-limit',
+        error: 'ai-rate-limit',
       }
     }
 

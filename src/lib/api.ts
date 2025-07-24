@@ -19,7 +19,12 @@ export interface SignatureHeaders {
   'x-nudge-version': string
 }
 
-export type ApiError = 'no-internet' | 'rate-limit' | 'unknown'
+export type ApiError =
+  | 'no-internet'
+  | 'rate-limit'
+  | 'ai-rate-limit'
+  | 'rate-limit'
+  | 'unknown'
 
 export type ApiResult<T> = { data: T } | { error: ApiError; message?: string }
 
@@ -64,6 +69,20 @@ export async function callNudgeAPI<T>(
     const message = `url=${url} status=${res.status} text=${ellipsis(text)}`
 
     // TODO: coordinate these with backend
+    if (res.status === 400) {
+      const json = safeJsonParse(text)
+      if (!json) {
+        return { error: 'unknown', message }
+      }
+      console.log('400 bro what!', json.error)
+      if (json.error === 'ai-rate-limit') {
+        return { error: 'ai-rate-limit', message }
+      }
+      if (json.error === 'no-internet') {
+        return { error: 'no-internet', message }
+      }
+      return { error: 'unknown', message: text }
+    }
     if (res.status === 503) {
       return { error: 'no-internet', message }
     }
@@ -212,3 +231,15 @@ export function genSignedFingerprint(): SignedFingerPrint {
 //   // For now, we'll use a simple hash
 //   return createHash('sha256').update(data).digest('hex')
 // }
+
+function safeJsonParse(text: string): Record<string, unknown> | null {
+  try {
+    return JSON.parse(text)
+  } catch (e) {
+    warn('[hosted/api] Failed to parse response as JSON', {
+      text: ellipsis(text),
+      error: e,
+    })
+    return null
+  }
+}

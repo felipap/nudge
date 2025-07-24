@@ -10,7 +10,7 @@ export type ModelError =
   | 'unknown'
   | 'no-api-key'
   | 'bad-api-key'
-  | 'rate-limit'
+  | 'ai-rate-limit'
   | 'no-internet'
 
 export type GoalFeedbackType =
