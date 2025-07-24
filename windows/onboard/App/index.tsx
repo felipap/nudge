@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { ReactNode, useState } from 'react'
+import { twMerge } from 'tailwind-merge'
 import {
   closeWindow,
   openGithubDiscussion,
@@ -14,6 +15,8 @@ import { DoneScreen } from './step5-done'
 
 type Step = '1' | '2' | '3' | '4' | '5'
 
+export const BG_CLASS = 'bg-[#FAFAFA] dark:bg-[#333333AA]'
+
 export default function App() {
   const [step, setStep] = useState<Step>('5')
 
@@ -25,7 +28,12 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen text-contrast bg-[#FAFAFA] dark:bg-[#333333AA] text-[14px] leading-[1.4]">
+    <div
+      className={twMerge(
+        'flex flex-col h-screen text-contrast text-[14px] leading-[1.4]',
+        BG_CLASS
+      )}
+    >
       <Nav />
       <main className="h-full flex flex-col w-full select-none gap-4 px-5 pt-5">
         {step === '1' && (
@@ -98,7 +106,7 @@ export default function App() {
               transition={{ duration: 0.5, ease: 'easeIn' }}
               className="gap-5 flex flex-col h-full"
             >
-              <DoneScreen next={finish} />
+              <DoneScreen goBack={() => setStep('4')} />
             </motion.div>
           </AnimatePresence>
         )}
@@ -107,7 +115,7 @@ export default function App() {
       <footer className="h-[40px] mt-[30px]">
         <BottomNavIndicator step={step} />
         <div className="absolute bottom-5 right-6">
-          <NeedHelpFooter />
+          {step !== '5' && <NeedHelpFooter />}
         </div>
       </footer>
     </div>
@@ -116,10 +124,10 @@ export default function App() {
 
 function BottomNavIndicator({ step }: { step: Step }) {
   const ball = (
-    <div className="w-[7px] h-[7px] rounded-full bg-gray-300 dark:bg-gray-500" />
+    <div className="w-[7px] h-[7px] rounded-full bg-gray-300 dark:bg-neutral-500" />
   )
   const activeBall = (
-    <div className="w-[7px] h-[7px] rounded-full bg-gray-500 dark:bg-gray-300" />
+    <div className="w-[7px] h-[7px] rounded-full bg-gray-500 dark:bg-neutral-300" />
   )
 
   return (
