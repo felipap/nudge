@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { CameraIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { StepScreenHeader } from '..'
@@ -57,6 +56,7 @@ export const ScreenPermissionScreen = withBoundary(
         <Illustration className="" />
 
         <div className="flex-1" />
+
         <div className="w-full flex justify-center gap-2 items-center">
           {goBack && (
             <SubmitButton onClick={goBack} color="gray" className="text-[14px]">
@@ -130,7 +130,7 @@ function Illustration({ className }: { className?: string }) {
           repeat: Infinity,
           repeatDelay: 1,
         }}
-        className="z-10 absolute bottom-[20px] left-[1/2] translate-x-[150px]"
+        className="z-10 absolute bottom-[6px] left-[1/2] translate-x-[60px]"
       >
         <MacOSPointer className="w-[40px]" />
       </motion.div>

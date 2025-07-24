@@ -5,12 +5,12 @@ import { Nav } from './Nav'
 import { NotificationScreen } from './step1-notifications'
 import { TestNotificationScreen } from './step2-test-notification'
 import { ScreenPermissionScreen } from './step3-screen'
-import { CameraIcon } from '../../shared/ui/icons'
+import { AISelectionScreen } from './step4-model'
 
 type Step = '1' | '2' | '3' | '4'
 
 export default function App() {
-  const [step, setStep] = useState<Step>('3')
+  const [step, setStep] = useState<Step>('4')
 
   return (
     <div className="flex flex-col h-screen text-contrast bg-[#FAFAFA] dark:bg-[#333333AA] text-[14px] leading-[1.4]">
@@ -56,7 +56,23 @@ export default function App() {
             >
               <ScreenPermissionScreen
                 goBack={() => setStep('1')}
-                next={() => setStep('3')}
+                next={() => setStep('4')}
+              />
+            </motion.div>
+          </AnimatePresence>
+        )}
+        {step === '4' && (
+          <AnimatePresence>
+            <motion.div
+              initial={{ x: 0, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 10, opacity: 0 }}
+              transition={{ duration: 0.5, ease: 'easeIn' }}
+              className="gap-5 flex flex-col h-full"
+            >
+              <AISelectionScreen
+                goBack={() => setStep('3')}
+                next={() => setStep('4')}
               />
             </motion.div>
           </AnimatePresence>

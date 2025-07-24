@@ -352,3 +352,24 @@ export function MacOSPointer(props: ComponentProps<'svg'>) {
     </svg>
   )
 }
+
+export function CircleInsideCircle({
+  showInner,
+  ...props
+}: ComponentProps<'svg'> & { showInner?: boolean }) {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="2" />
+      {showInner && (
+        <circle cx="12" cy="12" r="8" fill="currentColor" stroke-width="2" />
+      )}
+    </svg>
+  )
+}
