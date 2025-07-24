@@ -8,7 +8,7 @@ import { ActiveSessionScreen } from './ActiveSessionScreen'
 import { InputScreen } from './InputScreen'
 import { OnboardingScreen, useOnboardingState } from './OnboardingScren'
 
-export const DEFAULT_BG_CLASS = 'bg-gray-100 dark:bg-gray-800/90'
+export const DEFAULT_BG_CLASS = 'bg-gray-100 dark:bg-neutral-800/90'
 
 export default function App() {
   const { state } = useBackendState()

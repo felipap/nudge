@@ -48,7 +48,7 @@ export const InputScreen = withBoundary(() => {
     <div className={twMerge('flex flex-col h-screen', DEFAULT_BG_CLASS)}>
       <Nav title="What do you want to do next?" />
       <NavLine />
-      <main className="flex-1 overflow-scroll flex flex-col shadow-inset-bottom bg-[#F3f3f3] dark:bg-neutral-900/50">
+      <main className="flex-1 overflow-scroll flex flex-col shadow-inset-bottom bg-[#F3f3f3] dark:bg-black/0">
         <GoalTextarea
           value={value}
           onChange={setValue}
