@@ -163,7 +163,7 @@ export function createOnboardingWindow() {
   const windowHeight = 450
 
   const win = new BrowserWindow({
-    show: !app.isPackaged,
+    show: false,
     alwaysOnTop: true,
     width: windowWidth,
     height: windowHeight,
@@ -206,6 +206,10 @@ export function createOnboardingWindow() {
     }
     return true
   })
+
+  if (!getState().onboardingFinishedAt) {
+    win.show()
+  }
 
   onboardWindow = win
   return win

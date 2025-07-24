@@ -1,16 +1,10 @@
 import { Cloud, Key } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { StepScreenHeader } from '..'
-import { State } from '../../../../src/store/types'
-import {
-  openExternal,
-  setPartialState,
-  useBackendState,
-} from '../../../shared/ipc'
-import { Switch } from '../../../shared/ui/native/Switch'
+import { openExternal, useBackendState } from '../../../shared/ipc'
+import { SparkleIcon } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { SubmitButton } from '../SubmitButton'
-import { Fieldset } from '../ui'
 import { ModelOption } from './ModelOption'
 
 interface Props {
@@ -22,28 +16,59 @@ type Value = 'nudge-cloud' | 'openai'
 
 export const AISelectionScreen = withBoundary(({ next, goBack }: Props) => {
   const [selection, setSelection] = useState<Value | null>(null)
+  const [openAIKey, setOpenAIKey] = useState<string | null>(null)
+
+  const { state, setPartialState } = useBackendState()
+
+  function submit() {
+    if (!selection) {
+      return
+    }
+    if (selection === 'nudge-cloud') {
+      setPartialState({
+        useNudgeCloud: true,
+      })
+    } else {
+      setPartialState({
+        useNudgeCloud: false,
+        modelSelection: {
+          name: 'openai-4o-mini',
+          key: openAIKey,
+          validatedAt: null,
+        },
+      })
+    }
+  }
 
   return (
     <>
       <StepScreenHeader
-        // icon={
-        //   <CameraIcon className="w-5 h-5 text-gray-700 dark:text-gray-400 shrink-0" />
-        // }
+        icon={<SparkleIcon className="w-4 shrink-0" />}
         title="Step 4: Select a model"
         description={
           <>Nudge uses AI to detect whether you&apos;re distracted.</>
         }
       />
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 overflow-y-scroll h-full">
         <ModelOption
           title="Enter an OpenAI API key"
           subtitle="Use your own OpenAI API key to control your own data."
-          icon={<Key className="w-4 h-4 shrink-0" />}
+          icon={<Key className="w-5 h-5 shrink-0 text-inherit" />}
           onClick={() => {
             setSelection((s) => (s === 'openai' ? null : 'openai'))
           }}
           active={selection === 'openai'}
+          activeChildren={
+            <div className="flex flex-col gap-1">
+              <div className="text-[13px]">
+                <span className="font-medium">OpenAI API key:</span> sk-...
+              </div>
+              <div className="text-[13px]">
+                <span className="font-medium">OpenAI API key:</span> sk-...
+              </div>
+            </div>
+          }
         />
         <ModelOption
           title="Use Nudge Cloud"
@@ -52,8 +77,8 @@ export const AISelectionScreen = withBoundary(({ next, goBack }: Props) => {
               Use Nudge Cloud for up to 20 hours a month for free.{' '}
               <a
                 onClick={(e) => {
+                  // Allow user to click the link without selecting this option.
                   e.stopPropagation()
-
                   openExternal('https://nudge.fyi/faq')
                 }}
                 className="text-link transition hover:text-link/60 inline"
@@ -63,7 +88,7 @@ export const AISelectionScreen = withBoundary(({ next, goBack }: Props) => {
               .
             </>
           }
-          icon={<Cloud className="w-4 h-4 shrink-0" />}
+          icon={<Cloud className="w-5 h-5 shrink-0" />}
           onClick={() => {
             setSelection((s) => (s === 'nudge-cloud' ? null : 'nudge-cloud'))
           }}
@@ -80,7 +105,7 @@ export const AISelectionScreen = withBoundary(({ next, goBack }: Props) => {
           </SubmitButton>
         )}
         <SubmitButton
-          onClick={next}
+          onClick={submit}
           color="green"
           disabled={!selection}
           className={selection ? '' : 'opacity-0'}
@@ -91,64 +116,3 @@ export const AISelectionScreen = withBoundary(({ next, goBack }: Props) => {
     </>
   )
 })
-
-function makeUseStateWithBackendBackup<T>(
-  getSavedValue: (state: State) => T | undefined,
-  save: (value: T) => void
-) {
-  return function () {
-    const { state, setPartialState } = useBackendState()
-    const [localValue, setLocalValue] = useState<T | null>(null)
-
-    useEffect(() => {
-      if (state) {
-        const savedValue = getSavedValue(state)
-        if (savedValue) {
-          if (localValue === null) {
-            setLocalValue(savedValue)
-          }
-        }
-      }
-    }, [!!state])
-
-    function setValue(value: T) {
-      setLocalValue(value)
-      save(value)
-    }
-
-    return [localValue || '', setValue] as const
-  }
-}
-
-const useCustomInstructionState = makeUseStateWithBackendBackup<string | null>(
-  (state) => state?.customInstructions,
-  (value: string | null) => {
-    setPartialState({ customInstructions: value })
-  }
-)
-
-export function ToggleNudgeCloud() {
-  const { state, setPartialState } = useBackendState()
-
-  const onChange = () => {
-    setPartialState({
-      useNudgeCloud: !state?.useNudgeCloud,
-    })
-  }
-
-  return (
-    <Fieldset className="justify-center ml-6 flex">
-      <div
-        className="flex flex-row gap-2 items-start justify-start cursor-pointer"
-        onClick={onChange}
-      >
-        <Switch
-          id="auto-launch"
-          className="mt-1"
-          checked={state?.useNudgeCloud || false}
-          onChange={onChange}
-        />
-      </div>
-    </Fieldset>
-  )
-}

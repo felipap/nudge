@@ -1,16 +1,28 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { ReactNode, useState } from 'react'
-import { openGithubDiscussion } from '../../shared/ipc'
+import {
+  closeWindow,
+  openGithubDiscussion,
+  setPartialState,
+} from '../../shared/ipc'
 import { Nav } from './Nav'
 import { NotificationScreen } from './step1-notifications'
 import { TestNotificationScreen } from './step2-test-notification'
 import { ScreenPermissionScreen } from './step3-screen'
 import { AISelectionScreen } from './step4-model'
+import { DoneScreen } from './step5-done'
 
-type Step = '1' | '2' | '3' | '4'
+type Step = '1' | '2' | '3' | '4' | '5'
 
 export default function App() {
-  const [step, setStep] = useState<Step>('4')
+  const [step, setStep] = useState<Step>('5')
+
+  function finish() {
+    setPartialState({
+      onboardingFinishedAt: new Date().toISOString(),
+    })
+    closeWindow()
+  }
 
   return (
     <div className="flex flex-col h-screen text-contrast bg-[#FAFAFA] dark:bg-[#333333AA] text-[14px] leading-[1.4]">
@@ -77,6 +89,19 @@ export default function App() {
             </motion.div>
           </AnimatePresence>
         )}
+        {step === '5' && (
+          <AnimatePresence>
+            <motion.div
+              initial={{ x: 0, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 10, opacity: 0 }}
+              transition={{ duration: 0.5, ease: 'easeIn' }}
+              className="gap-5 flex flex-col h-full"
+            >
+              <DoneScreen next={finish} />
+            </motion.div>
+          </AnimatePresence>
+        )}
       </main>
 
       <footer className="h-[40px] mt-[30px]">
@@ -103,6 +128,7 @@ function BottomNavIndicator({ step }: { step: Step }) {
       {step === '2' ? activeBall : ball}
       {step === '3' ? activeBall : ball}
       {step === '4' ? activeBall : ball}
+      {step === '5' ? activeBall : ball}
     </div>
   )
 }

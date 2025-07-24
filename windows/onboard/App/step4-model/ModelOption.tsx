@@ -1,16 +1,18 @@
+import { ReactNode } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { CircleInsideCircle } from '../../../shared/ui/icons'
 
 interface Props {
-  title: string | React.ReactNode
-  subtitle: string | React.ReactNode
-  icon: React.ReactNode
+  activeChildren?: ReactNode
+  title: string | ReactNode
+  subtitle: string | ReactNode
+  icon: ReactNode
   onClick: () => void
   active: boolean
   className?: string
 }
 
 export function ModelOption({
+  activeChildren,
   title,
   subtitle,
   icon,
@@ -21,30 +23,29 @@ export function ModelOption({
   return (
     <div
       className={twMerge(
-        'flex flex-row items-center gap-2 cursor-pointer rounded-[10px] py-4 pl-5 pr-7',
+        'flex flex-row items-center gap-2 cursor-pointer rounded-[10px] pt-3 pb-4 pl-2 pr-7',
         'border-gray-400/20 border-[1.5px] transition',
-        !active && 'hover:bg-white/60',
+        !active && 'hover:bg-white/40',
         active &&
           'bg-white dark:bg-neutral-700/50 border-blue-400 dark:border-blue-500',
         className
       )}
       onClick={onClick}
     >
-      <div className="w-[30px] flex items-start justify-start">
-        <CircleInsideCircle
-          showInner={active}
-          className={twMerge(
-            'w-[15px] shrink-0 grow-0 text-contrast',
-            active && 'text-blue-500'
-          )}
-        />
+      <div
+        className={twMerge(
+          'w-[45px] grow-0 shrink-0 flex items-start mt-5 h-full justify-center',
+          active && 'text-blue-500'
+        )}
+      >
+        {icon}
       </div>
-      <div className="flex flex-col gap-0.5">
+      <div className="flex flex-col gap-0">
         <div className="flex flex-row gap-2 items-center">
-          {icon}
-          <div className="text-[15px] font-medium antialiased">{title}</div>
+          <div className="text-[14px] track-10 font-medium">{title}</div>
         </div>
         <div className="text-[13px] leading-[1.3]">{subtitle}</div>
+        {active && activeChildren}
       </div>
     </div>
   )

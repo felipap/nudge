@@ -1,6 +1,6 @@
 import { create, StoreApi } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { debug, logError, warn } from '../lib/logger'
+import { debug, logError } from '../lib/logger'
 import { checkScreenPermissions } from '../lib/screenshot'
 import { fileStore } from './backend'
 import type { Capture, State } from './types'

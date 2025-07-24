@@ -58,6 +58,7 @@ export type State = {
   assessStartedAt: string | null // date
   firstOpenedAt: string // date
   lastClosedAt: string | null
+  onboardingFinishedAt: string | null // date
   userHasClickedTestNotification: boolean
   // settings
 
@@ -82,6 +83,7 @@ export type State = {
 }
 
 export const DEFAULT_STATE: State = {
+  onboardingFinishedAt: null,
   nextCaptureAt: null,
   session: null,
   savedCaptures: [],
