@@ -72,7 +72,7 @@ type SharedIpcMethods = {
   getImageFromFs: (
     src: string
   ) => Promise<{ base64: string } | { error: string }>
-  sendTestNotificationAndWait: () => Promise<boolean>
+  sendTestNotification: () => void
 }
 
 export type IpcMainMethods = SharedIpcMethods & {

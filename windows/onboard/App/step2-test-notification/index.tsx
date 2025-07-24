@@ -1,46 +1,51 @@
 import { motion } from 'framer-motion'
 import { ReactNode, useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { StepScreenHeader } from '..'
-import {
-  sendTestNotificationAndWait,
-  useBackendState,
-} from '../../../shared/ipc'
+import { sendTestNotification, useBackendState } from '../../../shared/ipc'
 import { FsImage } from '../../../shared/ui/FsImage'
 import { BiNotification, MacOSPointer } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { SubmitButton } from '../SubmitButton'
+import { OnboardingScreenHeader } from '../ui'
 
 interface Props {
   goBack?: () => void
   next: () => void
 }
 
+function useHasClickedTestNotification() {
+  const { state } = useBackendState()
+  return state?.userHasClickedTestNotification ?? false
+}
+
 export const TestNotificationScreen = withBoundary(
   ({ goBack, next }: Props) => {
-    const { state } = useBackendState()
     const [hasSent, setHasSent] = useState(false)
-    const [hasJustSent, setHasJustSent] = useState(false)
-    const [hasClicked, setHasClicked] = useState(false)
+    const [hasJustClicked, setHasJustClicked] = useState(false)
 
-    useEffect(() => {
-      if (state?.userHasClickedTestNotification) {
-        setHasClicked(true)
-      }
-    }, [state?.userHasClickedTestNotification])
+    const userHasClickedTestNotification = useHasClickedTestNotification()
 
-    async function sendTestNotification() {
+    async function sendIt() {
       setHasSent(true)
-      await sendTestNotificationAndWait()
-      setHasClicked(true)
-      setHasJustSent(true)
-      setTimeout(() => {
-        setHasJustSent(false)
-      }, 3000)
+
+      // This will wait until user clicks on this particular notification, but
+      // there may be multiple pending "test" notifications, including the one
+      // we sent from the previous screen.
+      sendTestNotification()
     }
 
+    useEffect(() => {
+      // For the silly little "Nice!" animation.
+      if (userHasClickedTestNotification) {
+        setHasJustClicked(true)
+        setTimeout(() => {
+          setHasJustClicked(false)
+        }, 3000)
+      }
+    }, [userHasClickedTestNotification])
+
     let action: ReactNode
-    if (hasClicked) {
+    if (userHasClickedTestNotification) {
       action = (
         <SubmitButton onClick={next} color="green">
           Done, continue &rarr;
@@ -54,7 +59,7 @@ export const TestNotificationScreen = withBoundary(
       )
     } else {
       action = (
-        <SubmitButton onClick={sendTestNotification} color="yellow">
+        <SubmitButton onClick={sendIt} color="yellow">
           Send test notification
         </SubmitButton>
       )
@@ -62,7 +67,7 @@ export const TestNotificationScreen = withBoundary(
 
     return (
       <>
-        <StepScreenHeader
+        <OnboardingScreenHeader
           icon={<BiNotification className="h-5" />}
           title="Step 2: Test nudges"
           description={
@@ -71,23 +76,23 @@ export const TestNotificationScreen = withBoundary(
               <strong onClick={sendTestNotification} className="cursor-pointer">
                 Click to send a test notification.
               </strong>{' '}
-              {hasSent && (
-                <strong className="">
-                  Now click on the notification we just sent you.
+              <div className={twMerge('mt-2', hasSent && 'text-transparent')}>
+                <strong>
+                  Now click on the notification we just sent you...
                 </strong>
-              )}{' '}
-              {hasJustSent && (
-                <motion.div
-                  animate={{
-                    opacity: [0, 1, 1, 1, 1, 0],
-                    scale: [1, 2, 1, 1],
-                  }}
-                  transition={{ duration: 2 }}
-                  className="inline-block text-green-600 dark:text-green-400"
-                >
-                  Nice!
-                </motion.div>
-              )}
+                {hasJustClicked && (
+                  <motion.div
+                    animate={{
+                      opacity: [0, 1, 1, 1, 1, 0],
+                      scale: [1, 2, 1, 1],
+                    }}
+                    transition={{ duration: 2 }}
+                    className="inline-block text-green-600 dark:text-green-400"
+                  >
+                    Nice!
+                  </motion.div>
+                )}
+              </div>
             </>
           }
         />

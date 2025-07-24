@@ -1,10 +1,9 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import {
   finishOnboarding,
   openGithubDiscussion,
-  setPartialState,
   useBackendState,
 } from '../../shared/ipc'
 import { Nav } from './Nav'
@@ -13,31 +12,23 @@ import { TestNotificationScreen } from './step2-test-notification'
 import { ScreenPermissionScreen } from './step3-screen'
 import { AISelectionScreen } from './step4-model'
 import { DoneScreen } from './step5-done'
+import { BottomNavIndicator, ONBOARDING_BG_CLASS } from './ui'
 
-type Step =
+export type Step =
   | '1-notifications'
   | '2-test-nudge'
   | '3-screen'
   | '4-model'
   | '5-done'
 
-export const BG_CLASS = 'bg-one'
-
 export default function App() {
-  const [step, setStep] = useState<Step>('1-notifications')
-  const { state } = useBackendState()
-
-  useEffect(() => {
-    if (state?.userHasClickedTestNotification) {
-      setStep('3-screen')
-    }
-  }, [state?.userHasClickedTestNotification])
+  const { step, setStep } = useOnboardingStep()
 
   return (
     <div
       className={twMerge(
         'flex flex-col h-screen text-contrast text-[14px] leading-[1.4] ',
-        BG_CLASS
+        ONBOARDING_BG_CLASS
       )}
     >
       <Nav />
@@ -81,7 +72,7 @@ export default function App() {
               className="gap-6 flex flex-col h-full"
             >
               <ScreenPermissionScreen
-                goBack={() => setStep('1-notifications')}
+                goBack={() => setStep('2-test-nudge')}
                 next={() => setStep('4-model')}
               />
             </motion.div>
@@ -136,51 +127,6 @@ export default function App() {
   )
 }
 
-function BottomNavIndicator({ step }: { step: Step }) {
-  const ball = (
-    <div className="w-[7px] h-[7px] rounded-full bg-gray-300 dark:bg-neutral-500" />
-  )
-  const activeBall = (
-    <div className="w-[7px] h-[7px] rounded-full bg-gray-500 dark:bg-neutral-300" />
-  )
-
-  return (
-    <div className="flex flex-row gap-1.5 items-center justify-center">
-      {step === '1-notifications' ? activeBall : ball}
-      {step === '2-test-nudge' ? activeBall : ball}
-      {step === '3-screen' ? activeBall : ball}
-      {step === '4-model' ? activeBall : ball}
-      {step === '5-done' ? activeBall : ball}
-    </div>
-  )
-}
-
-interface StepScreenHeaderProps {
-  title: string | ReactNode
-  description: string | ReactNode
-  icon?: ReactNode
-}
-
-export function StepScreenHeader({
-  title,
-  description,
-  icon,
-}: StepScreenHeaderProps) {
-  return (
-    <div className="flex flex-col gap-1 relative">
-      <h2 className="flex flex-row gap-2 items-center">
-        {icon && (
-          <div className="w-5 shrink-0 opacity-80 mt-[-1px]">{icon}</div>
-        )}
-        <span className="text-[17px] font-medium antialiased">{title}</span>
-      </h2>
-      <p className="text-[14px] leading-[1.4] track-10 max-w-[95%] text-contrast/100 [&_strong]:text-contrast [&_strong]:font-medium dark:antialiased">
-        {description}
-      </p>
-    </div>
-  )
-}
-
 export function NeedHelpFooter() {
   return (
     <div className="text-secondary text-[13px]">
@@ -194,4 +140,20 @@ export function NeedHelpFooter() {
       </button>
     </div>
   )
+}
+
+function useOnboardingStep() {
+  const [step, setStep] = useState<Step>('1-notifications')
+  const { state } = useBackendState()
+
+  useEffect(() => {
+    if (state?.userHasClickedTestNotification) {
+      setStep('3-screen')
+    }
+  }, [state?.userHasClickedTestNotification])
+
+  return {
+    step,
+    setStep,
+  }
 }

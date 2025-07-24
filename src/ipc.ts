@@ -53,8 +53,8 @@ export function setupIPC() {
     return nativeTheme.shouldUseDarkColors
   })
 
-  ipcMainTyped.handle('sendTestNotificationAndWait', async () => {
-    log('[sendTestNotificationAndWait] called')
+  ipcMainTyped.handle('sendTestNotification', async () => {
+    log('[sendTestNotification] called')
 
     const notif = new Notification({
       title: 'TEST NUDGE',
@@ -64,20 +64,34 @@ export function setupIPC() {
       timeoutType: 'never',
     })
 
-    return await new Promise((resolve) => {
-      notif.on('click', () => {
-        log('[sendTestNotificationAndWait] click!!')
-        setPartialState({
-          userHasClickedTestNotification: true,
-        })
-        resolve(true)
+    notif.on('click', () => {
+      log('[sendTestNotification] click!!')
+      setPartialState({
+        userHasClickedTestNotification: true,
       })
-      notif.on('close', () => {
-        log('[sendTestNotificationAndWait] close!!')
-        resolve(true)
-      })
-      notif.show()
     })
+
+    notif.show()
+
+    // FELIPE: this was previously "sendTestNotificationAndWait" because we
+    // asked the user to click the test notification to proceede with
+    // onboarding. But it's possible for multiple test notifications to be out
+    // at the same time, and we want clicking on ANY of them to be allowed.
+
+    // return await new Promise((resolve) => {
+    //   notif.on('click', () => {
+    //     log('[sendTestNotification] click!!')
+    //     setPartialState({
+    //       userHasClickedTestNotification: true,
+    //     })
+    //     resolve(true)
+    //   })
+    //   notif.on('close', () => {
+    //     log('[sendTestNotification] close!!')
+    //     resolve(true)
+    //   })
+    //   notif.show()
+    // })
   })
 
   ipcMainTyped.handle('getImageFromFs', (_, fileName: string) => {

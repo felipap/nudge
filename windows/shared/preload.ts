@@ -71,8 +71,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return await typedIpcRenderer.invoke('getState')
   },
 
-  sendTestNotificationAndWait: async () => {
-    return await typedIpcRenderer.invoke('sendTestNotificationAndWait')
+  sendTestNotification: async () => {
+    return await typedIpcRenderer.invoke('sendTestNotification')
   },
 
   getImageFromFs: async (src: string) => {
@@ -157,7 +157,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
 
   tryAskForScreenPermission: async () => {
-    return await typedIpcRenderer.invoke('tryAskForScrenPermissions')
+    return await typedIpcRenderer.invoke('tryAskForScreenPermission')
   },
 
   openSystemSettings: async () => {

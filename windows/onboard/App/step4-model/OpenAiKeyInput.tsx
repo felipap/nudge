@@ -2,12 +2,11 @@ import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
 import { ComponentProps, useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { validateModelKey } from '../../../shared/ipc'
-import { type AvailableModel } from '../../../shared/shared-types'
+import { type AvailableProvider } from '../../../shared/shared-types'
 import { Input } from '../../../shared/ui/native/Input'
-import { Fieldset, Label } from '../ui'
 
 interface Props extends ComponentProps<'input'> {
-  model: AvailableModel | null
+  model: AvailableProvider | null
   currentKey: string | null
 }
 
@@ -43,8 +42,10 @@ export function OpenAiKeyInput({
   }
 
   return (
-    <Fieldset>
-      <Label>OpenAI key</Label>
+    <div className="flex flex-row gap-2 items-center justify-between">
+      <div className="track-15 text-[14px] text-contrast font-medium antialiased">
+        OpenAI key
+      </div>
       <div className="relative">
         <Input
           value={value}
@@ -75,7 +76,7 @@ export function OpenAiKeyInput({
           )}
         </div>
       </div>
-    </Fieldset>
+    </div>
   )
 }
 

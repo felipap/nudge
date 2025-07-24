@@ -1,7 +1,5 @@
 import { motion } from 'framer-motion'
-import { useEffect } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { StepScreenHeader } from '..'
 import {
   openGithubDiscussion,
   openSystemSettings,
@@ -12,6 +10,7 @@ import { FsImage } from '../../../shared/ui/FsImage'
 import { CameraIcon, MacOSPointer } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { SubmitButton } from '../SubmitButton'
+import { OnboardingScreenHeader } from '../ui'
 
 interface Props {
   next: () => void
@@ -26,15 +25,15 @@ export const ScreenPermissionScreen = withBoundary(
     // There's no reasonable way to implement a "Grant" button, because the OS
     // only shows the dialog to the user once, and we can't even know when the
     // user chooses to deny it.
-    useEffect(() => {
-      if (screenPermission !== 'granted') {
-        tryAskForScreenPermission()
-      }
-    }, [screenPermission])
+    // useEffect(() => {
+    //   if (screenPermission !== 'granted') {
+    //     tryAskForScreenPermission()
+    //   }
+    // }, [screenPermission])
 
     return (
       <>
-        <StepScreenHeader
+        <OnboardingScreenHeader
           icon={<CameraIcon className="w-5 h-5" />}
           title="Step 3: Allow capture screen"
           description={
@@ -64,7 +63,13 @@ export const ScreenPermissionScreen = withBoundary(
               Done, continue &rarr;
             </SubmitButton>
           ) : (
-            <SubmitButton onClick={openSystemSettings} color="yellow">
+            <SubmitButton
+              onClick={() => {
+                tryAskForScreenPermission()
+                openSystemSettings()
+              }}
+              color="yellow"
+            >
               Open System Settings
             </SubmitButton>
           )}

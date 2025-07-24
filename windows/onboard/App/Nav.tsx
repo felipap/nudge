@@ -1,15 +1,15 @@
 import { twMerge } from 'tailwind-merge'
-import { BG_CLASS } from '.'
 import { closeWindow, minimizeWindow, zoomWindow } from '../../shared/ipc'
 import { LogoIconCompleted } from '../../shared/ui/logos'
 import { WindowControls } from '../../shared/ui/WindowControls'
+import { ONBOARDING_BG_CLASS } from './ui'
 
 export function Nav() {
   return (
     <nav
       className={twMerge(
         'flex flex-row h-[32px] px-[10px] gap-5 items-center shrink-0 border-b border-gray-200 dark:border-two  z-10',
-        BG_CLASS
+        ONBOARDING_BG_CLASS
       )}
     >
       <WindowControls

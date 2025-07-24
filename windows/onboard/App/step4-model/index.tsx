@@ -1,11 +1,11 @@
 import { Cloud, Key } from 'lucide-react'
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { StepScreenHeader } from '..'
 import { openExternal, useBackendState } from '../../../shared/ipc'
 import { SparkleIcon } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { SubmitButton } from '../SubmitButton'
+import { OnboardingScreenHeader } from '../ui'
 import { ModelOption } from './ModelOption'
 import { OpenAiKeyInput } from './OpenAiKeyInput'
 
@@ -17,21 +17,22 @@ interface Props {
 type Value = 'nudge-cloud' | 'openai'
 
 export const AISelectionScreen = withBoundary(({ next, goBack }: Props) => {
+  const { setPartialState } = useBackendState()
+
+  // state
   const [selection, setSelection] = useState<Value | null>(null)
   const [openAIKey, setOpenAIKey] = useState<string | null>(null)
 
+  // ui
   const scrollRef = useRef<HTMLDivElement>(null)
   const hasScroll = useElementHasScroll(scrollRef)
-
-  const { state, setPartialState } = useBackendState()
 
   async function submit() {
     if (!selection) {
       return
     }
-    console.log('selection is', selection)
+
     if (selection === 'nudge-cloud') {
-      console.log('setting setPartialState')
       await setPartialState({
         useNudgeCloud: true,
       })
@@ -60,7 +61,7 @@ export const AISelectionScreen = withBoundary(({ next, goBack }: Props) => {
         )}
         ref={scrollRef}
       >
-        <StepScreenHeader
+        <OnboardingScreenHeader
           icon={<SparkleIcon className="w-4" />}
           title="Step 4: Choose an AI"
           description="Nudge uses AI to detect if you're distracted. Select&nbsp;your&nbsp;intelligence provider."

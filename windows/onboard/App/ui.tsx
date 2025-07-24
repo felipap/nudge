@@ -1,95 +1,49 @@
-import { ComponentProps } from 'react'
-import { twMerge } from 'tailwind-merge'
+import { ReactNode } from 'react'
+import { Step } from '.'
 
-export function SectionWithHeader({
+export const ONBOARDING_BG_CLASS = 'bg-one'
+
+export function BottomNavIndicator({ step }: { step: Step }) {
+  const ball = (
+    <div className="w-[7px] h-[7px] rounded-full bg-gray-300 dark:bg-neutral-500" />
+  )
+  const activeBall = (
+    <div className="w-[7px] h-[7px] rounded-full bg-gray-500 dark:bg-neutral-300" />
+  )
+
+  return (
+    <div className="flex flex-row gap-1.5 items-center justify-center">
+      {step === '1-notifications' ? activeBall : ball}
+      {step === '2-test-nudge' ? activeBall : ball}
+      {step === '3-screen' ? activeBall : ball}
+      {step === '4-model' ? activeBall : ball}
+      {step === '5-done' ? activeBall : ball}
+    </div>
+  )
+}
+
+interface StepScreenHeaderProps {
+  title: string | ReactNode
+  description: string | ReactNode
+  icon?: ReactNode
+}
+
+export function OnboardingScreenHeader({
   title,
-  subtitle,
-  children,
-}: {
-  title: string
-  subtitle?: string | React.ReactNode
-  children: React.ReactNode
-}) {
+  description,
+  icon,
+}: StepScreenHeaderProps) {
   return (
-    <section className="flex flex-col gap-3">
-      <header className="mb-1">
-        <h2 className="track-15 text-[15px] text-contrast font-medium antialiased max-w-[550px]">
-          {title}
-        </h2>
-        {subtitle && (
-          <p className="track-15 text-[14px]  text-secondary mt-0.5 leading-[1.3]">
-            {subtitle}
-          </p>
+    <div className="flex flex-col gap-1 relative">
+      <h2 className="flex flex-row gap-2 items-center">
+        {icon && (
+          <div className="w-5 shrink-0 opacity-80 mt-[-1px]">{icon}</div>
         )}
-      </header>
-      {children}
-    </section>
+        <span className="text-[17px] font-medium antialiased">{title}</span>
+      </h2>
+      <p className="text-[14px] leading-[1.4] track-10 max-w-[95%] text-contrast/100 [&_strong]:text-contrast [&_strong]:font-medium dark:antialiased">
+        {description}
+      </p>
+    </div>
   )
-}
-
-export function Label({
-  children,
-  className,
-}: {
-  children: React.ReactNode
-  className?: string
-}) {
-  return (
-    <label
-      className={twMerge(
-        'track-15 text-[14px] text-contrast font-medium antialiased',
-        className
-      )}
-    >
-      {children}
-    </label>
-  )
-}
-
-export function Description({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="track-15 text-[14px] text-secondary leading-[1.3]">
-      {children}
-    </p>
-  )
-}
-
-export function LabelStack({
-  children,
-  className,
-  ...props
-}: {
-  children: React.ReactNode
-  className?: string
-} & ComponentProps<'label'>) {
-  return (
-    <label className={twMerge('flex flex-col gap-0.5', className)} {...props}>
-      {children}
-    </label>
-  )
-}
-
-export function Fieldset({
-  children,
-  className,
-  ...props
-}: {
-  children: React.ReactNode
-  className?: string
-} & ComponentProps<'fieldset'>) {
-  return (
-    <fieldset
-      className={twMerge(
-        'flex flex-row gap-2 items-center justify-between',
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </fieldset>
-  )
-}
-
-export function Hr() {
-  return <div className="border-b border-two" />
 }

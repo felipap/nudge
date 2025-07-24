@@ -9,7 +9,7 @@ on:
       - '*.*.*' # Only trigger on version tags like 1.0.0
 
 jobs:
-  build:
+  release:
     runs-on: macos-latest
     timeout-minutes: 5
     env:

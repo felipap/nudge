@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion'
+import { useEffect } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { StepScreenHeader } from '..'
+import { sendTestNotification } from '../../../shared/ipc'
 import { FsImage } from '../../../shared/ui/FsImage'
 import { BiNotification, MacOSCursor } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
 import { SubmitButton } from '../SubmitButton'
+import { OnboardingScreenHeader } from '../ui'
 
 interface Props {
   goBack?: () => void
@@ -12,9 +14,14 @@ interface Props {
 }
 
 export const NotificationScreen = withBoundary(({ goBack, next }: Props) => {
+  useEffect(() => {
+    // Send a notification to prompt a permission dialog.
+    sendTestNotification()
+  }, [])
+
   return (
     <>
-      <StepScreenHeader
+      <OnboardingScreenHeader
         icon={<BiNotification className="h-5" />}
         title="Step 1: Enable notifications"
         description={
