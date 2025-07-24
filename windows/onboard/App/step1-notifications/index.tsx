@@ -13,7 +13,7 @@ interface Props {
 
 export const NotificationScreen = withBoundary(({ goBack, next }: Props) => {
   return (
-    <main className="p-4 flex flex-col gap-5 text-[14px] leading-[1.4] h-full">
+    <>
       <StepScreenHeader
         title="Step 1: Enable notifications"
         description={
@@ -47,7 +47,7 @@ export const NotificationScreen = withBoundary(({ goBack, next }: Props) => {
           Request notification permission
         </SubmitButton> */}
       </div>
-    </main>
+    </>
   )
 })
 
@@ -59,7 +59,14 @@ function Illustration({ className }: { className?: string }) {
         className
       )}
     >
-      <FsImage width={400} src="onboarding/screen-one-image.png" />
+      <motion.div
+        initial={{ opacity: 0, x: 10 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 10 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+      >
+        <FsImage width={400} src="onboarding/screen-one-image.png" />
+      </motion.div>
       <motion.div
         animate={{
           opacity: [0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0],
@@ -69,13 +76,14 @@ function Illustration({ className }: { className?: string }) {
         }}
         transition={{
           duration: 5,
+          delay: 2,
           // ease: 'easeIn',
           repeat: Infinity,
           repeatDelay: 1,
         }}
-        className="z-10 absolute bottom-[20px] left-[1/2] translate-x-[150px]"
+        className="z-10 absolute bottom-[16px] left-[1/2] translate-x-[150px]"
       >
-        <MacOSCursor className="w-[26px] h-[27px]" />
+        <MacOSCursor className="w-[27px]" />
       </motion.div>
     </div>
   )

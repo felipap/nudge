@@ -21,38 +21,38 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen text-contrast bg-[#FAFAFA] dark:bg-[#333333AA]">
+    <div className="flex flex-col h-screen text-contrast bg-[#FAFAFA] dark:bg-[#333333AA] text-[14px] leading-[1.4]">
       <Nav />
-      <div className="overflow-scroll h-full flex flex-col w-full select-none gap-4">
-        <AnimatePresence>
-          {step === '1' && (
+      <main className="overflow-scroll h-full flex flex-col w-full select-none gap-4 px-4 pt-5">
+        {step === '1' && (
+          <AnimatePresence>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="h-full"
+              initial={{ x: 0, opacity: 1 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 50, opacity: 0 }}
+              transition={{ duration: 2 }}
+              className="gap-6 flex flex-col h-full"
             >
               <NotificationScreen next={nextStep} />
             </motion.div>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {step === '2' && (
+          </AnimatePresence>
+        )}
+        {step === '2' && (
+          <AnimatePresence>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="h-full"
+              initial={{ x: 0, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 10, opacity: 0 }}
+              transition={{ duration: 0.5, ease: 'easeIn' }}
+              className="gap-6 flex flex-col h-full"
             >
               <TestNotificationScreen goBack={prevStep} next={nextStep} />
             </motion.div>
-          )}
-        </AnimatePresence>
+          </AnimatePresence>
+        )}
         {step === '3' && <ModelTab next={nextStep} />}
         {step === '4' && <ScreenPermissions next={nextStep} />}
-      </div>
+      </main>
 
       <footer className="h-[40px] mt-[30px]">
         <BottomNavIndicator step={step} />
@@ -94,7 +94,7 @@ export function StepScreenHeader({
   return (
     <div className="flex flex-col gap-1 [app-region:drag] relative">
       <h2 className="text-[18px] font-medium antialiased">{title}</h2>
-      <p className="text-[15px] track-10 text-contrast/80 leading-[1.4] [&_strong]:text-contrast [&_strong]:font-normal">
+      <p className="text-[15px] leading-[1.4] max-w-[95%] text-contrast/70 [&_strong]:text-contrast [&_strong]:font-normal">
         {description}
       </p>
     </div>
@@ -108,7 +108,7 @@ export function NeedHelpFooter() {
         onClick={() => {
           openGithubDiscussion()
         }}
-        className="text-link hover:underline"
+        className="text-link hover:text-link/80 transition-colors"
       >
         Need help?
       </button>
