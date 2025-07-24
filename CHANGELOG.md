@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/felipap/nudge/compare/v0.1.7...v0.1.8) (2025-07-24)
+
+
+### Features
+
+* onboarding 🎉 ([e5d3ff3](https://github.com/felipap/nudge/commit/e5d3ff3746518e9e5f5f42ea4563139eb5c6b5a4))
+* wip: onboarding ([140f7cc](https://github.com/felipap/nudge/commit/140f7cce74db1ce77a7a075b334f88c052d6ba7f))
+* wip: onboarding ([53edd43](https://github.com/felipap/nudge/commit/53edd43f0cd612f925ef57004b7373adb7e580d2))
+* wip: onboarding ([eab6890](https://github.com/felipap/nudge/commit/eab6890b0e4b41cd0f867608d31d8134bddff755))
+* wip: onboarding ([3e0d12e](https://github.com/felipap/nudge/commit/3e0d12e06d3a0c659bbc3557a8862e57aa5ed672))
+* wip: onboarding - capture screen ([9b4773d](https://github.com/felipap/nudge/commit/9b4773dbe37e2391ab66fb718015098f4d7ea8ad))
+* wip: onboarding - screen 4 done? ([51881a7](https://github.com/felipap/nudge/commit/51881a78f482af9d07c81b1142ff3537633c5d86))
+* wip: onboarding - screen 4 done? ([cdbe6c8](https://github.com/felipap/nudge/commit/cdbe6c8ad2648bcb93fc6e5f9c9070a867fb91fd))
+* wip: onboarding - screen 5 ([fcaef2d](https://github.com/felipap/nudge/commit/fcaef2d1f3230734f739ce0a33b0f09a08eb0c75))
+
+
+### Bug Fixes
+
+* misc: figuring out whats next ([82ade7a](https://github.com/felipap/nudge/commit/82ade7a161ce3efc80b96ac92bafbffc58ceb39a))
+* rate limit showing as unknown error ([aef67c8](https://github.com/felipap/nudge/commit/aef67c89a9d1479ca7d3b0d5447c072141107177))
+
 ### [0.1.7](https://github.com/felipap/nudge/compare/v0.1.6...v0.1.7) (2025-07-16)
 
 
