@@ -17,11 +17,11 @@ export const DoneScreen = withBoundary(({ goBack }: Props) => {
   return (
     <>
       <OnboardingScreenHeader
-        title="Onboarding done!"
+        title="Onboarding done"
         description="You're ready to start using Nudge."
       />
 
-      <div className="">
+      <div className="flex flex-row gap-2">
         {/* FELIPE: this extra "Back" button is a bit confusing */}
         {goBack && (
           <SubmitButton onClick={goBack} color="gray" className="text-[14px]">
@@ -30,7 +30,7 @@ export const DoneScreen = withBoundary(({ goBack }: Props) => {
         )}
         <SubmitButton
           onClick={closeWindow}
-          color="gray"
+          color="green"
           className="text-[14px]"
         >
           Close window

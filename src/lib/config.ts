@@ -23,8 +23,8 @@ export const IGNORE_UNTIL_MS = 30 * 1000
 
 export const NUDGE_AI_BASE_URL = app.isPackaged
   ? 'https://nudge.fyi/api'
-  : // : 'https://nudge.fyi/api'
-    'http://localhost:3000/api'
+  : 'https://nudge.fyi/api'
+// 'http://localhost:3000/api'
 
 // Reduce screenshot dimensions by this factor.
 export const CAPTURE_RESIZE_FACTOR = 0.4

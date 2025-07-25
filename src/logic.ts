@@ -40,6 +40,8 @@ export function onAppStart() {
     setPartialState({
       session: null,
     })
+  } else if (session?.pausedAt) {
+    // Session was already paused.
   } else if (session) {
     // Pause it.
     setPartialState({

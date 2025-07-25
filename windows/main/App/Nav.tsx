@@ -24,11 +24,17 @@ interface Props {
 }
 
 export function Nav({ title, showPin = false }: Props) {
+  // const theme = useTheme()
+
   return (
     <nav className={twMerge('flex flex-row h-[40px] items-center shrink-0')}>
       <div className="[app-region:drag] self-stretch flex-1 px-3 flex items-center flex-row select-none">
         <div className="flex flex-row items-center gap-3">
-          <LogoIconCompleted width={18} height={18} />
+          <LogoIconCompleted
+            width={18}
+            height={18}
+            // className="dark:text-yellow-800"
+          />
           <div className="track-15 text-[15px] font-medium antialiased">
             {title}
           </div>

@@ -20,27 +20,27 @@ export function SessionButton({
   timeLeftMs,
   ...props
 }: Props) {
+  let text
+  let hoverText
+  if (isPaused) {
+    hoverText = 'Resume'
+    text = 'Resume'
+  } else {
+    hoverText = <div className="flex flex-row items-center gap-1.5">Pause</div>
+    text = (
+      <div className="flex flex-row items-center gap-1.5">
+        <FaPlay className="shrink-0 w-2.5 h-2.5" />
+        {getLabelForTimeLeft(timeLeftMs)}
+      </div>
+    )
+  }
+
   return (
     <InnerButton
       icon={isPaused ? 'play' : null}
       hoverIcon={isPaused ? 'play' : 'pause'}
-      text={
-        isPaused ? (
-          'Resume'
-        ) : (
-          <div className="flex flex-row items-center gap-1.5">
-            <FaPlay className="shrink-0 w-2.5 h-2.5" />
-            {getLabelForTimeLeft(timeLeftMs)}
-          </div>
-        )
-      }
-      hoverText={
-        isPaused ? (
-          'Resume'
-        ) : (
-          <div className="flex flex-row items-center gap-1.5">Pause</div>
-        )
-      }
+      text={text}
+      hoverText={hoverText}
       className={twMerge(
         isPaused
           ? 'text-[#004E0C] bg-[#B3EBAA] border-[#33AC46] hover:bg-[#c6efbf]'
@@ -73,9 +73,10 @@ function InnerButton({
   ...props
 }: InnerProps) {
   return (
-    <Button
+    <button
       className={twMerge(
-        'border  transition-all group relative min-w-[100px] h-[28px] rounded-[5px] px-2',
+        'border-0 font-medium antialiased cursor-pointer whitespace-nowrap rounded-md inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:!cursor-default select-none min-w-[100px]',
+        'border transition-all group relative h-[28px] rounded-[5px] px-2',
         className
       )}
       onClick={onClick}
@@ -94,6 +95,6 @@ function InnerButton({
         {icon !== 'pause' && icon !== 'play' && icon}
         <div className="text-[14px] track-15 font-medium">{text}</div>
       </div>
-    </Button>
+    </button>
   )
 }

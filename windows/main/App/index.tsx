@@ -4,6 +4,7 @@ import {
   openSettings,
   useBackendState,
 } from '../../shared/ipc'
+import { useOnViewed } from '../../shared/ui/useOnViewed'
 import { ActiveSessionScreen } from './ActiveSessionScreen'
 import { InputScreen } from './InputScreen'
 import { OnboardingScreen, useOnboardingState } from './OnboardingScren'
@@ -33,7 +34,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen text-[14px] text-contrast">
+    <div className="flex flex-col h-screen text-[14px] text-contrast dark:antialiased">
       {inner}
     </div>
   )
@@ -58,7 +59,7 @@ function useGlobalShortcuts() {
 function LoadingScreenWithHelp() {
   const [shouldShowHelp, setShouldShowHelp] = useState(false)
 
-  useEffect(() => {
+  useOnViewed(() => {
     const interval = setInterval(() => {
       setShouldShowHelp(true)
     }, 1000)

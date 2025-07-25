@@ -29,7 +29,7 @@ export const GoalTextarea = withBoundary(({ className, ...props }: Props) => {
         ref={ref}
         placeholder={`${placeholder}`}
         className={twMerge(
-          'w-full p-2 border-0 bg-transparent resize-none ring-0 rounded leading-[1.4] placeholder:text-gray-400 ',
+          'w-full p-2 border-0 bg-transparent resize-none ring-0 rounded leading-[1.4] placeholder:text-gray-400 dark:placeholder:text-neutral-500',
           className
         )}
         {...props}

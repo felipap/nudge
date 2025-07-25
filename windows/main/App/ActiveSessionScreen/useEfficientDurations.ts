@@ -36,6 +36,7 @@ export function useEfficientDurations() {
         new Date(session.resumedAt || session.startedAt).getTime())
   }
 
+  console.log('elapsedMs', elapsedMs)
   const timeLeftMs = session.goalDurationMs - elapsedMs
 
   return {
@@ -47,10 +48,12 @@ export function useEfficientDurations() {
 }
 
 export function getLabelForTimeLeft(msLeft: number) {
-  if (msLeft < -60_000) {
-    return `${Math.floor(-msLeft / 1000 / 60)}m overtime`
+  if (msLeft < -60 * 60 * 1_000) {
+    return `${(-msLeft / 1000 / 60 / 60).toFixed(1)}h over`
+  } else if (msLeft < -60_000) {
+    return `${Math.floor(-msLeft / 1000 / 60)}m over`
   } else if (msLeft < -10_000) {
-    return `${Math.floor(-msLeft / 1000)}s overtime`
+    return `${Math.floor(-msLeft / 1000)}s over`
   } else if (msLeft <= 0) {
     return "Time's up"
   } else if (msLeft < 60_000) {

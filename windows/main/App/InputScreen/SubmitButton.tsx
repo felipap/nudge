@@ -35,7 +35,7 @@ export function SubmitButton({
   const RED_BG =
     'bg-[#FFE3E3] text-[#990000] hover:bg-[#FFE3E3] border-[#990000] dark:bg-[#3d1a1a] dark:text-[#f87171] dark:hover:bg-[#4a1f1f] dark:border-[#ef4444]'
   const GREY_BG =
-    'bg-[#DDD] text-[#666666] hover:bg-[#DDD] border-[#666666] dark:bg-neutral-700/50 dark:text-white/60 dark:hover:bg-neutral-700/50 dark:border-[#6b7280]'
+    'bg-[#DDD] text-[#666666] hover:bg-[#DDD] border-[#666666] dark:bg-neutral-700/50 dark:text-white/70 dark:hover:bg-neutral-700/50 dark:border-[#6b7280]'
 
   if (disableReason) {
     if (disableReason === 'empty') {
