@@ -68,8 +68,8 @@ export async function openGithubDiscussion() {
   return await window.electronAPI.openGithubDiscussion()
 }
 
-export async function openSystemSettings() {
-  return await window.electronAPI.openSystemSettings()
+export async function openSystemSettings(tab?: 'screen' | 'notifications') {
+  return await window.electronAPI.openSystemSettings(tab)
 }
 
 //

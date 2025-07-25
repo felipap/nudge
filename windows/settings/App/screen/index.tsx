@@ -96,7 +96,7 @@ export const ScreenPermissions = withBoundary(() => {
               </p>
               <button
                 onClick={() => {
-                  openSystemSettings()
+                  openSystemSettings('screen')
                 }}
                 className="self-start text-link hover:underline text-[13px]"
               >

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { twMerge } from 'tailwind-merge'
-import { sendTestNotification } from '../../../shared/ipc'
+import { openSystemSettings, sendTestNotification } from '../../../shared/ipc'
 import { FsImage } from '../../../shared/ui/FsImage'
 import { BiNotification, MacOSCursor } from '../../../shared/ui/icons'
 import { useOnViewed } from '../../../shared/ui/useOnViewed'
@@ -34,11 +34,19 @@ export const NotificationScreen = withBoundary(({ goBack, next }: Props) => {
         title="Step 1: Enable notifications"
         description={
           <>
-            Nudge sends you notifications when you start to look distracted.{' '}
-            <strong>
-              Look for a notification permission dialog for "Nudge" and click
-              "Allow."
-            </strong>
+            <p>
+              Nudge sends you notifications when you start to look distracted.{' '}
+              <strong>
+                Look for the permission dialog for "Nudge" and click "Allow."
+              </strong>{' '}
+              <a
+                onClick={() => openSystemSettings('notifications')}
+                className="cursor-pointer"
+              >
+                Or go to System Settings &gt; Notifications and turn on the
+                switch for Nudge.
+              </a>
+            </p>
           </>
         }
       />

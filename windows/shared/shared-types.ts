@@ -55,7 +55,7 @@ type SharedIpcMethods = {
   openExternal: (url: string) => Promise<void>
   clearActiveCapture: () => Promise<void>
   openGithubDiscussion: () => Promise<void>
-  openSystemSettings: () => Promise<void>
+  openSystemSettings: (tab?: 'screen' | 'notifications') => Promise<void>
   getGoalFeedback: (goal: string) => Promise<GetGoalFeedbackResult>
   finishOnboarding: () => Promise<void>
   pauseSession: () => Promise<void>
@@ -81,9 +81,6 @@ export type IpcMainMethods = SharedIpcMethods & {
 }
 
 export type ExposedElectronAPI = SharedIpcMethods & {
-  onWindowVisibilityChange: (
-    callback: (isVisible: boolean) => void
-  ) => () => void
   onIpcEvent: (
     channel: string,
     callback: (...args: any[]) => void

@@ -47,8 +47,8 @@ export const ScreenPermissionScreen = withBoundary(
                 <strong>
                   System Settings &gt; Privacy & Security &gt; Screen Recording
                 </strong>{' '}
-                and turn on the switch for Nudge. Then click{' '}
-                <strong>Quit &amp; Reopen</strong> the application.
+                and turn on the switch for Nudge. Then click to{' '}
+                <strong>Quit &amp; Reopen</strong> the app.
               </p>
             </>
           }
@@ -72,7 +72,7 @@ export const ScreenPermissionScreen = withBoundary(
             <SubmitButton
               onClick={() => {
                 tryAskForScreenPermission()
-                openSystemSettings()
+                openSystemSettings('screen')
               }}
               color="yellow"
             >

@@ -27,7 +27,7 @@ export default function App() {
   return (
     <div
       className={twMerge(
-        'flex flex-col h-screen text-contrast text-[14px] leading-[1.4] ',
+        'flex flex-col h-screen text-contrast text-[14px] leading-[1.4] dark:antialiased',
         ONBOARDING_BG_CLASS
       )}
     >

@@ -6,7 +6,6 @@
 
 import { contextBridge, IpcRenderer, ipcRenderer } from 'electron'
 import type { State } from '../../src/store/types'
-import { tryAskForScreenPermission } from './ipc'
 import {
   AvailableProvider,
   ExposedElectronAPI,
@@ -144,9 +143,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return await typedIpcRenderer.invoke('tryAskForScreenPermission')
   },
 
-  openSystemSettings: async () => {
-    await typedIpcRenderer.invoke('openSystemSettings')
-    await tryAskForScreenPermission()
+  openSystemSettings: async (tab?: 'screen' | 'notifications') => {
+    await typedIpcRenderer.invoke('openSystemSettings', tab)
   },
 
   openGithubDiscussion: async () => {
