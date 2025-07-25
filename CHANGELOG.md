@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/felipap/nudge/compare/v0.2.1...v0.2.2) (2025-07-25)
+
+
+### Features
+
+* pause on edit active goal ([47899d9](https://github.com/felipap/nudge/commit/47899d91276dfebe2312ce7d3fbd2a4b71b985f9))
+
 ### [0.2.1](https://github.com/felipap/nudge/compare/v0.2.0...v0.2.1) (2025-07-25)
 
 
