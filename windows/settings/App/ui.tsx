@@ -91,5 +91,5 @@ export function Fieldset({
 }
 
 export function Hr() {
-  return <div className="border-b border-two" />
+  return <div className="border-b border-two dark:border-neutral-700" />
 }

@@ -36,7 +36,7 @@ export function Nav({ tab, onTabChange, showPermissionsTab }: Props) {
     <div
       className={twMerge(
         'relative flex flex-col items-center justify-between pb-[10px] pt-[12px] gap-[8px] select-none',
-        'bg-nav border-b border-one [app-region:drag]'
+        'bg-[#f8f8f8] dark:bg-[#333] border-b border-two dark:border-[#222] [app-region:drag]'
       )}
     >
       <div className="top-3 left-3 absolute [app-region:no-drag]">
