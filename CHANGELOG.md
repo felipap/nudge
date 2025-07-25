@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/felipap/nudge/compare/v0.2.2...v0.2.3) (2025-07-25)
+
+
+### Bug Fixes
+
+* improve dark highlight ([100937c](https://github.com/felipap/nudge/commit/100937c0bc1f454499f37c37a5148179a859a959))
+
 ### [0.2.2](https://github.com/felipap/nudge/compare/v0.2.1...v0.2.2) (2025-07-25)
 
 
