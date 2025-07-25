@@ -181,3 +181,10 @@ export function useScreenPermissionState() {
 
   return { screenPermission: value }
 }
+
+export function useLastClickedTestNudgeAt() {
+  const { state } = useBackendState()
+  return state?.lastClickedTestNudgeAt
+    ? new Date(state.lastClickedTestNudgeAt)
+    : null
+}

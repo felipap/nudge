@@ -147,10 +147,13 @@ function useOnboardingStep() {
   const { state } = useBackendState()
 
   useEffect(() => {
-    if (state?.userHasClickedTestNotification) {
+    if (state?.lastClickedTestNudgeAt) {
       setStep('3-screen')
     }
-  }, [state?.userHasClickedTestNotification])
+  }, [
+    // Only re-render if value goes from falsy to truthy.
+    !!state?.lastClickedTestNudgeAt,
+  ])
 
   return {
     step,

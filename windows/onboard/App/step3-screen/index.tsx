@@ -38,13 +38,18 @@ export const ScreenPermissionScreen = withBoundary(
           title="Step 3: Allow capture screen"
           description={
             <>
-              Nudge captures your screen from time to time to see if you're
-              distracted.{' '}
-              <strong>
-                Go to System Settings &gt; Privacy & Security &gt; Screen
-                Recording and turn on the switch for Nudge.
-              </strong>{' '}
-              Then click to <strong>Quit &amp; Reopen</strong> the application.
+              <p>
+                Nudge captures your screen from time to time to see if you're
+                distracted.
+              </p>
+              <p className="mt-1">
+                Go to{' '}
+                <strong>
+                  System Settings &gt; Privacy & Security &gt; Screen Recording
+                </strong>{' '}
+                and turn on the switch for Nudge. Then click{' '}
+                <strong>Quit &amp; Reopen</strong> the application.
+              </p>
             </>
           }
         />

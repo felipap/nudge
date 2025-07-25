@@ -53,7 +53,7 @@ export interface ActiveSession {
 export type State = {
   // onboarding
   onboardingFinishedAt: string | null // date
-  userHasClickedTestNotification: boolean
+  lastClickedTestNudgeAt: string | null // date
   // The active capture, which must be relevant for the current goal. Set to
   // null when the user makes updates to the active goal, or clears it entirely.
   activeCapture: LatestCapture | CaptureError | null
@@ -89,7 +89,7 @@ export type State = {
 export const DEFAULT_STATE: State = {
   // onboarding
   onboardingFinishedAt: null,
-  userHasClickedTestNotification: false,
+  lastClickedTestNudgeAt: null,
   //
   nextCaptureAt: null,
   session: null,

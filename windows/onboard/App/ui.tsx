@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import { Step } from '.'
+import { twMerge } from 'tailwind-merge'
 
 export const ONBOARDING_BG_CLASS = 'bg-one'
 
@@ -41,7 +42,13 @@ export function OnboardingScreenHeader({
         )}
         <span className="text-[17px] font-medium antialiased">{title}</span>
       </h2>
-      <p className="text-[14px] leading-[1.4] track-10 max-w-[95%] text-contrast/100 [&_strong]:text-contrast [&_strong]:font-medium dark:antialiased">
+      <p
+        className={twMerge(
+          'text-[14px] leading-[1.4] track-10 max-w-[95%]',
+          // [&_strong]:weight-450 isn't working, so...
+          '[&_strong]:antialiased'
+        )}
+      >
         {description}
       </p>
     </div>

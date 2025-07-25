@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { sendTestNotification, useBackendState } from '../../../shared/ipc'
+import {
+  sendTestNotification,
+  useLastClickedTestNudgeAt,
+} from '../../../shared/ipc'
 import { FsImage } from '../../../shared/ui/FsImage'
 import { BiNotification, MacOSPointer } from '../../../shared/ui/icons'
 import { withBoundary } from '../../../shared/ui/withBoundary'
@@ -13,17 +16,10 @@ interface Props {
   next: () => void
 }
 
-function useHasClickedTestNotification() {
-  const { state } = useBackendState()
-  return state?.userHasClickedTestNotification ?? false
-}
-
 export const TestNotificationScreen = withBoundary(
   ({ goBack, next }: Props) => {
     const [hasSent, setHasSent] = useState(false)
-    const [hasJustClicked, setHasJustClicked] = useState(false)
-
-    const userHasClickedTestNotification = useHasClickedTestNotification()
+    const lastClickedTestNudgeAt = useLastClickedTestNudgeAt()
 
     async function sendIt() {
       setHasSent(true)
@@ -34,18 +30,8 @@ export const TestNotificationScreen = withBoundary(
       sendTestNotification()
     }
 
-    useEffect(() => {
-      // For the silly little "Nice!" animation.
-      if (userHasClickedTestNotification) {
-        setHasJustClicked(true)
-        setTimeout(() => {
-          setHasJustClicked(false)
-        }, 3000)
-      }
-    }, [userHasClickedTestNotification])
-
     let action: ReactNode
-    if (userHasClickedTestNotification) {
+    if (lastClickedTestNudgeAt) {
       action = (
         <SubmitButton onClick={next} color="green">
           Done, continue &rarr;
@@ -73,25 +59,23 @@ export const TestNotificationScreen = withBoundary(
           description={
             <>
               Next, let's make sure nudges are working.{' '}
-              <strong onClick={sendTestNotification} className="cursor-pointer">
+              <strong
+                onClick={sendIt}
+                className={hasSent ? 'line-through' : 'cursor-pointer'}
+              >
                 Click to send a test notification.
               </strong>{' '}
-              <div className={twMerge('mt-2', hasSent && 'text-transparent')}>
-                <strong>
-                  Now click on the notification we just sent you...
-                </strong>
-                {hasJustClicked && (
-                  <motion.div
-                    animate={{
-                      opacity: [0, 1, 1, 1, 1, 0],
-                      scale: [1, 2, 1, 1],
-                    }}
-                    transition={{ duration: 2 }}
-                    className="inline-block text-green-600 dark:text-green-400"
-                  >
-                    Nice!
-                  </motion.div>
+              <div
+                className={twMerge(
+                  'mt-1 transition',
+                  // Hide the text but keep the space.
+                  !hasSent && 'opacity-0'
                 )}
+              >
+                <strong>Now click on the notification we just sent you.</strong>{' '}
+                <NiceThatAppearsIfChangesLater
+                  lastClickedAt={lastClickedTestNudgeAt}
+                />
               </div>
             </>
           }
@@ -158,5 +142,46 @@ function Illustration({
         </motion.div>
       )}
     </div>
+  )
+}
+
+// For the silly little "Nice!" animation, which we want to show only if the
+// user clicks a notification AFTER we sent it.
+function NiceThatAppearsIfChangesLater({
+  lastClickedAt,
+}: {
+  lastClickedAt: Date | null
+}) {
+  const [visible, setVisible] = useState(false)
+  const firstRenderAt = useMemo(() => new Date(), [])
+
+  useEffect(() => {
+    if (
+      !visible &&
+      lastClickedAt &&
+      lastClickedAt.getTime() > firstRenderAt.getTime()
+    ) {
+      setVisible(true)
+      setTimeout(() => {
+        setVisible(false)
+      }, 3000)
+    }
+  }, [lastClickedAt])
+
+  if (!visible) {
+    return null
+  }
+
+  return (
+    <motion.div
+      animate={{
+        opacity: [0, 1, 1, 1, 1, 0],
+        scale: [1, 2, 1, 1],
+      }}
+      transition={{ duration: 2 }}
+      className="inline-block text-green-600 font-bold dark:text-green-400"
+    >
+      Nice!
+    </motion.div>
   )
 }

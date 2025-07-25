@@ -57,7 +57,7 @@ export function OpenAiKeyInput({
           onBlur={(e) => onBlur?.(e)}
           className={twMerge(
             props.className,
-            'w-[340px] h-[40px] bg-two !shadow-none !border-one !border peer pr-8 focus:pr-0 transition-all truncate active:truncate-none focus:!ring-0',
+            'w-[340px] h-[40px] bg-transparent !shadow-none !border-one !border peer pr-8 focus:pr-0 transition-all truncate active:truncate-none focus:!ring-0',
             state === 'invalid' && '!border-red-500'
           )}
         />

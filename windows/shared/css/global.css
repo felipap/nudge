@@ -122,6 +122,11 @@
   ::after {
     @apply dark:border-[#1e1c1e] border-[#ddd];
   }
+
+  /* 50 is too bold and 400 is too light, so antialiased is a little hack here. */
+  .weight-450 {
+    @apply font-medium antialiased;
+  }
 }
 
 .link {

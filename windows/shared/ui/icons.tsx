@@ -233,9 +233,9 @@ export function MacOSCursor(props: ComponentProps<'svg'>) {
           width="22.0869"
           height="29.1626"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -274,7 +274,7 @@ export function MacOSPointer(props: ComponentProps<'svg'>) {
       x="0px"
       y="0px"
       viewBox="0 0 32 32"
-      enable-background="new 0 0 32 32"
+      enableBackground="new 0 0 32 32"
       {...props}
     >
       <g>
@@ -366,9 +366,9 @@ export function CircleInsideCircle({
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="2" />
+      <circle cx="12" cy="12" r="11" stroke="currentColor" strokeWidth="2" />
       {showInner && (
-        <circle cx="12" cy="12" r="8" fill="currentColor" stroke-width="2" />
+        <circle cx="12" cy="12" r="8" fill="currentColor" strokeWidth="2" />
       )}
     </svg>
   )
@@ -379,7 +379,7 @@ export function BiNotification(props: ComponentProps<'svg'>) {
     <svg
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
+      strokeWidth="0"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       {...props}

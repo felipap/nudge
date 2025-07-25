@@ -28,17 +28,17 @@
 
 import '../shared/css/global.css'
 
-import { init as SentryInit } from '@sentry/electron/renderer'
+// import { init as SentryInit } from '@sentry/electron/renderer'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
 
-SentryInit({
-  // Adds request headers and IP for users, for more info visit:
-  // https://docs.sentry.io/platforms/javascript/guides/electron/configuration/options/#sendDefaultPii
-  // sendDefaultPii: true,
-  integrations: [],
-})
+// SentryInit({
+//   // Adds request headers and IP for users, for more info visit:
+//   // https://docs.sentry.io/platforms/javascript/guides/electron/configuration/options/#sendDefaultPii
+//   // sendDefaultPii: true,
+//   integrations: [],
+// })
 
 const root = createRoot(document.body)
 

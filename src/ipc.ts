@@ -67,7 +67,7 @@ export function setupIPC() {
     notif.on('click', () => {
       log('[sendTestNotification] click!!')
       setPartialState({
-        userHasClickedTestNotification: true,
+        lastClickedTestNudgeAt: new Date().toISOString(),
       })
     })
 
@@ -82,7 +82,7 @@ export function setupIPC() {
     //   notif.on('click', () => {
     //     log('[sendTestNotification] click!!')
     //     setPartialState({
-    //       userHasClickedTestNotification: true,
+    //       lastClickedTestNudgeAt: new Date().toISOString(),
     //     })
     //     resolve(true)
     //   })

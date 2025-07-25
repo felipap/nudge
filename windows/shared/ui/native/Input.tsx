@@ -7,7 +7,7 @@ interface Props extends ComponentProps<'input'> {
 }
 
 const selectStyles = cva(
-  'border border-transparent rounded-md py-0 track-15 text-[13px] bg-btn text-contrast focus:outline-none focus:ring-2 focus:ring-apple-highlight-color disabled:bg-apple-system-gray-5 disabled:text-apple-system-gray-2 shadow-sm',
+  'border border-transparent rounded-md py-0 track-15 text-[13px] bg-btn text-contrast focus:outline-none focus:ring-2 focus:ring-apple-highlight-color disabled:bg-apple-system-gray-5 disabled:text-apple-system-gray-2 shadow-sm placeholder:text-contrast/40',
   {
     variants: {
       size: {
