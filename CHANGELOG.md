@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/felipap/nudge/compare/v0.2.0...v0.2.1) (2025-07-25)
+
+
+### Bug Fixes
+
+* session button contents spilling over ([6cb3776](https://github.com/felipap/nudge/commit/6cb3776202c63c6428e00f424ebe4630595eca40))
+
 ## [0.2.0](https://github.com/felipap/nudge/compare/v0.1.9...v0.2.0) (2025-07-25)
 
 
