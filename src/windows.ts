@@ -1,5 +1,6 @@
 import { app, BrowserWindow, screen } from 'electron'
 import path from 'node:path'
+import { getImagePath } from './lib/utils'
 import {
   getState,
   hasFinishedOnboardingSteps,
@@ -19,6 +20,11 @@ declare const ONBOARD_WINDOW_VITE_NAME: string
 export let mainWindow: BrowserWindow | null = null
 export let prefWindow: BrowserWindow | null = null
 export let onboardWindow: BrowserWindow | null = null
+
+// In development, the default icon is Electron's. So we override it.
+if (!app.isPackaged) {
+  app.dock.setIcon(getImagePath('icon-development.png'))
+}
 
 export function createWindows() {
   createMainWindow()
@@ -59,12 +65,6 @@ function createMainWindow() {
       webSecurity: false,
     },
   })
-
-  // In development, the default icon is Electron's. So we override it.
-  if (!app.isPackaged) {
-    // app.dock.setIcon('images/icon-development.png')
-  }
-  // app.dock.setIcon(getImagePath('icon-development.png'))
 
   // Pin widget?
   function onChangePinnedState() {
@@ -196,6 +196,10 @@ function createOnboardingWindow() {
   }
 
   instrumentizeWindow(win)
+
+  if (!isOnboardingFinished()) {
+    win.show()
+  }
 
   // Hide window to tray on close instead of quitting
   win.on('close', (event) => {
