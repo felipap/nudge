@@ -36,7 +36,6 @@ export function useEfficientDurations() {
         new Date(session.resumedAt || session.startedAt).getTime())
   }
 
-  console.log('elapsedMs', elapsedMs)
   const timeLeftMs = session.goalDurationMs - elapsedMs
 
   return {

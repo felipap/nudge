@@ -8,8 +8,8 @@ declare global {
   }
 }
 
-export async function getState() {
-  return await window.electronAPI.getState()
+export function getState() {
+  return window.electronAPI.getState()
 }
 
 export function sendTestNotification() {
@@ -100,8 +100,6 @@ export async function startSession(goal: string, durationMs: number) {
   return await window.electronAPI.startSession(goal, durationMs)
 }
 
-// State
-
 export async function clearActiveCapture() {
   return await window.electronAPI.clearActiveCapture()
 }
@@ -110,15 +108,20 @@ export async function setPartialState(state: Partial<State>) {
   return await window.electronAPI.setPartialState(state)
 }
 
+// Hooks
+
 export function useBackendState() {
+  const [loading, setLoading] = useState(true)
   const [state, setState] = useState<State | null>(null)
   const stateRef = useRef<State | null>(null)
 
   useEffect(() => {
     async function load() {
+      setLoading(true)
       const state = await window.electronAPI.getState()
       stateRef.current = state
       setState(state)
+      setLoading(false)
     }
     load()
 
@@ -138,6 +141,7 @@ export function useBackendState() {
     state,
     stateRef,
     setPartialState,
+    loading,
   }
 }
 

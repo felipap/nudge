@@ -28,6 +28,7 @@ import { getImagePath } from './lib/utils'
 import { getState, setPartialState, store } from './store'
 import { State } from './store/types'
 import { prefWindow } from './windows'
+import { tryRegisterOnboardingDone } from './lib/telemetry'
 
 // Type up the ipcMain to complain when we listen for unknown events.
 type TypedIpcMain<Key extends string> = Omit<IpcMain, 'handle' | 'on'> & {
@@ -256,6 +257,8 @@ export function setupIPC() {
   )
 
   ipcMainTyped.handle('finishOnboarding', async (_event) => {
+    await tryRegisterOnboardingDone()
+
     setPartialState({
       onboardingFinishedAt: new Date().toISOString(),
       // Should already be null for 99% of users but useful for developers to

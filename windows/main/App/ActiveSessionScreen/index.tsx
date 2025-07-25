@@ -29,8 +29,7 @@ export const ActiveSessionScreen = withBoundary(() => {
     }
   }
 
-  const { value: goal, setValue: setGoal } =
-    useActiveGoalContentWithSync(onModifyGoal)
+  const { value: goal, setValue: setGoal } = useActiveGoalContentWithSync()
   const { isOvertime, isNearlyOver, timeLeftMs } = useEfficientDurations()
 
   function onClickMainButton() {
@@ -75,8 +74,12 @@ export const ActiveSessionScreen = withBoundary(() => {
       >
         <GoalTextarea
           className="p-3"
+          blueish={paused}
           value={goal}
-          onChange={(value) => setGoal(value)}
+          onChange={(value) => {
+            setGoal(value)
+            onModifyGoal?.()
+          }}
           onFocus={() => setEditorHasFocus(true)}
           onBlur={() => setEditorHasFocus(false)}
         />
@@ -89,6 +92,8 @@ export const ActiveSessionScreen = withBoundary(() => {
           isOvertime={isOvertime}
           onClick={onClickMainButton}
           timeLeftMs={timeLeftMs}
+          // FELIPE: disable when the user edits down the goal to empty.
+          disabled={paused && goal.trim() === ''}
         />
         {paused ? (
           <motion.div
@@ -111,7 +116,8 @@ function NewGoalButton(props: ButtonProps) {
   return (
     <Button
       className={twMerge(
-        'px-3.5 h-[28px] rounded-[5px] border bg-pink-50 border-pink-800/30 dark:border-gray-700 dark:bg-gray-700/80  dark:text-pink-100 text-pink-950 text-[14px]'
+        'px-3.5 h-[28px] rounded-[5px] text-[14px]',
+        'border bg-pink-50 border-pink-800/30 dark:border-gray-700 dark:bg-gray-700/80  dark:text-pink-100 text-pink-950'
       )}
       icon={<FaStop className="shrink-0 w-3 h-3" />}
       {...props}

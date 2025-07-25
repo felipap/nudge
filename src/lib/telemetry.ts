@@ -7,6 +7,17 @@ import { getState, setPartialState } from '../store'
 import { VERBOSE } from './config'
 import { debug } from './logger'
 
+type TelemetryEvent = 'open' | 'onboarding-done' | 'first-open'
+
+export async function tryRegisterOnboardingDone() {
+  debug('[telemetry/tryRegisterOnboardingDone]')
+  try {
+    await tryRegisterEvent('onboarding-done')
+  } catch (error) {
+    debug('[telemetry] Error sending onboarding-done event', error)
+  }
+}
+
 export async function tryRegisterOpen() {
   debug('[telemetry/tryRegisterOpen]')
   try {
@@ -34,13 +45,13 @@ export async function tryMaybeRegisterFirstOpen() {
       },
     })
 
-    await tryRegisterEvent('first-event')
+    await tryRegisterEvent('first-open')
   } catch (error) {
     debug('[telemetry]Error sending first-open event', error)
   }
 }
 
-async function tryRegisterEvent(event: string) {
+async function tryRegisterEvent(event: TelemetryEvent) {
   try {
     const ignoreReason = getIgnoreReason()
     if (ignoreReason) {
