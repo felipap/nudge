@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/felipap/nudge/compare/v0.1.9...v0.1.10) (2025-07-25)
+
+
+### Features
+
+* improved onboarding ([81560cf](https://github.com/felipap/nudge/commit/81560cfaaac817357e623bafb941a10008fbfcbe))
+
+
+### Bug Fixes
+
+* improved onboarding ([3d67200](https://github.com/felipap/nudge/commit/3d6720043398f224192405e70199b76c60947dd8))
+* stop showing test nudge unless viewing oboarding ([61d9614](https://github.com/felipap/nudge/commit/61d9614f6dd7718502e7003a58b4509b0e0418ca))
+
 ### [0.1.9](https://github.com/felipap/nudge/compare/v0.1.8...v0.1.9) (2025-07-24)
 
 
