@@ -4,23 +4,20 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.2.1](https://github.com/felipap/nudge/compare/v0.2.0...v0.2.1) (2025-07-25)
 
-
 ### Bug Fixes
 
-* session button contents spilling over ([6cb3776](https://github.com/felipap/nudge/commit/6cb3776202c63c6428e00f424ebe4630595eca40))
+- session button contents spilling over ([6cb3776](https://github.com/felipap/nudge/commit/6cb3776202c63c6428e00f424ebe4630595eca40))
 
 ## [0.2.0](https://github.com/felipap/nudge/compare/v0.1.9...v0.2.0) (2025-07-25)
 
-
 ### Features
 
-* improved onboarding ([81560cf](https://github.com/felipap/nudge/commit/81560cfaaac817357e623bafb941a10008fbfcbe))
-
+- improved onboarding ([81560cf](https://github.com/felipap/nudge/commit/81560cfaaac817357e623bafb941a10008fbfcbe))
 
 ### Bug Fixes
 
-* improved onboarding ([3d67200](https://github.com/felipap/nudge/commit/3d6720043398f224192405e70199b76c60947dd8))
-* stop showing test nudge unless viewing oboarding ([61d9614](https://github.com/felipap/nudge/commit/61d9614f6dd7718502e7003a58b4509b0e0418ca))
+- improved onboarding ([3d67200](https://github.com/felipap/nudge/commit/3d6720043398f224192405e70199b76c60947dd8))
+- stop showing test nudge unless viewing oboarding ([61d9614](https://github.com/felipap/nudge/commit/61d9614f6dd7718502e7003a58b4509b0e0418ca))
 
 ### [0.1.10](https://github.com/felipap/nudge/compare/v0.1.9...v0.1.10) (2025-07-25)
 

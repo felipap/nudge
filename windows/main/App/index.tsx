@@ -64,7 +64,7 @@ function LoadingScreenWithHelp() {
       setShouldShowHelp(true)
     }, 1000)
     return () => clearInterval(interval)
-  }, [])
+  })
 
   return (
     <div className="flex flex-col bg-white h-screen p-3 text-sm">
