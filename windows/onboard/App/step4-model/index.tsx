@@ -92,8 +92,8 @@ export const AISelectionScreen = withBoundary(({ next, goBack }: Props) => {
             title="Use Nudge Cloud"
             subtitle={
               <>
-                Use Nudge Cloud if you don't have an OpenAI key. Nudge doesn't
-                retain any of your data.{' '}
+                Use Nudge Cloud if you don't have a Gemini or OpenAI key. Nudge
+                doesn't retain any of your data.{' '}
                 <a
                   onClick={(e) => {
                     // Allow user to click the link without selecting this option.

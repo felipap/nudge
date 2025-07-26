@@ -39,7 +39,7 @@ export async function safeOpenAIStructuredCompletion<T>(
       ...options,
     })
   } catch (e) {
-    warn('[ai/openai] completion threw!', e)
+    warn('[ai/safeOpenAIStructuredCompletion] completion threw!', e)
 
     captureException(e, {
       extra: {

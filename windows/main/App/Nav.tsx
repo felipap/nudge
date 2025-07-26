@@ -35,7 +35,7 @@ export function Nav({ title, showPin = false }: Props) {
             height={18}
             // className="dark:text-yellow-800"
           />
-          <div className="track-15 text-[15px] font-medium antialiased">
+          <div className="track-10 text-[15px] font-medium antialiased">
             {title}
           </div>
         </div>

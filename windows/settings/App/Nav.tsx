@@ -111,13 +111,13 @@ export function TabButton({
       onClick={onClick}
       className={twMerge(
         'flex flex-col items-center gap-[3px] py-[6px] min-w-[65px] px-2 rounded-[5px] transition-colors cursor-pointer',
-        ' hover:bg-tab-active active:bg-apple-system-gray-2 text-secondary active:text-primary border border-transparent',
+        ' hover:bg-tab-active active:bg-apple-system-gray-4 text-secondary active:text-primary border border-transparent',
         isActive && 'text-apple-highlight-color bg-tab-active ',
         className
       )}
     >
       <div className="flex items-center justify-center h-[21px]">{icon}</div>
-      <span className={twMerge('text-[12.5px] track-15', isActive && '')}>
+      <span className={twMerge('text-[12.5px] track-10', isActive && '')}>
         {title}
       </span>
     </button>

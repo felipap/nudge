@@ -1,9 +1,10 @@
 # Nudge v0 Roadmap
 
-## v0.1.x
+## v0.2.x
 
+- [ ] Support Gemini.
 - [ ] Support multiple screens.
-- [ ] Make video showing how to create an OpenAI key.
+- [ ] Make video showing how to create a Gemini key.
 - [ ] CI: figure out how to make pre-release builds.
 - [ ] Notification: test access by asking users to click on the notification.
 - [ ] Fix: permission errors still silent.
@@ -11,24 +12,6 @@
 - [ ] Add session reset functionality - make it clear how to restart/reset sessions.
 - [ ] Feat: "0 of 20 hours used"
 - [ ] Instrumentize more events.
-- [ ] Fix: test nudge showing up all the time.
-- [x] Fix: 429 for OpenAI should trigger a Slack message to Felipe.
-- [x] Fix: fix button colors.
-- [x] Fix: warn when outside /Applications folder. Don't try to auto-update.
-- [x] Let users introspect captures and understand what's wrong.
-- [x] Somehow show notification skipped due to double-nudge.
-- [x] Fix: FAQ is outdated about data.
-- [x] Fix: double-nudge prevention is blocking initial notifications in first few minutes.
-- [x] Where can users get stdout/stderr logs?
-- [x] Notify when fails to capture scren.
-- [x] Fix evals. (Jul 15)
-- [x] Feat: let user choose annoy rate.
-- [x] CI: add evals to CI.
-- [x] Hosted version.
-- [x] Disable submit button when there are complaints about the current goal.
-- [x] When "capture now", definitely send notification.
-- [x] Show bigger dialog when editing or creating goal.
-- [x] Buy domain (nudge.fyi).
 
 ### Later
 
@@ -49,6 +32,30 @@
 - [ ] iPhone app.
 - [ ] Try to make it smaller.
 - [ ] Write privacy page.
+
+## v0.1.x
+
+Finished Jul 25.
+
+- [x] Feat: onboarding.
+- [x] Fix: test nudge showing up all the time.
+- [x] Fix: 429 for OpenAI should trigger a Slack message to Felipe.
+- [x] Fix: fix button colors.
+- [x] Fix: warn when outside /Applications folder. Don't try to auto-update.
+- [x] Let users introspect captures and understand what's wrong.
+- [x] Somehow show notification skipped due to double-nudge.
+- [x] Fix: FAQ is outdated about data.
+- [x] Fix: double-nudge prevention is blocking initial notifications in first few minutes.
+- [x] Where can users get stdout/stderr logs?
+- [x] Notify when fails to capture scren.
+- [x] Fix evals. (Jul 15)
+- [x] Feat: let user choose annoy rate.
+- [x] CI: add evals to CI.
+- [x] Hosted version.
+- [x] Disable submit button when there are complaints about the current goal.
+- [x] When "capture now", definitely send notification.
+- [x] Show bigger dialog when editing or creating goal.
+- [x] Buy domain (nudge.fyi).
 
 ## v0.0.x
 

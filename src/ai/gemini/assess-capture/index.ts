@@ -1,23 +1,12 @@
 import chalk from 'chalk'
-import { OpenAI } from 'openai'
 import { zodResponseFormat } from 'openai/helpers/zod'
-import { z } from 'zod'
-import { debug, log, warn } from '../oai-logger'
-import { Result, safeOpenAIStructuredCompletion } from '../utils'
+import { Output, OutputStruct } from '../../openai/assess-capture'
+import { debug, log, warn } from '../../openai/oai-logger'
+import { Result, safeOpenAIStructuredCompletion } from '../../openai/utils'
+import { OpenAICompatibleGeminiClient } from '../utils'
 
-export const OutputStruct = z.object({
-  screenSummary: z.string(),
-  notificationToUser: z.string(),
-  isFollowingGoals: z.boolean(),
-  goalUnclear: z
-    .boolean()
-    .describe(`Set to true when the goal is absolutely unclear.`),
-})
-
-export type Output = z.infer<typeof OutputStruct>
-
-export async function assessFlowWithOpenAI(
-  client: OpenAI,
+export async function assessFlowWithGemini(
+  client: OpenAICompatibleGeminiClient,
   imageBase64: string,
   goal: string,
   customInstructions: string | null,
@@ -29,13 +18,13 @@ export async function assessFlowWithOpenAI(
     previousCaptures
   )
 
-  debug('[ai/openai/assess-capture] prompt\n', chalk.gray(systemPrompt))
-  debug('[ai/openai/assess-capture] calling')
+  debug('[ai/gemini/assess-capture] prompt\n', chalk.gray(systemPrompt))
+  debug('[ai/gemini/assess-capture] calling')
 
   const start = Date.now()
 
   const result = await safeOpenAIStructuredCompletion<Output>(client, {
-    model: 'gpt-4o-mini',
+    model: 'gemini-2.0-flash',
     messages: [
       {
         role: 'system',
@@ -59,14 +48,14 @@ export async function assessFlowWithOpenAI(
   })
 
   if ('error' in result) {
-    warn('[ai/openai/assess-capture] error', result)
+    warn('[ai/gemini/assess-capture] error', result)
     return result
   }
 
   const elapsedMs = Date.now() - start
 
   debug(
-    '[ai/openai/assess-capture] elapsedMs',
+    '[ai/gemini/assess-capture] elapsedMs',
     `${(elapsedMs / 1000).toFixed(2)}s`
   )
 
@@ -78,7 +67,7 @@ export async function assessFlowWithOpenAI(
     }
   }
 
-  log('[ai/openai/assess-capture] result', parsed)
+  log('[ai/gemini/assess-capture] result', parsed)
 
   return {
     data: parsed,

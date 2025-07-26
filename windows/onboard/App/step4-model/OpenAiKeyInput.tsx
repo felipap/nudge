@@ -43,7 +43,7 @@ export function OpenAiKeyInput({
 
   return (
     <div className="flex flex-row gap-2 items-center justify-between">
-      <div className="track-15 text-[14px] text-contrast font-medium antialiased">
+      <div className="track-10 text-[14px] text-contrast font-medium antialiased">
         OpenAI key
       </div>
       <div className="relative">

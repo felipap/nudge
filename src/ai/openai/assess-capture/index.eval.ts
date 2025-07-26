@@ -4,9 +4,9 @@ import chalk from 'chalk'
 import fs from 'fs'
 import OpenAI from 'openai'
 import path from 'path'
+import examples, { TestCase } from '../../evals/assess-capture'
 import { log, warn } from '../oai-logger'
 import { Result } from '../utils'
-import examples, { TestCase } from './evals'
 import { assessFlowWithOpenAI, Output } from './index'
 
 interface TestResult {

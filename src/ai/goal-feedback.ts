@@ -1,8 +1,10 @@
-import { log } from '../lib/logger'
+import OpenAI from 'openai'
+import { debug } from '../lib/logger'
 import { getGoalFeedbackFromNudgeAPI } from './cloud/goal-feedback'
+import { getGoalFeedbackFromGemini } from './gemini/goal-feedback'
 import { BackendClient } from './models'
-import { Result } from './openai/utils'
 import { getGoalFeedbackFromOpenAI } from './openai/goal-feedback'
+import { Result } from './openai/utils'
 
 export type GoalFeedback = {
   feedbackType: 'lacking-duration' | 'unclear-apps' | null
@@ -16,10 +18,19 @@ export async function getGoalFeedback(
   client: BackendClient,
   goal: string
 ): Promise<GoalFeedbackResult> {
-  log('client.provider', client.provider)
+  debug('[ai/goal-feedback] provider', client.provider)
 
   if (client.provider === 'nudge') {
     return await getGoalFeedbackFromNudgeAPI(goal)
+  }
+
+  if (client.provider === 'gemini') {
+    const proxyClient = new OpenAI({
+      apiKey: client.key,
+      baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
+    })
+
+    return await getGoalFeedbackFromGemini(proxyClient, goal)
   }
 
   return await getGoalFeedbackFromOpenAI(client.openAiClient, goal)

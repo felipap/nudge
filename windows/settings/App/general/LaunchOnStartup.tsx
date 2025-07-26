@@ -20,7 +20,7 @@ export function LaunchOnStartup() {
   }
 
   return (
-    <Fieldset className="justify-cesnter ml-6 flex">
+    <Fieldset className="ml-6 flex">
       <div
         className="flex flex-row gap-2 items-start justify-start cursor-pointer"
         onClick={handleAutoLaunchChange}

@@ -68,7 +68,7 @@ export const OnboardingScreen = withBoundary(() => {
             onClick={() => openSettings('general')}
           >
             <StepIcon done={hasConfiguredBackend} />
-            <span className="">Choose Nudge Cloud or enter OpenAI key</span>
+            <span className="">Choose Nudge Cloud or AI key</span>
           </div>
         </div>
 

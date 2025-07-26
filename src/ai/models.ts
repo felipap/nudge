@@ -5,16 +5,38 @@ import { debug, logError, warn } from '../lib/logger'
 import { getState, ProviderSelection } from '../store'
 
 export async function validateModelKey(
-  model: AvailableProvider,
+  provider: AvailableProvider,
   key: string
 ): Promise<boolean> {
-  if (model === 'openai' || model === 'openai-4o-mini') {
+  if (provider === 'openai') {
     const isValid = await checkOpenAIKey(key)
-    debug('isValid', isValid)
+    debug('openai isValid', isValid)
     return isValid
   }
+  if (provider === 'gemini') {
+    const isValid = await checkGeminiKey(key)
+    debug('gemini isValid', isValid)
+    return isValid
+  }
+  if (provider === 'nudge') {
+    return true
+  }
 
-  throw new Error(`Unknown model: ${model}`)
+  throw new Error(`Unknown provider: ${provider}`)
+}
+
+async function checkGeminiKey(apiKey: string) {
+  const openai = new OpenAI({
+    apiKey,
+    baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
+  })
+  try {
+    const models = await openai.models.list()
+    return models.data.length > 0
+  } catch (error) {
+    logError('Error checking OpenAI key', { error })
+    return false
+  }
 }
 
 async function checkOpenAIKey(apiKey: string) {
@@ -28,10 +50,15 @@ async function checkOpenAIKey(apiKey: string) {
   }
 }
 
-export interface ModelClient {
-  provider: 'openai'
-  openAiClient: OpenAI
-}
+export type ModelClient =
+  | {
+      provider: 'openai'
+      openAiClient: OpenAI
+    }
+  | {
+      provider: 'gemini'
+      key: string
+    }
 
 export type BackendClient = ModelClient | { provider: 'nudge' }
 
@@ -55,6 +82,13 @@ export function getAiBackendClient(): BackendClient | null {
 export function getModelClient(model: ProviderSelection): ModelClient {
   assert(model.key, 'Model key is required')
   // assert(model.name === 'openai-4o')
+
+  if (model.name === 'gemini') {
+    return {
+      provider: 'gemini',
+      key: model.key,
+    }
+  }
 
   return {
     provider: 'openai',

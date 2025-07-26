@@ -78,7 +78,7 @@ iconutil -c icns images/Development.iconset
 
 ## Why we use a simple back-end API instead of proxying OpenAI calls
 
-For users that don't have an OpenAI API key, we provide a "hosted" version of
+For users that don't have a Gemini or OpenAI API key, we provide a "hosted" version of
 Nudge that sends AI requests through our API server at nudge.fyi. The API has
 different endpoints like `/api/assess` and `/api/feedback`, one for each type of
 AI inference used in the app. Each endpoint expects a different set of inputs,

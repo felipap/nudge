@@ -140,7 +140,7 @@ export const Assessment = withBoundary(() => {
         >
           <div
             className={twMerge(
-              'w-full text-[14px] pr-3 font-medium text-gray-500  track-15 flex flex-row gap-2 items-center cursor-help',
+              'w-full text-[14px] pr-3 font-medium text-gray-500  track-10 flex flex-row gap-2 items-center cursor-help',
               className
             )}
           >

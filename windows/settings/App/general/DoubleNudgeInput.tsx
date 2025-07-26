@@ -34,7 +34,7 @@ export const DoubleNudgeInput = () => {
         min={1}
         max={20}
         unit={`minute${value === 1 ? '' : 's'}`}
-        className="mt-1 w-[120px] rounded-md text-contrast text-sm px-1.5 h-8 border-0 shadow-sm bg-btn"
+        className="mt-1 w-[120px] rounded-md text-contrast text-sm pr-1.5 pl-3 h-8 border-0 shadow-sm bg-btn"
       />
     </fieldset>
   )

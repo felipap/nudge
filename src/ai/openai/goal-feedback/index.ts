@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { log, warn } from '../oai-logger'
 import { Result, safeOpenAIStructuredCompletion } from '../utils'
 
-const OutputStruct = z.object({
+export const OutputStruct = z.object({
   activityDurationMins: z
     .number()
     .describe('The duration the user wrote for the activity.')
@@ -53,7 +53,7 @@ export async function getGoalFeedbackFromOpenAI(
 }
 
 // Keep in sync with nudge/src/lib/ai/goal-feedback/direct.ts
-const SYSTEM_PROMPT = `
+export const SYSTEM_PROMPT = `
 
 You're part of Nudge, a macOS app that helps users stay focused by monitoring their screen for distractions. Users describe an activity ("I want to work on a presentation for 30 minutes") and the app notifies them when they start doing something else.
 

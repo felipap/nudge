@@ -24,11 +24,13 @@ export type GoalFeedbackType =
 //
 // Available models
 
-export type AvailableProvider = 'openai' | 'openai-4o-mini'
+export type AvailableProvider = 'openai' | 'gemini' | 'nudge'
 
-export const AVAILABLE_MODELS: { name: string; value: AvailableProvider }[] = [
-  { name: 'OpenAI 4o mini', value: 'openai' },
-]
+export const AVAILABLE_PROVIDERS: { name: string; value: AvailableProvider }[] =
+  [
+    { name: 'OpenAI', value: 'openai' },
+    { name: 'Gemini', value: 'gemini' },
+  ]
 
 //
 //

@@ -19,10 +19,13 @@ import {
 // Screen for the active focus session.
 export const ActiveSessionScreen = withBoundary(() => {
   const [editorHasFocus, setEditorHasFocus] = useState(false)
-
   const { paused, pause, clear, resume } = useActiveSession()
-  useWindowHeight(paused ? 250 : 250)
 
+  // useWindowHeight(paused ? 250 : 250)
+
+  // Pause when the user edits the goal. This shows the "Resume"
+  // and "New goal" buttons, which IMO make it more clear that the
+  // user is editing an existing goal.
   function onModifyGoal() {
     if (!paused) {
       pause()

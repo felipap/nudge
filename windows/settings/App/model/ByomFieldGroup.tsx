@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge'
 import { ProviderSelection } from '../../../../src/store/types'
 import { useBackendState, validateModelKey } from '../../../shared/ipc'
 import {
-  AVAILABLE_MODELS,
+  AVAILABLE_PROVIDERS,
   type AvailableProvider,
 } from '../../../shared/shared-types'
 import { Input } from '../../../shared/ui/native/Input'
@@ -18,7 +18,7 @@ export const ByomFieldGroup = withBoundary(() => {
   return (
     <>
       <Fieldset>
-        <Label>Model</Label>
+        <Label className="track-10">Model</Label>
         <ModelSelect
           value={model?.name || null}
           onChange={(value) => {
@@ -32,12 +32,14 @@ export const ByomFieldGroup = withBoundary(() => {
       </Fieldset>
       <Fieldset>
         <Label>
-          OpenAI service key
-          {/* <span className="text-red-500">* </span> */}
+          {(model &&
+            AVAILABLE_PROVIDERS.find((p) => p.value === model?.name)?.name) ||
+            'Provider'}{' '}
+          Key
         </Label>
         <InputWithAutoValidation
           model={model?.name || null}
-          placeholder="sk-..."
+          placeholder={model?.name === 'openai' ? 'sk-...' : '...'}
           value={model?.key || ''}
           disabled={!model}
           currentKey={model?.key || null}
@@ -67,10 +69,10 @@ function ModelSelect({
 }) {
   return (
     <Select
-      className="w-[200px]"
-      options={AVAILABLE_MODELS.map((model) => ({
-        label: model.name,
-        value: model.value,
+      className="w-[200px] text-[14px]"
+      options={AVAILABLE_PROVIDERS.map((provider) => ({
+        label: provider.name,
+        value: provider.value,
       }))}
       value={value || ''}
       onChange={(e) => onChange(e.target.value as AvailableProvider)}
@@ -114,7 +116,6 @@ function InputWithAutoValidation({
   return (
     <div className="relative">
       <Input
-        placeholder="sk-..."
         value={value}
         onChange={(e) => {
           onChange?.(e)
@@ -135,7 +136,7 @@ function InputWithAutoValidation({
             className="text-amber-600 dark:text-amber-300 opacity-100 bg-tertiary rounded-sm pl-1.5 pr-1.5"
             onClick={onClickCheckKey}
           >
-            Check
+            Validate
           </button>
         )}
       </div>

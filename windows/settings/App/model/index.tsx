@@ -25,14 +25,13 @@ export function ModelTab() {
   let modelSelector
   if (state?.useNudgeCloud) {
     modelSelector = (
-      <div className="track-15 text-[14px] px-1 leading-[1.3]">
+      <div className="track-10 text-[14px] px-1 leading-[1.3]">
         0 of 20 hours used
       </div>
     )
   } else {
     modelSelector = (
       <>
-        <Hr />
         {/* <SectionWithHeader
           title="Model Selection"
           subtitle="Nudge only supports OpenAI's 4o model today."
@@ -49,7 +48,7 @@ export function ModelTab() {
         <LabelStack>
           <Label className="text-[15px]">Use Nudge Cloud</Label>
           <Description>
-            Don't have an OpenAI developer account? Use Nudge Cloud for up to
+            Don't have a Gemini or OpenAI key? Use Nudge Cloud for up to
             20&nbsp;hours a month for free.{' '}
             <button
               onClick={() => openExternal('https://nudge.fyi/faq')}
@@ -63,7 +62,7 @@ export function ModelTab() {
         <ToggleNudgeCloud />
       </Fieldset>
 
-      {modelSelector}
+      <div className="flex flex-col gap-3 mt-2">{modelSelector}</div>
 
       <Hr />
 

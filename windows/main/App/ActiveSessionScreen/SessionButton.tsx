@@ -87,13 +87,13 @@ function InnerButton({
         {hoverIcon === 'play' && <FaPlay className="shrink-0 w-2.5 h-2.5" />}
         {hoverIcon !== 'pause' && hoverIcon !== 'play' && hoverIcon}
 
-        <div className="text-[14px] track-15 font-medium">{hoverText}</div>
+        <div className="text-[14px] track-10 font-medium">{hoverText}</div>
       </div>
       <div className="group-hover:hidden flex flex-row items-center gap-1.5">
         {icon === 'pause' && <FaPause6 className="shrink-0 w-3.5 h-3.5" />}
         {icon === 'play' && <FaPlay className="shrink-0 w-2.5 h-2.5" />}
         {icon !== 'pause' && icon !== 'play' && icon}
-        <div className="text-[14px] track-15 font-medium">{text}</div>
+        <div className="text-[14px] track-10 font-medium">{text}</div>
       </div>
     </button>
   )

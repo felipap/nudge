@@ -1,9 +1,11 @@
 import assert from 'assert'
+import OpenAI from 'openai'
 import { debug } from '../lib/logger'
 import { assessFlowFromNudgeAPI } from './cloud/assess-capture'
+import { assessFlowWithGemini } from './gemini/assess-capture'
 import { BackendClient } from './models'
-import { Result } from './openai/utils'
 import { assessFlowWithOpenAI } from './openai/assess-capture'
+import { Result } from './openai/utils'
 
 export type CaptureAssessment = {
   screenSummary: string
@@ -34,24 +36,40 @@ export async function assessFlowFromScreenshot(
     )
   }
 
-  const openaiResult = await assessFlowWithOpenAI(
-    client.openAiClient,
-    base64content,
-    goal,
-    customInstructions,
-    previousCaptures
-  )
+  let res
+  if (client.provider === 'gemini') {
+    const openai = new OpenAI({
+      apiKey: client.key,
+      baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
+    })
 
-  if ('error' in openaiResult) {
-    return openaiResult
+    res = await assessFlowWithGemini(
+      openai,
+      base64content,
+      goal,
+      customInstructions,
+      previousCaptures
+    )
+  } else {
+    res = await assessFlowWithOpenAI(
+      client.openAiClient,
+      base64content,
+      goal,
+      customInstructions,
+      previousCaptures
+    )
+  }
+
+  if ('error' in res) {
+    return res
   }
 
   return {
     data: {
-      screenSummary: openaiResult.data.screenSummary,
-      notificationToUser: openaiResult.data.notificationToUser,
-      isFollowingGoals: openaiResult.data.isFollowingGoals,
-      goalUnclear: openaiResult.data.goalUnclear,
+      screenSummary: res.data.screenSummary,
+      notificationToUser: res.data.notificationToUser,
+      isFollowingGoals: res.data.isFollowingGoals,
+      goalUnclear: res.data.goalUnclear,
     },
   }
 }
