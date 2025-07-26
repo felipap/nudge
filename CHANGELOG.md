@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/felipap/nudge/compare/v0.2.3...v0.2.4) (2025-07-26)
+
+
+### Features
+
+* gemini backend ([eef46fe](https://github.com/felipap/nudge/commit/eef46fe6e08dc7445355d1aead936712a83e1842))
+
 ### [0.2.3](https://github.com/felipap/nudge/compare/v0.2.2...v0.2.3) (2025-07-25)
 
 
