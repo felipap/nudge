@@ -2,16 +2,13 @@
 
 ## v0.2.x
 
-- [ ] Support Gemini.
+- [x] Support Gemini.
+- [x] Instrumentize more events.
 - [ ] Support multiple screens.
 - [ ] Make video showing how to create a Gemini key.
 - [ ] CI: figure out how to make pre-release builds.
-- [ ] Notification: test access by asking users to click on the notification.
-- [ ] Fix: permission errors still silent.
 - [ ] Fix: "Rate limit exceeded" error for OpenAI keys without billing setup.
-- [ ] Add session reset functionality - make it clear how to restart/reset sessions.
 - [ ] Feat: "0 of 20 hours used"
-- [ ] Instrumentize more events.
 
 ### Later
 
@@ -37,10 +34,12 @@
 
 Finished Jul 25.
 
+- [x] Notification: test access by asking users to click on the notification.
 - [x] Feat: onboarding.
 - [x] Fix: test nudge showing up all the time.
 - [x] Fix: 429 for OpenAI should trigger a Slack message to Felipe.
 - [x] Fix: fix button colors.
+- [x] Fix: permission errors still silent.
 - [x] Fix: warn when outside /Applications folder. Don't try to auto-update.
 - [x] Let users introspect captures and understand what's wrong.
 - [x] Somehow show notification skipped due to double-nudge.
