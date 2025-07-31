@@ -1,9 +1,20 @@
 import chalk from 'chalk'
 import { zodResponseFormat } from 'openai/helpers/zod'
-import { Output, OutputStruct } from '../../openai/assess-capture'
 import { debug, log, warn } from '../../openai/oai-logger'
 import { Result, safeOpenAIStructuredCompletion } from '../../openai/utils'
 import { OpenAICompatibleGeminiClient } from '../utils'
+import { z } from 'zod'
+
+export const OutputStruct = z.object({
+  screenSummary: z.string(),
+  notificationToUser: z.string(),
+  isFollowingGoals: z.boolean(),
+  goalUnclear: z
+    .boolean()
+    .describe(`Set to true when the goal is ABSOLUTELY unclear.`),
+})
+
+export type Output = z.infer<typeof OutputStruct>
 
 export async function assessFlowWithGemini(
   client: OpenAICompatibleGeminiClient,

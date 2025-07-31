@@ -56,7 +56,11 @@ export async function getGoalFeedbackFromGemini(
   log('[ai/gemini/goal-feedback] result', res)
 
   const feedbackType = res.data.feedbackType
-  if (feedbackType !== 'lacking-duration' && feedbackType !== 'unclear-apps') {
+  if (
+    feedbackType &&
+    feedbackType !== 'lacking-duration' &&
+    feedbackType !== 'unclear-apps'
+  ) {
     warn('[ai/gemini/goal-feedback] Invalid feedback type', res.data)
     return {
       error: 'unknown',
@@ -69,6 +73,5 @@ export async function getGoalFeedbackFromGemini(
       ...res.data,
       feedbackType: feedbackType as GoalFeedback['feedbackType'],
     },
-    error: undefined,
   }
 }

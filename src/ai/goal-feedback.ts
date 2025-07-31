@@ -30,7 +30,9 @@ export async function getGoalFeedback(
       baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
     })
 
-    return await getGoalFeedbackFromGemini(proxyClient, goal)
+    const gem = await getGoalFeedbackFromGemini(proxyClient, goal)
+    console.log('gem', gem)
+    return gem
   }
 
   return await getGoalFeedbackFromOpenAI(client.openAiClient, goal)
