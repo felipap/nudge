@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/felipap/nudge/compare/v0.2.4...v0.2.5) (2025-08-01)
+
+
+### Bug Fixes
+
+* Gemini not working ([032e1ca](https://github.com/felipap/nudge/commit/032e1cafa139e529eca3dae93b52aaa2f471b362))
+
 ### [0.2.4](https://github.com/felipap/nudge/compare/v0.2.3...v0.2.4) (2025-07-26)
 
 
