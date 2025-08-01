@@ -4,13 +4,14 @@
 
 - [x] Support Gemini.
 - [x] Instrumentize more events.
-- [ ] Support multiple screens.
+- [x] Support multiple screens.
 - [ ] Make video showing how to create a Gemini key.
 - [ ] CI: figure out how to make pre-release builds.
 - [ ] Fix: "Rate limit exceeded" error for OpenAI keys without billing setup.
 - [ ] Keep saved keys in settings for other models.
 - [ ] Feat: "0 of 20 hours used"
 - [ ] Feat: show current activity on menu bar.
+- [x] Feat: add download button to website.
 
 ### Later
 
